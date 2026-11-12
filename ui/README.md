@@ -77,7 +77,7 @@ The outline colour is `#1B1530` everywhere (UIStroke, icon outlines, frame borde
   - `Tabs`: All + 9 rarity filter tabs (`TextButton`s with a `Filter` attribute; "All" is styled as selected).
   - `Grid`: a `ScrollingFrame` with a `UIGridLayout` (82×100 cells) and all 50 fish in index order. 12 are shown discovered and 38 locked (silhouette, dimmed frame and padlock). Lionfish is shown selected (yellow stroke).
   - `Details`: the selected fish's big thumbnail on its rarity frame, its name, a rarity pill and the water area.
-- Water areas (Starter Pond, Willow River, Murky Swamp, Coral Reef, Open Ocean, Frozen Lake, Deep Trench, Volcano Vents, Shipwreck Cove, Sky Lagoon, Abyss, Cosmic Rift) are placeholders. Edit `AREA` in `tools/ui/fishdata.py` and rebuild.
+- Water areas follow the game's 10 zones: Pond, River, Swamp, Coral Reef, Open Ocean, Frozen Sea, Deep Abyss, Volcanic Vent, Sunken Ruins and Starfall Lake. They are set in `AREA` in `tools/ui/fishdata.py`; rebuild with `python3 tools/ui/build_rbxmx.py`.
 
 ## Still to do with scripts
 

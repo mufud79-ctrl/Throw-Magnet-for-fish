@@ -1,7 +1,7 @@
 """Shared data for the UI tools: the 50 fish, rarity palette and water areas.
 
 Plain Python (no bpy), so both the Blender render scripts and the PIL/XML tools import it.
-Water areas are placeholders chosen to fit each fish; rename them to match the real map.
+Water areas follow the game's 10 zones (models/Zones/).
 """
 import re
 
@@ -34,22 +34,56 @@ FISH = {
 }
 
 AREA = {
-    "Minnow": "Starter Pond", "Goldfish": "Starter Pond", "Guppy": "Starter Pond", "Bluegill": "Starter Pond",
-    "Perch": "Willow River", "Carp": "Willow River", "Catfish": "Murky Swamp", "Sardine": "Open Ocean",
-    "Clownfish": "Coral Reef", "BlueTang": "Coral Reef",
-    "Koi": "Starter Pond", "LargemouthBass": "Willow River", "RainbowTrout": "Willow River", "Salmon": "Willow River",
-    "Mudskipper": "Murky Swamp", "Pufferfish": "Coral Reef", "Angelfish": "Coral Reef", "Flounder": "Open Ocean",
+    "Minnow": "Pond",
+    "Goldfish": "Pond",
+    "Bluegill": "Pond",
+    "Guppy": "Pond",
+    "Koi": "Pond",
+    "Perch": "River",
+    "Carp": "River",
+    "Catfish": "River",
+    "LargemouthBass": "River",
+    "RainbowTrout": "River",
+    "Salmon": "River",
+    "Pike": "River",
+    "Sturgeon": "River",
+    "Mudskipper": "Swamp",
+    "Piranha": "Swamp",
+    "ElectricEel": "Swamp",
+    "AlligatorGar": "Swamp",
+    "Arapaima": "Swamp",
+    "Clownfish": "Coral Reef",
+    "BlueTang": "Coral Reef",
+    "Pufferfish": "Coral Reef",
+    "Angelfish": "Coral Reef",
     "Seahorse": "Coral Reef",
-    "Pike": "Frozen Lake", "Sturgeon": "Willow River", "Piranha": "Murky Swamp", "ElectricEel": "Murky Swamp",
-    "Lionfish": "Coral Reef", "MorayEel": "Coral Reef", "Icefish": "Frozen Lake", "Lanternfish": "Deep Trench",
-    "AlligatorGar": "Murky Swamp", "Arapaima": "Murky Swamp", "MantaRay": "Open Ocean", "HammerheadShark": "Open Ocean",
-    "GreenlandShark": "Frozen Lake", "Anglerfish": "Deep Trench", "Blobfish": "Deep Trench",
-    "GreatWhiteShark": "Open Ocean", "Sailfish": "Open Ocean", "CrystalPike": "Frozen Lake", "Oarfish": "Deep Trench",
-    "MagmaEel": "Volcano Vents", "Coelacanth": "Deep Trench",
-    "AuroraRay": "Frozen Lake", "GhostShark": "Shipwreck Cove", "EmberKoi": "Volcano Vents", "GoldenArowana": "Sky Lagoon",
-    "Megalodon": "Abyss", "HydraEel": "Abyss", "SeaSerpent": "Abyss",
-    "DragonKoi": "Sky Lagoon", "SeraphFish": "Sky Lagoon",
-    "StarfallWhaleShark": "Cosmic Rift",
+    "Flounder": "Coral Reef",
+    "Lionfish": "Coral Reef",
+    "MorayEel": "Coral Reef",
+    "MantaRay": "Coral Reef",
+    "Sardine": "Open Ocean",
+    "HammerheadShark": "Open Ocean",
+    "GreatWhiteShark": "Open Ocean",
+    "Sailfish": "Open Ocean",
+    "Icefish": "Frozen Sea",
+    "GreenlandShark": "Frozen Sea",
+    "CrystalPike": "Frozen Sea",
+    "AuroraRay": "Frozen Sea",
+    "Lanternfish": "Deep Abyss",
+    "Anglerfish": "Deep Abyss",
+    "Blobfish": "Deep Abyss",
+    "Oarfish": "Deep Abyss",
+    "GhostShark": "Deep Abyss",
+    "Megalodon": "Deep Abyss",
+    "MagmaEel": "Volcanic Vent",
+    "EmberKoi": "Volcanic Vent",
+    "HydraEel": "Volcanic Vent",
+    "Coelacanth": "Sunken Ruins",
+    "GoldenArowana": "Sunken Ruins",
+    "SeaSerpent": "Sunken Ruins",
+    "DragonKoi": "Sunken Ruins",
+    "SeraphFish": "Starfall Lake",
+    "StarfallWhaleShark": "Starfall Lake",
 }
 
 # Fish shown as discovered in the static layout / preview (12, matching the "12/50" counter)
