@@ -276,10 +276,24 @@ class Fish:
         self._save(self.img_studs, f"{self.name}_Texture_Studs")
 
     def studs(self, col, T, Vv, spacing=1.0, rad=0.3):
-        """Classic Roblox studs on the body at true scale (1 Blender unit = 1 stud)."""
+        """Roblox studs on the body at true scale (1 Blender unit = 1 stud).
+        Uses tools/blender/stud.png (one tile = one stud) if present, else a procedural stud."""
         X = T * self.L
         C = np.array([self.circ(t) for t in T[0]])[None, :]
         Y = Vv * C
+        amt = smooth(0.03, 0.09, T) * (1 - smooth(0.93, 0.99, T))
+        tile = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stud.png")
+        if os.path.exists(tile):
+            im = bpy.data.images.load(tile); w, h = im.size
+            px = np.array(im.pixels[:], dtype=np.float32).reshape(h, w, im.channels)
+            rgb = px[..., :3]; a = px[..., 3] if im.channels == 4 else np.ones((h, w))
+            lum = rgb @ np.array([0.299, 0.587, 0.114])
+            ref = np.median(lum[a > 0.5]) if (a > 0.5).any() else 0.5
+            fac = np.where(a > 0, 1 + (lum / max(ref, 1e-3) - 1) * a, 1.0)
+            u = ((X / spacing) % 1.0 * w).astype(int).clip(0, w - 1)
+            v = ((Y / spacing) % 1.0 * h).astype(int).clip(0, h - 1)
+            f = 1 + (fac[v, u] - 1) * amt
+            return np.clip(col * f[..., None], 0, 1)
         cx = (np.floor(X / spacing) + 0.5) * spacing; cy = (np.floor(Y / spacing) + 0.5) * spacing
         dx, dy = (X - cx) / rad, (Y - cy) / rad
         up = np.where(Vv < 0.5, 1.0, -1.0)            # texture direction pointing toward the back
@@ -290,7 +304,6 @@ class Fish:
         outline = np.exp(-((d - 1.0) / 0.07) ** 2)
         ds = np.hypot(dx + lx * 0.22, dy + ly * 0.22)
         drop = (1 - smooth(0.92, 1.12, ds)) * (1 - inside)
-        amt = smooth(0.03, 0.09, T) * (1 - smooth(0.93, 0.99, T))
         dark = np.clip(0.30 * np.maximum(-lit, 0) + 0.22 * outline + 0.22 * drop, 0, 1) * amt
         light = np.clip(0.45 * np.maximum(lit, 0) + 0.06 * inside, 0, 1) * amt
         out = col + (1 - col) * light[..., None]

@@ -8,7 +8,7 @@ One folder per fish: `models/<Rarity>/<FishName>/`.
 | `<Fish>.fbx` | Backup format, texture embedded |
 | `<Fish>.blend` | Blender source |
 | `<Fish>_Texture.png` | Clean texture |
-| `<Fish>_Texture_Studs.png` | Same texture with classic Roblox studs; swap it into the MeshPart's `TextureID` to add studs |
+| `<Fish>_Texture_Studs.png` | Same texture with studs (1 per stud). Swap into the MeshPart `TextureID` to toggle studs. Uses `tools/blender/stud.png` as the stud tile when present |
 | `previews/` | Renders, including `hero_studs` showing the studded version |
 
 ## Importing into Roblox
@@ -23,4 +23,4 @@ One folder per fish: `models/<Rarity>/<FishName>/`.
 
 | Fish | Glow parts | Colour |
 |---|---|---|
-| SeraphFish | halo, forehead gem, star dots | `#FFC850` (255, 200, 80) |
+| SeraphFish | eyes, spiked halo, side LED lines | `#FFC440` (255, 196, 64) |
