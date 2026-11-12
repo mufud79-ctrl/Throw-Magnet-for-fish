@@ -12,6 +12,7 @@ import numpy as np
 from mathutils import Vector, Matrix
 
 TEX = 1024
+STUD_TILE_CELLS = 4   # studs per side in tools/blender/stud.png
 
 def V(x, y, z): return Vector((x, y, z))
 def lerp(a, b, t): return a + (b - a) * t
@@ -275,7 +276,7 @@ class Fish:
         self.tex = self._save(self.img, f"{self.name}_Texture")
         self._save(self.img_studs, f"{self.name}_Texture_Studs")
 
-    def studs(self, col, T, Vv, spacing=1.0, rad=0.3):
+    def studs(self, col, T, Vv, spacing=float(os.environ.get("STUD_SPACING", 0.5)), rad=0.3):
         """Roblox studs on the body at true scale (1 Blender unit = 1 stud).
         Uses tools/blender/stud.png (one tile = one stud) if present, else a procedural stud."""
         X = T * self.L
@@ -290,8 +291,10 @@ class Fish:
             lum = rgb @ np.array([0.299, 0.587, 0.114])
             ref = np.median(lum[a > 0.5]) if (a > 0.5).any() else 0.5
             fac = np.where(a > 0, 1 + (lum / max(ref, 1e-3) - 1) * a, 1.0)
-            u = ((X / spacing) % 1.0 * w).astype(int).clip(0, w - 1)
-            v = ((Y / spacing) % 1.0 * h).astype(int).clip(0, h - 1)
+            n = STUD_TILE_CELLS                       # stud.png holds an n x n grid of studs
+            flip = np.where(Vv < 0.5, 1.0, -1.0)    # keep the tile upright on both sides
+            u = ((X * flip / (spacing * n)) % 1.0 * w).astype(int).clip(0, w - 1)
+            v = ((Y * flip / (spacing * n)) % 1.0 * h).astype(int).clip(0, h - 1)
             f = 1 + (fac[v, u] - 1) * amt
             return np.clip(col * f[..., None], 0, 1)
         cx = (np.floor(X / spacing) + 0.5) * spacing; cy = (np.floor(Y / spacing) + 0.5) * spacing
