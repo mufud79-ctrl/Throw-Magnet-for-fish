@@ -60,15 +60,9 @@ Done (in `models/<Rarity>/<Name>/`):
 - `ui/FishingUI.rbxmx` is the importable layout, with no scripts. `ui/asset_map.json` maps each PNG to the UI elements that use it.
 - Scripts are in `tools/ui/`. Fish water areas are in `tools/ui/fishdata.py` (`AREA`) and match the 10 zones. After changing them, rebuild with `python3 tools/ui/build_rbxmx.py`.
 
-## Zones: 10 zones, 6 unique props each (IN PROGRESS, this is the next task)
-Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07_DeepAbyss, 08_VolcanicVent, 09_SunkenRuins, 10_StarfallLake.
-- `tools/blender/zones.py` is written and committed. It defines all 60 props: a builder function per prop plus a `ZONES` table with each prop's pattern, palette and glow colour. Output goes to `models/Zones/<NN>_<Zone>/<Prop>/`.
-- **No prop may repeat across zones.** Variants like different coral species are fine.
-- All 60 built without errors in a `--no-render` dry run. **None are rendered, reviewed or committed yet.**
-
-Next steps:
-1. Render one zone at a time in the background (the whole set takes about 40+ minutes on 4 CPUs): `python zones.py 01_Pond`, and so on.
-2. For each zone, make a `contact_sheet` of `models/Zones/<zone>/*/previews/*_hero.png` (`step=4`), review it, and do one fix round in `zones.py`.
-3. Delete `*.blend1`, then commit and push each zone as you go.
-4. Add a Zones section to `models/README.md`, with each prop's glow colour as listed in `ZONES`.
-5. Send the user one overview sheet per zone.
+## Zones: 10 zones, 6 unique props each (DONE)
+Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07_DeepAbyss, 08_VolcanicVent, 09_SunkenRuins, 10_StarfallLake. The fish water areas in the UI match these.
+- All 60 props are rendered and committed in `models/Zones/<NN>_<Zone>/<Prop>/`. Overview: `models/Zones/Zones_overview.png`. The glow colours are in `models/README.md`.
+- **Style for zone props:** the user rejected smooth "play dough" props. They must be **chunky low-poly**: flat shading, few segments, thick parts, hard chamfers and faceted rocks. `zones.py` subclasses `Prop` to enforce this (the `flat` attribute makes `finish()` shade flat). Keep using it for new props.
+- No prop may repeat across zones. Variants such as different coral species are fine.
+- Weaker props worth a polish pass: SeaFan (reads as a balloon), StarCrystalTree (thin), KelpStalks (small), and RowBoat's oars.

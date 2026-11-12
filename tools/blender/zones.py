@@ -463,15 +463,16 @@ def archway(f):
     f.box("Keystone", V(0, 0, 4.0), (0.45, 0.75, 0.55), bevel=0.05)
     for k in range(4): f.tube(f"Vine{k}", [V(-1.6 + 0.1 * k, 0.37, 2.4 - 0.3 * k), V(-1.4, 0.4, 1.6 - 0.2 * k), V(-1.55, 0.38, 0.7 - 0.1 * k)], 0.04, 0.03, sw=X, K=5)
 def amphorae(f):
-    prof = lambda s: 0.12 + 0.3 * math.sin(math.pi * min(1, s * 1.2)) ** 0.8 if s < 0.8 else 0.12 + 0.05 * (s - 0.8) / 0.2
-    for i, (x, y, h, lie) in enumerate([(0, 0, 1.6, False), (0.8, 0.3, 1.3, False), (-0.9, 0.5, 1.4, True)]):
-        if lie: a, b = V(x - 0.7, y, 0.3), V(x + 0.7, y, 0.35)
-        else: a, b = V(x, y, 0), V(x, y, h)
-        f.tube(f"Vase{i}", [a, (a + b) / 2, b], 0, 0, sw=P, K=14, sub=6, rfn=prof)
-        top = b if not lie else b
+    for i, (x, y, sc, lie) in enumerate([(0, 0, 1.0, False), (0.95, 0.35, 0.8, False), (-1.0, 0.5, 0.85, True)]):
+        R = Matrix.Rotation(math.radians(80), 3, "Y") if lie else I3
+        base = V(x, y, 0.42 * sc if lie else 0)
+        L = lambda v, R=R, base=base, sc=sc: base + R @ (v * sc)
+        f.sphere(f"Body{i}", L(V(0, 0, 0.75)), R, (0.48 * sc, 0.48 * sc, 0.6 * sc), P, 10, 7)
+        f.cyl(f"Neck{i}", L(V(0, 0, 1.2)), L(V(0, 0, 1.6)), 0.17 * sc, 8, P, proj=False)
+        f.torus(f"Lip{i}", L(V(0, 0, 1.6)), R @ V(0, 0, 1), 0.2 * sc, 0.05 * sc, A, 12, 5)
+        f.cyl(f"Foot{i}", L(V(0, 0, 0.0)), L(V(0, 0, 0.2)), 0.22 * sc, 8, A, proj=False)
         for sy in (-1, 1):
-            hc = a + (b - a) * 0.75 + (V(0, sy * 0.2, 0) if not lie else V(0, sy * 0.2, 0))
-            f.torus(f"Handle{i}{sy}", hc, V(1, 0, 0) if not lie else V(0, 0, 1), 0.12, 0.03, A, 12, 5)
+            f.tube(f"Handle{i}{sy}", [L(V(0, sy * 0.17, 1.45)), L(V(0, sy * 0.42, 1.4)), L(V(0, sy * 0.4, 1.05))], 0.04 * sc, 0.04 * sc, sw=A, K=5, sub=3)
 def trident_altar(f):
     for i, (s, h) in enumerate([(2.4, 0.3), (1.8, 0.3), (1.2, 0.3)]): f.box(f"Step{i}", V(0, 0, 0.15 + i * 0.3), (s, s, h), bevel=0.04)
     base = V(0, 0, 1.0)
@@ -577,7 +578,7 @@ ZONES = [
                       ("SulfurCrystals", sulfur_crystals, ("stone", c(70, 60, 54), c(110, 100, 60)), pal(c(80, 70, 60), c(250, 220, 40), c(40, 36, 32), c(255, 255, 255), c(240, 240, 240), c(70, 60, 54), c(250, 225, 50)), None),
                       ("VolcanicBomb", volcanic_bomb, ("obsidian", c(36, 30, 30), c(200, 70, 20)), pal(c(60, 50, 46), c(255, 110, 30), c(40, 34, 32), c(255, 100, 20), c(240, 240, 240), c(40, 34, 32), c(255, 110, 30)), c(255, 100, 20))]),
  ("09_SunkenRuins", [("BrokenPillar", broken_pillar, ("marble", c(225, 220, 205), c(140, 170, 150)), pal(c(200, 195, 180), c(220, 200, 140), c(60, 70, 70), c(255, 255, 255), c(245, 242, 235), c(225, 220, 205), c(90, 150, 110)), None),
-                     ("StatueHead", statue_head, ("stone", c(170, 165, 150), c(90, 140, 100)), pal(c(170, 165, 150), c(220, 190, 90), c(40, 40, 40), c(255, 255, 255), c(240, 238, 230), c(175, 170, 155), c(90, 140, 100)), None),
+                     ("StatueHead", statue_head, ("marble", c(176, 172, 160), c(120, 116, 106)), pal(c(170, 165, 150), c(220, 190, 90), c(40, 40, 40), c(255, 255, 255), c(240, 238, 230), c(175, 170, 155), c(90, 140, 100)), None),
                      ("TreasureChest", treasure_chest, ("wood", c(120, 80, 45), c(160, 115, 70)), pal(c(120, 120, 126), c(240, 190, 60), c(40, 30, 20), c(255, 210, 90), c(245, 240, 230), c(130, 90, 50), c(240, 190, 60)), c(255, 210, 90)),
                      ("Archway", archway, ("marble", c(210, 205, 190), c(140, 170, 150)), pal(c(200, 195, 180), c(220, 200, 140), c(60, 70, 70), c(255, 255, 255), c(245, 242, 235), c(210, 205, 190), c(80, 140, 90)), None),
                      ("Amphorae", amphorae, ("vinyl", c(190, 100, 60), c(220, 140, 90)), pal(c(190, 100, 60), c(160, 80, 50), c(60, 40, 30), c(255, 255, 255), c(245, 240, 230), c(200, 110, 65), c(220, 150, 100)), None),
