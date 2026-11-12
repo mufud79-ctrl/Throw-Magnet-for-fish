@@ -12,9 +12,9 @@ Done (in `models/<Rarity>/<Name>/`):
 - **Divine:** DragonKoi (the style reference I love, don't change it), SeraphFish (aggressive shark-style angel)
 - **Common (10):** Minnow, Goldfish, Bluegill, Guppy, Perch, Carp, Catfish, Sardine, Clownfish, BlueTang
 - **Uncommon (9):** Koi, LargemouthBass, RainbowTrout, Salmon, Mudskipper, Pufferfish, Angelfish, Flounder, Seahorse
+- **Rare (8):** Pike, Sturgeon, Piranha, ElectricEel, Lionfish, MorayEel, Icefish, Lanternfish (`rares.py`; template for aggressive spec fish: `jaw`, `brow`, slit `pupil`, `eye_k`, `glow_eyes`, `dots`, `glow_line`, `wiggle`)
 
-Still to build (29). Rarity, then name, then water area, then design notes:
-- **Rare:** Pike (river: long duck-bill snout, toothy), Sturgeon (river: bony back plates, shovel snout, barbels), Piranha (swamp: deep body, underbite with teeth, red belly), ElectricEel (swamp: long eel with **glowing stripes**), Lionfish (reef: fan of striped venom spines), MorayEel (reef: eel with open toothy mouth, spotted), Icefish (frozen sea: see-through pale body, **glowing** blood-line optional), Lanternfish (abyss: small, rows of **glowing** photophores)
+Still to build (21). Rarity, then name, then water area, then design notes:
 - **Epic:** AlligatorGar (swamp: gator snout, armour scales), Arapaima (swamp: huge, red-scaled tail half), MantaRay (reef: wide wings, head fins), HammerheadShark (open ocean), GreenlandShark (frozen sea: slow grey, scarred), Anglerfish (abyss: **glowing lure**, huge fanged mouth), Blobfish (abyss: droopy comic blob)
 - **Legendary:** GreatWhiteShark (open ocean), Sailfish (open ocean: huge sail fin, bill), CrystalPike (frozen sea: pike made of ice crystal facets, **glowing** cyan core), Oarfish (abyss: very long ribbon, red crest), MagmaEel (volcanic vent: rocky crust with **glowing lava cracks**), Coelacanth (sunken ruins: ancient, lobed fins)
 - **Mythic:** AuroraRay (frozen sea: ray with **glowing** aurora bands), GhostShark (abyss: see-through, **glowing** outline/eyes), EmberKoi (volcanic: koi with **flame fins**, glowing), GoldenArowana (sunken ruins: gold armour, dragon whiskers)

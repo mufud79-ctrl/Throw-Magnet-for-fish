@@ -24,3 +24,6 @@ One folder per fish: `models/<Rarity>/<FishName>/`.
 | Fish | Glow parts | Colour |
 |---|---|---|
 | SeraphFish | eyes, gill slits, spiked halo | `#FFC440` (255, 196, 64) |
+| ElectricEel | lightning stripes, eyes | `#78E6FF` (120, 230, 255) |
+| Icefish | ice shards, eyes | `#8CE6FF` (140, 230, 255) |
+| Lanternfish | photophore dots, eyes | `#78D2FF` (120, 210, 255) |

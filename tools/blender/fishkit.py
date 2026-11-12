@@ -188,7 +188,7 @@ class Fish:
         uvs_f = (lambda k, a, s: self.uv_sw(sw)) if sw is not None else self.uv_strip
         verts, faces, uvs = [], [], []
         for i in range(n - 1):
-            s = seg[i] / seg[-1]; r = rfn(s) if rfn else lerp(r0, r1, s ** pw)
+            s = seg[i] / seg[-1]; r = float(rfn(s) if rfn else lerp(r0, r1, s ** pw))
             B = T[i].cross(Ns[i])
             for k in range(K):
                 a = 2 * math.pi * k / K
@@ -209,6 +209,7 @@ class Fish:
         return self.make_obj(name, verts, faces, uvs, glow)
 
     def sphere(self, name, center, rot, scale, sw, u=18, v=12, glow=False):
+        scale = tuple(float(x) for x in scale)
         bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=u, v_segments=v, radius=1.0)
         M = Matrix.Translation(center) @ rot.to_4x4() @ Matrix.Diagonal((*scale, 1))
         bmesh.ops.transform(bm, matrix=M, verts=bm.verts)
@@ -332,7 +333,7 @@ class Fish:
         ob = bpy.context.active_object; ob.name = name; ob.data.name = name
         return ob
 
-    def finish(self, bend=0.5, bend_len=7.0, glow_color=None, views=None, cam_scale=1.0, roll=0.0):
+    def finish(self, bend=0.5, bend_len=7.0, glow_color=None, views=None, cam_scale=1.0, roll=0.0, wiggle=(0, 0)):
         fish = self._join(self.parts, self.name)
         objs = [fish]
         glow = None
@@ -341,7 +342,7 @@ class Fish:
         for ob in objs:
             for v in ob.data.vertices:
                 k = max(0.0, (self.L / 2 - v.co.x) / bend_len)
-                v.co.y += bend * k ** 2.2
+                v.co.y += bend * k ** 2.2 + wiggle[0] * math.sin(2 * math.pi * wiggle[1] * k) * min(1.0, k * 3)
             if roll: ob.data.transform(Matrix.Rotation(roll, 4, "X"))
             ob.data.transform(Matrix.Rotation(math.radians(90), 4, "Z"))
         co = np.array([v.co[:] for v in fish.data.vertices])
