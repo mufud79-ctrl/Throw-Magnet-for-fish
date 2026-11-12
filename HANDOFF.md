@@ -48,3 +48,27 @@ Done (in `models/<Rarity>/<Name>/`):
 - Keep token use low. Write each batch in one pass, review only the contact sheet, and do at most one fix round per batch.
 - Delete `*.blend1` before committing.
 - After each batch, update this file's Status section, commit and push.
+
+## Gym gear (dumbbell curls)
+- 15 dumbbell tiers in `models/Gym/<NN>_<Theme>/<Theme>Dumbbell/` (Rusty → Rubber → Chrome → NeonSport → Golden → Crystal → Lava → Tiki → Cyber → Toxic → Kraken → Dragon → Galaxy → Angelic → Void), each cooler than the last. Built by `tools/blender/gym.py` (`python gym.py [tier numbers] [--bench-only] [--no-render]`).
+- The game uses a **standing player doing alternating-arm curls**. The dumbbell origin is at the grip centre. An R15 curl animation was offered but not made.
+- The preacher benches are **archived** in `models/Gym/_Archive_Benches/`, already resized to fit an R15 avatar. `tools/blender/fit_check.py` renders a bench with a blocky R15 stand-in.
+- `gym.py` also provides the `Prop` class (adds `box`, `cyl`, `rock`, `cracks` and `project`, which box-projects the painted pattern onto a part) and `pat(kind, a, b)`, the painted patterns: rust, rubber, chrome, vinyl, gold, ice, obsidian, stone, carbon, hazard, scales, galaxy, marble, void, wood and ocean.
+
+## UI (done)
+- `ui/` holds the HUD buttons (Fish/equipped, Shop, Index), the Fish Index window, 50 thumbnails and silhouettes, icons and 9-slice frames.
+- `ui/FishingUI.rbxmx` is the importable layout, with no scripts. `ui/asset_map.json` maps each PNG to the UI elements that use it.
+- Scripts are in `tools/ui/`. Fish water areas are in `tools/ui/fishdata.py` (`AREA`) and match the 10 zones. After changing them, rebuild with `python3 tools/ui/build_rbxmx.py`.
+
+## Zones: 10 zones, 6 unique props each (IN PROGRESS, this is the next task)
+Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07_DeepAbyss, 08_VolcanicVent, 09_SunkenRuins, 10_StarfallLake.
+- `tools/blender/zones.py` is written and committed. It defines all 60 props: a builder function per prop plus a `ZONES` table with each prop's pattern, palette and glow colour. Output goes to `models/Zones/<NN>_<Zone>/<Prop>/`.
+- **No prop may repeat across zones.** Variants like different coral species are fine.
+- All 60 built without errors in a `--no-render` dry run. **None are rendered, reviewed or committed yet.**
+
+Next steps:
+1. Render one zone at a time in the background (the whole set takes about 40+ minutes on 4 CPUs): `python zones.py 01_Pond`, and so on.
+2. For each zone, make a `contact_sheet` of `models/Zones/<zone>/*/previews/*_hero.png` (`step=4`), review it, and do one fix round in `zones.py`.
+3. Delete `*.blend1`, then commit and push each zone as you go.
+4. Add a Zones section to `models/README.md`, with each prop's glow colour as listed in `ZONES`.
+5. Send the user one overview sheet per zone.
