@@ -104,10 +104,10 @@ def driftwood(f):
         f.tube(f"Fork{k}", [p, p + d * 0.6, p + d * 1.2 + V(0, 0, 0.2)], 0.12, 0.03, strip=0, K=6)
     f.cyl("Root", V(-2.2, 0, 0.3), V(-2.35, 0, 0.3), 0.27, 9, X, proj=False)
 def beaver_dam(f):
-    f.project(f.sphere("Mound", V(0, 0, 0.2), I3, (2.2, 1.3, 0.8), D, 20, 10))
+    f.project(f.sphere("Mound", V(0, 0, 0.0), I3, (2.2, 1.3, 0.55), D, 20, 10))
     rng = np.random.default_rng(7)
     for k in range(11):
-        a = rng.uniform(0, math.pi); L = rng.uniform(1.8, 3.2); cz = rng.uniform(0.5, 1.0); cy = rng.uniform(-0.6, 0.6)
+        a = rng.uniform(0, math.pi); L = rng.uniform(1.8, 3.2); cz = rng.uniform(0.55, 1.05); cy = rng.uniform(-0.6, 0.6)
         d = V(math.cos(a) * L / 2, math.sin(a) * L / 2 * 0.4, rng.uniform(-0.2, 0.2))
         f.cyl(f"Stick{k}", V(rng.uniform(-0.6, 0.6), cy, cz) - d, V(rng.uniform(-0.6, 0.6), cy, cz) + d, rng.uniform(0.07, 0.14), 8)
 def rope_bridge(f):
@@ -125,7 +125,8 @@ def water_wheel(f):
     f.cyl("Axle", hub + V(0, -0.8, 0), hub + V(0, 0.8, 0), 0.12, 12, M, proj=False)
     for y in (-0.4, 0.4): f.torus(f"Rim{y}", hub + V(0, y, 0), V(0, 1, 0), 1.6, 0.08, X, 40, 6)
     for k in range(8):
-        a = 2 * math.pi * k / 8; f.box(f"Spoke{k}", hub + V(0.8 * math.cos(a), 0, 0.8 * math.sin(a)), (1.6, 0.9, 0.1), Matrix.Rotation(-a, 3, "Y"), bevel=0.02)
+        a = 2 * math.pi * k / 8
+        for y in (-0.4, 0.4): f.box(f"Spoke{k}{y}", hub + V(0.8 * math.cos(a), y, 0.8 * math.sin(a)), (1.6, 0.12, 0.12), Matrix.Rotation(-a, 3, "Y"), bevel=0.02)
     for k in range(12):
         a = 2 * math.pi * k / 12 + 0.13; f.box(f"Paddle{k}", hub + V(1.75 * math.cos(a), 0, 1.75 * math.sin(a)), (0.08, 0.95, 0.5), Matrix.Rotation(-a, 3, "Y"), bevel=0.02)
     for sy in (-1, 1):
@@ -503,7 +504,7 @@ ZONES = [
              ("MossyLog", mossy_log, ("wood", c(110, 75, 45), c(150, 105, 65)), pal(c(110, 80, 50), c(220, 70, 50), c(50, 35, 20), c(255, 255, 255), c(250, 245, 230), c(90, 160, 60), c(200, 160, 110)), None),
              ("Toadstools", toadstools, ("vinyl", c(220, 50, 40), c(240, 90, 60)), pal(c(110, 80, 50), c(250, 210, 60), c(40, 30, 20), c(255, 255, 255), c(250, 245, 230), c(220, 45, 40), c(200, 160, 110)), None),
              ("RowBoat", row_boat, ("wood", c(150, 95, 55), c(200, 140, 90)), pal(c(130, 90, 55), c(190, 140, 85), c(90, 60, 35), c(255, 255, 255), c(250, 245, 230), c(170, 110, 65), c(200, 160, 110)), None)]),
- ("02_River", [("RiverStones", river_stones, ("stone", c(150, 150, 150), c(110, 140, 90)), pal(c(140, 140, 140), c(200, 200, 200), c(80, 80, 80), c(255, 255, 255), c(250, 250, 250), c(150, 150, 150), c(180, 180, 180)), None),
+ ("02_River", [("RiverStones", river_stones, ("stone", c(150, 148, 142), c(122, 132, 104)), pal(c(140, 140, 140), c(200, 200, 200), c(80, 80, 80), c(255, 255, 255), c(250, 250, 250), c(150, 150, 150), c(180, 180, 180)), None),
               ("Driftwood", driftwood, ("wood", c(190, 180, 160), c(220, 210, 190)), pal(c(200, 190, 170), c(230, 220, 200), c(120, 110, 100), c(255, 255, 255), c(250, 250, 240), c(200, 190, 170), c(230, 220, 200)), None),
               ("BeaverDam", beaver_dam, ("wood", c(110, 75, 45), c(140, 100, 60)), pal(c(110, 80, 50), c(150, 110, 70), c(80, 60, 40), c(255, 255, 255), c(250, 250, 240), c(110, 80, 50), c(150, 110, 70)), None),
               ("RopeBridge", rope_bridge, ("wood", c(140, 100, 60), c(180, 135, 85)), pal(c(110, 80, 50), c(210, 180, 120), c(60, 40, 25), c(255, 255, 255), c(250, 250, 240), c(150, 110, 70), c(150, 110, 70)), None),
