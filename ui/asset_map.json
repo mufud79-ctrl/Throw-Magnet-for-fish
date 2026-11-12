@@ -1,0 +1,335 @@
+{
+  "icons/close.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.TitleBar.CloseButton"
+  ],
+  "icons/fish.png": [
+    "StarterGui.FishingUI.HUDButtons.FishButton.Icon"
+  ],
+  "icons/index.png": [
+    "StarterGui.FishingUI.HUDButtons.IndexButton.Icon",
+    "StarterGui.FishingUI.IndexWindow.Panel.TitleBar.Icon"
+  ],
+  "icons/lock.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.AlligatorGar.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Angelfish.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Anglerfish.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Arapaima.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.AuroraRay.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Blobfish.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.BlueTang.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Bluegill.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Carp.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Catfish.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Coelacanth.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.CrystalPike.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.DragonKoi.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.ElectricEel.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.EmberKoi.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Flounder.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GhostShark.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GoldenArowana.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GreatWhiteShark.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GreenlandShark.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.HammerheadShark.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.HydraEel.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Icefish.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Lanternfish.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.LargemouthBass.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.MagmaEel.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Megalodon.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.MorayEel.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Mudskipper.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Oarfish.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Pike.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.RainbowTrout.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Sardine.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.SeaSerpent.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Seahorse.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.SeraphFish.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.StarfallWhaleShark.LockIcon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Sturgeon.LockIcon"
+  ],
+  "icons/shop.png": [
+    "StarterGui.FishingUI.HUDButtons.ShopButton.Icon"
+  ],
+  "frames/button_blue.png": [
+    "StarterGui.FishingUI.HUDButtons.FishButton"
+  ],
+  "frames/button_green.png": [
+    "StarterGui.FishingUI.HUDButtons.ShopButton"
+  ],
+  "frames/button_orange.png": [
+    "StarterGui.FishingUI.HUDButtons.IndexButton"
+  ],
+  "frames/slot_Celestial.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.StarfallWhaleShark"
+  ],
+  "frames/slot_Common.png": [
+    "StarterGui.FishingUI.HUDButtons.FishButton.Slot",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.BlueTang",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Bluegill",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Carp",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Catfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Clownfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Goldfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Guppy",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Minnow",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Perch",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Sardine"
+  ],
+  "frames/slot_Divine.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.DragonKoi",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.SeraphFish"
+  ],
+  "frames/slot_Epic.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.AlligatorGar",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Anglerfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Arapaima",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Blobfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GreenlandShark",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.HammerheadShark",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.MantaRay"
+  ],
+  "frames/slot_Legendary.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Coelacanth",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.CrystalPike",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GreatWhiteShark",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.MagmaEel",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Oarfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Sailfish"
+  ],
+  "frames/slot_Mythic.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.AuroraRay",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.EmberKoi",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GhostShark",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GoldenArowana"
+  ],
+  "frames/slot_Rare.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Details.ThumbFrame",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.ElectricEel",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Icefish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Lanternfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Lionfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.MorayEel",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Pike",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Piranha",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Sturgeon"
+  ],
+  "frames/slot_Secret.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.HydraEel",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Megalodon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.SeaSerpent"
+  ],
+  "frames/slot_Uncommon.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Angelfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Flounder",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Koi",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.LargemouthBass",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Mudskipper",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Pufferfish",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.RainbowTrout",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Salmon",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Seahorse"
+  ],
+  "thumbnails/AlligatorGar.png": [],
+  "thumbnails/AlligatorGar_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.AlligatorGar.Thumbnail"
+  ],
+  "thumbnails/Angelfish.png": [],
+  "thumbnails/Angelfish_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Angelfish.Thumbnail"
+  ],
+  "thumbnails/Anglerfish.png": [],
+  "thumbnails/Anglerfish_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Anglerfish.Thumbnail"
+  ],
+  "thumbnails/Arapaima.png": [],
+  "thumbnails/Arapaima_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Arapaima.Thumbnail"
+  ],
+  "thumbnails/AuroraRay.png": [],
+  "thumbnails/AuroraRay_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.AuroraRay.Thumbnail"
+  ],
+  "thumbnails/Blobfish.png": [],
+  "thumbnails/Blobfish_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Blobfish.Thumbnail"
+  ],
+  "thumbnails/BlueTang.png": [],
+  "thumbnails/BlueTang_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.BlueTang.Thumbnail"
+  ],
+  "thumbnails/Bluegill.png": [],
+  "thumbnails/Bluegill_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Bluegill.Thumbnail"
+  ],
+  "thumbnails/Carp.png": [],
+  "thumbnails/Carp_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Carp.Thumbnail"
+  ],
+  "thumbnails/Catfish.png": [],
+  "thumbnails/Catfish_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Catfish.Thumbnail"
+  ],
+  "thumbnails/Clownfish.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Clownfish.Thumbnail"
+  ],
+  "thumbnails/Clownfish_locked.png": [],
+  "thumbnails/Coelacanth.png": [],
+  "thumbnails/Coelacanth_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Coelacanth.Thumbnail"
+  ],
+  "thumbnails/CrystalPike.png": [],
+  "thumbnails/CrystalPike_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.CrystalPike.Thumbnail"
+  ],
+  "thumbnails/DragonKoi.png": [],
+  "thumbnails/DragonKoi_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.DragonKoi.Thumbnail"
+  ],
+  "thumbnails/ElectricEel.png": [],
+  "thumbnails/ElectricEel_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.ElectricEel.Thumbnail"
+  ],
+  "thumbnails/EmberKoi.png": [],
+  "thumbnails/EmberKoi_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.EmberKoi.Thumbnail"
+  ],
+  "thumbnails/Flounder.png": [],
+  "thumbnails/Flounder_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Flounder.Thumbnail"
+  ],
+  "thumbnails/GhostShark.png": [],
+  "thumbnails/GhostShark_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GhostShark.Thumbnail"
+  ],
+  "thumbnails/GoldenArowana.png": [],
+  "thumbnails/GoldenArowana_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GoldenArowana.Thumbnail"
+  ],
+  "thumbnails/Goldfish.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Goldfish.Thumbnail"
+  ],
+  "thumbnails/Goldfish_locked.png": [],
+  "thumbnails/GreatWhiteShark.png": [],
+  "thumbnails/GreatWhiteShark_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GreatWhiteShark.Thumbnail"
+  ],
+  "thumbnails/GreenlandShark.png": [],
+  "thumbnails/GreenlandShark_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.GreenlandShark.Thumbnail"
+  ],
+  "thumbnails/Guppy.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Guppy.Thumbnail"
+  ],
+  "thumbnails/Guppy_locked.png": [],
+  "thumbnails/HammerheadShark.png": [],
+  "thumbnails/HammerheadShark_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.HammerheadShark.Thumbnail"
+  ],
+  "thumbnails/HydraEel.png": [],
+  "thumbnails/HydraEel_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.HydraEel.Thumbnail"
+  ],
+  "thumbnails/Icefish.png": [],
+  "thumbnails/Icefish_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Icefish.Thumbnail"
+  ],
+  "thumbnails/Koi.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Koi.Thumbnail"
+  ],
+  "thumbnails/Koi_locked.png": [],
+  "thumbnails/Lanternfish.png": [],
+  "thumbnails/Lanternfish_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Lanternfish.Thumbnail"
+  ],
+  "thumbnails/LargemouthBass.png": [],
+  "thumbnails/LargemouthBass_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.LargemouthBass.Thumbnail"
+  ],
+  "thumbnails/Lionfish.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Details.ThumbFrame.BigThumbnail",
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Lionfish.Thumbnail"
+  ],
+  "thumbnails/Lionfish_locked.png": [],
+  "thumbnails/MagmaEel.png": [],
+  "thumbnails/MagmaEel_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.MagmaEel.Thumbnail"
+  ],
+  "thumbnails/MantaRay.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.MantaRay.Thumbnail"
+  ],
+  "thumbnails/MantaRay_locked.png": [],
+  "thumbnails/Megalodon.png": [],
+  "thumbnails/Megalodon_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Megalodon.Thumbnail"
+  ],
+  "thumbnails/Minnow.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Minnow.Thumbnail"
+  ],
+  "thumbnails/Minnow_locked.png": [],
+  "thumbnails/MorayEel.png": [],
+  "thumbnails/MorayEel_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.MorayEel.Thumbnail"
+  ],
+  "thumbnails/Mudskipper.png": [],
+  "thumbnails/Mudskipper_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Mudskipper.Thumbnail"
+  ],
+  "thumbnails/Oarfish.png": [],
+  "thumbnails/Oarfish_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Oarfish.Thumbnail"
+  ],
+  "thumbnails/Perch.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Perch.Thumbnail"
+  ],
+  "thumbnails/Perch_locked.png": [],
+  "thumbnails/Pike.png": [],
+  "thumbnails/Pike_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Pike.Thumbnail"
+  ],
+  "thumbnails/Piranha.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Piranha.Thumbnail"
+  ],
+  "thumbnails/Piranha_locked.png": [],
+  "thumbnails/Pufferfish.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Pufferfish.Thumbnail"
+  ],
+  "thumbnails/Pufferfish_locked.png": [],
+  "thumbnails/RainbowTrout.png": [],
+  "thumbnails/RainbowTrout_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.RainbowTrout.Thumbnail"
+  ],
+  "thumbnails/Sailfish.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Sailfish.Thumbnail"
+  ],
+  "thumbnails/Sailfish_locked.png": [],
+  "thumbnails/Salmon.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Salmon.Thumbnail"
+  ],
+  "thumbnails/Salmon_locked.png": [],
+  "thumbnails/Sardine.png": [],
+  "thumbnails/Sardine_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Sardine.Thumbnail"
+  ],
+  "thumbnails/SeaSerpent.png": [],
+  "thumbnails/SeaSerpent_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.SeaSerpent.Thumbnail"
+  ],
+  "thumbnails/Seahorse.png": [],
+  "thumbnails/Seahorse_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Seahorse.Thumbnail"
+  ],
+  "thumbnails/SeraphFish.png": [],
+  "thumbnails/SeraphFish_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.SeraphFish.Thumbnail"
+  ],
+  "thumbnails/StarfallWhaleShark.png": [],
+  "thumbnails/StarfallWhaleShark_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.StarfallWhaleShark.Thumbnail"
+  ],
+  "thumbnails/Sturgeon.png": [],
+  "thumbnails/Sturgeon_locked.png": [
+    "StarterGui.FishingUI.IndexWindow.Panel.Grid.Sturgeon.Thumbnail"
+  ]
+}
