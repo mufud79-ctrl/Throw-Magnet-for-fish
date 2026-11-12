@@ -46,7 +46,9 @@ def catmull(pts, n):
     out.append(pts[-1]); return out
 
 def basis(n, upish=Vector((0, 0, 1))):
-    X = n.normalized(); Z = (upish - X * upish.dot(X)).normalized(); Y = Z.cross(X)
+    X = n.normalized()
+    if abs(X.dot(upish.normalized())) > 0.999: upish = Vector((1, 0, 0)) if abs(X.x) < 0.9 else Vector((0, 1, 0))
+    Z = (upish - X * upish.dot(X)).normalized(); Y = Z.cross(X)
     return Matrix((X, Y, Z)).transposed()
 
 def vnoise(X, Y, freq, seed):
@@ -358,7 +360,8 @@ class Fish:
         for ob in objs:
             ob.data.transform(Matrix.Translation(-center)); ob.location = (0, 0, 0)
             bpy.ops.object.select_all(action="DESELECT"); ob.select_set(True)
-            bpy.context.view_layer.objects.active = ob; bpy.ops.object.shade_smooth()
+            bpy.context.view_layer.objects.active = ob
+            (bpy.ops.object.shade_flat if getattr(self, "flat", False) else bpy.ops.object.shade_smooth)()
 
         mat = bpy.data.materials.new(f"{self.name}_Mat")
         bsdf = mat.node_tree.nodes["Principled BSDF"]; bsdf.inputs["Roughness"].default_value = 0.45

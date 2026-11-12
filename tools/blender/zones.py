@@ -6,7 +6,37 @@ import bpy
 import numpy as np
 from mathutils import Vector, Matrix
 from fishkit import V, lerp, c, basis
-from gym import Prop, pat, SW
+from gym import Prop as _Prop, pat, SW
+import bmesh
+
+class Prop(_Prop):
+    """Chunky low-poly look for zone props: flat shading, few segments, thicker parts, hard chamfers, faceted rocks."""
+    flat = True
+    def sphere(self, name, center, rot, scale, sw, u=18, v=12, glow=False):
+        return super().sphere(name, center, rot, scale, sw, max(6, min(u, 10)), max(4, min(v, 7)), glow)
+    def tube(self, name, ctrl, r0, r1, strip=0, K=8, sub=5, pw=1.0, glow=False, sw=None, rfn=None):
+        k = 1.35
+        rf = (lambda s: rfn(s) * k) if rfn else None
+        return super().tube(name, ctrl, r0 * k, max(r1 * k, r0 * k * 0.35), strip, max(4, min(K, 6)), min(sub, 3), pw, glow, sw, rf)
+    def torus(self, name, center, n, R1, r1, sw, U=24, Vn=8, glow=False):
+        return super().torus(name, center, n, R1, r1 * 1.3, sw, max(6, min(U, 14)), max(4, min(Vn, 5)), glow)
+    def cyl(self, name, a, b, r, K=24, sw=0, glow=False, proj=True):
+        return super().cyl(name, a, b, r * (1.4 if r < 0.16 else 1.0), max(6, min(K, 8)), sw, glow, proj)
+    def box(self, name, center, size, rot=None, sw=0, bevel=0.05, glow=False, proj=True):
+        bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0); bmesh.ops.scale(bm, vec=size, verts=bm.verts)
+        if bevel: bmesh.ops.bevel(bm, geom=list(bm.edges), offset=min(bevel * 1.4, min(size) * 0.3), segments=1, affect="EDGES")
+        M_ = Matrix.Translation(center) @ (rot.to_4x4() if rot else Matrix.Identity(4))
+        bmesh.ops.transform(bm, matrix=M_, verts=bm.verts)
+        verts = [v.co.copy() for v in bm.verts]; faces = [tuple(v.index for v in fc.verts) for fc in bm.faces]; bm.free()
+        ob = self.make_obj(name, verts, faces, [[self.uv_sw(sw)] * len(fc) for fc in faces], glow)
+        return self.project(ob) if proj and not glow else ob
+    def rock(self, name, center, r, sw=0, seed=1, proj=True):
+        ob = _Prop.sphere(self, name, center, Matrix.Identity(3), (r, r, r), sw, 7, 5)
+        rng = np.random.default_rng(seed + 100)
+        for v in ob.data.vertices:
+            d = v.co - center; v.co = center + d * float(rng.uniform(0.8, 1.15))
+            if v.co.z < center.z - r * 0.55: v.co.z = center.z - r * 0.55   # flat bottom
+        return self.project(ob) if proj else ob
 
 M, A, D, G, W, P, E, X = (SW[k] for k in ("metal", "accent", "dark", "glow", "white", "pad", "eye", "x"))
 I3 = Matrix.Identity(3)
@@ -65,7 +95,7 @@ def wooden_dock(f):
 def mossy_log(f):
     f.cyl("Log", V(-2, 0, 0.6), V(2, 0, 0.6), 0.6, 18)
     for sx in (-1, 1):
-        f.cyl(f"Ring{sx}", V(sx * 2.0, 0, 0.6), V(sx * 2.02, 0, 0.6), 0.55, 18, X, proj=False)
+        f.cyl(f"Ring{sx}", V(sx * 1.97, 0, 0.6), V(sx * 2.03, 0, 0.6), 0.5, 18, X, proj=False)
     rng = np.random.default_rng(4)
     for k in range(8):
         x = rng.uniform(-1.7, 1.7); f.sphere(f"Moss{k}", V(x, rng.uniform(-0.25, 0.25), 1.12), I3, (rng.uniform(0.3, 0.5), 0.35, 0.12), P, 12, 6)
