@@ -37,28 +37,60 @@ def arowana_hook(f, sp):
         b = side(f.surf(0.02, -1.2, 0.95), sd)
         f.tube(f"ChinBarbel{sd}", [b, b + V(0.15, sd * 0.03, -0.04), b + V(0.4, sd * 0.06, 0.02)], 0.04, 0.01, sw=SW["x1"], K=6)
 def mega_hook(f, sp): gills(f, 0.2, 5, SW["glow"], glow=True)
-def hydra_hook(f, sp):
+def dragon_head(f, tag, hc, fwd, s):
+    """Aggressive horned dragon head facing `fwd`. Returns the jaw hinge point."""
+    X = fwd.normalized(); Bm = basis(X); Y, Z = Bm.col[1], Bm.col[2]
+    Lp = lambda x, y, z: hc + (X * x + Y * y + Z * z) * s
+    n = lambda p: f"DH{tag}_{p}"
+    jn = (lambda p: f"Jaw_{tag}{p}") if tag == "M" else (lambda p: n("J" + p))
+    ln_ = (lambda p: f"ToothL_{tag}{p}") if tag == "M" else (lambda p: n("LT" + p))
+    f.sphere(n("Cranium"), Lp(0, 0, 0.01), Bm, (0.27 * s, 0.21 * s, 0.17 * s), SW["x1"], 16, 10)
+    f.tube(n("Snout"), [Lp(-0.05, 0, 0), Lp(0.3, 0, -0.03), Lp(0.64, 0, -0.06)], 0.17 * s, 0.075 * s, sw=SW["x1"], K=10)
+    hinge = Lp(-0.08, 0, -0.1); Rj = Matrix.Rotation(math.radians(32), 3, Y)
+    Mj = Matrix.Translation(hinge) @ Rj.to_4x4() @ Matrix.Translation(-hinge)
+    f.tube(jn("Bone"), [Mj @ p for p in (Lp(-0.08, 0, -0.12), Lp(0.25, 0, -0.14), Lp(0.56, 0, -0.15))], 0.13 * s, 0.055 * s, sw=SW["jaw"], K=10)
+    f.sphere(n("Maw"), Lp(0.2, 0, -0.13), Bm, (0.3 * s, 0.1 * s, 0.07 * s), SW["glow"], 12, 8, glow=True)
     for sd in (1, -1):
+        for k in range(7):
+            u = k / 6; p = Lp(0.1 + 0.48 * u, sd * (0.125 - 0.06 * u), -0.1 + 0.03 * u); l = (0.15 if k == 4 else 0.08) * s
+            f.tube(n(f"UT{sd}{k}"), [p, p - Z * l * 0.6 + X * 0.005 * s, p - Z * l], 0.03 * s, 0.003, K=5, sub=2, sw=SW["tooth"])
+        for k in range(6):
+            u = k / 5; p = Lp(0.04 + 0.46 * u, sd * (0.1 - 0.045 * u), -0.07); l = (0.13 if k == 3 else 0.07) * s
+            f.tube(ln_(f"{sd}{k}"), [Mj @ p, Mj @ (p + Z * l * 0.6), Mj @ (p + Z * l - X * 0.01 * s)], 0.028 * s, 0.003, K=5, sub=2, sw=SW["tooth"])
+        nrm = (Y * sd + X * 0.45 + Z * 0.25).normalized(); ec = Lp(0.12, sd * 0.15, 0.06); er = 0.055 * s
+        f.sphere(n(f"Eye{sd}"), ec, basis(nrm), (er,) * 3, SW["glow"], 12, 8, glow=True)
+        f.sphere(n(f"Pupil{sd}"), ec + nrm * er * 0.82, basis(nrm), (er * 0.3, er * 0.2, er * 0.7), SW["pupil"], 8, 6)
+        f.sphere(n(f"Nostril{sd}"), Lp(0.6, sd * 0.045, 0.0), Bm, (0.02 * s, 0.018 * s, 0.014 * s), SW["maw"], 8, 6)
+        f.fin(n(f"Brow{sd}"), lambda u, sd=sd: Lp(lerp(0.24, -0.06, u), sd * lerp(0.1, 0.16, u), lerp(0.08, 0.15, u)),
+              lambda u, sd=sd: X * -0.6 + Y * (sd * 0.45) + Z * 0.65, lambda u: lerp(0.06, 0.34, u) * s,
+              lambda u, r: V(0, 0, 0), 6, 3, 0.03 * s, 0)
+        f.tube(n(f"Horn{sd}"), [Lp(-0.08, sd * 0.12, 0.12), Lp(-0.35, sd * 0.2, 0.32), Lp(-0.7, sd * 0.26, 0.38), Lp(-0.98, sd * 0.22, 0.26)],
+               0.075 * s, 0.008, strip=0, K=8, sub=5)
+        f.tube(n(f"Horn2{sd}"), [Lp(-0.15, sd * 0.17, 0.0), Lp(-0.45, sd * 0.32, 0.06), Lp(-0.66, sd * 0.34, -0.06)], 0.045 * s, 0.006, strip=0, K=6, sub=4)
+        for k in range(3):
+            p = Lp(-0.12 - 0.05 * k, sd * 0.17, -0.08 - 0.03 * k)
+            f.tube(n(f"Cheek{sd}{k}"), [p, p + (Y * sd * 0.12 - X * 0.18) * s, p + (Y * sd * 0.16 - X * 0.32 - Z * 0.04) * s], 0.03 * s, 0.004, strip=0, K=5, sub=2)
+    for k in range(3):
+        p = Lp(-0.06 - 0.11 * k, 0, 0.16 - 0.02 * k)
+        f.tube(n(f"Crest{k}"), [p, p + (Z * 0.12 - X * 0.08) * s, p + (Z * 0.2 - X * 0.2) * s], 0.04 * s, 0.004, strip=0, K=5, sub=2)
+    return hinge
+
+def hydra_hook(f, sp):
+    f.jaw_hinge = dragon_head(f, "M", f.axis(0.05) + V(0.08, 0, 0.03), V(1, 0, 0.05), 1.25)
+    for sd in (1, -1):
+        tag = "L" if sd > 0 else "R"
         base = side(f.surf(0.16, 0.15, 0.85), sd)
-        neck = [base, base + V(0.25, sd * 0.35, 0.15), base + V(0.6, sd * 0.6, 0.32), base + V(0.95, sd * 0.68, 0.38)]
-        f.tube(f"Neck{sd}", neck, 0.22, 0.17, sw=SW["x1"], K=10)
-        hc = neck[-1] + V(0.22, 0, 0.02)
-        f.extra_bones.append(dict(name="Neck_L" if sd > 0 else "Neck_R", head=base, tail=hc, parent="Head",
-            match=lambda n, cen, sd=sd: cen.y * sd > 0.35 and n.startswith(("Neck", "Head", "HJaw", "HMaw", "HT", "HB", "HHorn", "Eye", "Pupil"))))
-        f.sphere(f"Head{sd}", hc, basis(V(1, 0, 0)), (0.36, 0.2, 0.17), SW["x1"], 16, 10)
-        hinge = hc + V(-0.12, 0, -0.08); Rj = Matrix.Rotation(math.radians(-24), 3, "Y")
-        Mj = Matrix.Translation(hinge) @ Rj.to_4x4() @ Matrix.Translation(-hinge)
-        jc = hc + V(0.06, 0, -0.14); f.sphere(f"HJaw{sd}", Mj @ jc, Rj, (0.28, 0.16, 0.06), SW["jaw"], 14, 8)
-        f.sphere(f"HMaw{sd}", hc + V(0.06, 0, -0.1), basis(V(1, 0, 0)), (0.24, 0.13, 0.05), SW["maw"], 10, 6)
-        for k, a in enumerate(np.linspace(-0.9, 0.9, 6)):
-            p = hc + V(0.3 * math.cos(a) - 0.02, 0.16 * math.sin(a), -0.1)
-            f.tube(f"HT{sd}{k}", [p, p + V(0, 0, -0.06), p + V(-0.01, 0, -0.11)], 0.028, 0.003, K=5, sub=2, sw=SW["tooth"])
-            q = Mj @ (jc + V(0.26 * math.cos(a), 0.14 * math.sin(a), 0.05))
-            f.tube(f"HB{sd}{k}", [q, Mj @ (jc + V(0.26 * math.cos(a), 0.14 * math.sin(a), 0.12))], 0.024, 0.003, K=5, sub=2, sw=SW["tooth"])
-        eye_pair(f, [(hc + V(0.12, s2 * 0.15, 0.08), V(0.4, s2, 0.4).normalized()) for s2 in (1, -1)], 0.06, True)
-        for k2, dz in enumerate((0.0, 0.08)):
-            hb = hc + V(-0.15, 0, 0.12 + dz)
-            f.tube(f"HHorn{sd}{k2}", [hb, hb + V(-0.12, sd * 0.06 * (k2 * 2 - 1), 0.16), hb + V(-0.34, sd * 0.1 * (k2 * 2 - 1), 0.22)], 0.05, 0.006, sw=SW["brow"], K=6)
+        neck = [base, base + V(0.25, sd * 0.4, 0.2), base + V(0.6, sd * 0.65, 0.4), base + V(0.95, sd * 0.72, 0.48)]
+        f.tube(f"Neck{sd}", neck, 0.22, 0.16, sw=SW["x1"], K=10)
+        fwd = ((neck[-1] - neck[-2]).normalized() + V(0.7, 0, 0)).normalized()
+        hc = neck[-1] + fwd * 0.14
+        dragon_head(f, tag, hc, fwd, 1.0)
+        for i, u in enumerate((0.2, 0.4, 0.6, 0.8)):
+            k = min(int(u * 3), 2); q = neck[k].lerp(neck[k + 1], u * 3 - k) + V(0, 0, 0.2 - 0.05 * u)
+            f.tube(f"NS{tag}{i}", [q - V(0, 0, 0.05), q + V(-0.08, 0, 0.12), q + V(-0.2, 0, 0.2)], 0.05, 0.005, strip=0, K=5, sub=2)
+        f.extra_bones.append(dict(name="Neck_" + tag, head=base, tail=hc, parent="Head",
+                                  match=lambda nm, cen, sd=sd, tag=tag: nm.startswith((f"Neck{sd}", f"DH{tag}", f"NS{tag}"))))
+
 def serpent_hook(f, sp):
     for sd in (1, -1):
         hb = side(f.surf(0.06, 1.0, 0.9), sd)
@@ -119,7 +151,8 @@ FISH = [
       pect=2.0, pelv=0.5, cam=1.25, fins=[[(0, c(44, 50, 58)), (0.9, c(74, 80, 90)), (1, c(20, 22, 26))]] * 2),
  dict(AG, name="HydraEel", anims="hydra", rarity="Secret", L=5.2, R=0.36, H=1.1, w=0.85, prof="eel", colors=(c(20, 34, 24), c(34, 52, 36), c(90, 120, 60)),
       stripe=(c(150, 230, 40), 0.05, 0.3), scale=0.16, scale_k=0.5, hook=hydra_hook, x1=c(28, 44, 30), glow=c(180, 255, 60), glow_eyes=True,
-      iris=c(180, 255, 60), jaw=(0.02, 0.13, 26, 13, 11, 0.1), mouth=0, eye=0.13, brow_c=c(150, 230, 40), jaw_c=c(60, 90, 50),
+      iris=c(180, 255, 60), mouth=0, eyes=False, brow=False, jaw_c=c(40, 62, 40), strips=[(c(20, 30, 22), c(180, 255, 60), 1.3)] * 2,
+      views={"hero": ((7.0, 7.5, 3.2), (0, 0.4, 0), 50), "side": ((12.5, 0, 0.6), (0, 0, 0.2), 50), "front": ((1.6, 9.0, 1.6), (0, 0.6, 0.2), 45)},
       dorsal=[(0.2, 0.96, 0.3, "spiny", 0, 20)], anal=(0.5, 0.97, 0.16, "long"), tail=(None, 0, 0), pect=0.5, pelv=0,
       wiggle=(0.45, 1.0), bend=0.0, cam=1.0, fins=[[(0, c(24, 40, 28)), (0.75, c(60, 110, 40)), (1, c(180, 255, 60))]] * 2),
  dict(AG, name="SeaSerpent", anims="eel", rarity="Secret", L=8.0, R=0.4, H=1.1, w=0.85, prof="eel", colors=(c(16, 70, 86), c(36, 130, 136), c(230, 190, 90)),
