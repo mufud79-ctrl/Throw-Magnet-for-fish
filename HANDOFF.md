@@ -15,11 +15,13 @@ Done (in `models/<Rarity>/<Name>/`):
 - **Rare (8):** Pike, Sturgeon, Piranha, ElectricEel, Lionfish, MorayEel, Icefish, Lanternfish (`rares.py`; template for aggressive spec fish: `jaw`, `brow`, slit `pupil`, `eye_k`, `glow_eyes`, `dots`, `glow_line`, `wiggle`)
 - **Epic (7):** AlligatorGar, Arapaima, MantaRay, HammerheadShark, GreenlandShark, Anglerfish, Blobfish (`epics.py`: custom hooks for hammer head, manta wings, angler lure)
 - **Legendary (6):** GreatWhiteShark, Sailfish, CrystalPike, Oarfish, MagmaEel, Coelacanth (`legendaries.py`: `cracks()` glowing crack lines, `gills()`)
+- **Mythic (4):** AuroraRay, GhostShark, EmberKoi, GoldenArowana; **Secret (3):** Megalodon, HydraEel, SeaSerpent; **Celestial (1):** StarfallWhaleShark (`top_tiers.py`)
 
-Still to build (8). Rarity, then name, then water area, then design notes:
-- **Mythic:** AuroraRay (frozen sea: ray with **glowing** aurora bands), GhostShark (abyss: see-through, **glowing** outline/eyes), EmberKoi (volcanic: koi with **flame fins**, glowing), GoldenArowana (sunken ruins: gold armour, dragon whiskers)
-- **Secret:** Megalodon (abyss: giant scarred shark), HydraEel (volcanic: **three-headed** eel, glowing eyes), SeaSerpent (sunken ruins: coiled serpent, finned crest)
-- **Celestial:** StarfallWhaleShark (starfall lake: spots are **glowing stars**, galaxy skin)
+**All 50 fish are built.** Possible follow-ups if the user asks:
+- Polish passes on individual fish (render a `front` view by passing `views=` in the spec; dramatic fish sell on their front silhouette).
+- EmberKoi body reads thin; the HydraEel's second neck is hidden in the 3/4 view.
+- Variants (Gold/Shiny/Giant) as texture or colour swaps.
+- Testing the imports in Roblox Studio (not done yet: confirm scale, facing and that Glow meshes import as separate MeshParts).
 
 ## Style rules (already approved)
 - **Look:** stylised cartoon with smooth shading and readable chunky silhouettes. Big expressive eyes (an iris sphere, a pupil and a glint). Painted texture detail: scales, patterns, and fin rays that fade toward pale tips. Slight swim curve in the tail.

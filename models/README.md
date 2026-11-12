@@ -31,3 +31,10 @@ One folder per fish: `models/<Rarity>/<FishName>/`.
 | Anglerfish | lure bulb, eyes | `#B4FFC8` (180, 255, 200) |
 | CrystalPike | ice cracks, eyes | `#5AE6FF` (90, 230, 255) |
 | MagmaEel | lava cracks, eyes | `#FF781E` (255, 120, 30) |
+| AuroraRay | aurora bands on wings | `#5AFFB4` (90, 255, 180) |
+| GhostShark | ribs, spine, eyes | `#B4F0FF` (180, 240, 255) |
+| EmberKoi | flame fins, whiskers, ember cracks, eyes | `#FF8C28` (255, 140, 40) |
+| Megalodon | gill slits, eyes | `#FF2828` (255, 40, 40) |
+| HydraEel | all six eyes | `#B4FF3C` (180, 255, 60) |
+| SeaSerpent | eyes | `#5AF0FF` (90, 240, 255) |
+| StarfallWhaleShark | star spots, constellation line, eyes | `#FFF0BE` (255, 240, 190) |
