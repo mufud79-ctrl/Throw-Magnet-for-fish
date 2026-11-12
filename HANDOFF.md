@@ -23,6 +23,12 @@ Done (in `models/<Rarity>/<Name>/`):
 - Variants (Gold/Shiny/Giant) as texture or colour swaps.
 - Testing the imports in Roblox Studio (not done yet: confirm scale, facing and that Glow meshes import as separate MeshParts).
 
+## Baits
+15 stylised bait props in `models/Baits/<Rarity>/<Name>/`, built by `tools/blender/baits.py` (`python baits.py [Name ...] [--no-render]`); overview: `models/Baits/Baits_overview.png`.
+- **Common:** BreadCrumbs, Earthworm, CornKernels. **Uncommon:** Cricket, Shrimp, SpinnerLure. **Rare:** SquidChunk, GlowWorm*, FrozenKrill. **Epic:** RawSteak, MagmaPepper*. **Legendary:** PhantomJelly*, RuneCookie*. **Mythic:** DragonPearl*. **Celestial:** StardustMorsel* (* = `_Glow` mesh).
+- Props are static: `finish(rig=False)` skips the rig and clips (fish keep the default `rig=True`). `Bait` (in baits.py) adds generic builders on top of `Fish`: `ell` (deformable ellipsoid), `rbox` (rounded box), `slab` (extruded outline), `loft` (tube with surface lookup `at(s, angle)`), `strokes`; each part paints its own rectangle of the atlas body region. `done(scale, yaw)` sizes the item, turns long ones across the camera and frames the previews.
+- All meshes are under 5k triangles. Weakest: CornKernels read more like jelly beans than kernels.
+
 ## Style rules (already approved)
 - **Look:** stylised cartoon with smooth shading and readable chunky silhouettes. Big expressive eyes (an iris sphere, a pupil and a glint). Painted texture detail: scales, patterns, and fin rays that fade toward pale tips. Slight swim curve in the tail.
 - **Rarity shows through design:** Commons are plain natural fish, about 1.6–3 studs long. Rarer fish get more parts and more drama, up to about 6–7 studs.

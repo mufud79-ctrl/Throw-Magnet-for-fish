@@ -38,3 +38,15 @@ One folder per fish: `models/<Rarity>/<FishName>/`.
 | HydraEel | all six eyes | `#B4FF3C` (180, 255, 60) |
 | SeaSerpent | eyes | `#5AF0FF` (90, 240, 255) |
 | StarfallWhaleShark | star spots, constellation line, eyes | `#FFF0BE` (255, 240, 190) |
+| PhantomJelly (bait) | core, bell-rim lights | `#A0FFE6` (160, 255, 230) |
+| GlowWorm (bait) | body spots, tail tip, band | `#50F0FF` (80, 240, 255) |
+| MagmaPepper (bait) | lava cracks, flame stem, embers | `#FF7A1C` (255, 122, 28) |
+| RuneCookie (bait) | carved runes, rune ring | `#46FFC8` (70, 255, 200) |
+| DragonPearl (bait) | inner swirl | `#FFBE50` (255, 190, 80) |
+| StardustMorsel (bait) | star core, orbiting sparkles | `#FFEC96` (255, 236, 150) |
+
+## Baits
+
+`models/Baits/<Rarity>/<Name>/`: 15 fish-food props with the same file set (no rig, no animation clips).
+Built by `tools/blender/baits.py`; overview sheet: `models/Baits/Baits_overview.png`. Glowing baits use the
+same `<Name>_Glow` Neon MeshPart setup (colours in the table above).
