@@ -568,7 +568,8 @@ def build_prop(folder, name, fn, pattern, palette, glow):
     a, b = pattern[1], pattern[2]
     f.texture(pat(*pattern), fin_stops=[FG(palette[P], palette[X])],
               strips=[(palette[M] * 0.7, palette[M] * 1.15, 1.0), (palette[A] * 0.6, palette[A] * 1.2, 1.0)], swatches=palette)
-    f.finish(bend=0.0, rig=False, glow_color=glow, cam_scale=max(0.45, size / 5.8),
+    hz = float(co[:, 2].max() - co[:, 2].min())
+    f.finish(bend=0.0, rig=False, glow_color=glow, cam_scale=max(0.45, size / 5.8, hz / 3.6),
              views={"hero": ((7.0, 7.5, 3.2), (0, 0.4, 0), 50)})
 
 if __name__ == "__main__":
