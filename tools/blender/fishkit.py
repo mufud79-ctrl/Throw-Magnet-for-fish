@@ -174,7 +174,7 @@ class Fish:
                 uvs.append([uf(a/nu, b/nv), uf((a+1)/nu, b/nv), uf((a+1)/nu, (b+1)/nv), uf(a/nu, (b+1)/nv)])
         ob = self.make_obj(name, verts, faces, uvs, glow); self.solidify(ob, thick); return ob
 
-    def tube(self, name, ctrl, r0, r1, strip=0, K=8, sub=5, pw=1.0, glow=False, sw=None):
+    def tube(self, name, ctrl, r0, r1, strip=0, K=8, sub=5, pw=1.0, glow=False, sw=None, rfn=None):
         pts = catmull(ctrl, sub); n = len(pts)
         seg = [0.0]
         for i in range(1, n): seg.append(seg[-1] + (pts[i] - pts[i-1]).length)
@@ -188,7 +188,7 @@ class Fish:
         uvs_f = (lambda k, a, s: self.uv_sw(sw)) if sw is not None else self.uv_strip
         verts, faces, uvs = [], [], []
         for i in range(n - 1):
-            s = seg[i] / seg[-1]; r = lerp(r0, r1, s ** pw)
+            s = seg[i] / seg[-1]; r = rfn(s) if rfn else lerp(r0, r1, s ** pw)
             B = T[i].cross(Ns[i])
             for k in range(K):
                 a = 2 * math.pi * k / K
@@ -332,7 +332,7 @@ class Fish:
         ob = bpy.context.active_object; ob.name = name; ob.data.name = name
         return ob
 
-    def finish(self, bend=0.5, bend_len=7.0, glow_color=None, views=None, cam_scale=1.0):
+    def finish(self, bend=0.5, bend_len=7.0, glow_color=None, views=None, cam_scale=1.0, roll=0.0):
         fish = self._join(self.parts, self.name)
         objs = [fish]
         glow = None
@@ -342,6 +342,7 @@ class Fish:
             for v in ob.data.vertices:
                 k = max(0.0, (self.L / 2 - v.co.x) / bend_len)
                 v.co.y += bend * k ** 2.2
+            if roll: ob.data.transform(Matrix.Rotation(roll, 4, "X"))
             ob.data.transform(Matrix.Rotation(math.radians(90), 4, "Z"))
         co = np.array([v.co[:] for v in fish.data.vertices])
         center = Vector(((co.min(0) + co.max(0)) / 2).tolist())
