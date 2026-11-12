@@ -29,3 +29,5 @@ One folder per fish: `models/<Rarity>/<FishName>/`.
 | Lanternfish | photophore dots, eyes | `#78D2FF` (120, 210, 255) |
 | GreenlandShark | parasite-glow eyes | `#C8FFDC` (200, 255, 220) |
 | Anglerfish | lure bulb, eyes | `#B4FFC8` (180, 255, 200) |
+| CrystalPike | ice cracks, eyes | `#5AE6FF` (90, 230, 255) |
+| MagmaEel | lava cracks, eyes | `#FF781E` (255, 120, 30) |
