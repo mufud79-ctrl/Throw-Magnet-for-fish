@@ -52,7 +52,9 @@ Built by `tools/blender/baits.py`; overview sheet: `models/Baits/Baits_overview.
 same `<Name>_Glow` Neon MeshPart setup (colours in the table above).
 
 ## Gym gear (dumbbell curls)
-15 tiers in `models/Gym/<NN>_<Theme>/`, each with a `<Theme>Dumbbell` and a `<Theme>Bench` (preacher curl bench). Built by `tools/blender/gym.py`. No rig.
+15 dumbbell tiers in `models/Gym/<NN>_<Theme>/<Theme>Dumbbell/`, for a standing, alternating-arm curl. Built by `tools/blender/gym.py` (`--bench-only` rebuilds the benches). No rig.
+Each dumbbell's origin is at the centre of the grip handle, ready to weld to a hand.
+The matching preacher curl benches, resized to fit an R15 avatar, are archived in `models/Gym/_Archive_Benches/`.
 
 | Tier | Glow parts | Colour |
 |---|---|---|

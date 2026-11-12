@@ -194,7 +194,7 @@ def frame_parts(f, t):
     if st == "bricks":
         for i, x in enumerate((-0.35, 0.35, 0.95)):
             for j in range(3 if x < 0.9 else 5):
-                f.box(f"Brick{i}{j}", V(x, 0, 0.16 + j * 0.3 + (0.0 if x < 0.9 else 0)), (0.5, 0.9, 0.28), bevel=0.04)
+                f.box(f"Brick{i}{j}", V(x, 0, 0.16 + j * 0.3), (0.5, 0.9 if x < 0.9 else 0.4, 0.28), bevel=0.04)
     if st in ("ice", "rock"):
         for i, (x, h) in enumerate(((0.0, 1.3), (0.92, 1.85))):
             if st == "ice": f.box(f"Block{i}", V(x, 0, h / 2), (0.6, 0.9, h), bevel=0.06)
@@ -250,7 +250,20 @@ def bench(t, folder):
     f.box("PadBase", V(0.9, 0, 2.0), (0.08, 1.15, 0.85), rot, sw=SW["metal"], bevel=0.02, proj=False)
     frame_parts(f, t)
     if t.get("bench_extra"): t["bench_extra"](f, t)
-    finish(f, t, 0.6)
+    fit_avatar(f)
+    finish(f, t, 0.78)
+
+# Resize to a ~5-stud R15 avatar: seat ~1.8 high x 2 wide, arm pad top ~3 high x 2.2 wide, base ~3 long.
+# Structural parts stretch; decorations move with the layout but keep their shape (uniform scale).
+FIT = Matrix.Diagonal((1.45, 1.65, 1.22, 1.0)); FIT_U = 1.3
+STRUCT = ("Seat", "ArmPad", "PadBase", "Post", "Rail", "Foot", "Brick", "Block", "Log", "Deck", "Mast", "Leg", "HazBase",
+          "PadTrim", "Pillar", "Pad", "Beam")
+def fit_avatar(f):
+    for ob in f.parts + f.glow:
+        if ob.name.startswith(STRUCT) and not ob.name.startswith("PadSpike"):
+            ob.data.transform(FIT); continue
+        co = np.array([v.co[:] for v in ob.data.vertices]); cen = Vector(co.mean(0).tolist())
+        ob.data.transform(Matrix.Translation(FIT @ cen) @ Matrix.Scale(FIT_U, 4) @ Matrix.Translation(-cen))
 
 def dumbbell(t, folder):
     f = Prop(t["theme"] + "Dumbbell", folder); hl = 0.5
@@ -327,9 +340,10 @@ TIERS = [
 ]
 
 if __name__ == "__main__":
-    want = [int(a) for a in sys.argv[1:] if a.isdigit()]
+    want = [int(a) for a in sys.argv[1:] if a.isdigit()]; bench_only = "--bench-only" in sys.argv
     sys.argv = sys.argv[:1] + [a for a in sys.argv[1:] if a.startswith("--")]
     for i, t in enumerate(TIERS, 1):
         if want and i not in want: continue
         folder = f"Gym/{i:02d}_{t['theme']}"
-        dumbbell(t, folder); bench(t, folder)
+        if not bench_only: dumbbell(t, folder)
+        bench(t, folder)
