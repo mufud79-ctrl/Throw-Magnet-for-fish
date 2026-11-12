@@ -36,6 +36,7 @@ def greenland_hook(f, sp):
 def angler_hook(f, sp):
     b = f.surf(0.08, math.pi / 2, 0.95)
     f.tube("Illicium", [b, b + V(-0.05, 0, 0.45), b + V(0.35, 0, 0.75), b + V(0.75, 0, 0.6), b + V(0.85, 0, 0.42)], 0.04, 0.02, sw=SW["x1"], K=6)
+    f.extra_bones.append(dict(name="Lure", head=b, tail=b + V(0.86, 0, 0.32), parent="Head", match=lambda n, cen: n in ("Illicium", "Lure")))
     f.sphere("Lure", b + V(0.86, 0, 0.32), basis(V(1, 0, 0)), (0.13, 0.13, 0.15), SW["glow"], 14, 10, glow=True)
 def blob_hook(f, sp):
     f.sphere("Nose", f.axis(0.04) + V(0.05, 0, -0.08), basis(V(1, 0, 0)), (0.18, 0.2, 0.26), SW["x1"], 16, 10)
@@ -61,7 +62,7 @@ FISH = [
       extra=arapaima_extra, scale=0.24, scale_k=0.6, mouth=0.07, eye_t=0.1, iris=c(220, 200, 120),
       dorsal=[(0.66, 0.86, 0.4, "long")], anal=(0.66, 0.86, 0.36, "long"), tail=("round", 0.9, 40), pect=0.8,
       fins=[[(0, c(60, 64, 56)), (0.6, c(150, 50, 40)), (1, c(200, 60, 40))]] * 2),
- dict(EP, name="MantaRay", L=2.6, R=0.5, H=0.42, w=1.25, wt=0.9, prof="blunt", belly=0.8,
+ dict(EP, name="MantaRay", anims="ray", L=2.6, R=0.5, H=0.42, w=1.25, wt=0.9, prof="blunt", belly=0.8,
       colors=(c(22, 24, 34), c(40, 44, 58), c(236, 236, 240)), speckle=(c(40, 40, 50), 5, 0.75, -1.2), scale_k=0.0,
       hook=manta_hook, x1=c(30, 32, 44), mouth=0.12, eye_th=0.15, eye_t=0.06, eye=0.08, pect=0, pelv=0, tail=(None, 0, 0),
       dorsal=[(0.7, 0.78, 0.2, "tri")], bend=0.0, cam=0.8,
@@ -75,7 +76,7 @@ FISH = [
       hook=greenland_hook, glow=c(200, 255, 220), iris=c(200, 255, 220), jaw=(0.04, 0.16, 14, 13, 11, 0.06), mouth=0,
       dorsal=[(0.42, 0.5, 0.4, "tri"), (0.62, 0.68, 0.3, "tri")], tail=shark_tail(1.4), pect=0.8, pelv=0.3,
       fins=[[(0, c(60, 62, 60)), (1, c(110, 110, 106))]] * 2),
- dict(EP, name="Anglerfish", L=1.9, R=0.8, H=0.95, w=0.9, prof="blunt", colors=(c(40, 30, 34), c(66, 50, 52), c(90, 70, 70)),
+ dict(EP, name="Anglerfish", anims="angler", L=1.9, R=0.8, H=0.95, w=0.9, prof="blunt", colors=(c(40, 30, 34), c(66, 50, 52), c(90, 70, 70)),
       noise=0.35, scale_k=0.0, jaw=(0.0, 0.22, 34, 15, 13, 0.16), mouth=0, hook=angler_hook, x1=c(70, 54, 56), glow=c(180, 255, 200),
       eye_t=0.2, eye_th=0.6, iris=c(180, 255, 200), glow_eyes=True, dorsal=[(0.6, 0.78, 0.3, "round")], anal=(0.66, 0.8, 0.26, "round"),
       tail=("round", 0.6, 40), pect=0.4, pelv=0, fins=[[(0, c(50, 38, 40)), (1, c(110, 90, 90))]] * 2),

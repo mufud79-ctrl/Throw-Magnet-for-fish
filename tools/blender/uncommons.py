@@ -28,7 +28,7 @@ def spikes_hook(f, sp):
             f.tube(f"Spike{i}_{j}", [p - n * 0.02, p + n * 0.07 + V(-0.03, 0, 0), p + n * 0.14 + V(-0.06, 0, 0)], 0.03, 0.003,
                    K=5, sub=2, sw=SW["barbel"])
 def kype_hook(f, sp):
-    b = f.surf(0.03, -math.pi / 2, 0.95)
+    b = f.surf(0.03, -math.pi / 2, 0.95); f.jaw_hinge = b + V(-0.15, 0, 0.02)
     f.tube("Kype", [b + V(-0.15, 0, 0.02), b + V(0.1, 0, -0.06), b + V(0.22, 0, 0.04), b + V(0.24, 0, 0.12)], 0.07, 0.03, sw=SW["lip"])
 def arms_hook(f, sp):
     for sd in (1, -1):
@@ -84,7 +84,7 @@ FISH = [
 ]
 
 def build_seahorse():
-    f = Fish("Seahorse", "Uncommon", L=1.0, R=0.3, H=1.0, PT=PT, PR=PROF["round"], fin_styles=2)
+    f = Fish("Seahorse", "Uncommon", L=1.0, R=0.3, H=1.0, PT=PT, PR=PROF["round"], fin_styles=2); f.rig_vertical = True
     body_sw, dark = 6, 7
     trunk = [V(-0.12, 0, 1.0), V(-0.16, 0, 0.82), V(-0.02, 0, 0.55), V(0.02, 0, 0.25), V(-0.06, 0, -0.05),
              V(-0.02, 0, -0.35), V(0.14, 0, -0.55), V(0.3, 0, -0.5), V(0.32, 0, -0.36), V(0.22, 0, -0.3)]

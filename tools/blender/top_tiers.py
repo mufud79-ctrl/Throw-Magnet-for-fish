@@ -43,6 +43,8 @@ def hydra_hook(f, sp):
         neck = [base, base + V(0.25, sd * 0.35, 0.15), base + V(0.6, sd * 0.6, 0.32), base + V(0.95, sd * 0.68, 0.38)]
         f.tube(f"Neck{sd}", neck, 0.22, 0.17, sw=SW["x1"], K=10)
         hc = neck[-1] + V(0.22, 0, 0.02)
+        f.extra_bones.append(dict(name="Neck_L" if sd > 0 else "Neck_R", head=base, tail=hc, parent="Head",
+            match=lambda n, cen, sd=sd: cen.y * sd > 0.35 and n.startswith(("Neck", "Head", "HJaw", "HMaw", "HT", "HB", "HHorn", "Eye", "Pupil"))))
         f.sphere(f"Head{sd}", hc, basis(V(1, 0, 0)), (0.36, 0.2, 0.17), SW["x1"], 16, 10)
         hinge = hc + V(-0.12, 0, -0.08); Rj = Matrix.Rotation(math.radians(-24), 3, "Y")
         Mj = Matrix.Translation(hinge) @ Rj.to_4x4() @ Matrix.Translation(-hinge)
@@ -92,7 +94,7 @@ def galaxy_extra(T, Vv, top, X, Y, col):
     return out * (1 - 0.3 * smooth(-0.3, -0.9, top))[..., None] + c(120, 110, 170) * 0.3 * smooth(-0.3, -0.9, top)[..., None]
 
 FISH = [
- dict(AG, name="AuroraRay", rarity="Mythic", L=2.8, R=0.5, H=0.42, w=1.25, wt=0.9, prof="blunt", belly=0.8,
+ dict(AG, name="AuroraRay", anims="ray", rarity="Mythic", L=2.8, R=0.5, H=0.42, w=1.25, wt=0.9, prof="blunt", belly=0.8,
       colors=(c(16, 30, 50), c(24, 44, 70), c(200, 220, 236)), extra=aurora_extra, scale_k=0.0, hook=aurora_hook, x1=c(20, 34, 56),
       glow=c(90, 255, 180), mouth=0.12, eye_th=0.15, eye_t=0.06, eye=0.08, pect=0, pelv=0, tail=(None, 0, 0), brow=False,
       dorsal=[(0.7, 0.78, 0.2, "tri")], bend=0.0, cam=0.85, fins=[[(0, c(16, 30, 50)), (0.6, c(30, 90, 110)), (1, c(120, 60, 200))]] * 2),
@@ -115,12 +117,12 @@ FISH = [
       glow_eyes=True, iris=c(255, 40, 40), jaw=(0.03, 0.17, 30, 17, 15, 0.16), mouth=0, eye_k=0.032,
       dorsal=[(0.3, 0.46, 2.0, "tri"), (0.76, 0.8, 0.4, "tri")], anal=(0.74, 0.79, 0.35, "tri"), tail=shark_tail(2.8),
       pect=2.0, pelv=0.5, cam=1.25, fins=[[(0, c(44, 50, 58)), (0.9, c(74, 80, 90)), (1, c(20, 22, 26))]] * 2),
- dict(AG, name="HydraEel", rarity="Secret", L=5.2, R=0.36, H=1.1, w=0.85, prof="eel", colors=(c(20, 34, 24), c(34, 52, 36), c(90, 120, 60)),
+ dict(AG, name="HydraEel", anims="hydra", rarity="Secret", L=5.2, R=0.36, H=1.1, w=0.85, prof="eel", colors=(c(20, 34, 24), c(34, 52, 36), c(90, 120, 60)),
       stripe=(c(150, 230, 40), 0.05, 0.3), scale=0.16, scale_k=0.5, hook=hydra_hook, x1=c(28, 44, 30), glow=c(180, 255, 60), glow_eyes=True,
       iris=c(180, 255, 60), jaw=(0.02, 0.13, 26, 13, 11, 0.1), mouth=0, eye=0.13, brow_c=c(150, 230, 40), jaw_c=c(60, 90, 50),
       dorsal=[(0.2, 0.96, 0.3, "spiny", 0, 20)], anal=(0.5, 0.97, 0.16, "long"), tail=(None, 0, 0), pect=0.5, pelv=0,
       wiggle=(0.45, 1.0), bend=0.0, cam=1.0, fins=[[(0, c(24, 40, 28)), (0.75, c(60, 110, 40)), (1, c(180, 255, 60))]] * 2),
- dict(AG, name="SeaSerpent", rarity="Secret", L=8.0, R=0.4, H=1.1, w=0.85, prof="eel", colors=(c(16, 70, 86), c(36, 130, 136), c(230, 190, 90)),
+ dict(AG, name="SeaSerpent", anims="eel", rarity="Secret", L=8.0, R=0.4, H=1.1, w=0.85, prof="eel", colors=(c(16, 70, 86), c(36, 130, 136), c(230, 190, 90)),
       scale=0.2, scale_k=0.6, hook=serpent_hook, glow=c(90, 240, 255), glow_eyes=True, iris=c(90, 240, 255), brow_c=c(230, 190, 90),
       jaw=(0.02, 0.12, 26, 15, 13, 0.12), mouth=0, eye=0.15, dorsal=[(0.12, 0.96, 0.6, "spiny", 0, 30)], anal=(0.45, 0.97, 0.2, "long"),
       tail=(None, 0, 0), pect=0.7, pelv=0, wiggle=(0.9, 1.5), bend=0.0, cam=1.35,

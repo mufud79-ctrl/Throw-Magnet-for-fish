@@ -36,6 +36,7 @@ def open_jaw(f, sp, t_tip=0.03, t_hinge=0.16, angle=22, nu=11, nl=9, ln=None):
     bottom = lambda t: f.surf(t, -math.pi / 2)
     tm = (t_tip + t_hinge) / 2; rm = f.r_of(tm)
     hinge = bottom(t_hinge) + V(0, 0, 0.1 * rm)
+    f.jaw_hinge = hinge
     Rj = Matrix.Rotation(math.radians(-angle), 3, "Y")
     Mj = Matrix.Translation(hinge) @ Rj.to_4x4() @ Matrix.Translation(-hinge)
     ja = ((t_hinge - t_tip) * L * 0.62, f.w(tm) * rm * 0.9, 0.22 * rm); jc = bottom(tm) + V(0, 0, -0.55 * ja[2])
@@ -59,6 +60,7 @@ def build(sp):
              zc=sp.get("zc_fn") or (lambda t: sp.get("hump", 0.04) * sp["R"] * math.sin(math.pi * t)),
              w=(lambda t, a=sp.get("w", 0.8), b=sp.get("wt", 0.25): a - b * t * t),
              belly=sp.get("belly", 0.9), fin_styles=2)
+    f.anim_set = sp.get("anims", "fish")
     f.body(N=40, M=24)
     R, L = sp["R"], sp["L"]; th_ = 0.02 * L + 0.012
     D, T_ = 0, 1

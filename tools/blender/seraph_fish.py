@@ -56,6 +56,7 @@ f.fin("Tail", lambda s: V(f.x_of(te), 0, f.zc(te) + lerp(-1, 1, s) * f.H * rte *
 # ---- open jaw: lower jaw ellipsoid hinged at the back, dark mouth, teeth rows
 def bottom(t, k=1.0): return f.surf(t, -math.pi / 2, k)
 hinge = bottom(0.2) + V(0, 0, 0.05)
+f.jaw_hinge = hinge
 Rj = Matrix.Rotation(math.radians(-20), 3, "Y")
 Mj = Matrix.Translation(hinge) @ Rj.to_4x4() @ Matrix.Translation(-hinge)
 jc = bottom(0.12) + V(0.0, 0, -0.1); ja = (0.52, 0.46, 0.15)

@@ -17,7 +17,7 @@ Done (in `models/<Rarity>/<Name>/`):
 - **Legendary (6):** GreatWhiteShark, Sailfish, CrystalPike, Oarfish, MagmaEel, Coelacanth (`legendaries.py`: `cracks()` glowing crack lines, `gills()`)
 - **Mythic (4):** AuroraRay, GhostShark, EmberKoi, GoldenArowana; **Secret (3):** Megalodon, HydraEel, SeaSerpent; **Celestial (1):** StarfallWhaleShark (`top_tiers.py`)
 
-**All 50 fish are built.** Possible follow-ups if the user asks:
+**All 50 fish are built, rigged and animated** (see `animations/README.md`: 6 shared clips plus 6 family clips; rig in `tools/blender/rig.py`, clips in `fishanim.py`, export with `export_anims.py`, check frames with `anim_preview.py`). Possible follow-ups if the user asks:
 - Polish passes on individual fish (render a `front` view by passing `views=` in the spec; dramatic fish sell on their front silhouette).
 - EmberKoi body reads thin; the HydraEel's second neck is hidden in the 3/4 view.
 - Variants (Gold/Shiny/Giant) as texture or colour swaps.

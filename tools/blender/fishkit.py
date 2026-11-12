@@ -95,6 +95,7 @@ class Fish:
         self.w = w or (lambda t: 0.8)
         self.fin_styles = fin_styles
         self.parts, self.glow = [], []
+        self.jaw_hinge, self.extra_bones, self.rig_vertical, self.anim_set = None, [], False, "fish"
         bpy.ops.wm.read_factory_settings(use_empty=True)
 
     # ---- body shape
@@ -334,19 +335,23 @@ class Fish:
         return ob
 
     def finish(self, bend=0.5, bend_len=7.0, glow_color=None, views=None, cam_scale=1.0, roll=0.0, wiggle=(0, 0)):
+        import rig, fishanim
+        rig.assign_weights(self)
         fish = self._join(self.parts, self.name)
         objs = [fish]
         glow = None
         if self.glow:
             glow = self._join(self.glow, f"{self.name}_Glow"); objs.append(glow)
+        Rall = Matrix.Rotation(math.radians(90), 4, "Z") @ (Matrix.Rotation(roll, 4, "X") if roll else Matrix.Identity(4))
+        def bendp(p):
+            k = max(0.0, (self.L / 2 - p[0]) / bend_len)
+            return Vector((p[0], p[1] + bend * k ** 2.2 + wiggle[0] * math.sin(2 * math.pi * wiggle[1] * k) * min(1.0, k * 3), p[2]))
         for ob in objs:
-            for v in ob.data.vertices:
-                k = max(0.0, (self.L / 2 - v.co.x) / bend_len)
-                v.co.y += bend * k ** 2.2 + wiggle[0] * math.sin(2 * math.pi * wiggle[1] * k) * min(1.0, k * 3)
-            if roll: ob.data.transform(Matrix.Rotation(roll, 4, "X"))
-            ob.data.transform(Matrix.Rotation(math.radians(90), 4, "Z"))
+            for v in ob.data.vertices: v.co = bendp(v.co)
+            ob.data.transform(Rall)
         co = np.array([v.co[:] for v in fish.data.vertices])
         center = Vector(((co.min(0) + co.max(0)) / 2).tolist())
+        xf = lambda p: (Rall @ bendp(p)) - center
         for ob in objs:
             ob.data.transform(Matrix.Translation(-center)); ob.location = (0, 0, 0)
             bpy.ops.object.select_all(action="DESELECT"); ob.select_set(True)
@@ -366,16 +371,19 @@ class Fish:
             gb.inputs["Emission Strength"].default_value = 1.6
             glow.data.materials.append(gm)
 
+        R3 = Rall.to_3x3()
+        arm = rig.build_armature(self, xf, R3 @ Vector((0, 0, 1)), R3 @ Vector((1, 0, 0)), objs)
+        fishanim.add_actions(arm, self.anim_set)
         tris = {ob.name: sum(len(p.vertices) - 2 for p in ob.data.polygons) for ob in objs}
         d = fish.dimensions
         print(f"TRIS {tris}  DIMS {d.x:.2f} x {d.y:.2f} x {d.z:.2f}")
 
         bpy.ops.object.select_all(action="DESELECT")
-        for ob in objs: ob.select_set(True)
+        for ob in objs + [arm]: ob.select_set(True)
         base = os.path.join(self.out, self.name)
-        bpy.ops.export_scene.gltf(filepath=base + ".glb", export_format="GLB", use_selection=True)
-        bpy.ops.export_scene.fbx(filepath=base + ".fbx", use_selection=True, path_mode="COPY",
-                                 embed_textures=True, mesh_smooth_type="FACE")
+        bpy.ops.export_scene.gltf(filepath=base + ".glb", export_format="GLB", use_selection=True, export_animations=False)
+        bpy.ops.export_scene.fbx(filepath=base + ".fbx", use_selection=True, path_mode="COPY", embed_textures=True,
+                                 mesh_smooth_type="FACE", add_leaf_bones=False, bake_anim=False)
         bpy.ops.wm.save_as_mainfile(filepath=base + ".blend")
         if self.render:
             self._previews(fish, views, cam_scale)
