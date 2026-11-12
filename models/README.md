@@ -50,3 +50,18 @@ One folder per fish: `models/<Rarity>/<FishName>/`.
 `models/Baits/<Rarity>/<Name>/`: 15 fish-food props with the same file set (no rig, no animation clips).
 Built by `tools/blender/baits.py`; overview sheet: `models/Baits/Baits_overview.png`. Glowing baits use the
 same `<Name>_Glow` Neon MeshPart setup (colours in the table above).
+
+## Gym gear (dumbbell curls)
+15 tiers in `models/Gym/<NN>_<Theme>/`, each with a `<Theme>Dumbbell` and a `<Theme>Bench` (preacher curl bench). Built by `tools/blender/gym.py`. No rig.
+
+| Tier | Glow parts | Colour |
+|---|---|---|
+| 06 Crystal | crystal cores, ice shards | `#78E6FF` |
+| 07 Lava | lava cracks, pad trim | `#FF781E` |
+| 09 Cyber | hex rings and cores, hover pads, trim | `#00E6FF` |
+| 10 Toxic | goo canisters, tanks, trim | `#96FF28` |
+| 11 Kraken | kraken eyes | `#5AF0FF` |
+| 12 Dragon | dragon eyes | `#FF5A1E` |
+| 13 Galaxy | planet rings, orbit | `#C8A0FF` |
+| 14 Angelic | halos | `#FFDC78` |
+| 15 Void | accretion disks, void ring, trim | `#BE50FF` |
