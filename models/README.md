@@ -27,3 +27,5 @@ One folder per fish: `models/<Rarity>/<FishName>/`.
 | ElectricEel | lightning stripes, eyes | `#78E6FF` (120, 230, 255) |
 | Icefish | ice shards, eyes | `#8CE6FF` (140, 230, 255) |
 | Lanternfish | photophore dots, eyes | `#78D2FF` (120, 210, 255) |
+| GreenlandShark | parasite-glow eyes | `#C8FFDC` (200, 255, 220) |
+| Anglerfish | lure bulb, eyes | `#B4FFC8` (180, 255, 200) |

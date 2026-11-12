@@ -13,9 +13,9 @@ Done (in `models/<Rarity>/<Name>/`):
 - **Common (10):** Minnow, Goldfish, Bluegill, Guppy, Perch, Carp, Catfish, Sardine, Clownfish, BlueTang
 - **Uncommon (9):** Koi, LargemouthBass, RainbowTrout, Salmon, Mudskipper, Pufferfish, Angelfish, Flounder, Seahorse
 - **Rare (8):** Pike, Sturgeon, Piranha, ElectricEel, Lionfish, MorayEel, Icefish, Lanternfish (`rares.py`; template for aggressive spec fish: `jaw`, `brow`, slit `pupil`, `eye_k`, `glow_eyes`, `dots`, `glow_line`, `wiggle`)
+- **Epic (7):** AlligatorGar, Arapaima, MantaRay, HammerheadShark, GreenlandShark, Anglerfish, Blobfish (`epics.py`: custom hooks for hammer head, manta wings, angler lure)
 
-Still to build (21). Rarity, then name, then water area, then design notes:
-- **Epic:** AlligatorGar (swamp: gator snout, armour scales), Arapaima (swamp: huge, red-scaled tail half), MantaRay (reef: wide wings, head fins), HammerheadShark (open ocean), GreenlandShark (frozen sea: slow grey, scarred), Anglerfish (abyss: **glowing lure**, huge fanged mouth), Blobfish (abyss: droopy comic blob)
+Still to build (14). Rarity, then name, then water area, then design notes:
 - **Legendary:** GreatWhiteShark (open ocean), Sailfish (open ocean: huge sail fin, bill), CrystalPike (frozen sea: pike made of ice crystal facets, **glowing** cyan core), Oarfish (abyss: very long ribbon, red crest), MagmaEel (volcanic vent: rocky crust with **glowing lava cracks**), Coelacanth (sunken ruins: ancient, lobed fins)
 - **Mythic:** AuroraRay (frozen sea: ray with **glowing** aurora bands), GhostShark (abyss: see-through, **glowing** outline/eyes), EmberKoi (volcanic: koi with **flame fins**, glowing), GoldenArowana (sunken ruins: gold armour, dragon whiskers)
 - **Secret:** Megalodon (abyss: giant scarred shark), HydraEel (volcanic: **three-headed** eel, glowing eyes), SeaSerpent (sunken ruins: coiled serpent, finned crest)
