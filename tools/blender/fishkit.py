@@ -334,9 +334,12 @@ class Fish:
         ob = bpy.context.active_object; ob.name = name; ob.data.name = name
         return ob
 
-    def finish(self, bend=0.5, bend_len=7.0, glow_color=None, views=None, cam_scale=1.0, roll=0.0, wiggle=(0, 0)):
-        import rig, fishanim
-        rig.assign_weights(self)
+    def finish(self, bend=0.5, bend_len=7.0, glow_color=None, views=None, cam_scale=1.0, roll=0.0, wiggle=(0, 0), rig=True):
+        """rig=False (props such as baits): no weights, armature or animation clips."""
+        do_rig = rig
+        if do_rig:
+            import rig, fishanim
+            rig.assign_weights(self)
         fish = self._join(self.parts, self.name)
         objs = [fish]
         glow = None
@@ -372,14 +375,16 @@ class Fish:
             glow.data.materials.append(gm)
 
         R3 = Rall.to_3x3()
-        arm = rig.build_armature(self, xf, R3 @ Vector((0, 0, 1)), R3 @ Vector((1, 0, 0)), objs)
-        fishanim.add_actions(arm, self.anim_set)
+        arm = None
+        if do_rig:
+            arm = rig.build_armature(self, xf, R3 @ Vector((0, 0, 1)), R3 @ Vector((1, 0, 0)), objs)
+            fishanim.add_actions(arm, self.anim_set)
         tris = {ob.name: sum(len(p.vertices) - 2 for p in ob.data.polygons) for ob in objs}
         d = fish.dimensions
         print(f"TRIS {tris}  DIMS {d.x:.2f} x {d.y:.2f} x {d.z:.2f}")
 
         bpy.ops.object.select_all(action="DESELECT")
-        for ob in objs + [arm]: ob.select_set(True)
+        for ob in objs + ([arm] if arm else []): ob.select_set(True)
         base = os.path.join(self.out, self.name)
         bpy.ops.export_scene.gltf(filepath=base + ".glb", export_format="GLB", use_selection=True, export_animations=False)
         bpy.ops.export_scene.fbx(filepath=base + ".fbx", use_selection=True, path_mode="COPY", embed_textures=True,
