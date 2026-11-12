@@ -276,7 +276,7 @@ class Fish:
         self.tex = self._save(self.img, f"{self.name}_Texture")
         self._save(self.img_studs, f"{self.name}_Texture_Studs")
 
-    def studs(self, col, T, Vv, spacing=float(os.environ.get("STUD_SPACING", 0.5)), rad=0.3):
+    def studs(self, col, T, Vv, spacing=float(os.environ.get("STUD_SPACING", 0.15)), rad=0.3):
         """Roblox studs on the body at true scale (1 Blender unit = 1 stud).
         Uses tools/blender/stud.png (one tile = one stud) if present, else a procedural stud."""
         X = T * self.L
@@ -285,7 +285,7 @@ class Fish:
         amt = smooth(0.03, 0.09, T) * (1 - smooth(0.93, 0.99, T))
         tile = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stud.png")
         if os.path.exists(tile):
-            im = bpy.data.images.load(tile); w, h = im.size
+            im = bpy.data.images.load(tile); im.scale(128, 128); w, h = im.size   # prefilter for tiny studs
             px = np.array(im.pixels[:], dtype=np.float32).reshape(h, w, im.channels)
             rgb = px[..., :3]; a = px[..., 3] if im.channels == 4 else np.ones((h, w))
             lum = rgb @ np.array([0.299, 0.587, 0.114])
@@ -409,3 +409,18 @@ class Fish:
             sc.render.filepath = os.path.join(self.out, "previews", f"{self.name}_{nm}.png")
             bpy.ops.render.render(write_still=True)
         tn.image = self.tex
+
+
+def contact_sheet(paths, out, cols=5, step=2):
+    """Downscaled grid of preview PNGs (for quick review)."""
+    tiles = []
+    for p in paths:
+        im = bpy.data.images.load(p); w, h = im.size
+        tiles.append(np.array(im.pixels[:], np.float32).reshape(h, w, 4)[::step, ::step])
+    th, tw = tiles[0].shape[:2]; rows = (len(tiles) + cols - 1) // cols
+    sheet = np.ones((rows * th, cols * tw, 4), np.float32)
+    for i, t in enumerate(tiles):
+        r, cc = divmod(i, cols); r = rows - 1 - r
+        sheet[r*th:(r+1)*th, cc*tw:(cc+1)*tw] = t
+    im = bpy.data.images.new("sheet", cols * tw, rows * th)
+    im.pixels.foreach_set(sheet.ravel()); im.filepath_raw = out; im.file_format = "PNG"; im.save()
