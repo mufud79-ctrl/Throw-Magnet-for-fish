@@ -67,10 +67,10 @@ class Brick(Fish):
             k = tuple(round(x, 5) for x in p)
             if k not in key: key[k] = len(verts); verts.append(p)
             return key[k]
-        for o, U, W in faces_def:
+        for fi, (o, U, W) in enumerate(faces_def):
             o, U, W = Vector(o), Vector(U), Vector(W)
             nu, nv = max(1, round(U.length / g)), max(1, round(W.length / g))
-            st = studs and U.length >= 0.6 * g and W.length >= 0.6 * g
+            st = bool(studs) and (studs != "top" or fi == 0) and U.length >= 0.6 * g and W.length >= 0.6 * g
             cb = self.cell(color, st)
             for i in range(nu):
                 for j in range(nv):
