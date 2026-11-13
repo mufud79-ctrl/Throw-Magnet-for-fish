@@ -300,10 +300,11 @@ def rex_cracks(col):
 def frog(f, P):
     C1, BEL = P["c1"], P.get("belly", YELLOW)
     f.block("Body", V(0, 0, 0.6), (1.8, 1.6, 1.0), C1); f.block("Belly", V(0.25, 0, 0.35), (1.3, 1.5, 0.4), BEL, studs=False)
-    f.block("Mouth", V(0.92, 0, 0.55), (0.06, 1.3, 0.08), dk(C1, 0.5), studs=False)
+    f.block("Mouth", V(0.91, 0, 0.62), (0.04, 1.1, 0.05), dk(C1, 0.45), studs=False)
     for sy in (1, -1):
-        f.block(f"EyeBump{sy}", V(0.45, sy * 0.5, 1.2), (0.55, 0.5, 0.45), C1)
-        f.block(f"Eye{sy}", V(0.73, sy * 0.5, 1.25), (0.05, 0.36, 0.32), BLACK, studs=False); f.block(f"Glint{sy}", V(0.76, sy * 0.42, 1.33), (0.04, 0.1, 0.1), WHITE, studs=False)
+        f.block(f"EyeBump{sy}", V(0.45, sy * 0.5, 1.15), (0.6, 0.55, 0.4), C1)
+        f.ball(f"EyeW{sy}", V(0.55, sy * 0.52, 1.42), 0.3, WHITE, u=12, v=8)
+        f.ball(f"Pupil{sy}", V(0.78, sy * 0.52, 1.45), (0.1, 0.16, 0.18), BLACK, u=8, v=6)
         f.block(f"Thigh{sy}", V(-0.55, sy * 0.95, 0.4), (1.0, 0.45, 0.7), C1); f.block(f"BackFoot{sy}", V(-0.1, sy * 1.05, 0.08), (0.9, 0.5, 0.16), dk(C1), studs=False)
         f.block(f"FrontLeg{sy}", V(0.65, sy * 0.65, 0.25), (0.25, 0.25, 0.5), C1, studs=False)
     for fn in P.get("x", []): fn(f, dict(L=1.8, W=1.6, H=1.0, z0=0.6, C1=C1))
