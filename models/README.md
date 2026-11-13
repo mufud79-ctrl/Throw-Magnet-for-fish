@@ -69,14 +69,16 @@ The matching preacher curl benches, resized to fit an R15 avatar, are archived i
 | 15 Void | accretion disks, void ring, trim | `#BE50FF` |
 
 ## Zone props
-60 chunky low-poly props, 6 unique per zone, in `models/Zones/<NN>_<Zone>/<Prop>/` (overview: `models/Zones/Zones_overview.png`). Built by `tools/blender/zones.py` (`python zones.py [Zone or Prop names] [--no-render]`). Static, no rig.
+60 underwater props, 6 unique per zone, in `models/Zones/<NN>_<Zone>/<Prop>/` (overview: `models/Zones/Zones_overview.png`). They are built from Roblox-style parts: studded blocks (1 stud per cell), wedges, and smooth cylinders and balls in flat BrickColor-like colours. Built by `tools/blender/zones_blocky.py` on top of `tools/blender/blocky.py`. Static, no rig. Scale is true studs.
 
 | Zone | Prop with glow | Colour |
 |---|---|---|
-| 03_Swamp | WispLantern | `#A0FF8C` (160, 255, 140) |
-| 03_Swamp | GlowShrooms | `#C8FF5A` (200, 255, 90) |
-| 05_OpenOcean | Buoy | `#FFF096` (255, 240, 150) |
+| 03_Swamp | BogGlowBulbs | `#C8FF5A` (200, 255, 90) |
+| 03_Swamp | SunkenLantern | `#FFDC78` (255, 220, 120) |
+| 05_OpenOcean | MooringBuoy | `#FFE678` (255, 230, 120) |
+| 05_OpenOcean | SunkenContainer | `#78E6FF` (120, 230, 255) |
 | 06_FrozenSea | IceCrystals | `#78E6FF` (120, 230, 255) |
+| 06_FrozenSea | FrozenRelic | `#78E6FF` (120, 230, 255) |
 | 07_DeepAbyss | TubeWorms | `#FF466E` (255, 70, 110) |
 | 07_DeepAbyss | SubmarineWreck | `#78E6FF` (120, 230, 255) |
 | 07_DeepAbyss | GlowPolyps | `#BE78FF` (190, 120, 255) |
@@ -88,8 +90,8 @@ The matching preacher curl benches, resized to fit an R15 avatar, are archived i
 | 09_SunkenRuins | TreasureChest | `#FFD25A` (255, 210, 90) |
 | 09_SunkenRuins | TridentAltar | `#5AF0DC` (90, 240, 220) |
 | 10_StarfallLake | FallenStar | `#FFEC8C` (255, 236, 140) |
-| 10_StarfallLake | StarCrystalTree | `#78DCFF` (120, 220, 255) |
-| 10_StarfallLake | Telescope | `#AADCFF` (170, 220, 255) |
+| 10_StarfallLake | StarCrystalCoral | `#78DCFF` (120, 220, 255) |
 | 10_StarfallLake | MeteorChunk | `#DC8CFF` (220, 140, 255) |
 | 10_StarfallLake | ConstellationStone | `#FFF0BE` (255, 240, 190) |
 | 10_StarfallLake | NebulaPortal | `#C878FF` (200, 120, 255) |
+| 10_StarfallLake | OrbitingOrbs | `#FFFFFF` (255, 255, 255) |

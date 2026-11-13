@@ -60,9 +60,12 @@ Done (in `models/<Rarity>/<Name>/`):
 - `ui/FishingUI.rbxmx` is the importable layout, with no scripts. `ui/asset_map.json` maps each PNG to the UI elements that use it.
 - Scripts are in `tools/ui/`. Fish water areas are in `tools/ui/fishdata.py` (`AREA`) and match the 10 zones. After changing them, rebuild with `python3 tools/ui/build_rbxmx.py`.
 
-## Zones: 10 zones, 6 unique props each (DONE)
-Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07_DeepAbyss, 08_VolcanicVent, 09_SunkenRuins, 10_StarfallLake. The fish water areas in the UI match these.
-- All 60 props are rendered and committed in `models/Zones/<NN>_<Zone>/<Prop>/`. Overview: `models/Zones/Zones_overview.png`. The glow colours are in `models/README.md`.
-- **Style for zone props:** the user rejected smooth "play dough" props. They must be **chunky low-poly**: flat shading, few segments, thick parts, hard chamfers and faceted rocks. `zones.py` subclasses `Prop` to enforce this (the `flat` attribute makes `finish()` shade flat). Keep using it for new props.
-- No prop may repeat across zones. Variants such as different coral species are fine.
-- Weaker props worth a polish pass: SeaFan (reads as a balloon), StarCrystalTree (thin), KelpStalks (small), and RowBoat's oars.
+## Zones: 10 zones, 6 unique props each (DONE, blocky underwater style)
+Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07_DeepAbyss, 08_VolcanicVent, 09_SunkenRuins, 10_StarfallLake.
+- **The game is visually underwater.** Props must make sense underwater (sunken versions, things seen from below, bubbles) and read through blue fog: bright, saturated colours, light tops, tall silhouettes and Neon accents.
+- **The approved style for environment props is blocky Roblox-part builds**, in the vein of Grow a Garden, Steal an Egg and Throw Food for Animals:
+  - Use `tools/blender/blocky.py` (`Brick` class): `block` (studs from `stud.png` on every face, 1 stud per cell), `wedge`, `cyl` and `ball` (smooth plastic), `rocks` (a cluster of rotated studded blocks), and `done(glow)`.
+  - Minimal curves are fine: `seg()` in `zones_blocky.py` gives segmented cylinders with ball joints.
+  - The user rejected both smooth sculpted props and faceted low-poly ones.
+- `tools/blender/zones_blocky.py` builds all 60 props (`python zones_blocky.py [Zone or Prop names] [--no-render]`). No prop may repeat across zones.
+- Possible polish: StatueHead and IcebergChunk are plain; FallenStar's glow arms read as a white smear in previews (Neon in Roblox).

@@ -347,10 +347,13 @@ def glow_polyps(f):
             z = 0.8 + k * (h - 0.8) / 4
             for sd in (-1, 1): f.block(f"Plume{i}{k}{sd}", b + V(0, sd * 0.35, z), (0.12, 0.6, 0.35), PURPLE, Rz(a) @ Rx(sd * 0.4), studs=False, glow=True)
 def eye_rock(f):
-    f.rocks("Rock", V(0, 0, 0), 4.5, DGREY, 5, seed=9, color2=BLACK)
-    for k, (x, y, z, r) in enumerate([(2.0, 0.4, 2.2, 0.55), (1.8, -1.0, 1.4, 0.4), (1.2, 1.3, 2.8, 0.35), (2.2, -0.2, 0.9, 0.3)]):
+    f.block("Boulder", V(0, 0, 1.9), (4.2, 4.2, 3.8), DGREY, Rz(0.05))
+    f.block("Chunk1", V(-2.2, 1.2, 1.0), (2.2, 2.0, 2.0), BLACK, Rz(0.5) @ Rx(0.2))
+    f.block("Chunk2", V(-1.0, -2.3, 0.8), (1.8, 1.8, 1.6), GREY, Rz(-0.4) @ Ry(0.15))
+    f.block("Cap", V(0.2, 0.3, 4.0), (2.6, 2.4, 0.6), BLACK, Rz(0.3))
+    for k, (x, y, z, r, nx) in enumerate([(2.1, 0.6, 2.6, 0.75, True), (2.1, -1.1, 1.4, 0.5, True), (0.6, 2.1, 2.9, 0.6, False), (-0.9, 2.1, 1.3, 0.45, False)]):
         f.ball(f"Eye{k}", V(x, y, z), r, YELLOW, glow=True, u=10, v=7)
-        f.block(f"Slit{k}", V(x + r * 0.85, y, z), (0.08, r * 0.35, r * 1.3), BLACK, studs=False)
+        f.block(f"Slit{k}", V(x + (r * 0.85 if nx else 0), y + (0 if nx else r * 0.85), z), (0.1 if nx else r * 0.35, r * 0.35 if nx else 0.1, r * 1.3), BLACK, studs=False)
 def trench_spire(f):
     z = 0
     for i, s in enumerate((3.4, 2.8, 2.3, 1.8, 1.4, 1.0)):
