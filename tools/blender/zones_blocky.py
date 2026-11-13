@@ -95,12 +95,12 @@ def river_boulders(f):
     for k, (x, y) in enumerate([(-0.6, 0.3), (0.8, -0.4)]): f.block(f"MossCap{k}", V(x, y, 2.6), (1.6, 1.4, 0.3), GREEN, Rz(k))
 def driftwood_snag(f):
     pts = [V(-3.5, 0, 0), V(-1.5, 0.3, 1.8), V(0.5, -0.2, 3.4), V(2.5, 0.4, 4.6)]
-    seg(f, "Trunk", pts, 0.55, SAND, r_end=0.25, K=8)
+    seg(f, "Trunk", pts, 0.8, SAND, r_end=0.4, K=8)
     rng = np.random.default_rng(6)
     for k, p in enumerate(pts[1:3]):
         for sd in (-1, 1):
             d = V(rng.uniform(-.2, .6), sd * rng.uniform(.6, 1), rng.uniform(.3, .8)).normalized()
-            seg(f, f"Branch{k}{sd}", [p, p + d * 1.4, p + d * 2.6 + V(0, 0, 0.4)], 0.25, SAND, r_end=0.1, K=6)
+            seg(f, f"Branch{k}{sd}", [p, p + d * 1.4, p + d * 2.6 + V(0, 0, 0.4)], 0.38, SAND, r_end=0.18, K=6)
     f.rocks("Base", V(-3.5, 0, 0), 1.6, GREY, 3, seed=7)
 def beaver_dam_wall(f):
     rng = np.random.default_rng(7)
@@ -135,26 +135,31 @@ def sunken_bridge_post(f):
 
 # ======================================================================== 3 SWAMP
 def mangrove_roots(f):
-    f.cyl("Trunk", V(0, 0, 5), V(0, 0, 14), 0.9, DBROWN, 10)
-    for k in range(8):
-        a = 2 * math.pi * k / 8; o = V(math.cos(a), math.sin(a), 0)
-        seg(f, f"Root{k}", [V(0, 0, 5.5) + o * 0.5, o * 1.8 + V(0, 0, 5.2), o * 3.2 + V(0, 0, 3), o * 3.8 + V(0, 0, 0)], 0.35, BROWN, r_end=0.22, K=6)
-    for k in range(4): f.block(f"Algae{k}", V(3.5 * math.cos(k * 1.6), 3.5 * math.sin(k * 1.6), 0.4), (1.2, 1.2, 0.8), MOSS, Rz(k))
+    f.cyl("Trunk", V(0, 0, 4), V(0, 0, 9.5), 1.2, DBROWN, 10)
+    for k in range(10):
+        a = 2 * math.pi * k / 10; o = V(math.cos(a), math.sin(a), 0)
+        seg(f, f"Root{k}", [V(0, 0, 4.6) + o * 0.8, o * 2.4 + V(0, 0, 4.6), o * 4.0 + V(0, 0, 2.8), o * 4.6 + V(0, 0, 0)], 0.5, BROWN if k % 2 else RBROWN, r_end=0.3, K=6)
+        f.block(f"Algae{k}", o * 4.6 + V(0, 0, 0.35), (0.9, 0.9, 0.7), MOSS, Rz(a))
+    for k, (x, y, z, s_) in enumerate([(0, 0, 10.6, 3.6), (1.6, 0.8, 9.8, 2.6), (-1.5, -0.9, 10.0, 2.8), (0.4, -1.8, 9.6, 2.2)]):
+        f.block(f"Leaves{k}", V(x, y, z), (s_, s_, s_ * 0.7), GREEN if k % 2 else DGREEN, Rz(0.4 * k))
 def gator_skull(f):
-    f.block("Mud", V(0.5, 0, 0.15), (6, 4, 0.3), DBROWN)
-    f.block("Cranium", V(-1, 0, 1.1), (2.0, 2.2, 1.6), WHITE)
-    f.block("Snout", V(1.3, 0, 0.9), (2.8, 1.4, 0.8), WHITE); f.block("Tip", V(3.0, 0, 0.85), (0.8, 1.1, 0.6), WHITE)
-    f.block("Jaw", V(1.0, 0, 0.4), (3.6, 1.3, 0.35), SAND)
+    BONE, BONE2 = rgb(236, 228, 205), rgb(214, 202, 172)
+    f.block("Mud", V(0.5, 0, 0.15), (7, 4.6, 0.3), DBROWN)
+    f.block("Cranium", V(-1, 0, 1.3), (2.4, 2.6, 2.0), BONE, studs=False)
+    f.wedge("Brow", V(-1.6, 0, 2.6), (1.2, 2.6, 0.7), BONE2)
+    f.block("Snout", V(1.5, 0, 1.0), (3.2, 1.6, 1.0), BONE, studs=False); f.block("Tip", V(3.4, 0, 0.95), (0.9, 1.3, 0.8), BONE2, studs=False)
+    f.block("Jaw", V(1.2, 0, 0.42), (4.2, 1.5, 0.4), BONE2, studs=False)
     for sy in (-1, 1):
-        f.block(f"Socket{sy}", V(-0.6, sy * 0.85, 1.6), (0.7, 0.4, 0.5), BLACK, studs=False)
-        for k in range(5): f.wedge(f"Tooth{sy}{k}", V(0.3 + 0.6 * k, sy * 0.6, 0.45), (0.25, 0.25, 0.35), WHITE, Ry(-math.pi / 2))
+        f.block(f"Socket{sy}", V(-0.4, sy * 1.0, 1.75), (0.9, 0.7, 0.8), BLACK, studs=False)
+        f.block(f"Nostril{sy}", V(3.6, sy * 0.3, 1.36), (0.3, 0.25, 0.1), BLACK, studs=False)
+        for k in range(6): f.wedge(f"Tooth{sy}{k}", V(0.2 + 0.6 * k, sy * 0.72, 0.42), (0.3, 0.28, 0.45), WHITE, Ry(-math.pi / 2))
 def bog_glow_bulbs(f):
-    f.rocks("Mud", V(0, 0, 0), 2.4, DBROWN, 3, seed=12)
+    f.rocks("Mud", V(0, 0, 0), 3.6, DBROWN, 4, seed=12, color2=MOSS)
     rng = np.random.default_rng(12)
     for i in range(7):
         a = 2 * math.pi * i / 7; r = rng.uniform(0.3, 1.2); h = rng.uniform(2.5, 5.5); b = V(r * math.cos(a), r * math.sin(a), 1.0)
         seg(f, f"Stem{i}", [b, b + V(0.2, 0, h * 0.5), b + V(0, 0.2, h)], 0.1, MOSS, K=6)
-        f.ball(f"Bulb{i}", b + V(0, 0.2, h + 0.3), 0.35 + 0.1 * h / 5, LIME, glow=True, u=10, v=7)
+        f.ball(f"Bulb{i}", b + V(0, 0.2, h + 0.4), 0.5 + 0.15 * h / 5, LIME, glow=True, u=10, v=7)
 def sunken_lantern(f):
     f.block("Mud", V(0, 0, 0.15), (4, 3, 0.3), DBROWN)
     X = Xf(Ry(math.pi / 2 - 0.2), (0, 0, 1.2))
@@ -170,9 +175,9 @@ def cypress_knees(f):
         f.cyl(f"Knee{i}", b, b + V(0, 0, h), rng.uniform(0.5, 0.8), BROWN if i % 2 else RBROWN, 8, r1=0.18)
     f.block("Mud", V(0, 0, 0.15), (6, 6, 0.3), DBROWN)
 def methane_vent(f):
-    f.rocks("Mound", V(0, 0, 0), 2.6, DBROWN, 4, seed=15, color2=MOSS)
-    f.cyl("Mouth", V(0, 0, 1.8), V(0, 0, 2.1), 0.6, BLACK, 10)
-    bubbles(f, "Bubble", V(0, 0, 2.0), 14, 16, 0.5, 9)
+    f.rocks("Mound", V(0, 0, 0), 4.4, DBROWN, 5, seed=15, color2=MOSS)
+    f.cyl("Mouth", V(0, 0, 2.6), V(0, 0, 3.0), 1.0, BLACK, 10)
+    bubbles(f, "Bubble", V(0, 0, 3.0), 16, 16, 0.7, 9)
 
 # ======================================================================== 4 CORAL REEF
 def brain_coral(f):
