@@ -183,7 +183,10 @@ def methane_vent(f):
 def brain_coral(f):
     f.rocks("Base", V(0, 0, 0), 2.4, LGREY, 3, seed=3)
     f.ball("Brain", V(0, 0, 2.3), (2.6, 2.4, 1.9), PINK, u=16, v=10)
-    for k in range(4): seg(f, f"Ridge{k}", [V(-2.0, -1.2 + 0.8 * k, 2.6 + 0.3 * math.sin(k)), V(-0.6, -1.0 + 0.8 * k, 3.7), V(0.8, -1.3 + 0.8 * k, 3.7), V(2.0, -1.1 + 0.8 * k, 2.7)], 0.22, MAGENTA, K=6)
+    zt = lambda x, y: 2.3 + 1.9 * math.sqrt(max(0.0, 1 - (x / 2.6) ** 2 - (y / 2.4) ** 2))
+    for k in range(4):
+        y0 = -1.2 + 0.8 * k
+        seg(f, f"Ridge{k}", [V(x, y0 + 0.2 * math.sin(x * 2), zt(x, y0) + 0.05) for x in (-2.0, -1.0, 0.0, 1.0, 2.0)], 0.24, MAGENTA, K=6)
 def staghorn(f):
     rng = np.random.default_rng(14)
     def branch(name, p, d, L, r, depth):
@@ -222,10 +225,10 @@ def tube_sponge(f):
 def mooring_buoy(f):
     f.block("Anchor", V(0, 0, 0.6), (2.4, 2.4, 1.2), GREY)
     for k in range(18):
-        z = 1.3 + k * 0.7; f.block(f"Link{k}", V(0.15 * math.sin(k * 0.5), 0, z), (0.18, 0.45 if k % 2 else 0.18, 0.7), DGREY, studs=False)
+        z = 1.3 + k * 0.7; f.block(f"Link{k}", V(0.15 * math.sin(k * 0.5), 0, z), (0.3, 0.7 if k % 2 else 0.3, 0.7), DGREY, studs=False)
     top = 1.3 + 18 * 0.7
-    f.ball("Float", V(0, 0, top + 1.2), (1.6, 1.6, 1.3), RED)
-    f.cyl("Band", V(0, 0, top + 0.9), V(0, 0, top + 1.5), 1.62, WHITE, 16)
+    f.ball("Float", V(0, 0, top + 1.6), (2.4, 2.4, 1.9), RED)
+    f.cyl("Band", V(0, 0, top + 1.2), V(0, 0, top + 2.0), 2.42, WHITE, 16)
     f.cyl("Mast", V(0, 0, top + 2.3), V(0, 0, top + 3.8), 0.18, DGREY, 8)
     f.block("Light", V(0, 0, top + 4.0), (0.5, 0.5, 0.5), YELLOW, studs=False, glow=True)
 def kelp_stalks(f):
@@ -234,11 +237,11 @@ def kelp_stalks(f):
     for i in range(4):
         x, y = rng.uniform(-1, 1, 2); h = rng.uniform(10, 15)
         pts = [V(x + 0.6 * math.sin(z * 0.6 + i), y + 0.4 * math.cos(z * 0.5 + i), z) for z in np.linspace(0.5, h, 6)]
-        seg(f, f"Stalk{i}", pts, 0.16, rgb(120, 130, 40), K=6)
+        seg(f, f"Stalk{i}", pts, 0.3, rgb(120, 130, 40), K=6)
         for k in range(1, 6):
             p = pts[k]; a = k * 2.3 + i
-            f.block(f"Leaf{i}{k}", p + V(0.8 * math.cos(a), 0.8 * math.sin(a), 0.4), (1.6, 0.5, 0.1), rgb(150, 160, 50), Rz(a) @ Ry(-0.4), studs=False)
-            f.ball(f"Float{i}{k}", p + V(0.2 * math.cos(a), 0.2 * math.sin(a), 0), 0.22, YELLOW, u=8, v=6)
+            f.block(f"Leaf{i}{k}", p + V(1.2 * math.cos(a), 1.2 * math.sin(a), 0.5), (2.6, 0.9, 0.12), rgb(150, 160, 50), Rz(a) @ Ry(-0.4), studs=False)
+            f.ball(f"Float{i}{k}", p + V(0.3 * math.cos(a), 0.3 * math.sin(a), 0), 0.38, YELLOW, u=8, v=6)
 def sunken_container(f):
     X = Xf(Rx(0.12) @ Rz(0.35), (0, 0, 1.75))
     f.block("Box", X.p((0, 0, 0)), (9, 3.4, 3.4), RED, X.r())
@@ -247,17 +250,17 @@ def sunken_container(f):
     for k in range(7): f.ball(f"Barnacle{k}", X.p((-3.5 + k, 1.75, -1.2 + 0.3 * (k % 3))), 0.25, WHITE, u=8, v=5)
     for k in range(3): seg(f, f"Weed{k}", [X.p((-3 + 2.5 * k, 0, 1.7)), X.p((-3 + 2.5 * k, 0.3, 3.4)), X.p((-2.7 + 2.5 * k, 0, 5))], 0.13, LIME, K=6)
 def crab_trap(f):
-    s = (3.2, 2.4, 1.8); hx, hy, hz = s[0] / 2, s[1] / 2, s[2] / 2
+    s = (5.0, 3.8, 2.8); hx, hy, hz = s[0] / 2, s[1] / 2, s[2] / 2
     for x in (-hx, hx):
         for y in (-hy, hy): f.block(f"Post{x}{y}", V(x, y, hz), (0.2, 0.2, s[2]), YELLOW, studs=False)
     for z in (0, s[2]):
         for y in (-hy, hy): f.block(f"RailX{z}{y}", V(0, y, z), (s[0], 0.2, 0.2), YELLOW, studs=False)
         for x in (-hx, hx): f.block(f"RailY{z}{x}", V(x, 0, z), (0.2, s[1], 0.2), YELLOW, studs=False)
     for k in range(5): f.block(f"Mesh{k}", V(-hx + 0.55 * (k + 1), 0, s[2]), (0.08, s[1], 0.08), LGREY, studs=False)
-    f.block("CrabBody", V(0, 0, 0.45), (1.0, 0.8, 0.4), RED)
-    for sy in (-1, 1): f.block(f"Claw{sy}", V(0.7, sy * 0.45, 0.45), (0.5, 0.3, 0.3), RED, studs=False)
-    seg(f, "Line", [V(0, 0, s[2]), V(0.3, 0.2, 5), V(0, 0, 9)], 0.06, TAN, K=5)
-    f.ball("BuoyFloat", V(0, 0, 9.4), 0.5, ORANGE)
+    f.block("CrabBody", V(0, 0, 0.6), (1.8, 1.4, 0.7), RED)
+    for sy in (-1, 1): f.block(f"Claw{sy}", V(1.25, sy * 0.8, 0.6), (0.8, 0.5, 0.5), RED, studs=False)
+    seg(f, "Line", [V(0, 0, s[2]), V(0.3, 0.2, 4.5), V(0, 0, 6.5)], 0.1, TAN, K=5)
+    f.ball("BuoyFloat", V(0, 0, 7.0), 0.8, ORANGE)
 def sunken_anchor(f):
     f.cyl("Sand", V(0, 0, -0.2), V(0, 0, 0.2), 4.0, SAND, 16)
     X = Xf(Ry(1.25), (0, 0, 1.0))
