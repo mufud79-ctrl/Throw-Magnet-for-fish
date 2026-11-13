@@ -7,6 +7,8 @@ from tffa_kit import *
 FUR, FACE, CHEST, SOLE = rgb(62, 62, 70), rgb(98, 92, 98), rgb(44, 44, 52), rgb(40, 40, 46)
 m = Model("Gorilla", sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else None, stud=0.6, chamfer=0.2)
 
+LR = lambda s: "L" if s > 0 else "R"
+m.bone("Body", (-0.5, 0, 3.6)).__enter__()     # everything not inside another bone rides the Body bone
 # body mass: one big wedge that is tallest at the head and slopes down to the rump
 # exact corners (hexa) give full control of the back line: high at the shoulders, sloping to the rump
 m.hexa("Back", [(-3.7, -2.9, 1.6), (2.4, -3.0, 1.6), (2.4, 3.0, 1.6), (-3.7, 2.9, 1.6),
@@ -16,7 +18,7 @@ m.box("Hips", (-2.3, 0, 2.3), (3.0, 5.4, 2.8), FUR, top=(0.85, 0.9))
 m.box("Chest", (2.9, 0, 3.8), (1.6, 3.6, 2.8), CHEST, rot=Ry(-0.2), studs=False)
 
 # head: the highest point; crest slopes back from the brows; vertical face plate carries the eyes
-with m.frame(pivot=(3.2, 0, 5.2), scale=1.25, move=(0.15, 0, -0.1)):   # big TFFA head
+with m.bone("Head", (3.3, 0, 5.4)), m.frame(pivot=(3.2, 0, 5.2), scale=1.25, move=(0.15, 0, -0.1)):   # big TFFA head
     m.box("Head", (2.7, 0, 6.6), (3.4, 3.6, 2.6), FUR, top=(0.42, 0.8), shift=(-0.95, 0))
     m.box("Face", (4.0, 0, 6.8), (1.0, 3.4, 2.1), FUR)
     m.box("Muzzle", (5.0, 0, 5.45), (2.8, 3.0, 1.9), FACE, top=(0.72, 0.85), shift=(-0.25, 0))
@@ -28,10 +30,13 @@ with m.frame(pivot=(3.2, 0, 5.2), scale=1.25, move=(0.15, 0, -0.1)):   # big TFF
 
 for s in (1, -1):
     sh, el, ha = V(2.0, s * 2.95, 5.4), V(2.7, s * 3.3, 3.0), V(3.0, s * 3.2, 0.9)
-    m.seg(f"UpperArm{s}", sh, el, 3.0, 2.7, FUR)
-    m.seg(f"Forearm{s}", el + V(0, 0, 0.3), ha, 2.8, 3.1, FUR)
-    m.box(f"Fist{s}", (3.25, s * 3.2, 0.55), (3.0, 3.0, 1.1), FUR, top=(0.9, 0.9))
-    m.seg(f"Leg{s}", (-2.3, s * 2.4, 2.2), (-2.0, s * 2.6, 0.5), 2.6, 2.3, FUR)
-    m.box(f"Foot{s}", (-1.7, s * 2.6, 0.35), (2.6, 2.0, 0.7), SOLE, studs=False)
+    with m.bone(f"Leg_F{LR(s)}", sh):            # knuckle-walking arms use the quadruped front-leg bones
+        m.seg(f"UpperArm{s}", sh, el, 3.0, 2.7, FUR)
+        m.seg(f"Forearm{s}", el + V(0, 0, 0.3), ha, 2.8, 3.1, FUR)
+        m.box(f"Fist{s}", (3.25, s * 3.2, 0.55), (3.0, 3.0, 1.1), FUR, top=(0.9, 0.9))
+    with m.bone(f"Leg_B{LR(s)}", (-2.3, s * 2.4, 2.4)):
+        m.seg(f"Leg{s}", (-2.3, s * 2.4, 2.2), (-2.0, s * 2.6, 0.5), 2.6, 2.3, FUR)
+        m.box(f"Foot{s}", (-1.7, s * 2.6, 0.35), (2.6, 2.0, 0.7), SOLE, studs=False)
 
+m.gait = {"amp": 0.8}
 m.done(views=[("hero", 50, 10, 40), ("rainbow", 55, 4, 30, "rainbow"), ("side", 90, 5, 50), ("front", 0, 8, 50)])

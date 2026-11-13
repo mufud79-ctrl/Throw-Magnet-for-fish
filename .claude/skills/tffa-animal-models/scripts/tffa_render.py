@@ -112,3 +112,30 @@ def post(path, r):
     o = bpy.data.images.new("o", w, h, alpha=False)
     o.pixels.foreach_set(np.concatenate([np.clip(out, 0, 1), np.ones((h, w, 1))], 2).astype(np.float32).ravel())
     o.filepath_raw = path; o.file_format = "PNG"; o.save(); bpy.data.images.remove(o)
+
+def anim_strip(model, az=40, el=12, lens=45, n=4, res=420):
+    """previews/<Name>_anim.png: one row per clip (Idle / Walk / Fly), n frames across, to eyeball the motion."""
+    sc = bpy.context.scene; arm = model.arm
+    sc.render.resolution_x = sc.render.resolution_y = res; sc.cycles.samples = 8
+    cam = sc.camera; os.makedirs(os.path.join(model.out, "previews"), exist_ok=True)
+    co = np.array([o.matrix_world @ v.co for o in model.objs for v in o.data.vertices])
+    lo, hi = co.min(0), co.max(0); ctr = Vector(((lo + hi) / 2).tolist()); rad = float(np.linalg.norm(hi - lo)) / 2
+    tg = cam.constraints[0].target; tg.location = ctr + Vector((0, 0, rad * 0.1))
+    a, e = math.radians(az), math.radians(el); d = Vector((-math.sin(a) * math.cos(e), math.cos(a) * math.cos(e), math.sin(e)))
+    cam.data.lens = lens; cam.location = tg.location + d * (rad * 1.2 / math.sin(math.atan(18 / lens)))
+    rows = []
+    for act in model.clips:
+        arm.animation_data.action = act; F = int(act["frames"]); row = []
+        for i in range(n):
+            sc.frame_set(int(F * i / n))
+            p = os.path.join(model.out, "previews", "_tmp.png"); sc.render.filepath = p
+            bpy.ops.render.render(write_still=True); post(p, 3)
+            im = bpy.data.images.load(p); px = np.array(im.pixels[:], np.float32).reshape(res, res, 4); bpy.data.images.remove(im)
+            row.append(px)
+        rows.append(np.concatenate(row, 1))
+    os.remove(p)
+    arm.animation_data.action = model.clips[0]; sc.frame_set(0)
+    sheet = np.concatenate(rows[::-1], 0); h, w = sheet.shape[:2]
+    o = bpy.data.images.new("strip", w, h); o.pixels.foreach_set(sheet.ravel())
+    o.filepath_raw = os.path.join(model.out, "previews", f"{model.name}_anim.png"); o.file_format = "PNG"; o.save(); bpy.data.images.remove(o)
+    print("ANIM", [a["clip"] for a in model.clips])

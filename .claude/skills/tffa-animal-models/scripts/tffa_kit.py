@@ -73,6 +73,7 @@ class Model:
         self.render_on = "--no-render" not in sys.argv
         self.cells = {}            # key -> atlas index
         self.parts, self.glow, self._xf = [], [], []
+        self.bones, self._bstack = {}, []      # rig: name -> (pivot in build space, parent)
         bpy.ops.wm.read_factory_settings(use_empty=True)
 
     # ------------------------------------------------------------------ atlas
@@ -92,15 +93,25 @@ class Model:
         studs: True (all big faces), 'top', 'sides' or False. grad=(c0, c1) paints a bottom->top gradient instead."""
         C = [Vector(p) for p in C]
         # cells per axis (shared by opposite faces so neighbouring faces line up)
-        ex = max((C[1] - C[0]).length, (C[2] - C[3]).length, (C[5] - C[4]).length, (C[6] - C[7]).length)
-        ey = max((C[3] - C[0]).length, (C[2] - C[1]).length, (C[7] - C[4]).length, (C[6] - C[5]).length)
-        ez = max((C[4] - C[0]).length, (C[5] - C[1]).length, (C[6] - C[2]).length, (C[7] - C[3]).length)
+        E = {"x": [(C[1] - C[0]).length, (C[2] - C[3]).length, (C[5] - C[4]).length, (C[6] - C[7]).length],
+             "y": [(C[3] - C[0]).length, (C[2] - C[1]).length, (C[7] - C[4]).length, (C[6] - C[5]).length],
+             "z": [(C[4] - C[0]).length, (C[5] - C[1]).length, (C[6] - C[2]).length, (C[7] - C[3]).length]}
+        ex, ey, ez = (max(E[k]) for k in "xyz")
         g = self.stud
-        nx, ny, nz = (max(1, round(e / g)) for e in (ex, ey, ez))
-        # faces: (corner a, corner b(=a+U), corner c, corner d(=a+V), nu, nv, kind)
-        F = [(0, 3, 2, 1, ny, nx, "bottom"), (4, 5, 6, 7, nx, ny, "top"),
-             (0, 1, 5, 4, nx, nz, "side"), (1, 2, 6, 5, ny, nz, "side"),
-             (2, 3, 7, 6, nx, nz, "side"), (3, 0, 4, 7, ny, nz, "side")]
+        ch = self.chamfer if chamfer is None else chamfer
+        off = min(ex, ey, ez) * ch if ch > 0 else 0.0
+        # grid lines per axis; lines inside the chamfer zone are dropped (the bevel would invert those thin cells)
+        lines, unit = {}, {}
+        for k in "xyz":
+            n = max(1, round(max(E[k]) / g)); r = off * 1.15 / max(min(E[k]), 1e-6)
+            ts = [0.0] + [i / n for i in range(1, n) if r < i / n < 1 - r] + [1.0]
+            lines[k], unit[k] = ts, 1.0 / n
+        if off > 0:   # never bevel wider than the outermost cell
+            off = min(off, 0.9 * min((lines[k][1] if len(lines[k]) > 1 else 1) * min(E[k]) for k in "xyz"))
+        # faces: (corner a, corner b(=a+U), corner c, corner d(=a+V), u-axis, v-axis, kind)
+        F = [(0, 3, 2, 1, "y", "x", "bottom"), (4, 5, 6, 7, "x", "y", "top"),
+             (0, 1, 5, 4, "x", "z", "side"), (1, 2, 6, 5, "y", "z", "side"),
+             (2, 3, 7, 6, "x", "z", "side"), (3, 0, 4, 7, "y", "z", "side")]
         bm = bmesh.new(); cid = bm.faces.layers.int.new("cid"); vmap = {}
         info = []
         def vert(p):
@@ -108,27 +119,28 @@ class Model:
             if k not in vmap: vmap[k] = bm.verts.new(p)
             return vmap[k]
         lo = min(p.z for p in C); hi = max(p.z for p in C)
-        for a, b, c, d, nu, nv, kind in F:
+        for a, b, c, d, ua, va, kind in F:
             A, B, Cc, D = C[a], C[b], C[c], C[d]
             P = lambda s, t: (A * (1 - s) + B * s) * (1 - t) + (D * (1 - s) + Cc * s) * t
             fu, fv = (B - A).length, (D - A).length
             st = bool(studs) and not grad and (studs is True or (studs == "top" and kind == "top") or
                                                (studs == "sides" and kind == "side")) and min(fu, fv) >= 0.55 * g
-            for i in range(nu):
-                for j in range(nv):
-                    q = [P(i / nu, j / nv), P((i + 1) / nu, j / nv), P((i + 1) / nu, (j + 1) / nv), P(i / nu, (j + 1) / nv)]
+            U_, V_ = lines[ua], lines[va]
+            for i in range(len(U_) - 1):
+                for j in range(len(V_) - 1):
+                    s0, s1, t0, t1 = U_[i], U_[i + 1], V_[j], V_[j + 1]
+                    q = [P(s0, t0), P(s1, t0), P(s1, t1), P(s0, t1)]
                     if (q[1] - q[0]).cross(q[3] - q[0]).length < 1e-9: continue
                     f = bm.faces.new([vert(p) for p in q])
-                    f[cid] = len(info); info.append((q[0], q[1] - q[0], q[3] - q[0], st, (i * 31 + j * 17 + seed) % 4))
+                    whole = abs((s1 - s0) - unit[ua]) < 1e-6 and abs((t1 - t0) - unit[va]) < 1e-6   # merged edge cells stay plain
+                    f[cid] = len(info); info.append((q[0], q[1] - q[0], q[3] - q[0], st and whole, (i * 31 + j * 17 + seed) % 4))
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         new = set()
-        ch = self.chamfer if chamfer is None else chamfer
-        if ch > 0:
-            m = min(ex, ey, ez)
+        if off > 0:
             sharp = [e for e in bm.edges if len(e.link_faces) == 2 and e.link_faces[0].normal.angle(e.link_faces[1].normal, 0) > 0.35]
             if sharp:
-                res = bmesh.ops.bevel(bm, geom=sharp, offset=m * ch, segments=1, profile=0.5, affect="EDGES", clamp_overlap=True)
+                res = bmesh.ops.bevel(bm, geom=sharp, offset=off, segments=1, profile=0.5, affect="EDGES", clamp_overlap=True)
                 new = set(res["faces"])
         uvl = bm.loops.layers.uv.new("UVMap")
         pc = self._plain(color)
@@ -166,11 +178,31 @@ class Model:
             finally: self._xf.pop()
         return cm()
 
+    def bone(self, name, head=None, parent=None):
+        """Context manager: parts built inside are skinned (rigidly) to bone `name`, pivoting at `head`.
+        Standard names (shared clips work across a family): Body, Neck, Head, Jaw, Ear_L/R, Tail1..n,
+        Leg_FL/FR/BL/BR (quadrupeds) or Leg_L/R + Arm_L/R (bipeds), Wing_L/R, Fin_L/R, Tent<k>_<j>.
+        Omit head to re-enter an existing bone. parent defaults to the enclosing bone, else Body (Body -> Root)."""
+        import contextlib
+        if name not in self.bones:                        # first definition wins (re-entering keeps the pivot)
+            p = Vector(head) if head is not None else Vector((0, 0, 0))
+            for M in reversed(self._xf): p = M @ p
+            par = parent or (self._bstack[-1] if self._bstack else ("Root" if name == "Body" else "Body"))
+            self.bones[name] = (p, par if par != name else "Root", head is not None)
+        @contextlib.contextmanager
+        def cm():
+            self._bstack.append(name)
+            try: yield
+            finally: self._bstack.pop()
+        return cm()
+
     def _obj(self, name, bm, glow):
         for M in reversed(self._xf): bmesh.ops.transform(bm, matrix=M, verts=bm.verts)
         me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
         for p in me.polygons: p.use_smooth = False
         ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob)
+        ob["bone"] = self._bstack[-1] if self._bstack else "Body"
+        ob.vertex_groups.new(name=ob["bone"]).add(list(range(len(me.vertices))), 1.0, "REPLACE")
         (self.glow if glow else self.parts).append(ob); return ob
 
     # ------------------------------------------------------------------ friendly primitives
@@ -199,13 +231,20 @@ class Model:
                 C.append(p + fwd * (X * d / 2) + side * (Y * w / 2))
         return self.hexa(name, C, color, **kw)
 
-    def chain(self, name, pts, widths, color, depths=None, overlap=0.18, **kw):
-        """Stepped tapering chain of segs through pts (tails, trunks, necks, tentacles). widths per point."""
+    def chain(self, name, pts, widths, color, depths=None, overlap=0.18, bones=None, **kw):
+        """Stepped tapering chain of segs through pts (tails, trunks, necks, tentacles). widths per point.
+        bones: a bone name prefix (e.g. "Tail" -> Tail1, Tail2, ...) or a list; each segment gets its own bone pivoting
+        at its start point, parented to the previous one, so the chain can wag."""
         depths = depths or widths
+        names = bones if isinstance(bones, (list, tuple)) else ([f"{bones}{i + 1}" for i in range(len(pts) - 1)] if bones else None)
         for i in range(len(pts) - 1):
             a, b = Vector(pts[i]), Vector(pts[i + 1]); d = (b - a)
             a2, b2 = a - d * overlap * (i > 0), b + d * overlap * (i < len(pts) - 2)
-            self.seg(f"{name}{i}", a2, b2, widths[i], widths[i + 1], color, depths[i], depths[i + 1], **kw)
+            if names:
+                with self.bone(names[i], a, None if i == 0 else names[i - 1]):
+                    self.seg(f"{name}{i}", a2, b2, widths[i], widths[i + 1], color, depths[i], depths[i + 1], **kw)
+            else:
+                self.seg(f"{name}{i}", a2, b2, widths[i], widths[i + 1], color, depths[i], depths[i + 1], **kw)
 
     def spike(self, name, base, tip, r, color, sides=4, rot=0.0, flat=1.0, glow=False):
         """Pyramid spike: teeth, claws, horns, spines. flat < 1 makes a blade: thin across the animal (Y),
@@ -390,22 +429,68 @@ class Model:
             gb.inputs["Emission Strength"].default_value = 2.0
             glow.data.materials.append(gm)
         self.xform = R @ shift
+        arm = self._rig(objs, R @ shift, hi[2] - lo[2])
         tris = {o.name: sum(len(p.vertices) - 2 for p in o.data.polygons) for o in objs}
         d = body.dimensions
         print(f"TRIS {tris}  SIZE (studs) W {d.x:.1f} x L {d.y:.1f} x H {d.z:.1f}")
         for n_, t in tris.items(): assert t < 20000, f"{n_} has {t} triangles (Roblox limit 20k)"
         bpy.ops.object.select_all(action="DESELECT")
-        for o in objs: o.select_set(True)
+        for o in objs + [arm]: o.select_set(True)
         base = os.path.join(self.out, self.name)
-        bpy.ops.export_scene.gltf(filepath=base + ".glb", export_format="GLB", use_selection=True)
+        import tffa_anim
+        clips = tffa_anim.add_clips(arm, self)
+        arm.animation_data.action = clips[0]
+        bpy.ops.export_scene.gltf(filepath=base + ".glb", export_format="GLB", use_selection=True, export_animations=True,
+                                  export_animation_mode="ACTIONS", export_skins=True)
         bpy.ops.export_scene.fbx(filepath=base + ".fbx", use_selection=True, path_mode="COPY", embed_textures=True,
-                                 mesh_smooth_type="FACE", add_leaf_bones=False, bake_anim=False)
+                                 mesh_smooth_type="FACE", add_leaf_bones=False, bake_anim=True, bake_anim_use_all_actions=True,
+                                 bake_anim_use_nla_strips=False, bake_anim_force_startend_keying=True)
+        os.makedirs(os.path.join(self.out, "anims"), exist_ok=True)
+        for act in clips:                       # one FBX per clip for Roblox's Animation Editor (Import > From FBX Animation)
+            arm.animation_data.action = act
+            bpy.context.scene.frame_start, bpy.context.scene.frame_end = 0, int(act["frames"])
+            bpy.ops.object.select_all(action="DESELECT"); arm.select_set(True)
+            for o in objs: o.select_set(True)
+            bpy.ops.export_scene.fbx(filepath=os.path.join(self.out, "anims", f"{self.name}_{act['clip']}.fbx"), use_selection=True,
+                                     add_leaf_bones=False, bake_anim=True, bake_anim_use_all_actions=False, bake_anim_use_nla_strips=False,
+                                     bake_anim_force_startend_keying=True, mesh_smooth_type="FACE", embed_textures=False, path_mode="STRIP")
+        arm.animation_data.action = clips[0]; bpy.context.scene.frame_set(0)
+        print("CLIPS", [f"{a['clip']}({a['frames']}f)" for a in clips])
         bpy.ops.wm.save_as_mainfile(filepath=base + ".blend")
-        self.objs = objs
+        self.objs, self.arm, self.clips = objs, arm, clips
         if self.render_on:
             import tffa_render
             tffa_render.render(self, views or [("hero", 35, 14, 50)])
+            if os.environ.get("TFFA_ANIM_PREVIEW", "1") != "0": tffa_render.anim_strip(self)
         print("DONE", base)
+
+    def _rig(self, objs, X, height):
+        """Armature in final space. All bones point straight up with roll 0, so every bone shares the same local axes:
+        X = animal's right (pitch: + nose up / leg swings forward), Y = up (yaw: + turns left), Z = backward
+        (roll: + lowers the animal's LEFT side). That is what makes one clip work on every animal of a family."""
+        B = dict(self.bones)
+        co = np.array([v.co[:] for o in objs for v in o.data.vertices])
+        if "Body" not in B or not B["Body"][2]:
+            c = (co.min(0) + co.max(0)) / 2
+            B["Body"] = (X.inverted() @ Vector((c[0], c[1], c[2] * 0.8)), "Root", True)
+        ad = bpy.data.armatures.new(f"{self.name}_Rig"); arm = bpy.data.objects.new(f"{self.name}_Rig", ad)
+        bpy.context.scene.collection.objects.link(arm)
+        bpy.ops.object.select_all(action="DESELECT"); arm.select_set(True); bpy.context.view_layer.objects.active = arm
+        bpy.ops.object.mode_set(mode="EDIT")
+        L = max(0.3, height * 0.08)
+        root = ad.edit_bones.new("Root"); root.head = (0, 0, 0); root.tail = (0, 0, L); root.roll = 0
+        made = {"Root": root}
+        def make(n):
+            if n in made: return made[n]
+            p, par, _ = B[n]; parent = make(par if par in B or par == "Root" else "Body")
+            eb = ad.edit_bones.new(n); h = X @ p; eb.head = h; eb.tail = h + Vector((0, 0, L)); eb.roll = 0
+            eb.parent = parent; made[n] = eb; return eb
+        for n in B: make(n)
+        bpy.ops.object.mode_set(mode="OBJECT")
+        for o in objs:
+            o.parent = arm; md = o.modifiers.new("Armature", "ARMATURE"); md.object = arm
+        arm["height"] = float(height)
+        return arm
 
 
 def _k(c): return tuple(round(float(x), 4) for x in c)

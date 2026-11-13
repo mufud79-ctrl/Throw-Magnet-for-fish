@@ -27,7 +27,13 @@ Stop only when a fresh pass finds nothing at the silhouette, proportion or face 
 - [ ] Gradients dominated by the tip colour?
 - [ ] Mutation preview (if the reference is a mutation): saturated, eyes/teeth untouched.
 
-## D. Export sanity
+## D. Rig & animation (previews/<Name>_anim.png: rows = Idle, Walk, Fly)
+- [ ] Every part follows a bone: nothing floats or stays behind when legs/head/wings move.
+- [ ] Walk: diagonal leg pairs (quads) or alternating legs + counter-swinging arms (bipeds); feet don't sink far below ground.
+- [ ] Fly (winged): wings flap symmetrically, body lifts, legs tuck. Flightless birds have no Fly clip.
+- [ ] Idle: head looks around, body breathes, tail wags; unanimated bones sit at rest (no pose left over from another clip).
+
+## E. Export sanity
 - [ ] `TRIS` line under 20k per mesh. Size in studs plausible.
 - [ ] Facing: the animal looks toward Roblox -Z (the kit does this; don't rotate the build).
 
@@ -43,3 +49,6 @@ Stop only when a fresh pass finds nothing at the silhouette, proportion or face 
 | Feathers look muddy orange | 2-stop gradient | 3 stops, tip colour dominant |
 | Pale colours look white | preview over-exposure | judge mid-tones; keep belly colours fairly saturated |
 | Black bar on the image edge | outline wrap | (fixed: padded dilation) |
+| Black square holes on small animals | bevel wider than a stud cell inverted faces | (fixed: grid lines inside the chamfer zone are dropped) |
+| Idle shows legs mid-stride | unkeyed bones kept the previous clip's pose | (fixed: every clip keys every bone) |
+| Spots stick out as slabs near the rump | patches placed over the tapered/chamfered ends | keep patterns on the flat middle (archetype `pattern` does) |

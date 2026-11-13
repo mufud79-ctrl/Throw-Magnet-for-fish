@@ -11,6 +11,8 @@ Everything needed is in this folder:
 |---|---|
 | `scripts/tffa_kit.py` | The builder. `Model` + primitives (`box`, `hexa`, `seg`, `chain`, `spike`, `slab`, `poly`, `ball`), the face kit (`eyes`, `teeth`), `frame()` groups, atlas + export |
 | `scripts/tffa_render.py` | Previews: Roblox-like light, ground shadow, thick black thumbnail outline, `rainbow` mutation preview |
+| `scripts/tffa_archetypes.py` | Rigged parametric builders: `quad`, `bird`, `ape`, `theropod`, `frog`, `seal`, `snake`, `scorpion`, `blob`, `golem`, `whale`, `kraken` + accessories (`horns`, `wings`, `tusks`, `mane_back`, `shell`, `plates`, `frill`, ...) and `build(name, arch, spec, out)` |
+| `scripts/tffa_anim.py` | Procedural looping clips from bone names: `Idle` (always), `Walk` (legs/spine/tentacles), `Fly` (wings) |
 | `scripts/compare.py` | Reference vs ours side-by-side sheet (system `python3` + Pillow) |
 | `references/style_guide.md` | **Read first.** The style rules, measured from the real game shots |
 | `references/review_checklist.md` | The harsh comparison checklist + known pitfalls and their fixes |
@@ -39,7 +41,20 @@ Everything needed is in this folder:
    ```
    Open the sheet and go through `references/review_checklist.md` point by point. Write down every difference, worst first (silhouette > proportions > face > colour > detail).
 6. **Fix and repeat** until a fresh look finds nothing silhouette/proportion/face-level. Typically 3-6 rounds. Do not stop at "looks okay". Check the front and side views too, not only the matching view (thin edge-on wings and hidden eyes show up there).
-7. **Deliver**: `<Name>.glb` (import this into Roblox with the 3D Importer, at 1 unit = 1 stud, facing -Z, pivot at the ground centre), `<Name>.fbx`, `<Name>.blend`, `<Name>_Texture.png`, `<Name>_Detail.png` (stud shading + mutation mask), and `previews/`. Each mesh must stay under 20k triangles (the kit asserts this). Typical builds are 3-8k.
+7. **Rig + animate (required, every model).** Wrap parts in bone contexts: `with m.bone("Leg_FL", pivot): ...`
+   (pivot = the joint: hip/shoulder for legs, neck tip for the head, chain joints for tails via `m.chain(..., bones="Tail")`).
+   Use the standard names so clips are shared per family: `Body` (everything not in another bone), `Neck`, `Head`, `Jaw`,
+   `Ear_L/R`, `Tail1..n`, `Leg_FL/FR/BL/BR` (quadrupeds, incl. knuckle-walking apes), `Leg_L/R` + `Arm_L/R` (bipeds),
+   `Wing_L/R`, `Fin_L/R`, `Tent<k>_<j>`. Animal's left = +Y build = `_L`. `done()` builds the armature, skins every part
+   rigidly to its bone, generates the clips and checks them in `previews/<Name>_anim.png` (one row per clip, top = Idle).
+   Look at that strip: legs must swing in diagonal pairs, wings must flap, nothing may detach. `m.gait = {"fly": False}`
+   for flightless birds, `{"hop": True}` for frogs/rabbits, `{"amp": 0.8}` to calm big animals.
+8. **Batch carefully.** For rosters, build ONE zone (5-8 animals) at a time with `tools/blender/tffa_zoo.py <Zone> --sheet`,
+   review `<Zone>_overview.png` and `<Zone>_anim_overview.png` animal by animal, fix, rebuild, then commit and move on.
+   Quality drops when many animals are generated without review - don't do it.
+9. **Deliver**: `<Name>.glb` (import this into Roblox with the 3D Importer, at 1 unit = 1 stud, facing -Z, pivot at the ground centre), `<Name>.fbx`, `<Name>.blend`, `<Name>_Texture.png`, `<Name>_Detail.png` (stud shading + mutation mask), `anims/<Name>_<Clip>.fbx` (one per clip: Roblox Animation
+   Editor → Import → From FBX Animation → Loop → Publish; bone names are shared, so one upload per family works for every
+   animal with the same bones), and `previews/`. The GLB/FBX hold the skinned mesh + armature + all clips. Each mesh must stay under 20k triangles (the kit asserts this). Typical builds are 3-8k.
 
 ## Kit cheat-sheet (all sizes in studs, colours from `rgb(r, g, b)`)
 ```python
@@ -56,7 +71,14 @@ m.ball(name, center, r, COL)                    # low-poly faceted ball (knobs, 
 m.eyes(left_eye_center, facing=(1,0,0), size=(w, h), pupil=0.6, look=(toward_nose, up), angry=0.3, ...)
 m.teeth(name, start, end, n, length, r)
 with m.frame(pivot=, scale=1.25, rot=Ry(a), move=(0,0,1)): ...   # resize a head, open a jaw, pose a limb
+with m.bone("Leg_FL", (x, y, hip_z)): ...                         # rig: parts inside are skinned to that bone
+m.gait = {"fly": False}                                          # clip options (walk / fly / hop / amp / crawl)
 m.done(views=[("hero", 40, 10, 45), ("rainbow", 50, 8, 35, "rainbow"), ("head", 35, -5, 50, "plain", (x, y, z, r))], glow_color=None)
+
+# or a whole rigged animal from an archetype spec (design units, scaled x1.6 to studs):
+from tffa_archetypes import *
+build("Fox", quad, dict(body=(2.0, 0.95, 1.0), legs=(0.75, 0.32), head=(1.0, 1.05, 0.9), c1=rgb(236, 120, 40), belly=WHITE,
+      snout=(0.55, 0.5, 0.4), snout_c=WHITE, ears="point", tail="bushy"), out_dir)
 ```
 Palette constants: `WHITE BLACK PUPIL TOOTH CLAW HORN MOUTH TONGUE PINK NOSE`, helpers `dk(c, k)`, `lt(c, k)`, `mix(a, b, t)`, `hexc("#ff8800")`.
 Neon parts: pass `glow=True` to a primitive. They export as `<Name>_Glow` (set Material = Neon in Roblox), and `done(glow_color=rgb(...))` sets their preview colour.
