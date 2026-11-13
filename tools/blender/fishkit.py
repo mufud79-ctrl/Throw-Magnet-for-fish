@@ -361,7 +361,8 @@ class Fish:
             ob.data.transform(Matrix.Translation(-center)); ob.location = (0, 0, 0)
             bpy.ops.object.select_all(action="DESELECT"); ob.select_set(True)
             bpy.context.view_layer.objects.active = ob
-            (bpy.ops.object.shade_flat if getattr(self, "flat", False) else bpy.ops.object.shade_smooth)()
+            fl = getattr(self, "flat", False)
+            if fl != "keep": (bpy.ops.object.shade_flat if fl else bpy.ops.object.shade_smooth)()
 
         mat = bpy.data.materials.new(f"{self.name}_Mat")
         bsdf = mat.node_tree.nodes["Principled BSDF"]; bsdf.inputs["Roughness"].default_value = 0.45
