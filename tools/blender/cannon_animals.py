@@ -43,7 +43,7 @@ def trex(f):
         f.block(f"Eye{sy}", V(5.2, sy * 1.29, 7.03), (0.56, 0.05, 0.46), ORANGE_EYE, studs=False)
         f.block(f"Pupil{sy}", V(5.24, sy * 1.315, 7.03), (0.14, 0.04, 0.42), BLACK, studs=False)
         f.block(f"Glint{sy}", V(5.08, sy * 1.33, 7.17), (0.1, 0.03, 0.1), WHITE, studs=False)
-        f.block(f"Brow{sy}", V(5.2, sy * 1.12, 7.52), (1.3, 0.55, 0.36), G2, Ry(-0.28) @ Rx(sy * 0.12), studs=False)
+        f.block(f"Brow{sy}", V(5.25, sy * 1.12, 7.45), (1.35, 0.55, 0.36), G2, Ry(0.34) @ Rx(sy * 0.12), studs=False)
         f.block(f"Nostril{sy}", V(7.8, sy * 0.45, 7.26), (0.3, 0.26, 0.06), BLACK, studs=False)
         # tiny two-claw arms
         f.block(f"UpperArm{sy}", V(3.05, sy * 1.35, 4.25), (0.8, 0.35, 0.35), G1, Ry(0.8), studs=False)
