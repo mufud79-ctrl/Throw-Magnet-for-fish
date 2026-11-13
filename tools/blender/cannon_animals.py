@@ -493,7 +493,8 @@ ZONES = [
 ]
 
 def build(folder, name, fn, P):
-    f = Brick(name, "CannonTame/Animals/" + folder)
+    big = fn in ("trex", trexlike, whale, kraken, golem) or (P and max(P.get("body", (0,))) >= 3.4)
+    f = Brick(name, "CannonTame/Animals/" + folder, grid=1.0 if big else 0.5, bevel=0.22)
     if fn == "trex": trex(f); glow = None
     else: fn(f, P); glow = P.get("glow")
     if not f.glow: glow = None

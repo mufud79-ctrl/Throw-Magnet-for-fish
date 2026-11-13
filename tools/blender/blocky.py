@@ -35,9 +35,9 @@ def _stud_tile():
 
 class Brick(Fish):
     flat = "keep"
-    def __init__(self, name, folder, grid=1.0):
+    def __init__(self, name, folder, grid=1.0, bevel=0.0):
         super().__init__(name, folder, L=3.0, R=0.5, H=1.0, PT=[0, 1], PR=[1, 1], fin_styles=1)
-        self.cells, self.grid = {}, grid
+        self.cells, self.grid, self.bevel = {}, grid, bevel
 
     # ---- atlas cells
     def cell(self, color, studs):
@@ -79,7 +79,20 @@ class Brick(Fish):
                     faces.append(tuple(vid(p) for p in q))
                     uvs.append([self._uv(cb, 0, 0), self._uv(cb, 1, 0), self._uv(cb, 1, 1), self._uv(cb, 0, 1)] if st else [self._uv(cb, .5, .5)] * 4)
         ob = self.make_obj(name, self._place(verts, center, rot), faces, uvs, glow)
-        self._smooth(ob, [False] * len(faces)); return ob
+        self._smooth(ob, [False] * len(faces))
+        bv = getattr(self, "bevel", 0.0)
+        if bv > 0: self._round(ob, min(size) * bv)
+        return ob
+
+    def _round(self, ob, off, segs=3):
+        """Round the outer box edges (TFFA-style chunky soft parts); bevel faces get smooth shading."""
+        bm = bmesh.new(); bm.from_mesh(ob.data)
+        sharp = [e for e in bm.edges if len(e.link_faces) == 2 and e.link_faces[0].normal.angle(e.link_faces[1].normal, 0) > 0.5]
+        if sharp:
+            res = bmesh.ops.bevel(bm, geom=sharp, offset=off, segments=segs, profile=0.5, affect="EDGES", clamp_overlap=True)
+            for fc in bm.faces: fc.smooth = False
+            for fc in res["faces"]: fc.smooth = True
+        bm.to_mesh(ob.data); bm.free()
 
     def wedge(self, name, center, size, color, rot=None, glow=False):
         """Roblox WedgePart: full height at -X, sloping down to +X."""

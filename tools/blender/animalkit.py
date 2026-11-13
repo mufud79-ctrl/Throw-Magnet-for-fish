@@ -15,17 +15,15 @@ def lerp(a, b, t): return a + (b - a) * t
 
 # ------------------------------------------------------------------ shared face / parts
 def eyes(f, hc, hl, hw, hh, angry=False, iris=YELLOW, brow=None, size=1.0, fwd=0.22, up=0.18):
-    e = min(hh, hl) * 0.3 * size
+    """TFFA-style eyes: white block, black pupil toward the front, thick black brow (tilted down-in when angry).
+    A non-default iris colour (fantasy animals) replaces the white."""
+    e = min(hh, hl) * 0.34 * size
+    white = WHITE if iris in (YELLOW,) or not angry else iris
     for sy in (1, -1):
         p = hc + V(hl * fwd, sy * (hw / 2 + 0.03), hh * up)
-        if angry:
-            f.block(f"Socket{sy}", p, (e * 1.5, 0.05, e * 1.15), BLACK, studs=False)
-            f.block(f"Iris{sy}", p + V(0, sy * 0.02, 0), (e * 1.05, 0.05, e * 0.85), iris, studs=False)
-            f.block(f"Pupil{sy}", p + V(e * 0.06, sy * 0.045, 0), (e * 0.28, 0.04, e * 0.8), BLACK, studs=False)
-            f.block(f"Brow{sy}", p + V(0, -sy * 0.05, e * 0.8), (e * 2.0, e * 0.6 + 0.12, e * 0.45), brow or BLACK, Ry(0.34), studs=False)
-        else:
-            f.block(f"Eye{sy}", p, (e * 0.8, 0.05, e * 1.05), BLACK, studs=False)
-            f.block(f"Glint{sy}", p + V(-e * 0.12, sy * 0.035, e * 0.22), (e * 0.26, 0.04, e * 0.26), WHITE, studs=False)
+        f.block(f"EyeW{sy}", p, (e * 0.95, 0.06, e * 1.15), white, studs=False)
+        f.block(f"Pupil{sy}", p + V(e * 0.18, sy * 0.03, -e * 0.12), (e * 0.45, 0.05, e * 0.62), BLACK, studs=False)
+        f.block(f"Brow{sy}", p + V(0, sy * 0.02, e * 0.78), (e * 1.35, 0.08, e * 0.24), BLACK, Ry(0.38) if angry else Ry(-0.08), studs=False)
 
 def ears(f, kind, hc, hl, hw, hh, col):
     if not kind: return
@@ -79,13 +77,16 @@ def pattern(f, kind, L, W, H, lh, z0, col, n=5, seed=1):
 def quad(f, P):
     L, W, H = P["body"]; lh, lw = P["legs"]; C1 = P["c1"]; C2 = P.get("c2", dk(C1)); BEL = P.get("belly"); sprawl = P.get("sprawl", 0.0)
     z0 = lh + H / 2
-    f.block("Body", V(0, 0, z0), (L, W, H), C1)
-    if BEL: f.block("Belly", V(0, 0, lh + H * 0.2), (L * 0.86, W + 0.06, H * 0.4), BEL, studs=False)
+    f.block("Body", V(0, 0, z0), (L * 0.9, W * 0.94, H * 0.94), C1)
+    f.block("Shoulders", V(L * 0.27, 0, z0 + H * 0.04), (L * 0.48, W * 1.04, H * 1.06), C1, Ry(-0.08))
+    f.block("Hips", V(-L * 0.28, 0, z0 + H * 0.02), (L * 0.44, W, H * 1.0), C1, Ry(0.06))
+    if BEL: f.block("Belly", V(0, 0, lh + H * 0.2), (L * 0.8, W * 0.96, H * 0.42), BEL, studs=False)
     feet = P.get("feet")
     for sx in (1, -1):
         for sy in (1, -1):
             x = sx * (L / 2 - lw / 2 - 0.15); y = sy * (W / 2 - lw / 2 + sprawl)
-            f.block(f"Leg{sx}{sy}", V(x, y, (lh + 0.25) / 2), (lw, lw, lh + 0.25), P.get("leg_c", C1))
+            f.block(f"Thigh{sx}{sy}", V(x - sx * 0.05, y, lh + 0.05 - lh * 0.22), (lw * 1.35, lw * 1.2, lh * 0.6 + 0.3), P.get("leg_c", C1), Ry(-sx * 0.08))
+            f.block(f"Leg{sx}{sy}", V(x, y, (lh * 0.55) / 2 + 0.05), (lw * 0.95, lw * 0.95, lh * 0.6 + 0.1), P.get("leg_c", C1))
             if feet:
                 fh = min(0.35, lh * 0.25); f.block(f"Foot{sx}{sy}", V(x + 0.05, y, fh / 2), (lw + 0.1, lw + 0.1, fh), feet, studs=False)
     nl, nt = P.get("neck", (0.4, 0.7)); hl, hw, hh = P["head"]
@@ -93,6 +94,7 @@ def quad(f, P):
     if nl > 0: f.block("Neck", base + d * (nl / 2), (nl + 0.6, hw * 0.72, hh * 0.72), P.get("neck_c", C1), Ry(-nt))
     hc = base + d * nl + V(hl * 0.3, 0, hh * 0.15)
     f.block("Head", hc, (hl, hw, hh), P.get("head_c", C1))
+    f.block("Jaw", hc + V(-hl * 0.05, 0, -hh * 0.32), (hl * 0.8, hw * 1.04, hh * 0.5), P.get("head_c", C1))
     sl, sw, sh = P.get("snout", (hl * 0.35, hw * 0.6, hh * 0.5)); sc = hc + V(hl / 2 + sl / 2 - 0.05, 0, -hh * 0.18)
     if sl > 0:
         f.block("Snout", sc, (sl, sw, sh), P.get("snout_c", C1), studs=False)
@@ -134,25 +136,30 @@ def bird(f, P):
     return c
 
 def ape(f, P):
-    """Upright/knuckle-walking body: torso, head with muzzle, long arms to the ground, short legs."""
-    W, D, H = P["torso"]; lh = P.get("leg", 1.2); C1 = P["c1"]; C2 = P.get("c2", dk(C1)); lean = P.get("lean", 0.35)
+    """Hunched primate: torso + shoulder hump, head low at the front, thick upper arm/forearm/fist, short legs."""
+    W, D, H = P["torso"]; lh = P.get("leg", 1.2); C1 = P["c1"]; C2 = P.get("c2", dk(C1)); lean = P.get("lean", 0.55)
     z0 = lh + H / 2
     f.block("Torso", V(0, 0, z0), (D, W, H), C1, Ry(-lean))
-    if P.get("belly"): f.block("Chest", V(D * 0.35, 0, z0 - H * 0.05), (0.2, W * 0.75, H * 0.7), P["belly"], Ry(-lean), studs=False)
-    hs = P["head"]; hc = V(math.sin(lean) * H * 0.5 + 0.2, 0, z0 + H / 2 + hs * 0.35)
-    f.block("Head", hc, (hs, hs, hs), P.get("head_c", C1))
-    f.block("Muzzle", hc + V(hs / 2, 0, -hs * 0.2), (hs * 0.35, hs * 0.7, hs * 0.45), P.get("face_c", lt(C1)), studs=False)
-    f.block("Nose", hc + V(hs / 2 + 0.18, 0, -hs * 0.08), (0.06, hs * 0.3, hs * 0.14), BLACK, studs=False)
-    eyes(f, hc, hs, hs, hs, P.get("angry", False), P.get("iris", YELLOW), C2, P.get("eye", 1.0), fwd=0.4, up=0.15)
+    f.block("Hump", V(D * 0.2, 0, z0 + H * 0.32), (D * 1.05, W * 1.12, H * 0.55), C1, Ry(-lean * 0.6))
+    f.block("Hips", V(-D * 0.25, 0, lh + H * 0.12), (D * 0.9, W * 0.92, H * 0.45), C1)
+    if P.get("belly"): f.block("Chest", V(D * 0.45, 0, z0 - H * 0.05), (0.25, W * 0.7, H * 0.6), P["belly"], Ry(-lean), studs=False)
+    hs = P["head"]; hc = V(D * 0.55 + math.sin(lean) * H * 0.35, 0, z0 + H * 0.38)
+    f.block("Head", hc, (hs, hs * 0.95, hs * 0.95), P.get("head_c", C1))
+    f.block("Brow", hc + V(hs * 0.42, 0, hs * 0.25), (hs * 0.3, hs * 0.9, hs * 0.22), P.get("head_c", C1))
+    f.block("Muzzle", hc + V(hs * 0.48, 0, -hs * 0.2), (hs * 0.4, hs * 0.72, hs * 0.48), P.get("face_c", lt(C1)), studs=False)
+    f.block("Nose", hc + V(hs * 0.7, 0, -hs * 0.08), (0.06, hs * 0.32, hs * 0.14), BLACK, studs=False)
+    eyes(f, hc, hs, hs * 0.95, hs * 0.95, P.get("angry", False), P.get("iris", YELLOW), C2, P.get("eye", 1.0), fwd=0.38, up=0.05)
     ears(f, P.get("ears"), hc, hs, hs, hs, P.get("ear_c", C1))
-    al = P.get("arm", H + lh * 0.8); aw = P.get("arm_w", W * 0.28)
+    aw = P.get("arm_w", W * 0.32); al = P.get("arm", None)
     for sy in (1, -1):
-        sh_ = V(math.sin(lean) * H * 0.45, sy * (W / 2 + aw / 2), z0 + H * 0.35)
-        hand = V(sh_.x + al * 0.35, sy * (W / 2 + aw / 2 + 0.1), 0.25)
-        dvec = hand - sh_; f.block(f"Arm{sy}", (sh_ + hand) / 2, (aw, aw, dvec.length), C1, dvec.to_track_quat("Z", "X").to_matrix())
-        f.block(f"Hand{sy}", hand, (aw * 1.2, aw * 1.2, 0.4), P.get("hand_c", C2), studs=False)
-        f.block(f"Leg{sy}", V(-0.3, sy * W * 0.28, (lh + 0.3) / 2), (aw * 1.1, aw * 1.1, lh + 0.3), C1)
-        f.block(f"Foot{sy}", V(0.0, sy * W * 0.28, 0.15), (aw * 1.6, aw * 1.2, 0.3), P.get("hand_c", C2), studs=False)
+        sh_ = V(D * 0.3, sy * (W / 2 + aw * 0.45), z0 + H * 0.3)
+        hand = V(D * 0.75, sy * (W / 2 + aw * 0.6), 0.35) if al is None else sh_ + V(al * 0.35, sy * 0.05, -al)
+        elbow = (sh_ + hand) / 2 + V(-0.2, sy * 0.15, 0)
+        for nm, a_, b_, w_ in (("UpperArm", sh_, elbow, aw * 1.25), ("Forearm", elbow, hand, aw * 1.05)):
+            d_ = b_ - a_; f.block(f"{nm}{sy}", (a_ + b_) / 2, (w_, w_, d_.length + w_ * 0.4), C1, d_.to_track_quat("Z", "X").to_matrix())
+        f.block(f"Fist{sy}", hand + V(0.05, 0, 0.05), (aw * 1.45, aw * 1.35, aw * 1.0), P.get("hand_c", C2))
+        f.block(f"Leg{sy}", V(-D * 0.2, sy * W * 0.28, (lh + 0.3) / 2), (aw * 1.2, aw * 1.2, lh + 0.3), C1)
+        f.block(f"Foot{sy}", V(0.0, sy * W * 0.28, 0.15), (aw * 1.7, aw * 1.25, 0.3), P.get("hand_c", C2), studs=False)
     if P.get("tail"): tail(f, P["tail"], D * 1.2, H * 0.5, lh + H * 0.2, P.get("tail_c", C1), P.get("tail_tip"))
     c = dict(W=W, D=D, H=H, z0=z0, hc=hc, hs=hs, C1=C1, C2=C2, lh=lh)
     for fn in P.get("x", []): fn(f, c)
