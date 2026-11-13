@@ -69,3 +69,8 @@ Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07
   - The user rejected both smooth sculpted props and faceted low-poly ones.
 - `tools/blender/zones_blocky.py` builds all 60 props (`python zones_blocky.py [Zone or Prop names] [--no-render]`). No prop may repeat across zones.
 - Possible polish: StatueHead and IcebergChunk are plain; FallenStar's glow arms read as a white smear in previews (Neon in Roblox).
+
+## TFFA-style animals (skill)
+- Skill: `.claude/skills/tffa-animal-models/` (`SKILL.md`, kit `scripts/tffa_kit.py`, renderer, `compare.py`, style guide, harsh-review checklist, real reference shots).
+- Reviewed models in `models/TFFA/`: Gorilla, TRex, RedDragon, Phoenix (each iterated 4-8 rounds against a real game shot) and the Cow quadruped template. See `models/TFFA/TFFA_vs_reference.png`.
+- Supersedes the older `models/CannonTame/` animal look (smooth bevels and big L-studs).
