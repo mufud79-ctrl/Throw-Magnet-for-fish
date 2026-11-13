@@ -33,12 +33,15 @@ def trex(f):
     f.block("Chin", X @ V(6.0, 0, 4.86), (2.6, 1.5, 0.1), BEL, Ry(0.3), studs=False)
     f.block("Tongue", X @ V(5.9, 0, 5.56), (2.0, 1.0, 0.12), TONGUE, Ry(0.3), studs=False)
     for sy in (-1, 1):
-        for k in range(5):
-            l = 0.62 if k == 3 else 0.45
-            f.wedge(f"ToothU{sy}{k}", V(5.35 + 0.48 * k, sy * 0.82, 5.88 - l / 2), (0.34, 0.3, l), IVORY, Ry(-math.pi / 2))
-        for k in range(4):
-            l = 0.55 if k == 2 else 0.4; p = V(5.35 + 0.5 * k, sy * 0.72, 5.52 + l / 2)
-            f.wedge(f"ToothL{sy}{k}", X @ p, (0.3, 0.28, l), IVORY, Ry(0.3) @ Ry(math.pi / 2))
+        for k in range(6):                           # upper row: sharp, evenly spaced, growing to a fang
+            x = 5.15 + 0.46 * k; l = 0.34 + 0.05 * k + (0.18 if k == 4 else 0); top = V(x, sy * 0.8, 5.9)
+            f.cyl(f"ToothU{sy}{k}", top, top - V(0, 0, l), 0.15 + 0.01 * k, IVORY, 4, r1=0.0)
+        for k in range(5):                           # lower row on the hinged jaw
+            x = 5.3 + 0.46 * k; l = 0.3 + 0.04 * k + (0.14 if k == 3 else 0); base = V(x, sy * 0.7, 5.5)
+            f.cyl(f"ToothL{sy}{k}", X @ base, X @ (base + V(0, 0, l)), 0.14, IVORY, 4, r1=0.0)
+    for k, yy in enumerate((-0.45, 0.0, 0.45)):      # incisors across the snout tip
+        top = V(7.95, yy, 5.92); f.cyl(f"Incisor{k}", top, top - V(0, 0, 0.32), 0.12, IVORY, 4, r1=0.0)
+    for sy in (-1, 1):
         f.block(f"Socket{sy}", V(5.15, sy * 1.26, 7.05), (0.85, 0.06, 0.62), SOCKET, studs=False)
         f.block(f"Eye{sy}", V(5.2, sy * 1.29, 7.03), (0.56, 0.05, 0.46), ORANGE_EYE, studs=False)
         f.block(f"Pupil{sy}", V(5.24, sy * 1.315, 7.03), (0.14, 0.04, 0.42), BLACK, studs=False)
