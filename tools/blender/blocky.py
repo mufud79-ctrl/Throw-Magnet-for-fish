@@ -24,6 +24,7 @@ GREEN, LIME, DGREEN, MOSS = rgb(75, 151, 75), rgb(140, 200, 70), rgb(40, 110, 60
 BLUE, LBLUE, CYAN, NAVY, TEAL = rgb(13, 105, 172), rgb(128, 187, 219), rgb(40, 190, 236), rgb(20, 40, 100), rgb(40, 160, 150)
 GOLD, ICE, SNOW, CORAL, TERRA, OBSID = rgb(239, 184, 56), rgb(175, 221, 255), rgb(250, 250, 252), rgb(255, 120, 100), rgb(190, 104, 80), rgb(40, 34, 52)
 NEON = rgb(255, 255, 255)
+def lerp(a, b, t): return a + (b - a) * t
 
 def _stud_tile():
     im = bpy.data.images.load(os.path.join(HERE, "stud.png")); w, h = im.size
@@ -57,7 +58,16 @@ class Brick(Fish):
         ob.data.polygons.foreach_set("use_smooth", flags)
 
     # ---- parts
-    def block(self, name, center, size, color, rot=None, studs=True, glow=False):
+    grp = "Body"
+    def make_obj(self, *a, **k):
+        ob = super().make_obj(*a, **k); ob["grp"] = self.grp; return ob
+
+    def limb(self, name, a, b, w0, w1, color, d0=None, studs=True, glow=False):
+        """Tapered rounded limb segment from a to b (w0 wide at a, w1 at b) - a MeshPart-style limb piece."""
+        a, b = Vector(a), Vector(b); d = b - a
+        return self.block(name, (a + b) / 2, (w0, d0 or w0, d.length), color, d.to_track_quat("Z", "X").to_matrix(), studs, glow, taper=(1.0, w1 / w0))
+
+    def block(self, name, center, size, color, rot=None, studs=True, glow=False, taper=(1.0, 1.0)):
         hx, hy, hz = (s / 2 for s in size); g = self.grid
         faces_def = [((-hx, -hy, hz), (2 * hx, 0, 0), (0, 2 * hy, 0)), ((-hx, hy, -hz), (2 * hx, 0, 0), (0, -2 * hy, 0)),
                      ((hx, -hy, -hz), (0, 2 * hy, 0), (0, 0, 2 * hz)), ((-hx, hy, -hz), (0, -2 * hy, 0), (0, 0, 2 * hz)),
@@ -78,6 +88,8 @@ class Brick(Fish):
                          o + U * ((i + 1) / nu) + W * ((j + 1) / nv), o + U * (i / nu) + W * ((j + 1) / nv)]
                     faces.append(tuple(vid(p) for p in q))
                     uvs.append([self._uv(cb, 0, 0), self._uv(cb, 1, 0), self._uv(cb, 1, 1), self._uv(cb, 0, 1)] if st else [self._uv(cb, .5, .5)] * 4)
+        if taper != (1.0, 1.0):
+            verts = [Vector((v[0] * lerp(taper[0], taper[1], (v[2] + hz) / (2 * hz)), v[1] * lerp(taper[0], taper[1], (v[2] + hz) / (2 * hz)), v[2])) for v in verts]
         ob = self.make_obj(name, self._place(verts, center, rot), faces, uvs, glow)
         self._smooth(ob, [False] * len(faces))
         bv = getattr(self, "bevel", 0.0)

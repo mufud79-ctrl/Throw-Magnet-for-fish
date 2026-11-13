@@ -342,11 +342,17 @@ class Fish:
         if do_rig:
             import rig, fishanim
             rig.assign_weights(self)
+        groups = {}
+        if getattr(self, "split_parts", False):          # export limbs/head/tail as separate MeshParts
+            for ob in self.parts: groups.setdefault(ob.get("grp", "Body"), []).append(ob)
+            self.parts = groups.pop("Body")
         fish = self._join(self.parts, self.name)
         objs = [fish]
         glow = None
         if self.glow:
             glow = self._join(self.glow, f"{self.name}_Glow"); objs.append(glow)
+        extra = [self._join(lst, f"{self.name}_{g}") for g, lst in sorted(groups.items())]
+        objs += extra
         Rall = Matrix.Rotation(math.radians(90), 4, "Z") @ (Matrix.Rotation(roll, 4, "X") if roll else Matrix.Identity(4))
         def bendp(p):
             k = max(0.0, (self.L / 2 - p[0]) / bend_len)
@@ -369,6 +375,7 @@ class Fish:
         tn = mat.node_tree.nodes.new("ShaderNodeTexImage"); tn.image = self.tex
         mat.node_tree.links.new(tn.outputs["Color"], bsdf.inputs["Base Color"])
         fish.data.materials.append(mat)
+        for ob in extra: ob.data.materials.append(mat)
         if glow:
             gcol = (*[x ** 2.2 for x in glow_color], 1.0)
             gm = bpy.data.materials.new(f"{self.name}_Glow_Neon")

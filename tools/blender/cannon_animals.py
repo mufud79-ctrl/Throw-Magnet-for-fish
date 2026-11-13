@@ -296,6 +296,45 @@ def rex_cracks(col):
             for sy in (1, -1): f.block(f"Crack{k}{sy}", S(x, sy * 1.42, z), (1.2 * c["s"], 0.06, 0.18 * c["s"]), col, Rx(0) @ Ry(a), glow=True, studs=False)
     return fn
 
+# ====================================================================== hand-built hero animals (TFFA reference style)
+def gorilla(f, P):
+    """Built to the TFFA gorilla reference: head high at the front of a huge shoulder mass, back sloping down,
+    long thick pillar arms planted forward, short tucked legs, heavy brow over white eyes, pale muzzle."""
+    C1, FACE, SILVER, HAND = rgb(58, 58, 66), rgb(120, 118, 128), rgb(150, 150, 160), rgb(40, 40, 46)
+    f.grp = "Body"
+    f.block("Torso", V(-0.2, 0, 3.0), (3.0, 3.0, 2.6), C1, Ry(-0.38), taper=(0.85, 1.05))
+    f.block("Shoulders", V(0.85, 0, 4.0), (2.0, 3.9, 2.0), C1, Ry(-0.15))
+    f.block("Hump", V(-0.4, 0, 4.15), (2.2, 3.1, 1.6), C1, Ry(-0.3))
+    f.block("Saddle", V(-1.0, 0, 3.85), (1.6, 2.6, 0.5), SILVER, Ry(0.15), studs=False)
+    f.block("Hips", V(-1.4, 0, 2.2), (1.8, 2.6, 1.8), C1, Ry(0.1))
+    f.block("Chest", V(1.35, 0, 3.0), (0.4, 2.2, 1.9), FACE, Ry(-0.35), studs=False)
+    f.grp = "Head"
+    hc = V(2.05, 0, 4.75)
+    f.block("Head", hc, (1.8, 2.1, 1.9), C1, Ry(-0.05))
+    f.block("Crest", hc + V(-0.35, 0, 0.95), (1.2, 1.4, 0.6), C1, Ry(0.25))
+    f.block("BrowBand", hc + V(0.85, 0, 0.45), (0.5, 2.2, 0.45), rgb(30, 30, 36))
+    f.block("Face", hc + V(0.86, 0, -0.05), (0.2, 1.7, 0.9), FACE, studs=False)
+    for sy in (1, -1):
+        f.block(f"EyeW{sy}", hc + V(0.97, sy * 0.42, 0.05), (0.06, 0.5, 0.52), WHITE, studs=False)
+        f.block(f"Pupil{sy}", hc + V(1.0, sy * 0.36, -0.02), (0.05, 0.24, 0.32), BLACK, studs=False)
+        f.block(f"Nostril{sy}", hc + V(1.42, sy * 0.2, -0.38), (0.05, 0.16, 0.12), BLACK, studs=False)
+        f.block(f"Ear{sy}", hc + V(0.1, sy * 1.1, 0.05), (0.4, 0.2, 0.5), FACE, studs=False)
+    f.block("Muzzle", hc + V(1.05, 0, -0.62), (0.75, 1.5, 0.85), FACE)
+    f.block("Mouth", hc + V(1.43, 0, -0.85), (0.04, 0.9, 0.07), BLACK, studs=False)
+    for sy, side in ((1, "L"), (-1, "R")):
+        f.grp = f"Arm_{side}"
+        sh = V(1.0, sy * 2.0, 4.1); el = V(1.6, sy * 2.15, 2.1); wr = V(1.9, sy * 2.15, 0.75)
+        f.limb(f"UpperArm{sy}", sh, el, 1.45, 1.1, C1)
+        f.limb(f"Forearm{sy}", el, wr, 1.05, 1.25, C1)
+        f.block(f"Fist{sy}", V(2.05, sy * 2.15, 0.42), (1.5, 1.35, 0.85), HAND)
+        for k in (-1, 0, 1): f.block(f"Knuckle{sy}{k}", V(2.82, sy * 2.15 + k * 0.4, 0.42), (0.12, 0.32, 0.5), FACE, studs=False)
+        f.grp = f"Leg_{side}"
+        hp = V(-1.3, sy * 1.15, 2.0); kn = V(-0.75, sy * 1.35, 1.0); an = V(-1.1, sy * 1.35, 0.35)
+        f.limb(f"Thigh{sy}", hp, kn, 1.3, 1.0, C1)
+        f.limb(f"Shin{sy}", kn, an, 0.95, 0.85, C1)
+        f.block(f"Foot{sy}", V(-0.75, sy * 1.35, 0.22), (1.5, 1.0, 0.45), HAND)
+    f.grp = "Body"
+
 # ====================================================================== special body types
 def frog(f, P):
     C1, BEL = P["c1"], P.get("belly", YELLOW)
@@ -421,7 +460,7 @@ ZONES = [
    ("Sloth", A, dict(torso=(1.4, 1.1, 1.5), leg=0.5, head=1.0, lean=0.1, c1=rgb(170, 150, 120), face_c=CREAM, ears=None, x=[eye_patches(DBROWN)])),
    ("Panther", Q, dict(body=(2.8, 1.2, 1.3), legs=(1.0, 0.45), head=(1.2, 1.1, 1.0), neck=(0.3, 0.5), c1=rgb(40, 40, 52), snout=(0.4, 0.6, 0.5), ears="point", tail="long", angry=True, iris=rgb(170, 230, 60))),
    ("Crocodile", Q, dict(body=(4.0, 1.8, 1.0), legs=(0.5, 0.5), sprawl=0.35, head=(1.6, 1.5, 0.8), neck=(0, 0.1), c1=rgb(70, 110, 60), belly=CREAM, snout=(2.0, 1.1, 0.55), tail="thick", angry=True, x=[spine_spikes(rgb(50, 80, 45), 7), fangs()])),
-   ("Gorilla", A, dict(torso=(2.0, 1.5, 2.2), leg=1.1, head=1.3, c1=rgb(55, 55, 62), face_c=rgb(110, 110, 118), belly=rgb(110, 110, 118), angry=True, arm_w=0.65)),
+   ("Gorilla", gorilla, dict()),
  ]),
  ("05_Arctic", [
    ("Penguin", B, dict(body=(1.4, 1.4, 2.0), leg=0.25, head=1.1, c1=BLACK, belly=WHITE, beak=(0.4, 0.3, 0.2), upright=True, wing=0.5)),
@@ -494,7 +533,8 @@ ZONES = [
 
 def build(folder, name, fn, P):
     big = fn in ("trex", trexlike, whale, kraken, golem) or (P and max(P.get("body", (0,))) >= 3.4)
-    f = Brick(name, "CannonTame/Animals/" + folder, grid=1.0 if big else 0.5, bevel=0.22)
+    f = Brick(name, "CannonTame/Animals/" + folder, grid=0.6 if big else 0.3, bevel=0.22)
+    f.split_parts = True
     if fn == "trex": trex(f); glow = None
     else: fn(f, P); glow = P.get("glow")
     if not f.glow: glow = None
