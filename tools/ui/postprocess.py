@@ -3,6 +3,8 @@
     python3 tools/ui/postprocess.py thumbs RAW_DIR ui/thumbnails     # 50 fish + <Name>_locked.png
     python3 tools/ui/postprocess.py icons  RAW_DIR ui/icons          # fish/shop/index icons
     python3 tools/ui/postprocess.py sheet  ui/thumbnails OUT.png     # review contact sheet
+    python3 tools/ui/postprocess.py gameicons RAW_DIR ui/icons/game   # render_game_icons.py output
+    python3 tools/ui/postprocess.py iconsheet ui/icons/game OUT.png   # review sheet of any icon folder
 """
 import os
 import sys
@@ -93,6 +95,28 @@ def icons(raw, dst):
             print("icon", f[5:])
 
 
+def gameicons(raw, dst):
+    """Outline and shadow scale with the image (12 px outline at 512, 24 px at 1024)."""
+    os.makedirs(dst, exist_ok=True)
+    for f in sorted(os.listdir(raw)):
+        if f.endswith(".png"):
+            img = load(os.path.join(raw, f))
+            w = img.shape[1]
+            save(cartoon(img, 12.0 * w / 512, round(9 * w / 512)), os.path.join(dst, f))
+            print("icon", f)
+
+
+def iconsheet(src, out, cols=8, tile=192):
+    files = sorted(f for f in os.listdir(src) if f.endswith(".png"))
+    rows = (len(files) + cols - 1) // cols
+    im = Image.new("RGBA", (cols * tile, rows * tile), (40, 44, 58, 255))
+    for i, f in enumerate(files):
+        t = Image.open(os.path.join(src, f)).convert("RGBA").resize((tile, tile), Image.LANCZOS)
+        im.alpha_composite(t, ((i % cols) * tile, (i // cols) * tile))
+    im.save(out)
+    print("sheet ->", out)
+
+
 def sheet(src, out, cols=10, tile=128):
     names = [n for n, _ in fishdata.all_fish()]
     files = [f"{n}.png" for n in names] + [f"{n}_locked.png" for n in names[:10]]
@@ -106,4 +130,4 @@ def sheet(src, out, cols=10, tile=128):
 
 
 if __name__ == "__main__":
-    {"thumbs": thumbs, "icons": icons, "sheet": sheet}[sys.argv[1]](*sys.argv[2:])
+    {"thumbs": thumbs, "icons": icons, "sheet": sheet, "gameicons": gameicons, "iconsheet": iconsheet}[sys.argv[1]](*sys.argv[2:])
