@@ -48,6 +48,11 @@ reference-driven script per animal. Use this method for every animal in every re
 - When heads are the problem, **do head studies**: 4 variations of the head alone on a neck stub
   (`tools/blender/tffa_head_studies.py`), show the user, build from the one they pick. Picked heads become head kits
   (`HEAD_KITS` in tffa_archetypes.py: `lion_sunburst`, `horse_wedge`).
+- When a whole animal misses ("looks like a normal bunny", "looks bad"), build **4 full-body variations with clearly
+  different concepts** (`tools/blender/tffa_space_variants.py` is the template: one builder function per variant, shared
+  head/body helpers, one sheet per animal with hero/front/side rows). The concept must change the SILHOUETTE (a planetary
+  ring round the waist, a moon body, a comet tail, antennae + crystals), not just add decals. User picks, then refine.
+  Picks so far: MoonBunny = Saturn (ringed galaxy bunny), SpaceCat = Alien (third eye, antennae, crystals, orbs).
 - When the user asks for a full rework, archive the old model to `models/CannonTame/Animals/_Archive/<Name>_v1/` and keep
   the old spec as a comment in the roster; never silently overwrite a version the user may want back.
 - Show the user the review sheet after each round and apply their notes literally ("over the centre", "lower it").
