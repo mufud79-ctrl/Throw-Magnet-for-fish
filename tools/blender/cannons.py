@@ -538,7 +538,108 @@ def build_dragon(K, out):
     m.done(views=VIEWS, glow_color=GLD)
 
 
-BUILDERS = {1: build_wooden, 2: build_iron, 3: build_stone, 12: build_dragon, 13: build_galaxy, 14: build_celestial}
+# ============================================================================== tier 04: Bamboo (studded bundle launcher)
+def build_bamboo(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    dk = K.dk
+    BAMB, BAMB_D, NODE = rgb(160, 210, 76), rgb(108, 160, 50), rgb(124, 176, 54)
+    ROPE, MAT, LEAF = rgb(220, 184, 120), rgb(206, 164, 98), rgb(64, 184, 64)
+    INNER, BORE, COCO = rgb(244, 230, 172), rgb(40, 32, 26), rgb(116, 74, 44)
+    m = K.Model("BambooCannon", out, stud=0.27, chamfer=0.18, jitter=0.05)
+    m.gait = {"recoil": 0.3}
+    T = Vector((0.3, 0, 2.15))
+    with m.bone("Body", (0, 0, 1.0)):
+        for x in (-1.1, 1.1):
+            for y in (-0.72, 0.72):
+                prism(m, f"Leg{x}{y}", (x, y, 0.0), (x, y, 0.62), 0.16, 0.16, BAMB_D, chamfer=0.15)
+            m.seg(f"Cross{x}", (x, -0.95, 0.5), (x, 0.95, 0.5), 0.24, 0.24, BAMB_D, chamfer=0.22, studs=False)
+        m.box("Mat", (0, 0, 0.72), (2.9, 1.85, 0.26), MAT)
+        for k in range(5):
+            m.box(f"Weave{k}", (-1.15 + k * 0.58, 0, 0.86), (0.2, 1.88, 0.04), dk(MAT, 0.85), studs=False, chamfer=0.1)
+        for s in (1, -1):                                        # A-frame poles lashed at the trunnion
+            m.seg(f"PoleA{s}", (T.x - 0.75, s * 0.74, 0.8), (T.x + 0.15, s * 0.74, T.z + 0.4), 0.2, 0.18, BAMB_D, chamfer=0.22, studs=False)
+            m.seg(f"PoleB{s}", (T.x + 0.75, s * 0.74, 0.8), (T.x - 0.15, s * 0.74, T.z + 0.4), 0.2, 0.18, BAMB_D, chamfer=0.22, studs=False)
+            m.box(f"Lash{s}", (T.x, s * 0.74, T.z + 0.05), (0.38, 0.32, 0.4), ROPE, studs=False)
+        for k, p in enumerate(((-1.0, 0.45, 1.08), (-1.0, -0.25, 1.08), (-1.15, 0.12, 1.45))):
+            m.ball(f"Coconut{k}", p, 0.24, COCO, segs=(8, 6))
+    with barrel_ctx(m, K, T, 0.15):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        kw = dict(chamfer=0.22)
+        m.seg("Tube", P(-1.85), P(2.2), 1.0, 1.0, BAMB, **kw)
+        for x in (-1.88, -0.3, 1.05, 2.12):
+            r = octa(1.0) + 0.05; prism(m, f"Node{x}", P(x - 0.08), P(x + 0.08), r, r, NODE, chamfer=0.2)
+        prism(m, "Inner", P(2.18), P(2.25), octa(0.82), octa(0.82), INNER, chamfer=0.0)
+        prism(m, "Bore", P(2.2), P(2.27), 0.34, 0.34, BORE, chamfer=0.0)
+        for s in (1, -1):                                        # two side tubes in the bundle
+            m.seg(f"Side{s}", P(-1.2, -0.2, s * 0.64), P(1.45, -0.2, s * 0.64), 0.44, 0.44, BAMB_D, **kw)
+            prism(m, f"SideIn{s}", P(1.43, -0.2, s * 0.64), P(1.5, -0.2, s * 0.64), octa(0.34), octa(0.34), INNER, chamfer=0.0)
+            prism(m, f"SideBore{s}", P(1.45, -0.2, s * 0.64), P(1.52, -0.2, s * 0.64), 0.12, 0.12, BORE, chamfer=0.0)
+        for x in (-0.85, 0.62):
+            m.box(f"Rope{x}", P(x, -0.06), (0.24, 1.78, 1.18), ROPE, studs=False)
+        for s in (1, -1):                                        # leaves sprouting from the front node
+            m.slab(f"Leaf{s}", [(0, 0), (0.2, 0.35), (0.04, 1.05), (-0.18, 0.4)], 0.06, LEAF, origin=P(1.05, 0.48, s * 0.15),
+                   xaxis=(1, 0, 0), yaxis=(-0.45, s * 0.55, 0.7))
+        m.slab("Leaf0", [(0, 0), (0.16, 0.3), (0.03, 0.8), (-0.15, 0.32)], 0.06, dk(LEAF, 0.85), origin=P(-0.3, 0.48, 0.1),
+               xaxis=(1, 0, 0), yaxis=(-0.7, 0.1, 0.7))
+        m.seg("Trunnion", (T.x, -0.9, T.z), (T.x, 0.9, T.z), 0.3, 0.3, BAMB_D, chamfer=0.22, studs=False)
+        with m.bone("Muzzle", P(2.27)): pass
+    m.done(views=VIEWS)
+
+
+# ============================================================================== tier 11: Cyber (faceted railgun, pink glow)
+def build_cyber(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    DARK, PANEL, WHITE2 = rgb(36, 38, 52), rgb(84, 90, 110), rgb(232, 236, 246)
+    GLC = rgb(255, 60, 180)
+    m = K.Model("CyberCannon", out, stud=0.4, chamfer=0.14, faceted=True)
+    m.gait = {"recoil": 0.45}
+    T = Vector((0.0, 0, 2.75))
+    with m.bone("Body", (0, 0, 1.3)):
+        for k in range(3):                                       # three mech legs
+            a = math.radians(60 + 120 * k); c, s_ = math.cos(a), math.sin(a)
+            hip, knee, foot = Vector((0.5 * c, 0.5 * s_, 1.3)), Vector((1.45 * c, 1.45 * s_, 1.25)), Vector((1.85 * c, 1.85 * s_, 0.18))
+            m.seg(f"Thigh{k}", hip, knee, 0.36, 0.3, PANEL, chamfer=0.2)
+            m.seg(f"Shin{k}", knee, foot, 0.3, 0.22, DARK, chamfer=0.2)
+            m.box(f"Knee{k}", knee, (0.36, 0.36, 0.36), WHITE2, rot=K.Rz(a))
+            m.box(f"KneeLight{k}", knee + Vector((0, 0, 0.2)), (0.16, 0.16, 0.06), GLC, rot=K.Rz(a), glow=True)
+            m.box(f"Foot{k}", foot - Vector((0, 0, 0.08)), (0.6, 0.42, 0.2), DARK, rot=K.Rz(a), top=(0.7, 0.8))
+        prism(m, "Hub", (0, 0, 0.95), (0, 0, 1.6), 0.75, 0.85, DARK, sides=6)
+        ring(m, "HubLight", (0, 0, 1.3), (0, 0, 1), 0.86, 0.08, GLC, n=6, glow=True, depth=0.1)
+        prism(m, "Turret", (0, 0, 1.55), (0, 0, 1.95), 1.0, 0.92, PANEL, sides=6)
+        prism(m, "TurretTop", (0, 0, 1.9), (0, 0, 2.05), 0.8, 0.8, WHITE2, sides=6)
+        for s in (1, -1):
+            m.box(f"Yoke{s}", (T.x - 0.1, s * 0.86, 2.4), (1.0, 0.24, 1.0), PANEL, top=(0.7, 1), shift=(0.12, 0))
+            m.box(f"YokeLight{s}", (T.x - 0.1, s * 0.99, 2.35), (0.6, 0.04, 0.1), GLC, glow=True, chamfer=0.0)
+    with barrel_ctx(m, K, T, 0.15):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        prism(m, "Core", P(-1.3), P(2.5), 0.42, 0.42, DARK, sides=6)
+        m.box("Breech", P(-1.45), (1.25, 1.3, 1.05), PANEL, top=(0.8, 0.9))
+        m.box("BreechTop", P(-1.45, 0.56), (0.9, 0.9, 0.12), WHITE2)
+        for k in range(3): m.box(f"Vent{k}", P(-1.75 + k * 0.3, 0.64), (0.12, 0.6, 0.06), DARK, chamfer=0.1)
+        m.box("BackScreen", P(-2.09), (0.06, 0.8, 0.5), GLC, glow=True, chamfer=0.0)
+        for sz in (1, -1):                                       # the two rails
+            m.box(f"Rail{sz}", P(1.3, sz * 0.56), (3.9, 0.56, 0.26), DARK)
+            m.box(f"RailEdge{sz}", P(1.2, sz * 0.7), (3.4, 0.6, 0.06), WHITE2)
+            m.box(f"RailGlow{sz}", P(1.45, sz * 0.4), (3.3, 0.2, 0.06), GLC, glow=True, chamfer=0.0)
+            m.spike(f"RailTip{sz}", P(3.25, sz * 0.56), P(3.75, sz * 0.48), 0.2, DARK, flat=0.6)
+        for x in (0.25, 0.85, 1.45, 2.05):
+            ring(m, f"Coil{x}", P(x), (1, 0, 0), 0.5, 0.1, GLC, n=6, glow=True, depth=0.12)
+        m.ball("Charge", P(2.95), 0.26, GLC, segs=(6, 4), glow=True)
+        for s in (1, -1):                                        # swept side fins + side screen
+            m.slab(f"Fin{s}", [(-0.8, 0), (0.6, 0), (-0.2, 0.55), (-1.15, 0.6)], 0.1, WHITE2, origin=P(-1.0, 0, s * 0.64),
+                   xaxis=(1, 0, 0), yaxis=(0, s, -0.25))
+            m.box(f"SidePanel{s}", P(-1.4, 0, s * 0.66), (0.7, 0.04, 0.36), GLC, glow=True, chamfer=0.0)
+        prism(m, "Trunnion", (T.x, -0.8, T.z), (T.x, 0.8, T.z), 0.22, 0.22, WHITE2, sides=6)
+        with m.bone("Muzzle", P(3.1)): pass
+    m.done(views=VIEWS, glow_color=GLC)
+
+
+BUILDERS = {1: build_wooden, 2: build_iron, 3: build_stone, 4: build_bamboo, 11: build_cyber, 12: build_dragon,
+            13: build_galaxy, 14: build_celestial}
 
 
 def build_one(t):
