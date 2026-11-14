@@ -73,15 +73,19 @@ Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07
 ## TFFA-style animals (skill) - CURRENT WORK
 Develop on branch `claude/roblox-animal-models-852c5h`. Commit + push after every zone (another Claude session may push
 to the same branch: `git fetch` + `git rebase origin/claude/roblox-animal-models-852c5h` before pushing; never rebuild a
-zone that session owns). A second session works BOTTOM-UP (10_MythicIsles done, then 11_Space, 09_Volcano, 08...), skipping animals already rebuilt.
+zone that session owns). A second session works BOTTOM-UP (11_Space, 10_MythicIsles and 09_Volcano done; next 08_DinoLand,
+then 07, 06...), skipping animals already rebuilt. Per-zone status + Roblox import notes: `models/CannonTame/Animals/README.md`.
 
 **Skill:** `.claude/skills/tffa-animal-models/` - read `SKILL.md` first (workflow, look options table, kit cheat-sheet),
 then `references/style_guide.md` and `references/review_checklist.md`. Reference models in `models/TFFA/`
 (Gorilla, TRex, RedDragon, Phoenix, Cow; see `TFFA_vs_reference.png`).
-**Roster:** `tools/blender/tffa_zoo.py` holds every Cannon Tame animal as an archetype spec (one line each), building into
-`models/CannonTame/Animals/<Zone>/<Name>/`. Gorilla, TRex, Cow and Phoenix are built from the skill's example scripts.
+**Roster:** `tools/blender/tffa_zoo.py` holds every Cannon Tame animal, building into `models/CannonTame/Animals/<Zone>/<Name>/`.
+An entry is either a one-line archetype spec or `("<Name>", EX, "<script>")` = a hero build in
+`.claude/skills/tffa-animal-models/examples/<script>.py` (zones 09-11, Chimera, Kraken, plus Gorilla/TRex/Cow/Phoenix).
+Replaced versions are kept: models in `models/CannonTame/Animals/_Archive/<Name>_v<n>/`, scripts as `examples/_archive_<name>_v<n>.py`,
+old specs as `# v1:` comments in the roster.
 
-### Status (53 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips; 24 left, all in zones 04-08)
+### Status (49 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips; 28 left, all in zones 04-08)
 | Zone | Done (new kit) | To do (still the old CannonTame look) |
 |---|---|---|
 | 01_Farm | all 7 | - |
@@ -92,9 +96,9 @@ then `references/style_guide.md` and `references/review_checklist.md`. Reference
 | 06_Desert | Rattlesnake, Scorpion | Camel, FennecFox, Lizard, SphinxCat, Vulture |
 | 07_IceAge | Mammoth (shaggy + fierce + muscular + studs, user-approved) | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
-| 09_Volcano | all 7: EmberWolf, FireSalamander, LavaRex, MagmaSlug, ObsidianGolem as hero scripts (bottom-up session), LavaDrake (user-approved), Phoenix (reviewed example, rigged) | - |
-| 10_MythicIsles | all 7 (bottom-up session: equine Pegasus/Unicorn, king-of-the-sea Kraken, dragon-archetype CelestialDragon, snarling Chimera) | - |
-| 11_Space | all 7 as hero scripts (bottom-up session; `examples/<name>.py`) | - |
+| 09_Volcano | all 7: EmberWolf, LavaRex, MagmaSlug, ObsidianGolem (hero scripts), FireSalamander (user-picked variation "Magma Newt"), LavaDrake (user-approved), Phoenix (reviewed example, rigged) | - |
+| 10_MythicIsles | all 7: Chimera + Kraken (custom from user references), Pegasus/Unicorn (user-picked horse head H1, equine body), CelestialDragon (dragon archetype), Griffin, Jackalope | - |
+| 11_Space | all 7 hero scripts; MoonBunny = user-picked "Saturn" variation, SpaceCat = user-picked "Alien" variation | - |
 
 "Hard set" for future skill work (unusual anatomy, will need adjustments): Crocodile, Scorpion, Rattlesnake, Mammoth,
 Triceratops, Spinosaurus, LavaDrake. Known weak spots: mammoth hair strands are flat blocks, scorpion tail segments are
@@ -104,6 +108,14 @@ plain, frill and sail are flat plates.
 - **Quality bar = the custom Chimera** (`examples/chimera.py`, user: "THAT LOOKS SO GOOD!!"). Every animal in every
   remaining zone gets that level of detail: reference analysis first, a custom script per animal, 4-view review sheet,
   head studies when heads are weak. See `.claude/skills/tffa-animal-models/references/hero_build_workflow.md`.
+- When a whole animal misses ("looks like a normal bunny", "looks rough"), build **4 full-body variations** with different
+  concepts that change the silhouette (templates: `tools/blender/tffa_space_variants.py`, `tffa_salamander_variants.py`),
+  show the sheet, let the user pick, refine, swap it in and archive the old one. Heads that miss: 4 head studies
+  (`tools/blender/tffa_head_studies.py`; picks became the `lion_sunburst` / `horse_wedge` head kits).
+- User verdicts so far: Chimera "THAT LOOKS SO GOOD!!"; Kraken "alright I guess, not the best"; the first SpaceCat,
+  MoonBunny and FireSalamander were rejected (replaced by picked variations). Flames must show all three layers
+  (red / orange / glowing yellow fanned apart - see `flame()` in `examples/emberwolf.py`); dark-skinned animals need white
+  eyes with small pupils or glowing eyes, otherwise the eyes read as empty frames.
 - Quality over speed: **one zone at a time**, review hero + front + side of every animal, fix, then commit.
 - **Studs on everything** (the user rejected stud-less dragons and fur).
 - Predators and big beasts must look **aggressive and muscular**: `snarl=True` (panther-style open jaw) for hunters such
@@ -119,7 +131,7 @@ plain, frill and sail are flat plates.
 > Read `HANDOFF.md` ("TFFA-style animals" section), `.claude/skills/tffa-animal-models/SKILL.md` and
 > `.claude/skills/tffa-animal-models/references/hero_build_workflow.md` first; use the `tffa-animal-models` skill.
 > Set up Blender with `python3 -m venv /tmp/bpyenv && /tmp/bpyenv/bin/pip install bpy numpy`.
-> 24 animals are left, all still in the old look: the rest of 04_Jungle (Frog, Gorilla, Monkey, Sloth, Toucan),
+> 28 animals are left, all still in the old look: the rest of 04_Jungle (Frog, Gorilla, Monkey, Sloth, Toucan),
 > then 05_Arctic (all 7), 06_Desert (Camel, FennecFox, Lizard, SphinxCat, Vulture), 07_IceAge (GiantBeaver, GiantSloth,
 > Glyptodon, Sabertooth, WoollyHare, WoollyRhino) and 08_DinoLand (Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex).
 > Another session may be working bottom-up on the same branch: before each zone, `git fetch` and skip any animal that
