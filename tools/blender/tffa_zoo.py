@@ -85,12 +85,18 @@ ZONES = [
    # v1: ("SphinxCat", Q, dict(body=(2.1, 1.2, 1.3), legs=(0.85, 0.42), head=(1.1, 1.15, 1.0), neck=(0.3, 0.7), c1=rgb(234, 192, 162), snout=(0.35, 0.6, 0.45), ears="fennec", tail="long", iris=rgb(130, 230, 120), x=[headdress()])),
  ]),
  ("07_IceAge", [
-   ("WoollyHare", Q, dict(gait=dict(hop=True), body=(1.7, 1.3, 1.3), legs=(0.4, 0.42), head=(1.1, 1.05, 1.0), neck=(0.1, 0.8), c1=CREAM, ears="long", tail="short", snout=(0.25, 0.55, 0.4), snout_c=WHITE, nose_c=PINKC, x=[wool(SNOW)])),
-   ("GiantBeaver", Q, dict(body=(2.5, 1.6, 1.4), legs=(0.5, 0.52), head=(1.2, 1.35, 1.1), neck=(0.1, 0.4), c1=rgb(124, 82, 52), snout=(0.4, 0.85, 0.55), snout_c=rgb(156, 112, 76), ears="tiny", tail="flat", tail_tip=rgb(72, 62, 56), x=[buck_teeth(rgb(245, 190, 80))])),
-   ("GiantSloth", A, dict(torso=(2.4, 1.8, 2.6), leg=0.9, head=1.4, lean=0.2, c1=rgb(164, 122, 82), face_c=TAN2, arm_w=0.6)),
-   ("Glyptodon", Q, dict(body=(2.9, 2.4, 1.4), legs=(0.55, 0.6), head=(1.0, 1.05, 0.85), neck=(0, 0.2), c1=rgb(124, 102, 82), ears="tiny", tail="thick", x=[shell(rgb(166, 134, 92), rgb(112, 86, 60))])),
-   ("WoollyRhino", Q, dict(body=(3.4, 2.1, 2.1), legs=(0.9, 0.8), head=(1.6, 1.4, 1.2), neck=(0.1, 0.2), c1=rgb(146, 102, 62), snout=(0.9, 1.15, 0.9), ears="point", tail="short", angry=True, x=[horns("rhino"), fur_coat(rgb(156, 108, 62))])),
-   ("Sabertooth", Q, dict(body=(2.7, 1.4, 1.5), legs=(1.0, 0.52), head=(1.3, 1.25, 1.1), neck=(0.3, 0.5), c1=rgb(216, 164, 92), pattern="stripes", pat_c=rgb(156, 102, 50), pat_n=4, snout=(0.45, 0.75, 0.55), snout_c=CREAM, ears="round", tail="short", angry=True, x=[fangs()])),
+   ("WoollyHare", EX, "woollyhare"),   # hero build (reference analysis in the script)
+   # v1: ("WoollyHare", Q, dict(gait=dict(hop=True), body=(1.7, 1.3, 1.3), legs=(0.4, 0.42), head=(1.1, 1.05, 1.0), neck=(0.1, 0.8), c1=CREAM, ears="long", tail="short", snout=(0.25, 0.55, 0.4), snout_c=WHITE, nose_c=PINKC, x=[wool(SNOW)])),
+   ("GiantBeaver", EX, "giantbeaver"),   # hero build (reference analysis in the script)
+   # v1: ("GiantBeaver", Q, dict(body=(2.5, 1.6, 1.4), legs=(0.5, 0.52), head=(1.2, 1.35, 1.1), neck=(0.1, 0.4), c1=rgb(124, 82, 52), snout=(0.4, 0.85, 0.55), snout_c=rgb(156, 112, 76), ears="tiny", tail="flat", tail_tip=rgb(72, 62, 56), x=[buck_teeth(rgb(245, 190, 80))])),
+   ("GiantSloth", EX, "giantsloth"),   # hero build (reference analysis in the script)
+   # v1: ("GiantSloth", A, dict(torso=(2.4, 1.8, 2.6), leg=0.9, head=1.4, lean=0.2, c1=rgb(164, 122, 82), face_c=TAN2, arm_w=0.6)),
+   ("Glyptodon", EX, "glyptodon"),   # hero build (reference analysis in the script)
+   # v1: ("Glyptodon", Q, dict(body=(2.9, 2.4, 1.4), legs=(0.55, 0.6), head=(1.0, 1.05, 0.85), neck=(0, 0.2), c1=rgb(124, 102, 82), ears="tiny", tail="thick", x=[shell(rgb(166, 134, 92), rgb(112, 86, 60))])),
+   ("WoollyRhino", EX, "woollyrhino"),   # hero build (reference analysis in the script)
+   # v1: ("WoollyRhino", Q, dict(body=(3.4, 2.1, 2.1), legs=(0.9, 0.8), head=(1.6, 1.4, 1.2), neck=(0.1, 0.2), c1=rgb(146, 102, 62), snout=(0.9, 1.15, 0.9), ears="point", tail="short", angry=True, x=[horns("rhino"), fur_coat(rgb(156, 108, 62))])),
+   ("Sabertooth", EX, "sabertooth"),   # hero build (reference analysis in the script)
+   # v1: ("Sabertooth", Q, dict(body=(2.7, 1.4, 1.5), legs=(1.0, 0.52), head=(1.3, 1.25, 1.1), neck=(0.3, 0.5), c1=rgb(216, 164, 92), pattern="stripes", pat_c=rgb(156, 102, 50), pat_n=4, snout=(0.45, 0.75, 0.55), snout_c=CREAM, ears="round", tail="short", angry=True, x=[fangs()])),
    ("Mammoth", Q, dict(body=(3.8, 2.6, 2.6), legs=(1.5, 0.95), head=(2.0, 2.1, 2.0), neck=(0, 0.3), c1=rgb(118, 64, 36), snout=(0.5, 0.95, 0.9), snout_c=rgb(104, 56, 32), ears="tiny", ear_c=rgb(92, 50, 28), tail="tuft", tail_tip=rgb(70, 38, 22), head_scale=1.3, fierce=True, muscular=True, x=[shaggy(rgb(118, 64, 36), rgb(90, 48, 27)), tusks("mammoth"), trunk(rgb(110, 60, 34))])),
  ]),
  ("08_DinoLand", [

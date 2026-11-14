@@ -1,7 +1,7 @@
 # Cannon Tame animals (TFFA style)
 
 77 animals in 11 zones (7 per zone), rebuilt in the "Throw Food For Animals" look with the skill in
-`.claude/skills/tffa-animal-models/`. **66 of 77 are done** (rigged + animated); the other 11 still have the old
+`.claude/skills/tffa-animal-models/`. **72 of 77 are done** (rigged + animated); the other 5 still have the old
 CannonTame look and are listed below.
 
 ## Status by zone
@@ -13,7 +13,7 @@ CannonTame look and are listed below.
 | 04_Jungle | Crocodile, Frog, Gorilla, Monkey, Panther, Sloth, Toucan | - |
 | 05_Arctic | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus | - |
 | 06_Desert | Camel, FennecFox, Lizard, Rattlesnake, Scorpion, SphinxCat, Vulture | - |
-| 07_IceAge | Mammoth | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
+| 07_IceAge | GiantBeaver, GiantSloth, Glyptodon, Mammoth, Sabertooth, WoollyHare, WoollyRhino | - |
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
 | 09_Volcano | EmberWolf, FireSalamander, LavaDrake, LavaRex, MagmaSlug, ObsidianGolem, Phoenix | - |
 | 10_MythicIsles | CelestialDragon, Chimera, Griffin, Jackalope, Kraken, Pegasus, Unicorn | - |
@@ -22,7 +22,7 @@ CannonTame look and are listed below.
 A rebuilt animal has an `anims/` folder; an old one does not.
 
 ## Hero builds (one script per animal)
-Zones 05, 06 and 09-11, the 04_Jungle Frog/Gorilla/Monkey/Sloth/Toucan (and the Chimera/Kraken) are **hero builds**: a dedicated script with a written reference analysis in its
+Zones 05-07 and 09-11, the 04_Jungle Frog/Gorilla/Monkey/Sloth/Toucan (and the Chimera/Kraken) are **hero builds**: a dedicated script with a written reference analysis in its
 docstring, at `.claude/skills/tffa-animal-models/examples/<name>.py`. Highlights:
 
 | Animal | Signature |
@@ -52,6 +52,12 @@ docstring, at `.claude/skills/tffa-animal-models/examples/<name>.py`. Highlights
 | Lizard | frilled lizard in threat display: red/orange/yellow frill with spokes, gaping yellow mouth, banded whip tail |
 | SphinxCat | pharaoh's temple cat: nemes headdress, usekh collar, kohl eyeliner, glowing emerald eyes + scarab (Neon) |
 | Vulture | lappet-faced vulture mantling: bald red head, huge hooked beak, cream ruff, finger primaries |
+| Sabertooth | Smilodon gape with long flat sabres, heavy front quarters, frost-tipped ruff, bob tail |
+| WoollyRhino | charging with the head low, hanging coat strands, ivory front + second horn, snow on the back |
+| GiantSloth | Megatherium reared up on hind legs + tail, arms raised with three huge hooked claws per hand |
+| Glyptodon | high dome shell covered in raised rosettes, scalloped rim, plated head cap, ringed tail with a spiked club |
+| WoollyHare | woolly frost-tipped tufts, black-tipped ears, cheek fluff, snowshoe hind feet, icicles |
+| GiantBeaver | bear-sized Castoroides: huge orange incisors, scaly paddle tail, webbed feet, a gnawed stick in its paws |
 | LavaRex / MagmaSlug / ObsidianGolem | basalt-armoured T-Rex with magma drool / slug with an erupting volcano shell / golem with a caged crystal heart |
 
 Other rebuilt animals come from one-line archetype specs in `tools/blender/tffa_zoo.py`.

@@ -76,7 +76,7 @@ with m.bone("Tail3"):
         m.spike(f"ClubSpike{k}", c + d * 0.5, c + d * 1.15 + V(-0.15, 0, 0), 0.18, SPIKE, flat=0.8)
     m.spike("ClubTip", c + V(-0.5, 0, 0), c + V(-1.15, 0, 0), 0.2, SPIKE, flat=0.8)
 
-with m.bone("Head", (2.7, 0, 2.2)), m.frame(pivot=(2.7, 0, 2.2), scale=1.15):
+with m.bone("Head", (2.7, 0, 2.2)), m.frame(pivot=(2.7, 0, 2.2), scale=1.35):
     hc = V(3.3, 0, 2.05)
     m.box("Head", hc, (1.35, 1.55, 1.2), SKIN, top=(0.82, 0.86), bot=(0.88, 0.9))
     m.box("Snout", hc + V(0.85, 0, -0.18), (0.6, 1.05, 0.9), SKIN, top=(0.85, 0.85))
