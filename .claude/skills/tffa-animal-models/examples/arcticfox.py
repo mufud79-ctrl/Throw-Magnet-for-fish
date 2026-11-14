@@ -36,11 +36,11 @@ def leg(nm, hip, foot, w0, w1):
 for s in (1, -1):
     with m.bone(f"Leg_F{LR(s)}", (1.0, s * 0.6, 2.2)):
         m.box(f"Shoulder{s}", (1.05, s * 0.7, 2.15), (1.0, 0.45, 1.1), FUR, top=(0.8, 0.8))
-        leg(f"Foreleg{s}", V(1.05, s * 0.66, 2.0), V(1.3, s * 0.7, 0.3), 0.62, 0.52)
+        leg(f"Foreleg{s}", V(1.05, s * 0.66, 2.0), V(1.3, s * 0.7, 0.3), 0.7, 0.6)
         m.box(f"Paw{s}", (1.45, s * 0.7, 0.2), (0.78, 0.62, 0.4), FROST, top=(0.85, 0.9))
     with m.bone(f"Leg_B{LR(s)}", (-1.5, s * 0.6, 2.3)):
         m.box(f"Thigh{s}", (-1.5, s * 0.7, 1.85), (1.2, 0.55, 1.4), FUR, rot=Ry(-0.3), top=(0.85, 0.9), bot=(0.65, 0.75))
-        leg(f"Hock{s}", V(-1.8, s * 0.72, 1.4), V(-1.55, s * 0.72, 0.3), 0.5, 0.46)
+        leg(f"Hock{s}", V(-1.8, s * 0.72, 1.4), V(-1.55, s * 0.72, 0.3), 0.6, 0.54)
         m.box(f"HindPaw{s}", (-1.35, s * 0.72, 0.2), (0.75, 0.58, 0.4), FROST, top=(0.85, 0.9))
 
 # huge bushy tail sweeping up and curling forward over the back
@@ -67,9 +67,11 @@ with m.bone("Head", (2.0, 0, 2.95), "Neck"), m.frame(pivot=(2.0, 0, 2.95), scale
             m.spike(f"Cheek{s}{k}", b, b + V(-0.45, s * 0.65, -0.12 - 0.12 * k), 0.3, FUR if k else FUR_D, flat=0.55)
     m.box("Snout", hc + V(0.95, 0, -0.25), (1.0, 0.72, 0.52), FUR, top=(0.75, 0.85), bot=(0.9, 0.9))
     m.box("Nose", hc + V(1.47, 0, -0.1), (0.14, 0.34, 0.24), BLK, **NS)
-    m.box("Mouth", hc + V(1.15, 0, -0.5), (0.7, 0.62, 0.06), BLK, **NS)
-    m.box("Grin", hc + V(0.72, 0.32, -0.42), (0.36, 0.06, 0.06), BLK, rot=Ry(-0.4), **NS)
-    m.spike("Fang", hc + V(1.3, 0.24, -0.5), hc + V(1.32, 0.24, -0.75), 0.06, TOOTH, flat=0.35)
+    m.box("Mouth", hc + V(1.46, 0, -0.38), (0.06, 0.44, 0.06), BLK, **NS)
+    for s in (1, -1):
+        m.box(f"MouthSide{s}", hc + V(1.0, s * 0.37, -0.4), (0.9, 0.06, 0.06), BLK, **NS)
+    m.box("Grin", hc + V(0.5, 0.37, -0.3), (0.36, 0.06, 0.06), BLK, rot=Ry(-0.5), **NS)       # sly half-grin on the left
+    m.spike("Fang", hc + V(1.3, 0.3, -0.4), hc + V(1.32, 0.3, -0.72), 0.07, TOOTH, flat=0.35)
     m.eyes(tuple(hc + V(0.58, 0.42, 0.18)), facing=(0.9, 0.45, 0), size=(0.44, 0.26), pupil=0.85, look=(0.55, 0), angry=0.5,
            white=ICE, brow_col=BROW, brow_h=0.6, brow_up=0.75, depth=0.12)
     for s in (1, -1):

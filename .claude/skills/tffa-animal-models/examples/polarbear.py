@@ -13,7 +13,7 @@ import sys, os, math
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 from tffa_kit import *
 
-FUR, FUR_D, CREAM, MUZ = rgb(246, 244, 236), rgb(214, 210, 196), rgb(230, 226, 210), rgb(236, 232, 220)
+FUR, FUR_D, CREAM, MUZ = rgb(240, 236, 222), rgb(206, 200, 182), rgb(224, 218, 198), rgb(232, 226, 210)
 BLK, ICE, ICE_D, SCAR = rgb(30, 30, 38), rgb(150, 214, 255), rgb(96, 168, 230), rgb(196, 170, 170)
 LR = lambda s: "L" if s > 0 else "R"
 NS = dict(studs=False)
