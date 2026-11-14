@@ -102,7 +102,8 @@ ZONES = [
    ("Unicorn", Q, dict(equine=True, head_kit="horse_wedge", head_k=0.74, body=(3.0, 1.45, 1.6), legs=(1.6, 0.5), head=(1.3, 0.95, 1.0), neck=(1.3, 1.0), c1=WHITE, snout_c=rgb(255, 230, 245), mane_c=PINK, horn=GOLD, tail="flow", tail_c=PINK, tail_tip=LAVENDER, feet=GOLD, glow=rgb(255, 220, 120), x=[mane_back(PINK)])),
    ("Chimera", EX, "chimera"),   # custom build from the user reference; v1 (quad + chimera_bits) archived in models/CannonTame/Animals/_Archive/Chimera_v1
    # v1: ("Chimera", Q, dict(head_kit="lion_sunburst", head_k=0.62, snarl=True, body=(3.4, 1.75, 1.7), legs=(1.35, 0.66), head=(1.5, 1.5, 1.0), neck=(0.5, -0.12), c1=rgb(196, 140, 82), mane=rgb(120, 62, 34), mane2=rgb(156, 86, 42), snout_c=rgb(232, 204, 156), nose_c=rgb(50, 30, 26), iris=rgb(255, 140, 30), eye_glow=True, glow=rgb(255, 140, 30), tail=None, muscular=True, front_back=0.07, x=[chimera_bits(), talons()])),
-   ("Kraken", kraken, dict(c1=rgb(150, 28, 52), c2=rgb(84, 16, 34), sucker=rgb(236, 150, 150), iris=rgb(255, 214, 60))),
+   ("Kraken", EX, "kraken"),   # custom hero build from the user reference; v1 archived in models/CannonTame/Animals/_Archive/Kraken_v1
+   # v1: ("Kraken", kraken, dict(c1=rgb(150, 28, 52), c2=rgb(84, 16, 34), sucker=rgb(236, 150, 150), iris=rgb(255, 214, 60))),
    ("CelestialDragon", dragon, dict(s=0.85, studded=True, muscular=True, c1=rgb(238, 240, 255), c2=rgb(150, 170, 220), mem=rgb(150, 200, 255), belly=GOLD, seg=rgb(214, 150, 30), knob=rgb(120, 230, 255), horn=GOLD, eye=CYAN, eye_glow=True, spikes=rgb(120, 230, 255), glow=rgb(120, 230, 255))),
  ]),
  ("11_Space", [
