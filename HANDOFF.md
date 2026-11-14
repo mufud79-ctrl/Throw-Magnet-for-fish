@@ -70,6 +70,36 @@ Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07
 - `tools/blender/zones_blocky.py` builds all 60 props (`python zones_blocky.py [Zone or Prop names] [--no-render]`). No prop may repeat across zones.
 - Possible polish: StatueHead and IcebergChunk are plain; FallenStar's glow arms read as a white smear in previews (Neon in Roblox).
 
+## Cannon Tame: cannons, shops, lobby props (DONE)
+Latest work is on branch `claude/epic-rubin-syjk53`. It contains everything from `claude/roblox-animal-models-852c5h`
+(the animal work below) plus the items in this section. All of these use the TFFA kit in `.claude/skills/tffa-animal-models/`.
+Set up Blender with `python3 -m venv /tmp/bpyenv && /tmp/bpyenv/bin/pip install bpy numpy`; contact sheets use the system python + Pillow.
+
+**Cannons: all 14 tiers built** (`models/CannonTame/Cannons/`, README with status, rig and glow tables, `Cannons_overview.png`).
+- Built by `tools/blender/cannons.py` (`/tmp/bpyenv/bin/python tools/blender/cannons.py [tiers] [--no-render]`; `python3 tools/blender/cannons.py --sheet-only` rebuilds the overview).
+- Tiers: 01 Wooden, 02 Iron, 03 Stone, 04 Bamboo, 05 Copper (steam cannon, gear wheels, boiler), 06 Candy (frosting, donut wheels,
+  lollipops), 07 Golden (treasure chest, crown, gems; studded bridge tier), 08 Frost (ice sled, icicles; glow #50D2FF),
+  09 Lava (mini volcano; glow #FF5400), 10 Toxic (sludge launcher on treads; glow #46FF28), 11 Cyber, 12 Dragon, 13 Galaxy, 14 Celestial.
+- Tiers 01-07 are studded, 08-14 faceted + Neon `_Glow` mesh. Each cannon: rig (`Body`, `Barrel` pivots on the trunnion, `Muzzle` = projectile spawn),
+  Idle + Fire clips, GLB/FBX/.blend, previews hero/side/front/back. Helpers added this round: `gear()` (cog wheel).
+- User feedback: Copper and Toxic were called "Beautiful". Glow colours that render too close to the base colours get pushed more saturated (Toxic lime -> green, Lava gold -> orange, Frost ice deepened).
+
+**Shops** (`models/CannonTame/Shops/`, README, `Shops_overview.png`), built by `tools/blender/shops.py`:
+- `CannonShop` (red/white awning, "CANNONS" pixel sign on both sides, a big rooftop cannon, shelves of six tier-coloured display cannons, cannonballs, kegs, lanterns; 18.8k tris, close to the 20k limit).
+- `SellShop` (green/white awning, "SELL" sign, giant $ coin, balance scale, coin stacks, money bags, gold piles).
+- Static props (no rig) sized for R15: counter top at 3.7 studs. `shops.py` holds the shared static-prop helpers: `done_static` (export without rig),
+  `group(m, name)` (parts exported as a separate `<Name>_<name>` MeshPart), `text()` (3x5 pixel font: A C E H L N O P R S $, `back=True` for the reverse side),
+  `awning`, `lantern`, `mini_cannon`, `prism`.
+
+**Lobby** (`models/CannonTame/Lobby/`, README, `Lobby_overview.png`), built by `tools/blender/lobby.py`:
+- Leaderboard, one design in three colourways: `LeaderboardGold`, `LeaderboardPurple`, `LeaderboardTeal`. Each has a separate `_Screen` part for a SurfaceGui,
+  medals beside rows 1-3, a trophy crest, and marquee bulbs (glow). The header has no text, so titles go in the GUI.
+- `Ranch`: an open fenced pen (29 x 25 studs, fence 4.3 high) with a gate. Doors are the separate `Ranch_GateL/R` parts.
+  The user asked for "just fences": no arch, sign, overhang, props or floor.
+
+**Not done yet:** none of the cannons, shops or lobby props have been imported into Roblox Studio (check scale, -Z facing, Neon glow parts,
+SurfaceGui on the leaderboard screen, gate pivots). Possible next asks: food projectiles/ammo per cannon tier, cannon colour variants, more lobby props.
+
 ## TFFA-style animals (skill) - CURRENT WORK
 Develop on branch `claude/roblox-animal-models-852c5h`. Commit + push after every zone (another Claude session may push
 to the same branch: `git fetch` + `git rebase origin/claude/roblox-animal-models-852c5h` before pushing; never rebuild a
