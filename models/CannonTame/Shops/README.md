@@ -6,7 +6,7 @@ TFFA kit in `.claude/skills/tffa-animal-models/`. Overview: `Shops_overview.png`
 | Shop | Size (W x D x H studs) | Look |
 |---|---|---|
 | CannonShop | 15 x 11.5 x 16 | Wooden stall with a red/white striped awning and a pixel-block "CANNONS" sign (lettered on both sides). A big cannon sits on the roof as a landmark. Inside: a red counter with cannonball panels and cannonball piles, back-wall shelves of six mini display cannons in tier colours, powder kegs, and lanterns on the front posts |
-| SellShop | 13 x 9.5 x 15 | Green stall with a stone deck, a green/white awning, a "SELL" sign (both sides) and a giant spinning-ready $ coin on top with sparkles. Inside: a green counter with a $ coin emblem, a balance scale (coins vs a ruby), coin stacks, money bags with a $ and gold piles |
+| SellShop | 13 x 9.5 x 15 | Green stall with a stone deck, a green/white awning, a "SELL" sign (both sides) and a giant $ coin on top with sparkles. Inside: a green counter with a $ coin emblem, a balance scale (coins vs a ruby), coin stacks, money bags with a $ and gold piles |
 
 ## Files per shop
 `<Name>.glb` (import with the Roblox 3D Importer: 1 unit = 1 stud, the counter faces -Z, pivot at the ground centre), `.fbx`, `.blend`,
