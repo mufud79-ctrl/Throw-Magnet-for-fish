@@ -432,7 +432,113 @@ def build_galaxy(K, out):
     m.done(views=VIEWS, glow_color=GL)
 
 
-BUILDERS = {1: build_wooden, 2: build_iron, 13: build_galaxy, 14: build_celestial}
+# ============================================================================== tier 03: Stone (studded idol on rollers)
+def build_stone(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    STONE, STONE_D, STONE_L = rgb(156, 158, 166), rgb(112, 114, 124), rgb(196, 196, 200)
+    MOSS, MOSS_D, BORE = rgb(104, 182, 62), rgb(72, 140, 46), rgb(30, 26, 30)
+    m = K.Model("StoneCannon", out, stud=0.28, chamfer=0.18, jitter=0.07)
+    m.gait = {"recoil": 0.3}
+    T = Vector((0.25, 0, 2.0))
+    with m.bone("Body", (0, 0, 1.0)):
+        for x in (-1.15, 0.0, 1.15):                                  # stone rollers
+            prism(m, f"Roller{x}", (x, -0.95, 0.33), (x, 0.95, 0.33), 0.34, 0.34, STONE_D, chamfer=0.2)
+        m.box("Slab", (0, 0, 0.84), (3.3, 1.65, 0.44), STONE)
+        m.box("SlabMoss", (-0.6, 0.15, 1.08), (1.5, 1.2, 0.1), MOSS, studs="top")
+        for s in (1, -1):
+            m.box(f"Pillar{s}", (T.x, s * 0.64, 1.47), (0.86, 0.38, 1.0), STONE_D)
+            m.box(f"PillarCap{s}", (T.x, s * 0.64, T.z + 0.02), (0.98, 0.46, 0.18), STONE_L, studs=False)
+            m.box(f"MossDrip{s}", (T.x - 0.2, s * 0.84, 1.75), (0.36, 0.06, 0.4), MOSS_D, studs=False)
+        for k, p in enumerate(((-1.25, 0.35, 1.32), (-1.25, -0.32, 1.32), (-1.25, 0.02, 1.72))):     # ammo pile
+            m.ball(f"Ammo{k}", p, 0.27, STONE_D, segs=(8, 6))
+    with barrel_ctx(m, K, T, 0.12):
+        X = lambda dx: T.x + dx
+        m.box("Breech", (X(-1.45), 0, T.z), (1.0, 1.28, 1.28), STONE_D)
+        m.seg("Chase", (X(-1.0), 0, T.z), (X(1.4), 0, T.z), 1.14, 1.0, STONE, chamfer=0.16)
+        for x in (-0.55, 0.65):
+            m.box(f"Band{x}", (X(x), 0, T.z), (0.24, 1.26, 1.2), STONE_D, studs=False)
+        m.box("Head", (X(1.82), 0, T.z + 0.05), (0.95, 1.55, 1.55), STONE)
+        m.box("HeadMoss", (X(1.78), 0, T.z + 0.86), (1.0, 1.6, 0.14), MOSS, studs="top")
+        for s in (1, -1): m.box(f"Drip{s}", (X(1.6), s * 0.76, T.z + 0.62), (0.3, 0.12, 0.42), MOSS_D, studs=False)
+        m.box("Mouth", (X(2.29), 0, T.z - 0.33), (0.1, 0.84, 0.44), BORE, studs=False)
+        m.box("Lip", (X(2.31), 0, T.z - 0.6), (0.14, 0.96, 0.12), STONE_L, studs=False)
+        for k in range(4):                                         # chunky stone teeth
+            m.box(f"Tooth{k}", (X(2.33), -0.3 + k * 0.2, T.z - 0.17), (0.08, 0.14, 0.14), STONE_L, studs=False)
+        m.box("Nose", (X(2.36), 0, T.z + 0.08), (0.22, 0.3, 0.3), STONE_D, studs=False, top=(0.7, 0.8))
+        m.eyes((X(2.3), 0.38, T.z + 0.4), facing=(1, 0, 0), size=(0.44, 0.34), pupil=0.62, look=(0.2, -0.1), angry=0.35,
+               brow_col=STONE_D, white=rgb(236, 232, 214), depth=0.12)
+        prism(m, "Trunnion", (T.x, -0.86, T.z), (T.x, 0.86, T.z), 0.2, 0.2, STONE_D)
+        with m.bone("Muzzle", (X(2.34), 0, T.z - 0.33)): pass
+    m.done(views=VIEWS)
+
+
+# ============================================================================== tier 12: Dragon (faceted, fire glow)
+def build_dragon(K, out):
+    from mathutils import Vector
+    rgb, Ry = K.rgb, K.Ry
+    RED, RED_D, BELLY = rgb(200, 30, 42), rgb(126, 14, 30), rgb(246, 196, 112)
+    HORN, BASALT, BASALT_D, GOLD = rgb(246, 238, 220), rgb(70, 60, 72), rgb(48, 40, 52), rgb(255, 200, 50)
+    GLD = rgb(255, 150, 40)
+    m = K.Model("DragonCannon", out, stud=0.4, chamfer=0.16, faceted=True)
+    m.gait = {"recoil": 0.4}
+    T = Vector((0.0, 0, 2.9))
+    with m.bone("Body", (0, 0, 1.0)):
+        m.box("Crag", (0, 0, 0.45), (2.9, 2.3, 0.9), BASALT, top=(0.85, 0.85))
+        m.box("Crag2", (0.15, -0.2, 1.05), (1.9, 1.7, 0.6), BASALT_D, top=(0.75, 0.8), rot=K.Rz(0.2))
+        for k, (x, y, z) in enumerate(((1.15, 0.7, 0.95), (1.0, -0.6, 0.95), (-1.1, 0.75, 0.95), (1.3, 0.1, 0.94), (-0.9, -0.8, 0.95))):
+            prism(m, f"Coin{k}", (x, y, z - 0.03), (x, y, z + 0.06), 0.2, 0.2, GOLD, chamfer=0.3)
+        gem(m, "HoardGem", (1.2, -0.1, 1.1), (0.3, 0, 1), 0.32, 0.18, rgb(60, 220, 120), glow=False)
+        for s in (1, -1):                                     # dragon arms holding the trunnions
+            m.seg(f"UpperArm{s}", (-0.35, s * 0.75, 1.15), (0.15, s * 1.15, 2.1), 0.6, 0.5, RED, chamfer=0.22)
+            m.seg(f"Forearm{s}", (0.15, s * 1.15, 2.0), (T.x, s * 0.95, T.z - 0.15), 0.48, 0.42, RED, chamfer=0.22)
+            m.box(f"Hand{s}", (T.x, s * 0.98, T.z - 0.05), (0.55, 0.36, 0.45), RED_D)
+            for dx in (-0.22, 0.0, 0.22):
+                m.spike(f"Claw{s}{dx}", (T.x + dx, s * 0.95, T.z + 0.12), (T.x + dx * 1.3, s * 0.62, T.z + 0.62), 0.09, HORN, flat=0.5)
+            m.spike(f"Elbow{s}", (0.15, s * 1.15, 2.05), (-0.35, s * 1.5, 2.25), 0.14, HORN)
+            with m.bone("Wing_L" if s > 0 else "Wing_R", (-0.5, s * 0.95, 1.4)):    # folded wings behind
+                m.seg(f"WingBone{s}", (-0.5, s * 0.95, 1.4), (-1.5, s * 1.55, 3.5), 0.22, 0.14, RED, chamfer=0.2)
+                m.ball(f"WingKnob{s}", (-1.5, s * 1.55, 3.5), 0.16, GOLD, segs=(6, 4))
+                m.poly(f"Membrane{s}", [(-0.5, s * 0.95, 1.4), (-1.5, s * 1.55, 3.5), (-2.4, s * 1.45, 2.4), (-2.1, s * 1.25, 1.6),
+                                        (-1.4, s * 1.05, 1.2)], 0.1, RED_D)
+    with barrel_ctx(m, K, T, 0.18):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        m.chain("Tail", [P(-1.0), P(-1.9, -0.1), P(-2.6, -0.45), P(-2.95, -1.0)], [1.0, 0.72, 0.46, 0.22], RED, chamfer=0.22)
+        m.slab("TailSpade", [(-0.35, 0), (0.35, 0), (0, -0.6)], 0.12, HORN, origin=P(-2.95, -0.95), xaxis=(1, 0, 0), yaxis=(0.3, 0, 1))
+        m.seg("Neck", P(-1.2), P(1.7), 1.04, 0.88, RED, chamfer=0.22)
+        for i in range(5):
+            m.box(f"Plate{i}", P(-0.9 + i * 0.55, -0.45), (0.44, 0.72, 0.16), BELLY)
+        for i in range(7):
+            x = -2.3 + i * 0.6; h = 0.5 if i % 2 else 0.36
+            base = Vector(P(x, 0.38 if x > -1.2 else 0.25 - 0.1 * (-1.2 - x)))
+            m.spike(f"Spine{i}", base, base + Vector((-0.25, 0, h)), 0.2, HORN, flat=0.3)
+        # head: skull + snout, jaw hinged open, fireball in the mouth
+        m.box("Skull", P(2.15, 0.15), (1.3, 1.25, 0.82), RED, top=(0.85, 0.9))
+        m.box("Snout", P(3.0, 0.1), (1.05, 0.95, 0.52), RED, top=(0.8, 0.85))
+        m.box("Brow", P(2.35, 0.55), (0.7, 1.15, 0.2), RED_D, top=(0.8, 0.9))
+        m.teeth("UpperTeeth", P(2.6, -0.17, 0.36), P(3.45, -0.17, 0.33), 4, 0.24, 0.08, fangs=(0,))
+        m.teeth("UpperTeethR", P(2.6, -0.17, -0.36), P(3.45, -0.17, -0.33), 4, 0.24, 0.08, fangs=(0,))
+        m.box("MouthIn", P(2.2, -0.25), (0.8, 0.9, 0.5), K.MOUTH)
+        with m.frame(pivot=P(1.8, -0.3), rot=Ry(0.32)):
+            m.box("Jaw", P(2.7, -0.5), (1.6, 0.86, 0.3), RED)
+            m.box("JawBelly", P(2.6, -0.67), (1.4, 0.7, 0.1), BELLY)
+            m.teeth("LowerTeeth", P(2.3, -0.33, 0.33), P(3.35, -0.33, 0.3), 4, 0.2, 0.07, down=False)
+            m.teeth("LowerTeethR", P(2.3, -0.33, -0.33), P(3.35, -0.33, -0.3), 4, 0.2, 0.07, down=False)
+        m.ball("Fireball", P(2.85, -0.28), 0.36, GLD, segs=(8, 6), glow=True)
+        m.eyes(P(2.45, 0.38, 0.6), facing=(0.35, 1, 0), size=(0.42, 0.28), pupil=0.75, look=(0.3, 0), angry=0.5,
+               brow_col=RED_D, glow_white=True, depth=0.14)
+        for s in (1, -1):
+            m.spike(f"Horn{s}", P(1.75, 0.42, s * 0.42), P(0.75, 1.2, s * 0.8), 0.22, HORN)
+            m.spike(f"Horn2{s}", P(1.95, 0.2, s * 0.6), P(1.25, 0.45, s * 1.05), 0.14, HORN)
+            m.slab(f"Frill{s}", [(0, 0), (0.7, 0), (-0.4, 0.55)], 0.08, RED_D, origin=P(1.6, 0.0, s * 0.62),
+                   xaxis=(1, 0, 0), yaxis=(0, s * 0.9, 0.4))
+        prism(m, "Trunnion", (T.x, -0.92, T.z), (T.x, 0.92, T.z), 0.2, 0.2, RED_D)
+        with m.bone("Muzzle", P(3.4, -0.28)): pass
+    m.done(views=VIEWS, glow_color=GLD)
+
+
+BUILDERS = {1: build_wooden, 2: build_iron, 3: build_stone, 12: build_dragon, 13: build_galaxy, 14: build_celestial}
 
 
 def build_one(t):
