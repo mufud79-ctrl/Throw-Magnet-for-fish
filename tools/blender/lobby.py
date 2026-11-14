@@ -93,7 +93,7 @@ def build_leaderboard(K, out, scheme):
     done_static(m, GLOW, VIEWS)
 
 
-# ============================================================================== Ranch (fenced pen + gate arch)
+# ============================================================================== Ranch (open fenced pen with a gate)
 def build_ranch(K, out):
     from mathutils import Vector
     rgb = K.rgb
@@ -105,9 +105,6 @@ def build_ranch(K, out):
     ns = dict(studs=False)
     L, W, gate = 28.0, 24.0, 4.2                 # pen length (x), width (y), half gate opening
     hx, hy = L / 2, W / 2
-    with group(m, "Floor"):                      # dirt floor with a grass rim (delete if the map has its own ground)
-        m.box("Grass", (0, 0, 0.1), (L + 3, W + 3, 0.2), GRASS)
-        m.box("Dirt", (0, 0, 0.22), (L - 1, W - 1, 0.1), DIRT, studs=False, chamfer=0.0)
     # fence: posts every ~3.5 studs, two rails per side, gap in the front for the gate
     placed = set()
     def posts(a, b, n):
@@ -123,32 +120,16 @@ def build_ranch(K, out):
         size = (abs(d.x) + 0.3, abs(d.y) + 0.3, 0.5)
         for z in (1.7, 3.2):
             m.box(f"{name}{z}", (c.x, c.y, z), (max(size[0], 0.3), max(size[1], 0.3), 0.5), WOOD)
+    placed.update({(round(hx, 2), round(s_ * (gate + 0.6), 2)) for s_ in (1, -1)})      # gate posts are built below
     posts((-hx, -hy, 0), (hx, -hy, 0), 8); posts((-hx, hy, 0), (hx, hy, 0), 8)
     posts((-hx, -hy, 0), (-hx, hy, 0), 7)
     posts((hx, -hy, 0), (hx, -gate - 0.6, 0), 2); posts((hx, gate + 0.6, 0), (hx, hy, 0), 2)
     rails("RailL", (-hx, hy, 0), (hx, hy, 0)); rails("RailR", (-hx, -hy, 0), (hx, -hy, 0))
     rails("RailB", (-hx, -hy, 0), (-hx, hy, 0))
     rails("RailFL", (hx, gate + 0.6, 0), (hx, hy, 0)); rails("RailFR", (hx, -hy, 0), (hx, -gate - 0.6, 0))
-    # gate arch: two big posts, crossbeam, RANCH sign, horns, lanterns
-    for s in (1, -1):
-        m.box(f"ArchPost{s}", (hx, s * (gate + 0.7), 4.5), (1.3, 1.3, 9.0), WOOD_DD)
-        m.box(f"ArchFoot{s}", (hx, s * (gate + 0.7), 0.5), (1.8, 1.8, 1.0), WOOD_D)
-        lantern(m, f"Lamp{s}", (hx + 0.95, s * (gate + 0.7), 6.2), LAMP, IRON)
-        m.box(f"LampArm{s}", (hx + 0.7, s * (gate + 0.7), 6.75), (0.6, 0.18, 0.18), IRON, **ns)
-    m.box("Beam", (hx, 0, 9.3), (1.4, 2 * gate + 4.0, 1.0), WOOD_DD)
-    for s in (1, -1):
-        m.box(f"BeamEnd{s}", (hx, s * (gate + 2.1), 9.3), (1.6, 0.5, 1.3), WOOD_D, **ns)
-    m.box("Sign", (hx + 0.15, 0, 11.0), (0.5, 8.6, 2.4), RED)
-    for z in (12.3, 9.75):
-        m.box(f"SignFrame{z}", (hx + 0.15, 0, z), (0.6, 9.0, 0.28), WOOD_D, **ns)
-    for s in (1, -1):
-        m.box(f"SignFrameS{s}", (hx + 0.15, s * 4.4, 11.0), (0.6, 0.28, 2.8), WOOD_D, **ns)
-    text(m, "Txt", "RANCH", (hx + 0.44, 0, 11.0), 0.32, CREAM)
-    text(m, "TxtB", "RANCH", (hx - 0.14, 0, 11.0), 0.32, CREAM, back=True, chamfer=0.0)
-    m.box("Skull", (hx + 0.35, 0, 12.85), (0.6, 1.1, 0.8), IVORY, top=(1, 0.8))
-    for s in (1, -1):                                     # long-horn skull on top of the sign
-        m.spike(f"Horn{s}", (hx + 0.35, s * 0.5, 13.0), (hx + 0.35, s * 2.0, 13.7), 0.22, IVORY)
-        m.box(f"SkullEye{s}", (hx + 0.66, s * 0.24, 12.95), (0.04, 0.2, 0.2), WOOD_DD, **ns)
+    for s in (1, -1):                                     # gate posts: fence height, a bit chunkier
+        m.box(f"GatePost{s}", (hx, s * (gate + 0.6), 2.25), (0.95, 0.95, 4.3), WOOD_DD)
+        m.box(f"GatePostCap{s}", (hx, s * (gate + 0.6), 4.5), (1.15, 1.15, 0.3), WOOD_D, **ns)
     # gate doors (separate meshes so they can swing; hinges at the arch posts)
     for s, gname in ((1, "GateL"), (-1, "GateR")):
         with group(m, gname):
@@ -162,24 +143,7 @@ def build_ranch(K, out):
             m.box(f"{gname}Brace", c, (0.3, 0.38, d.length), WOOD_D, rot=d.to_track_quat("Z", "X").to_matrix(), **ns)
             for z in (1.0, 3.4):
                 m.box(f"{gname}Hinge{z}", (hx + 0.1, y0, z), (0.5, 0.5, 0.2), IRON, **ns)
-    # inside: water trough, feed trough, hay bales
-    t = Vector((-hx + 2.0, hy - 5.0, 0))
-    m.box("Trough", t + Vector((0, 0, 0.75)), (1.8, 4.5, 1.1), WOOD_D)
-    m.box("TroughWater", t + Vector((0, 0, 1.25)), (1.3, 4.0, 0.12), WATER, studs=False, chamfer=0.0)
-    for y in (-1.6, 1.6):
-        m.box(f"TroughLeg{y}", t + Vector((0, y, 0.2)), (2.0, 0.4, 0.4), WOOD_DD, **ns)
-    f = Vector((-hx + 2.0, -hy + 6.0, 0))
-    m.box("Feeder", f + Vector((0, 0, 1.0)), (1.6, 3.6, 0.9), WOOD, top=(1.25, 1.05))
-    m.box("FeederHay", f + Vector((0, 0, 1.5)), (1.6, 3.4, 0.3), HAY, studs=False)
-    for y in (-1.4, 1.4):
-        m.box(f"FeederLeg{y}", f + Vector((0, y, 0.3)), (0.4, 0.4, 0.7), WOOD_DD, **ns)
-    for k, (x, y, z, a) in enumerate(((-hx + 5.5, -hy + 2.0, 0.85, 0.0), (-hx + 7.8, -hy + 2.0, 0.85, 0.0), (-hx + 6.6, -hy + 2.0, 2.05, 0.0),
-                                      (hx - 4.0, hy - 2.2, 0.85, 0.4))):
-        R = K.Rz(a)
-        m.box(f"Hay{k}", (x, y, z), (2.2, 1.3, 1.2), HAY, rot=R)
-        for dx in (-0.55, 0.55):
-            m.box(f"Twine{k}{dx}", Vector((x, y, z)) + R @ Vector((dx, 0, 0)), (0.12, 1.36, 1.26), HAY_D, rot=R, studs=False, chamfer=0.0)
-    done_static(m, LAMP, [("hero", 30, 26, 35), ("front", 0, 10, 40), ("side", 90, 14, 40), ("top", 20, 70, 35)])
+    done_static(m, None, [("hero", 30, 26, 35), ("front", 0, 10, 40), ("side", 90, 14, 40), ("top", 20, 70, 35)])
 
 
 BUILDERS = {"LeaderboardGold": lambda K, o: build_leaderboard(K, o, "Gold"),

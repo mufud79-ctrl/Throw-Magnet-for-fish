@@ -4,7 +4,7 @@ Built by `tools/blender/lobby.py` (`/tmp/bpyenv/bin/python tools/blender/lobby.p
 sharing the helpers and static export in `tools/blender/shops.py`. Overview: `Lobby_overview.png`.
 
 All props are static (no rig): import the `.glb` with the Roblox 3D Importer (1 unit = 1 stud, the front faces -Z, pivot at the ground centre).
-Each comes as several MeshParts: the main mesh, extra named parts (below), and `<Name>_Glow` (set Material = Neon and Color to the glow colour).
+Each comes as several MeshParts: the main mesh, extra named parts (below), and on the leaderboards `<Name>_Glow` (set Material = Neon and Color to the glow colour).
 
 ## Leaderboards (one design, three colourways)
 12 x 3.8 x 13.6 studs: a stone plinth, two pillars with orbs, a studded frame with a marquee of glowing bulbs, gold/silver/bronze medals beside
@@ -20,14 +20,12 @@ rows 1-3 on the left, and a header crest with stars and a gold trophy.
 The header banner has no text, so the title (e.g. "Most Coins", "Most Tamed", "Top Cannons") can go in the SurfaceGui or a BillboardGui.
 
 ## Ranch
-29.7 x 24.9 x 13.8 studs: a fenced pen (posts and two rails) on a grass rim with a dirt floor. The gate arch at the front has a "RANCH" sign
-(lettered on both sides), a long-horn skull and two lanterns. Inside: a water trough, a hay feeder and hay bales.
+29 x 25 x 4.6 studs: an open fenced pen, nothing else (no arch, roof or floor). Wooden posts every ~3.5 studs with two rails,
+and a gate in the middle of the front side between two chunkier gate posts.
 
 | Part | Use |
 |---|---|
-| `Ranch` | fence, arch, sign, props |
-| `Ranch_Floor` | grass rim + dirt floor (delete it if the map has its own ground) |
-| `Ranch_GateL`, `Ranch_GateR` | the two gate doors, closed. Hinges are at the arch posts: set each door's pivot to its outer edge, then rotate or tween it to open |
-| `Ranch_Glow` | lanterns, `#FFCC64` (255, 204, 100) |
+| `Ranch` | fence posts, rails, gate posts |
+| `Ranch_GateL`, `Ranch_GateR` | the two gate doors, closed. Hinges are at the gate posts: set each door's pivot to its outer edge, then rotate or tween it to open |
 
 The gate opening is 8.4 studs wide (an R15 avatar or a big animal fits); the fence is 4.3 studs high.
