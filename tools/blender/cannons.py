@@ -675,8 +675,446 @@ def build_cyber(K, out):
     m.done(views=VIEWS, glow_color=GLC)
 
 
-BUILDERS = {1: build_wooden, 2: build_iron, 3: build_stone, 4: build_bamboo, 11: build_cyber, 12: build_dragon,
-            13: build_galaxy, 14: build_celestial}
+def gear(m, K, name, c, r, t, col, hub, teeth=12, axis_y=True):
+    """Cog wheel in the XZ plane (axle along Y): faceted disc, square teeth round the rim, hub."""
+    from mathutils import Vector
+    c = Vector(c); h = Vector((0, t / 2, 0))
+    prism(m, name + "Disc", c - h, c + h, r * 0.84, r * 0.84, col, sides=16, chamfer=0.18)
+    for k in range(teeth):
+        a = 2 * math.pi * k / teeth
+        m.box(f"{name}T{k}", c + Vector((math.cos(a), 0, math.sin(a))) * r * 0.9, (r * 0.26, t * 0.92, r * 0.24), col,
+              rot=K.Ry(-a), studs=False, chamfer=0.12)
+    prism(m, name + "Hub", c - h * 1.5, c + h * 1.5, r * 0.3, r * 0.3, hub, chamfer=0.2)
+    prism(m, name + "Inner", c - h * 1.05, c + h * 1.05, r * 0.6, r * 0.6, hub, sides=16, chamfer=0.1)
+
+
+# ============================================================================== tier 05: Copper (studded steam cannon)
+def build_copper(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    COP, COP_D, COP_L = rgb(224, 124, 64), rgb(162, 80, 42), rgb(246, 166, 100)
+    PATINA, BRASS = rgb(70, 196, 164), rgb(242, 192, 76)
+    IRON, IRON_D, BORE = rgb(84, 78, 82), rgb(54, 50, 54), rgb(30, 24, 26)
+    FACE, NEEDLE, VALVE = rgb(248, 242, 228), rgb(210, 40, 36), rgb(206, 52, 42)
+    m = K.Model("CopperCannon", out, stud=0.28, chamfer=0.18, jitter=0.05)
+    m.gait = {"recoil": 0.35}
+    T = Vector((0.45, 0, 2.45))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.1)):
+        m.box("Bed", (-0.6, 0, 0.8), (4.4, 1.4, 0.44), IRON)
+        m.box("BedTrim", (-0.6, 0, 1.06), (4.5, 1.5, 0.1), BRASS, **ns)
+        m.box("Axle", (0.55, 0, 1.05), (0.32, 2.4, 0.32), IRON_D, **ns)
+        m.box("RearAxle", (-2.2, 0, 0.38), (0.26, 1.7, 0.26), IRON_D, **ns)
+        for s in (1, -1):
+            gear(m, K, f"Gear{s}", (0.55, s * 1.1, 1.05), 1.05, 0.3, COP_D, BRASS, teeth=12)
+            prism(m, f"Roller{s}", (-2.2, s * 0.62, 0.38), (-2.2, s * 0.98, 0.38), 0.38, 0.38, IRON_D, chamfer=0.2)
+            prism(m, f"RollerHub{s}", (-2.2, s * 0.95, 0.38), (-2.2, s * 1.04, 0.38), 0.15, 0.13, BRASS, chamfer=0.25)
+            m.box(f"Cheek{s}", (T.x - 0.05, s * 0.66, 1.8), (1.35, 0.28, 1.25), COP, top=(0.72, 1))
+            m.box(f"Strap{s}", (T.x, s * 0.66, T.z + 0.04), (0.5, 0.34, 0.22), BRASS, **ns)
+            for x, z in ((T.x - 0.5, 1.4), (T.x + 0.4, 1.4), (T.x - 0.2, 2.0)):
+                m.box(f"Rivet{s}{x}{z}", (x, s * 0.81, z), (0.13, 0.06, 0.13), BRASS, chamfer=0.1, **ns)
+        # steam boiler at the back: copper drum, brass bands, smokestack, pressure gauge and valve wheel
+        B = Vector((-2.4, 0, 0))
+        prism(m, "Boiler", B + Vector((0, 0, 1.08)), B + Vector((0, 0, 2.35)), 0.62, 0.62, COP, sides=10)
+        for z in (1.25, 2.12):
+            prism(m, f"BoilerBand{z}", B + Vector((0, 0, z)), B + Vector((0, 0, z + 0.14)), 0.67, 0.67, BRASS, sides=10)
+        prism(m, "PatinaBand", B + Vector((0, 0, 1.6)), B + Vector((0, 0, 1.72)), 0.65, 0.65, PATINA, sides=10)
+        prism(m, "Dome", B + Vector((0, 0, 2.33)), B + Vector((0, 0, 2.62)), 0.62, 0.38, COP_D, sides=10)
+        prism(m, "Stack", B + Vector((0, 0, 2.55)), B + Vector((0, 0, 3.35)), 0.17, 0.21, IRON_D)
+        prism(m, "StackLip", B + Vector((0, 0, 3.3)), B + Vector((0, 0, 3.48)), 0.3, 0.3, BRASS)
+        for s in (1, -1):
+            g = B + Vector((0, s * 0.6, 1.92))
+            prism(m, f"Gauge{s}", g, g + Vector((0, s * 0.14, 0)), 0.26, 0.26, BRASS, sides=12)
+            prism(m, f"GaugeFace{s}", g + Vector((0, s * 0.1, 0)), g + Vector((0, s * 0.17, 0)), 0.2, 0.2, FACE, sides=12, chamfer=0.0)
+            m.box(f"Needle{s}", g + Vector((0.04, s * 0.18, 0.05)), (0.04, 0.03, 0.2), NEEDLE, rot=K.Ry(0.6), chamfer=0.0, **ns)
+        v = B + Vector((-0.66, 0, 1.45))
+        ring(m, "Valve", v, (1, 0, 0), 0.22, 0.07, VALVE, n=8, depth=0.07)
+        m.box("ValveBarA", v, (0.05, 0.42, 0.06), VALVE, chamfer=0.0, **ns)
+        m.box("ValveBarB", v, (0.05, 0.06, 0.42), VALVE, chamfer=0.0, **ns)
+        m.seg("Pipe", B + Vector((0.55, 0.0, 1.95)), (-1.25, 0, 1.12), 0.2, 0.2, BRASS, chamfer=0.22, **ns)
+    with barrel_ctx(m, K, T, 0.14):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        kw = dict(chamfer=0.22)
+        m.seg("Breech", P(-1.9), P(-0.8), 1.14, 1.2, COP, **kw)
+        m.seg("Chase", P(-0.9), P(2.0), 1.06, 0.84, COP, **kw)
+        m.seg("Bell", P(1.9), P(2.6), 0.84, 1.24, COP_L, **kw)
+        for nm, x0, x1, w in (("Ring0", -1.86, -1.62, 1.2), ("Ring1", -0.86, -0.62, 1.1), ("Ring2", 0.82, 1.02, 0.96)):
+            r = octa(w) + 0.07; prism(m, nm, P(x0), P(x1), r, r, BRASS, chamfer=0.2)
+        r = octa(1.02) + 0.04; prism(m, "Patina", P(0.05), P(0.3), r, r, PATINA, chamfer=0.2)
+        r = octa(1.24) + 0.07; prism(m, "Lip", P(2.5), P(2.72), r, r, BRASS, chamfer=0.2)
+        prism(m, "Bore", P(2.5), P(2.74), 0.44, 0.44, BORE, chamfer=0.0)
+        prism(m, "Cascabel", P(-2.2), P(-1.88), 0.2, 0.24, COP_D)
+        m.ball("Knob", P(-2.3), 0.26, BRASS, segs=(8, 6))
+        prism(m, "Trunnion", (T.x, -0.95, T.z), (T.x, 0.95, T.z), 0.18, 0.18, IRON_D)
+        for k, x in enumerate((-1.5, -1.12)):                       # twin steam vents with valve caps
+            prism(m, f"Vent{k}", P(x, 0.5), P(x, 0.98), 0.11, 0.11, BRASS)
+            prism(m, f"VentCap{k}", P(x, 0.95), P(x, 1.06), 0.19, 0.19, VALVE)
+        for k, x in enumerate((-0.35, 0.45, 1.4)):                  # rivet row along the top
+            m.box(f"TopRivet{k}", P(x, 0.47 - 0.05 * k), (0.14, 0.14, 0.08), BRASS, chamfer=0.1, **ns)
+        with m.bone("Muzzle", P(2.74)): pass
+    m.done(views=VIEWS)
+
+
+# ============================================================================== tier 10: Toxic (faceted sludge launcher, lime glow)
+def build_toxic(K, out):
+    from mathutils import Vector
+    rgb, Ry = K.rgb, K.Ry
+    HAZ, BLK = rgb(252, 206, 36), rgb(34, 36, 40)
+    GUN, GUN_L = rgb(66, 74, 70), rgb(110, 120, 110)
+    DRUM = rgb(62, 150, 52)
+    GL = rgb(70, 255, 40)
+    m = K.Model("ToxicCannon", out, stud=0.4, chamfer=0.14, faceted=True)
+    m.gait = {"recoil": 0.42}
+    T = Vector((0.2, 0, 2.75))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.2)):
+        for s in (1, -1):                                         # tank treads
+            m.box(f"Track{s}", (0, s * 1.08, 0.46), (3.7, 0.64, 0.92), BLK, bot=(0.8, 1))
+            for k, x in enumerate((-1.25, -0.42, 0.42, 1.25)):
+                prism(m, f"Wheel{s}{k}", (x, s * 1.36, 0.46), (x, s * 1.46, 0.46), 0.3, 0.27, GUN_L)
+                prism(m, f"WheelHub{s}{k}", (x, s * 1.44, 0.46), (x, s * 1.5, 0.46), 0.11, 0.1, HAZ)
+            for k in range(8):
+                m.box(f"Tread{s}{k}", (-1.6 + k * 0.46, s * 1.08, 0.93), (0.14, 0.66, 0.06), GUN, chamfer=0.1)
+        m.box("Deck", (0, 0, 1.08), (3.3, 2.0, 0.4), GUN)
+        for s in (1, -1):                                         # hazard stripes down both deck sides
+            m.box(f"Hazard{s}", (0, s * 1.0, 1.08), (3.2, 0.06, 0.3), HAZ, chamfer=0.0)
+            for k in range(7):
+                m.box(f"HazStripe{s}{k}", (-1.35 + k * 0.45, s * 1.03, 1.08), (0.13, 0.04, 0.33), BLK, rot=Ry(0.6), chamfer=0.0)
+        prism(m, "Turret", (0, 0, 1.28), (0, 0, 1.68), 1.0, 0.9, GUN_L)
+        ring(m, "TurretGlow", (0, 0, 1.48), (0, 0, 1), 0.98, 0.06, GL, n=8, glow=True, depth=0.08)
+        for s in (1, -1):
+            m.box(f"Yoke{s}", (T.x - 0.1, s * 0.72, 2.2), (0.95, 0.24, 1.1), HAZ, top=(0.7, 1))
+            for k in (-1, 1):
+                m.box(f"YokeStripe{s}{k}", (T.x - 0.1 + k * 0.22, s * 0.85, 2.05), (0.12, 0.03, 0.6), BLK, rot=Ry(0.6), chamfer=0.0)
+        for k, (x, y) in enumerate(((1.15, 0.6), (1.15, -0.6), (-1.2, 0.55))):   # leaking waste drums
+            z0, z1 = 1.28, 1.96 if k < 2 else 2.0
+            prism(m, f"Drum{k}", (x, y, z0), (x, y, z1), 0.36, 0.36, DRUM, sides=10)
+            for z in (z0 + 0.14, z1 - 0.2):
+                prism(m, f"DrumRib{k}{z}", (x, y, z), (x, y, z + 0.07), 0.39, 0.39, HAZ, sides=10, chamfer=0.0)
+            prism(m, f"Goo{k}", (x, y, z1 - 0.04), (x, y, z1 + 0.05), 0.28, 0.28, GL, sides=10, glow=True, chamfer=0.0)
+            d = Vector((x, y, 0)) + Vector((0.36 if x > 0 else -0.36, 0, z1 - 0.02))
+            m.spike(f"Drip{k}", d, d - Vector((0, 0, 0.45)), 0.08, GL, glow=True)
+        m.ball("Puddle", (1.6, 0.6, 0.02), (0.5, 0.36, 0.04), GL, segs=(8, 3), glow=True)
+    with barrel_ctx(m, K, T, 0.17):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        prism(m, "Core", P(-1.6), P(2.4), 0.52, 0.46, GUN)
+        m.box("Breech", P(-1.5), (1.2, 1.25, 1.15), GUN_L, top=(0.85, 0.9))
+        m.box("BackPlate", P(-2.12), (0.06, 0.8, 0.6), HAZ, chamfer=0.0)
+        m.box("BackStripe", P(-2.16), (0.04, 0.12, 0.7), BLK, rot=K.Rx(0.6), chamfer=0.0)
+        # glowing sludge canister on the breech: glass cylinder, black caps, cage bars, bubbles
+        c = Vector(P(-1.45))
+        prism(m, "TankBase", c + Vector((0, 0, 0.52)), c + Vector((0, 0, 0.7)), 0.5, 0.5, BLK, sides=8)
+        prism(m, "Tank", c + Vector((0, 0, 0.66)), c + Vector((0, 0, 1.46)), 0.42, 0.42, GL, sides=8, glow=True, chamfer=0.0)
+        prism(m, "TankCap", c + Vector((0, 0, 1.42)), c + Vector((0, 0, 1.62)), 0.5, 0.44, BLK, sides=8)
+        prism(m, "CapValve", c + Vector((0, 0, 1.6)), c + Vector((0, 0, 1.74)), 0.16, 0.16, HAZ)
+        for k in range(4):
+            a = math.pi / 4 + k * math.pi / 2
+            m.box(f"Cage{k}", c + Vector((0.46 * math.cos(a), 0.46 * math.sin(a), 1.06)), (0.08, 0.08, 0.82), BLK, chamfer=0.1)
+        m.ball("Bubble0", c + Vector((0.1, 0.12, 1.98)), 0.11, GL, segs=(6, 4), glow=True)
+        m.ball("Bubble1", c + Vector((-0.1, -0.08, 2.28)), 0.07, GL, segs=(6, 4), glow=True)
+        m.seg("Feed", c + Vector((0.3, 0, 1.0)), P(-0.35, 0.42), 0.2, 0.16, GL, glow=True, chamfer=0.2)
+        for nm, x0, x1, r in (("Collar0", -0.8, -0.56, 0.62), ("Collar1", 0.95, 1.17, 0.58)):
+            prism(m, nm, P(x0), P(x1), r, r, HAZ)
+        for x in (0.2, 1.75):
+            ring(m, f"Seam{x}", P(x), (1, 0, 0), 0.5, 0.08, GL, n=8, glow=True, depth=0.12)
+        for s in (1, -1):                                        # swept hazard fins
+            m.slab(f"Fin{s}", [(-0.8, 0), (0.6, 0), (-0.2, 0.5), (-1.1, 0.55)], 0.1, HAZ, origin=P(-0.3, 0, s * 0.46),
+                   xaxis=(1, 0, 0), yaxis=(0, s, -0.2))
+        # nozzle muzzle full of sludge, dripping
+        prism(m, "Nozzle", P(2.3), P(2.9), 0.52, 0.84, BLK)
+        prism(m, "Lip", P(2.85), P(3.05), 0.9, 0.9, HAZ)
+        prism(m, "Sludge", P(2.7), P(3.07), 0.62, 0.62, GL, glow=True, chamfer=0.0)
+        for k, (y, L) in enumerate(((0.38, 0.5), (-0.32, 0.36), (0.02, 0.66))):
+            b = Vector(P(2.97, -0.66 if abs(y) < 0.1 else -0.55, y))
+            m.spike(f"MDrip{k}", b, b - Vector((0, 0, L)), 0.09, GL, glow=True)
+        prism(m, "Trunnion", (T.x, -0.95, T.z), (T.x, 0.95, T.z), 0.22, 0.22, GUN_L)
+        with m.bone("Muzzle", P(3.07)): pass
+    m.done(views=VIEWS, glow_color=GL)
+
+
+# ============================================================================== tier 06: Candy (studded sweets cannon)
+def build_candy(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    PINK, PINK_L, CREAM = rgb(255, 118, 170), rgb(255, 186, 214), rgb(252, 246, 240)
+    CHOC, CHOC_D, DOUGH = rgb(124, 72, 44), rgb(88, 50, 32), rgb(232, 170, 98)
+    CHERRY, STEM, MINT, LEMON, SKY = rgb(222, 30, 52), rgb(96, 150, 50), rgb(80, 214, 160), rgb(255, 222, 70), rgb(96, 170, 255)
+    BORE = rgb(70, 30, 40)
+    SPR = (LEMON, SKY, MINT, CREAM, CHERRY)
+    m = K.Model("CandyCannon", out, stud=0.27, chamfer=0.18, jitter=0.05)
+    m.gait = {"recoil": 0.35}
+    T = Vector((0.4, 0, 2.3))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.0)):
+        m.box("Bar", (0, 0, 0.95), (3.3, 1.5, 0.44), CHOC)            # chocolate-bar bed
+        for k in range(5):
+            m.box(f"BarGroove{k}", (-1.32 + k * 0.66, 0, 1.18), (0.07, 1.52, 0.05), CHOC_D, chamfer=0.0, **ns)
+        for x in (-1.05, 1.05):                                       # frosted donut wheels with sprinkles
+            m.box(f"Axle{x}", (x, 0, 0.55), (0.3, 2.0, 0.3), CHOC_D, **ns)
+            for s in (1, -1):
+                c = Vector((x, s * 0.98, 0.55))
+                ring(m, f"Donut{x}{s}", c, (0, 1, 0), 0.36, 0.36, DOUGH, n=12, depth=0.34)
+                ring(m, f"Frost{x}{s}", c + Vector((0, s * 0.15, 0)), (0, 1, 0), 0.36, 0.3, PINK, n=12, depth=0.1)
+                for k in range(6):
+                    a = 2 * math.pi * k / 6 + 0.3 * s
+                    m.box(f"Spr{x}{s}{k}", c + Vector((0.36 * math.cos(a), s * 0.21, 0.36 * math.sin(a))), (0.14, 0.04, 0.05),
+                          SPR[k % 5], rot=K.Ry(a * 1.7), chamfer=0.0, **ns)
+        for s in (1, -1):                                             # chocolate-bar cheeks with raised squares
+            m.box(f"Cheek{s}", (T.x - 0.05, s * 0.64, 1.75), (1.4, 0.28, 1.2), CHOC, top=(0.72, 1))
+            for i, j in ((0, 0), (1, 0), (0, 1), (1, 1)):
+                m.box(f"Square{s}{i}{j}", (T.x - 0.32 + 0.6 * i - 0.12 * j, s * 0.79, 1.42 + 0.48 * j), (0.4, 0.05, 0.38),
+                      CHOC_D, chamfer=0.25, **ns)
+            m.box(f"Strap{s}", (T.x, s * 0.64, T.z + 0.04), (0.5, 0.34, 0.22), PINK_L, **ns)
+        for s, (c0, c1) in ((1, (PINK, CREAM)), (-1, (SKY, LEMON))):  # two lollipops at the back
+            b = Vector((-1.5, s * 0.92, 1.1)); top = Vector((-1.5, s * 0.92, 2.55))
+            prism(m, f"Stick{s}", b, top - Vector((0, 0, 0.3)), 0.07, 0.07, CREAM, chamfer=0.1)
+            h = Vector((0, 0.08, 0))
+            prism(m, f"Pop{s}", top - h, top + h, 0.5, 0.5, c1, sides=12, chamfer=0.3)
+            ring(m, f"PopSwirl{s}", top, (0, 1, 0), 0.28, 0.14, c0, n=12, depth=0.2)
+            prism(m, f"PopCore{s}", top - h * 1.3, top + h * 1.3, 0.1, 0.1, c0, chamfer=0.2)
+    with barrel_ctx(m, K, T, 0.14):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        kw = dict(chamfer=0.24)
+        m.seg("Breech", P(-1.9), P(-0.8), 1.12, 1.18, PINK, **kw)
+        m.seg("Chase", P(-0.9), P(2.1), 1.04, 0.86, PINK, **kw)
+        m.seg("Swell", P(2.0), P(2.55), 0.86, 1.16, PINK, **kw)
+        for k, (x0, w) in enumerate(((-1.75, 1.18), (-1.2, 1.17), (-0.55, 1.08), (0.15, 1.0), (0.85, 0.96), (1.55, 0.9))):
+            r = octa(w) + 0.05; prism(m, f"Stripe{k}", P(x0), P(x0 + 0.24), r, r, CREAM, chamfer=0.2)
+        r = octa(1.16) + 0.08
+        prism(m, "Frosting", P(2.38), P(2.68), r, r, CREAM, chamfer=0.25)
+        prism(m, "Bore", P(2.5), P(2.7), 0.42, 0.42, BORE, chamfer=0.0)
+        for k, (a, L) in enumerate(((-1.9, 0.26), (-1.25, 0.36), (-0.4, 0.22), (0.5, 0.32), (1.3, 0.24), (2.0, 0.34), (2.7, 0.2))):
+            d = Vector((0, math.cos(a), math.sin(a)))
+            if d.z > 0.35: continue
+            b = Vector(P(2.53)) + d * (r * 0.92)
+            m.seg(f"Drip{k}", b + Vector((0, 0, 0.1)), b - Vector((0, 0, L)) + d * 0.04, 0.3, 0.24, CREAM, d0=0.22, d1=0.2, chamfer=0.45, **ns)
+        for k in range(10):                                           # sprinkles on the frosting front
+            a = 2 * math.pi * k / 10 + 0.2; d = Vector((0, math.cos(a), math.sin(a)))
+            m.box(f"FSpr{k}", Vector(P(2.69)) + d * 0.66, (0.04, 0.16, 0.05), SPR[k % 5], rot=K.Rx(a + 0.8), chamfer=0.0, **ns)
+        m.ball("Cherry", P(2.42, 0.86), 0.24, CHERRY, segs=(8, 6))
+        m.seg("CherryStem", P(2.42, 1.05), P(2.2, 1.45), 0.06, 0.05, STEM, chamfer=0.1, **ns)
+        prism(m, "Cascabel", P(-2.2), P(-1.88), 0.2, 0.24, PINK_L)
+        m.box("Gumdrop", P(-2.38), (0.46, 0.46, 0.42), MINT, rot=K.Ry(math.pi / 2), top=(0.5, 0.5))
+        prism(m, "Trunnion", (T.x, -0.92, T.z), (T.x, 0.92, T.z), 0.18, 0.18, PINK_L)
+        with m.bone("Muzzle", P(2.7)): pass
+    m.done(views=VIEWS)
+
+
+# ============================================================================== tier 09: Lava (faceted volcano, magma glow)
+def build_lava(K, out):
+    from mathutils import Vector
+    rgb, Ry, Rz, lerp = K.rgb, K.Ry, K.Rz, K.lerp
+    BAS, BAS_D, BAS_L = rgb(58, 46, 50), rgb(34, 26, 32), rgb(96, 74, 70)
+    HOT = rgb(170, 52, 28)
+    GL = rgb(255, 84, 0)
+    m = K.Model("LavaCannon", out, stud=0.4, chamfer=0.16, faceted=True)
+    m.gait = {"recoil": 0.45}
+    T = Vector((0.25, 0, 3.0))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.2)):
+        # mini volcano: basalt cone, crater lip, lava rivers down the sides, magma pool and rocks round the foot
+        prism(m, "Cone", (0, 0, 0.0), (0, 0, 1.9), 2.05, 1.05, BAS, sides=8, grad=(BAS_D, BAS, BAS_L))
+        prism(m, "Crater", (0, 0, 1.82), (0, 0, 2.12), 1.18, 1.26, BAS_L, sides=8)
+        prism(m, "Magma", (0, 0, 2.0), (0, 0, 2.16), 0.95, 0.95, GL, sides=8, glow=True, chamfer=0.0)
+        for k, a in enumerate((0.45, 1.75, 3.4, 4.6, 5.6)):
+            def pt(t, wob=0.0):
+                r = lerp(1.0, 1.98, t) + 0.05; aa = a + wob
+                return Vector((r * math.cos(aa), r * math.sin(aa), lerp(1.9, 0.05, t)))
+            pts = [pt(0), pt(0.4, 0.12), pt(0.75, -0.05), pt(1.0, 0.1)]
+            for i in range(3):
+                m.seg(f"Flow{k}{i}", pts[i], pts[i + 1], 0.34 - 0.03 * i + 0.06 * i, 0.3 + 0.06 * i, GL, d0=0.1, d1=0.1, glow=True, chamfer=0.2)
+        for k, (a, t, sz) in enumerate(((1.1, 0.45, 0.62), (2.55, 0.62, 0.55), (4.0, 0.35, 0.58), (5.15, 0.6, 0.5), (0.0, 0.7, 0.48))):
+            r = lerp(1.0, 1.98, t) * 0.97
+            m.box(f"Ledge{k}", (r * math.cos(a), r * math.sin(a), lerp(1.9, 0.05, t)), (sz, sz * 0.9, sz * 0.55), BAS_L,
+                  rot=Rz(a) @ Ry(0.45), top=(0.75, 0.8))
+        ring(m, "Pool", (0, 0, 0.03), (0, 0, 1), 2.15, 0.42, GL, n=8, glow=True, depth=0.06)
+        for k, (a, sz) in enumerate(((0.9, 0.55), (2.6, 0.48), (3.9, 0.6), (5.1, 0.45), (6.0, 0.4))):
+            m.box(f"Rock{k}", (2.25 * math.cos(a), 2.25 * math.sin(a), sz * 0.35), (sz, sz * 0.85, sz * 0.75), BAS_D,
+                  rot=Rz(a * 2.3) @ Ry(0.2))
+        for s in (1, -1):                                             # obsidian yoke pillars
+            m.box(f"Pillar{s}", (T.x - 0.05, s * 0.78, 2.5), (0.85, 0.3, 1.1), BAS_D, top=(0.7, 1))
+            m.spike(f"PillarSpike{s}", (T.x - 0.05, s * 0.86, 3.0), (T.x - 0.25, s * 1.0, 3.75), 0.2, BAS_D)
+            m.box(f"PillarCrack{s}", (T.x - 0.05, s * 0.94, 2.45), (0.06, 0.04, 0.6), GL, rot=K.Rx(0) @ Ry(0.35), glow=True, chamfer=0.0)
+        for k, p in enumerate(((0.9, 0.6, 3.1), (-0.8, -0.5, 2.85), (-0.3, 0.9, 3.5))):
+            m.ball(f"Ember{k}", p, 0.08 + 0.03 * (k % 2), GL, segs=(6, 4), glow=True)
+    with barrel_ctx(m, K, T, 0.18):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        G = (BAS_D, BAS, HOT)
+        prism(m, "Breech", P(-2.0), P(-0.8), 0.95, 0.9, BAS, grad=G)
+        prism(m, "Chase", P(-0.95), P(2.6), 0.82, 0.64, BAS, grad=G)
+        for nm, x0, x1, r in (("Band0", -0.95, -0.66, 0.95), ("Band1", 0.75, 0.98, 0.8), ("Band2", 1.9, 2.1, 0.74)):
+            prism(m, nm, P(x0), P(x1), r, r, BAS_L)
+        for x in (-1.55, 0.2, 1.45):
+            ring(m, f"Seam{x}", P(x), (1, 0, 0), 0.82 - 0.06 * (x > 0) - 0.04 * (x > 1), 0.08, GL, n=8, glow=True, depth=0.1)
+        for k, (x, a, s) in enumerate(((-0.4, 0.5, 1), (0.55, -0.6, 1), (-0.2, -0.4, -1), (1.2, 0.45, -1), (-1.3, 0.3, 1), (-1.4, -0.5, -1))):
+            fl = (0.88 if x < -0.8 else 0.72 - 0.035 * x) * math.cos(math.pi / 8)
+            m.box(f"Crack{k}", P(x, 0.0, s * fl), (0.62, 0.05, 0.08), GL, rot=Ry(a), glow=True, chamfer=0.0)
+        for k, x in enumerate((-1.5, -0.6, 0.35)):                     # swept obsidian spines on top
+            b = Vector(P(x, 0.7 - 0.05 * k))
+            m.spike(f"Spine{k}", b - Vector((0.25, 0, 0)), b + Vector((-0.55, 0, 0.7 - 0.12 * k)), 0.24, BAS_D, flat=0.55)
+        for k in range(3):                                             # glowing vents on the breech
+            m.box(f"Vent{k}", P(-1.75 + 0.3 * k, 0.86), (0.12, 0.7, 0.05), GL, glow=True, chamfer=0.0)
+        prism(m, "BackCore", P(-2.25), P(-1.95), 0.55, 0.7, BAS_D)
+        prism(m, "BackGlow", P(-2.3), P(-2.2), 0.36, 0.36, GL, glow=True, chamfer=0.0)
+        # crater muzzle: rough flare, magma bore, obsidian teeth round the lip
+        prism(m, "Flare", P(2.5), P(3.15), 0.66, 1.05, BAS_D)
+        prism(m, "Lip", P(3.08), P(3.3), 1.1, 1.0, BAS)
+        prism(m, "Bore", P(2.95), P(3.32), 0.68, 0.68, GL, glow=True, chamfer=0.0)
+        for k in range(8):
+            a = 2 * math.pi * k / 8; rd = Vector((0, math.cos(a), math.sin(a)))
+            b = Vector(P(3.2)) + rd * 0.95
+            m.spike(f"Tooth{k}", b, b + Vector((0.5, 0, 0)) + rd * 0.2, 0.16, BAS_D)
+        m.ball("Fireblob", P(3.45, 0.2, 0.15), 0.12, GL, segs=(6, 4), glow=True)
+        prism(m, "Trunnion", (T.x, -1.0, T.z), (T.x, 1.0, T.z), 0.22, 0.22, BAS_L)
+        with m.bone("Muzzle", P(3.32)): pass
+    m.done(views=VIEWS, glow_color=GL)
+
+
+# ============================================================================== tier 07: Golden (studded bridge tier: royal treasure cannon)
+def build_golden(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    GOLD, GOLD_D, GOLD_L = rgb(255, 196, 46), rgb(214, 140, 24), rgb(255, 226, 120)
+    WOODR, WOODR_D = rgb(150, 44, 40), rgb(104, 30, 30)
+    RUBY, SAPH, EMER, BORE = rgb(236, 32, 60), rgb(40, 110, 255), rgb(30, 200, 110), rgb(40, 26, 20)
+    m = K.Model("GoldenCannon", out, stud=0.28, chamfer=0.18, jitter=0.05)
+    m.gait = {"recoil": 0.38}
+    T = Vector((0.35, 0, 2.9))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.2)):
+        # treasure chest carriage on four gold spoked wheels
+        for x in (-0.95, 0.95):
+            m.box(f"Axle{x}", (x, 0, 0.62), (0.3, 2.2, 0.3), GOLD_D, **ns)
+            for s in (1, -1):
+                spoke_wheel(m, f"W{x}{s}", (x, s * 1.02, 0.62), 0.62, 0.18, GOLD, RUBY, spokes=8, tyre=WOODR_D)
+        m.box("Chest", (0, 0, 1.3), (2.8, 1.7, 1.0), WOODR)
+        m.box("Lid", (0, 0, 1.95), (2.85, 1.75, 0.34), WOODR, top=(0.88, 0.62))
+        for x in (-1.0, 0.0, 1.0):                                    # gold straps over chest and lid
+            m.box(f"Band{x}", (x, 0, 1.3), (0.22, 1.76, 1.04), GOLD, **ns)
+            m.box(f"LidBand{x}", (x, 0, 1.96), (0.22, 1.8, 0.36), GOLD, top=(1, 0.62), **ns)
+        for sx in (1, -1):
+            for s in (1, -1):
+                m.box(f"Corner{sx}{s}", (sx * 1.38, s * 0.83, 0.86), (0.18, 0.18, 0.2), GOLD_D, **ns)
+        m.box("Lock", (1.43, 0, 1.55), (0.12, 0.5, 0.6), GOLD, **ns)
+        m.box("Keyhole", (1.5, 0, 1.52), (0.04, 0.1, 0.24), BORE, chamfer=0.0, **ns)
+        gem(m, "LockGem", (1.5, 0, 1.72), (1, 0, 0), 0.14, 0.12, RUBY, sides=6, glow=False)
+        for s in (1, -1):                                             # gold cheeks with a gem each
+            m.box(f"Cheek{s}", (T.x - 0.05, s * 0.66, 2.45), (1.2, 0.28, 1.0), GOLD, top=(0.72, 1))
+            gem(m, f"CheekGem{s}", (T.x - 0.1, s * 0.82, 2.3), (0, s, 0), 0.18, 0.16, SAPH, sides=6, glow=False)
+            m.box(f"Strap{s}", (T.x, s * 0.66, T.z + 0.04), (0.5, 0.34, 0.22), GOLD_D, **ns)
+        coins = [(1.8, 0.4, 0.05), (1.95, 0.0, 0.05), (1.75, -0.45, 0.05), (1.9, 0.2, 0.13), (2.25, -0.2, 0.05), (1.62, 0.05, 0.05),
+                 (-0.9, 0.55, 2.12), (-0.55, -0.6, 2.1), (-1.25, -0.3, 2.08), (1.05, 0.62, 2.1)]
+        for k, (x, y, z) in enumerate(coins):                          # spilled coins
+            tilt = Vector((0.15 * ((k % 3) - 1), 0.12 * ((k % 2) * 2 - 1), 1)).normalized()
+            prism(m, f"Coin{k}", Vector((x, y, z)), Vector((x, y, z)) + tilt * 0.08, 0.2, 0.2, GOLD_L, chamfer=0.2)
+    with barrel_ctx(m, K, T, 0.14):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        kw = dict(chamfer=0.22)
+        m.seg("Breech", P(-1.95), P(-0.8), 1.16, 1.22, GOLD, **kw)
+        m.seg("Chase", P(-0.9), P(2.05), 1.08, 0.86, GOLD, **kw)
+        m.seg("Bell", P(1.95), P(2.6), 0.86, 1.2, GOLD_L, **kw)
+        for nm, x0, x1, w in (("Ring0", -1.9, -1.66, 1.22), ("Ring1", -0.86, -0.62, 1.12), ("Ring2", 0.82, 1.02, 0.98)):
+            r = octa(w) + 0.07; prism(m, nm, P(x0), P(x1), r, r, GOLD_D, chamfer=0.2)
+        for s in (1, -1):                                             # gem inlays along both sides
+            gem(m, f"Ruby{s}", P(-1.25, 0, s * 0.6), (0, s, 0), 0.2, 0.2, RUBY, sides=6, glow=False)
+            gem(m, f"Saph{s}", P(0.2, 0, s * 0.53), (0, s, 0), 0.17, 0.17, SAPH, sides=6, glow=False)
+            gem(m, f"Emer{s}", P(1.45, 0, s * 0.47), (0, s, 0), 0.15, 0.15, EMER, sides=6, glow=False)
+        # royal crown on the breech
+        cb = Vector(P(-1.25, 0.56))
+        prism(m, "CrownBand", cb, cb + Vector((0, 0, 0.26)), 0.34, 0.38, GOLD_D, chamfer=0.15)
+        for k in range(5):
+            a = 2 * math.pi * k / 5; d = Vector((math.cos(a), math.sin(a), 0))
+            m.spike(f"CrownPt{k}", cb + d * 0.3 + Vector((0, 0, 0.22)), cb + d * 0.36 + Vector((0, 0, 0.62)), 0.11, GOLD)
+            m.ball(f"CrownPearl{k}", cb + d * 0.36 + Vector((0, 0, 0.64)), 0.06, GOLD_L, segs=(6, 4))
+        m.ball("CrownRuby", cb + Vector((0, 0, 0.36)), 0.2, RUBY, segs=(8, 6))
+        # crown muzzle: lip ringed by forward points with gem tips
+        r = octa(1.2) + 0.08
+        prism(m, "Lip", P(2.5), P(2.74), r, r, GOLD_D, chamfer=0.2)
+        prism(m, "Bore", P(2.52), P(2.76), 0.44, 0.44, BORE, chamfer=0.0)
+        for k in range(6):
+            a = 2 * math.pi * k / 6 + math.pi / 6; rd = Vector((0, math.cos(a), math.sin(a)))
+            b = Vector(P(2.62)) + rd * (r * 0.92); tip = b + Vector((0.38, 0, 0)) + rd * 0.32
+            m.spike(f"MuzzlePt{k}", b, tip, 0.16, GOLD)
+            m.ball(f"MuzzleGem{k}", tip, 0.09, (RUBY, EMER, SAPH)[k % 3], segs=(6, 4))
+        prism(m, "Cascabel", P(-2.25), P(-1.93), 0.2, 0.24, GOLD_D)
+        gem(m, "BackRuby", P(-2.3), (-1, 0, 0), 0.4, 0.28, RUBY, sides=6, glow=False, back=0.2)
+        prism(m, "Trunnion", (T.x, -0.92, T.z), (T.x, 0.92, T.z), 0.18, 0.18, GOLD_D)
+        with m.bone("Muzzle", P(2.76)): pass
+    m.done(views=VIEWS)
+
+
+# ============================================================================== tier 08: Frost (faceted ice sled, icy glow)
+def build_frost(K, out):
+    from mathutils import Vector
+    rgb, Ry = K.rgb, K.Ry
+    ICE, ICE_D, ICE_L = rgb(76, 156, 236), rgb(36, 88, 196), rgb(150, 212, 255)
+    SNOW, STEEL, NAVY = rgb(248, 252, 255), rgb(150, 170, 196), rgb(40, 66, 130)
+    GL = rgb(80, 210, 255)
+    m = K.Model("FrostCannon", out, stud=0.4, chamfer=0.16, faceted=True)
+    m.gait = {"recoil": 0.42}
+    T = Vector((0.2, 0, 2.85))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.2)):
+        for s in (1, -1):                                             # sled runners with curled fronts and struts
+            y = s * 0.95
+            m.seg(f"Runner{s}", (-1.85, y, 0.1), (1.45, y, 0.1), 0.16, 0.16, STEEL, d0=0.2, d1=0.2, chamfer=0.2)
+            m.seg(f"Curl{s}a", (1.4, y, 0.1), (1.95, y, 0.42), 0.16, 0.16, STEEL, d0=0.2, d1=0.2, chamfer=0.2)
+            m.seg(f"Curl{s}b", (1.92, y, 0.38), (1.8, y, 0.82), 0.16, 0.14, STEEL, d0=0.2, d1=0.18, chamfer=0.2)
+            for x in (-1.25, 0.0, 1.15):
+                m.seg(f"Strut{s}{x}", (x, y, 0.12), (x, y * 0.92, 0.55), 0.13, 0.13, STEEL, chamfer=0.2)
+        m.box("Deck", (0, 0, 0.72), (3.4, 2.1, 0.36), NAVY)
+        m.box("Block", (0.1, 0, 1.22), (2.0, 1.7, 0.7), ICE, grad=(ICE_D, ICE, ICE_L))
+        for k, (x, y, sx, sy) in enumerate(((-1.25, 0.6, 0.9, 0.7), (1.25, -0.55, 0.8, 0.8), (0.1, 0.0, 1.9, 1.55))):
+            m.box(f"Snow{k}", (x, y, 0.95 if k < 2 else 1.62), (sx, sy, 0.16), SNOW, top=(0.82, 0.8))
+        for s in (1, -1):                                             # ice-crystal yoke pillars with a snowflake each
+            m.box(f"Pillar{s}", (T.x - 0.05, s * 0.74, 2.2), (0.95, 0.28, 1.3), ICE_L, top=(0.6, 1))
+            m.spike(f"PillarTip{s}", (T.x - 0.05, s * 0.74, 2.8), (T.x - 0.15, s * 0.82, 3.55), 0.18, ICE_L)
+            star(m, f"Flake{s}", (T.x - 0.05, s * 0.9, 2.1), (0, s, 0), (0, 0, 1), 0.34, GL, points=8, r=0.08)
+        for k, (p, d, L, r, g) in enumerate((((-1.35, -0.45, 0.9), (-0.3, -0.25, 1), 1.05, 0.26, True),     # crystal cluster
+                                             ((-1.15, -0.75, 0.9), (0.2, -0.6, 1), 0.7, 0.2, False),
+                                             ((-1.55, -0.1, 0.9), (-0.6, 0.1, 1), 0.65, 0.18, False),
+                                             ((1.3, 0.6, 0.9), (0.4, 0.3, 1), 0.6, 0.18, True))):
+            gem(m, f"Crystal{k}", p, d, L, r, GL if g else ICE_L, sides=6, glow=g, back=0.15)
+    with barrel_ctx(m, K, T, 0.16):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        G = (ICE_D, ICE, ICE_L)
+        prism(m, "Breech", P(-2.0), P(-0.8), 0.95, 0.9, ICE, grad=G)
+        prism(m, "Chase", P(-0.95), P(2.5), 0.8, 0.64, ICE, grad=G)
+        for nm, x0, x1, r in (("Band0", -0.95, -0.66, 0.95), ("Band1", 0.75, 0.97, 0.8), ("Band2", 1.85, 2.05, 0.75)):
+            prism(m, nm, P(x0), P(x1), r, r, SNOW)
+        for x in (-1.55, 0.2, 1.4):
+            ring(m, f"Seam{x}", P(x), (1, 0, 0), 0.82 - 0.06 * (x > 0) - 0.04 * (x > 1), 0.07, GL, n=8, glow=True, depth=0.1)
+        m.box("CapBreech", P(-1.35, 0.82), (1.15, 0.95, 0.2), SNOW, top=(0.8, 0.75))
+        m.box("CapChase", P(0.0, 0.7), (1.3, 0.8, 0.16), SNOW, top=(0.8, 0.7))
+        for k, (x, L, g) in enumerate(((-1.55, 0.45, False), (-1.1, 0.7, True), (-0.3, 0.4, False), (0.4, 0.55, False),
+                                       (1.1, 0.35, True), (1.7, 0.5, False))):      # icicles under the barrel
+            for s in ((1,) if k % 2 else (-1,)):
+                b = Vector(P(x, -0.62 + 0.04 * x, s * 0.25))
+                m.spike(f"Icicle{k}", b, b - Vector((0, 0, L)), 0.11, GL if g else ICE_L, glow=g)
+        star(m, "BackFlake", P(-2.06), (-1, 0, 0), (0, 0, 1), 0.85, GL, points=8, r=0.18)
+        # frozen muzzle: flare, snow lip, glowing bore, crown of ice shards
+        prism(m, "Flare", P(2.4), P(3.0), 0.66, 1.0, ICE_L)
+        prism(m, "Lip", P(2.95), P(3.15), 1.04, 1.0, SNOW)
+        prism(m, "Bore", P(2.8), P(3.17), 0.62, 0.62, GL, glow=True, chamfer=0.0)
+        for k in range(8):
+            a = 2 * math.pi * k / 8 + math.pi / 8; rd = Vector((0, math.cos(a), math.sin(a)))
+            b = Vector(P(3.05)) + rd * 0.92
+            L = 0.55 if k % 2 else 0.38
+            m.spike(f"Shard{k}", b, b + Vector((L * 0.8, 0, 0)) + rd * L * 0.6, 0.16, ICE_L)
+        prism(m, "Trunnion", (T.x, -1.0, T.z), (T.x, 1.0, T.z), 0.22, 0.22, SNOW)
+        with m.bone("Muzzle", P(3.17)): pass
+    m.done(views=VIEWS, glow_color=GL)
+
+
+BUILDERS = {1: build_wooden, 2: build_iron, 3: build_stone, 4: build_bamboo, 5: build_copper, 6: build_candy,
+            7: build_golden, 8: build_frost, 9: build_lava, 10: build_toxic,
+            11: build_cyber, 12: build_dragon, 13: build_galaxy, 14: build_celestial}
 
 
 def build_one(t):

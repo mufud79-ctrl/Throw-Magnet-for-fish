@@ -10,9 +10,9 @@ CannonTame look and are listed below.
 | 01_Farm | Chicken, Cow, Duck, Goat, Horse, Pig, Sheep | - |
 | 02_Forest | BrownBear, Fox, Hedgehog, Owl, Rabbit, Raccoon, Squirrel | - |
 | 03_Savanna | Giraffe, Hyena, Meerkat, Ostrich, Rhino, Warthog, Zebra | - |
-| 04_Jungle | Crocodile, Frog, Gorilla, Monkey, Panther, Sloth, Toucan | - |
+| 04_Jungle | Crocodile, Panther, Frog (poison dart frog), Gorilla (roaring silverback), Monkey (capuchin), Sloth, Toucan | - |
 | 05_Arctic | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus | - |
-| 06_Desert | Camel, FennecFox, Lizard, Rattlesnake, Scorpion, SphinxCat, Vulture | - |
+| 06_Desert | Camel, FennecFox, Lizard (frilled), Rattlesnake, Scorpion, SphinxCat, Vulture | - |
 | 07_IceAge | GiantBeaver, GiantSloth, Glyptodon, Mammoth, Sabertooth, WoollyHare, WoollyRhino | - |
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
 | 09_Volcano | EmberWolf, FireSalamander, LavaDrake, LavaRex, MagmaSlug, ObsidianGolem, Phoenix | - |

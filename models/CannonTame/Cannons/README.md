@@ -6,18 +6,18 @@ TFFA kit in `.claude/skills/tffa-animal-models/`. Overview: `Cannons_overview.pn
 | # | Tier | Status | Look |
 |---|---|---|---|
 | 01 | Wooden | **done (style guide: base)** | studded: wood barrel with iron hoops on a stepped four-wheel carriage |
-| 02 | Iron | **done** | studded field gun: black barrel with brass rings, red carriage, two big spoked wheels and a trail |
-| 03 | Stone | **done** | studded stone idol: carved angry face at the muzzle, moss, stone rollers |
-| 04 | Bamboo | **done** | studded bamboo bundle (three tubes, rope wraps, leaves) on A-frame poles over a woven mat |
-| 05 | Copper | planned | studded |
-| 06 | Candy | planned | studded |
-| 07 | Golden | planned | studded, bridge tier |
-| 08 | Frost | planned | faceted + glow |
-| 09 | Lava | planned | faceted + glow |
-| 10 | Toxic | planned | faceted + glow |
-| 11 | Cyber | **done** | faceted railgun: twin rails, pink coils, three-legged mech turret |
-| 12 | Dragon | **done** | faceted: the zoo RedDragon's head with the jaw open around a fireball bore, spiked dragon-body barrel, curled tail, black/gold carriage |
-| 13 | Galaxy | **done** | faceted: hovering ringed planet, star-dusted barrel with rocket fins, black-hole muzzle with spinning accretion disc |
+| 02 | Iron | **done** | studded field gun: dark iron barrel with brass rings on two big red spoked wheels, trail and ammo box |
+| 03 | Stone | **done** | studded: stone idol-face barrel with moss on a roller sled |
+| 04 | Bamboo | **done** | studded: lashed bamboo bundle launcher on a mat platform, leaves and coconuts |
+| 05 | Copper | **done** | studded steam cannon: copper barrel with brass rings and a verdigris band, cog-gear wheels, back boiler with smokestack, pressure gauges and valve wheel |
+| 06 | Candy | **done** | studded: pink candy-striped barrel with frosting drips, sprinkles and a cherry, chocolate-bar carriage, frosted donut wheels, lollipops |
+| 07 | Golden | **done** | studded bridge tier: gold barrel with ruby/sapphire/emerald inlays, royal crown on the breech, gem-tipped crown muzzle, treasure-chest carriage on gold wheels, spilled coins |
+| 08 | Frost | **done** | faceted: ice barrel with snow caps, frost bands and icicles, ice-shard crown muzzle, snowflake emblems, crystal cluster on an ice block riding a sled |
+| 09 | Lava | **done** | faceted: basalt barrel with magma seams and cracks on a mini volcano (lava rivers, crater, magma pool), spiked crater muzzle |
+| 10 | Toxic | **done** | faceted: sludge launcher on tank treads, hazard stripes, glowing goo canister on the breech, leaking waste drums, dripping nozzle |
+| 11 | Cyber | **done** | faceted: twin-rail railgun with glowing coils on three mech legs |
+| 12 | Dragon | **done** | faceted: dragon-head barrel (zoo RedDragon head) with open jaws around a fireball bore, black/gold carriage |
+| 13 | Galaxy | **done** | faceted: hovering planet with Saturn ring and moons, rocket-fin barrel, black-hole muzzle with accretion disc |
 | 14 | Celestial | **done (style guide: final)** | faceted: hovering marble/gold plinth, angel wings, spiked crown muzzle, glowing bore, halo and rune ring |
 
 Sizes grow with the tier: Wooden is about 5 x 2.5 x 3 studs (L x W x H); Celestial about 7 x 5 x 5.6.
@@ -38,8 +38,10 @@ Clips: `Idle` (loop: barrel sway, hover, halo and ring spin, wing breathing) and
 ## Glow colours
 | Cannon | Glow parts | Colour |
 |---|---|---|
-| IronCannon, StoneCannon, BambooCannon | none | - |
-| CyberCannon | rail strips, coils, charge orb, screens, knee lights | `#FF3CB4` (255, 60, 180) |
-| DragonCannon | fireball bore | `#FF5C0C` (255, 92, 12) |
-| GalaxyCannon | core, accretion disc, Saturn ring, stars | `#D678FF` (214, 120, 255) |
+| FrostCannon | bore, seams, snowflakes, back snowflake, two crystals, two icicles | `#50D2FF` (80, 210, 255) |
+| LavaCannon | crater magma, lava rivers, pool, seams, cracks, vents, bore, embers | `#FF5400` (255, 84, 0) |
+| ToxicCannon | canister, bore sludge, drips, seams, turret ring, drum goo, puddle | `#46FF28` (70, 255, 40) |
+| CyberCannon | rail strips, coils, charge ball, screens, knee and hub lights | `#FF3CB4` (255, 60, 180) |
+| DragonCannon | fireball, mouth and eye glow | `#FF5C0C` (255, 92, 12) |
+| GalaxyCannon | stars, core, accretion disc, ring glow | `#D678FF` (214, 120, 255) |
 | CelestialCannon | bore, back core gem, halo, gem studs, ground rune ring | `#6EE1FF` (110, 225, 255) |
