@@ -104,7 +104,7 @@ plain, frill and sail are flat plates.
 - Quality over speed: **one zone at a time**, review hero + front + side of every animal, fix, then commit.
 - **Studs on everything** (the user rejected stud-less dragons and fur).
 - Predators and big beasts must look **aggressive and muscular**: `snarl=True` (panther-style open jaw) for hunters such
-  as the Sabertooth, EmberWolf, PolarBear, Husky?; `fierce=True` for big herbivores (WoollyRhino, GiantSloth...);
+  as the Sabertooth, EmberWolf and PolarBear; `fierce=True` for big herbivores (WoollyRhino, GiantSloth...);
   `muscular=True` on both. Rejected looks: "basic house cat", "dog with wings", "starved", "stubby", "elephant through chemo".
 - Dragons (GalaxyDragon, CelestialDragon) must use the `dragon` archetype (`studded=True, muscular=True`), not `quad` + wings.
 - The rattlesnake's coiled build was preferred over a redesign: when an animal already looks good, don't replace it.
