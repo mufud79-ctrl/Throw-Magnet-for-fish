@@ -74,3 +74,8 @@ Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07
 - Skill: `.claude/skills/tffa-animal-models/` (`SKILL.md`, kit `scripts/tffa_kit.py`, renderer, `compare.py`, style guide, harsh-review checklist, real reference shots).
 - Reviewed models in `models/TFFA/`: Gorilla, TRex, RedDragon, Phoenix (each iterated 4-8 rounds against a real game shot) and the Cow quadruped template. See `models/TFFA/TFFA_vs_reference.png`.
 - Supersedes the older `models/CannonTame/` animal look (smooth bevels and big L-studs).
+
+## Cannons (Cannon Tame, 14 tiers) - IN PROGRESS
+- `tools/blender/cannons.py` builds into `models/CannonTame/Cannons/<NN>_<Theme>/<Theme>Cannon/`; see that folder's `README.md` for the roster, rig and glow table.
+- Style guides done: **01 Wooden** (base, studded, four-wheel naval carriage) and **14 Celestial** (final, faceted marble/gold, hovering plinth, wings, crown muzzle, Neon glow). Waiting on user feedback before the 12 middle tiers.
+- Each cannon: rigged (`Body`, `Barrel` aim bone at the trunnion, empty `Muzzle` bone for projectile spawn), clips `Idle` + `Fire`. Helpers `prism`, `ring`, `gem` live in cannons.py on top of the TFFA kit.
