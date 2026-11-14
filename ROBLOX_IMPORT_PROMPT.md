@@ -4,15 +4,20 @@ Paste everything below the line into the Roblox import/showcase session.
 
 ---
 
-The models you imported are outdated: your branch (`claude/wonderful-gates-mxwjhe` / `claude/wizardly-lovelace-cxmaa7`) was cut
-from commit `636292e`, the very first Cannon Tame prototype. Its animals use the old tiled `_Texture_Studs.png` (one big
-recessed square per face + a brick pattern in Studio) and have no rig. The current models are on branch
-**`claude/roblox-animal-models-852c5h`**. Use only that branch's files:
+The models you imported are outdated. They are the very first Cannon Tame prototype (commit `636292e`): e.g. the Chicken
+with ONE red comb block, a black eye with a white glint and no brow, and a giant recessed "L" square per face. Those files
+only exist in the HISTORY of `claude/roblox-animal-models-852c5h`; the branch's current files are completely different.
+Your working tree is sitting on old files (your branch was cut from `636292e`, so a pull/merge can keep them).
 
-1. Get the current models (keep your Roblox tooling):
-   `git fetch origin claude/roblox-animal-models-852c5h` then merge it into your branch
-   (`git merge origin/claude/roblox-animal-models-852c5h`; on a conflict under `models/`, take THEIRS - that branch's file).
-   Do not copy `models/` from any other branch.
+1. Force the current model files into your working tree (keeps your Roblox tooling):
+   ```
+   git fetch origin claude/roblox-animal-models-852c5h
+   git checkout origin/claude/roblox-animal-models-852c5h -- models/ ROBLOX_IMPORT_PROMPT.md
+   git log -1 --format=%h origin/claude/roblox-animal-models-852c5h     # must be abe6def or newer
+   ```
+   Then confirm the Chicken is the new one: `models/CannonTame/Animals/01_Farm/Chicken/` must contain `anims/` and
+   `Chicken_Detail.png` and must NOT contain `Chicken_Texture_Studs.png`. The new Chicken has a three-point comb, block eyes
+   with a thick black brow, a hanging red wattle and side wings (see `previews/Chicken_hero.png`).
 2. Verify before uploading. All of these must hold, otherwise stop and tell me:
    - `models/CannonTame/Animals/<Zone>/<Name>/` exists for 77 animals (11 zones x 7), each with `<Name>.glb`, `<Name>.fbx`,
      `<Name>_Texture.png`, `<Name>_Detail.png` and an `anims/` folder.
