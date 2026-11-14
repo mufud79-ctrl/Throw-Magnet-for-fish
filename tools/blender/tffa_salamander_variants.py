@@ -137,8 +137,10 @@ def SalB_MagmaNewt(m, T, V):
     with m.bone("Tail4"): m.box("TailDrip", tp[-1] + V((-0.1, 0, -0.35)), (0.18, 0.18, 0.4), GL, glow=True, studs=False)
     with m.bone("Head", (2.4, 0.0, 1.2)):
         hc = V((3.35, -0.05, 1.45))
-        with m.frame(pivot=hc, rot=T.Rz(-0.1) @ T.Ry(-0.08)):
-            round_head(m, T, V, hc, ROCK, (2.0, 2.5, 1.2), belly=BELLY)
+        with m.frame(pivot=hc, rot=T.Rz(-0.1) @ T.Ry(-0.2)):
+            round_head(m, T, V, hc, ROCK, (2.0, 2.5, 1.3), belly=BELLY)
+            for k in range(3):     # rock crest along the brow
+                m.spike(f"BrowCrest{k}", hc + V((0.1 - k * 0.45, 0, 0.95)), hc + V((-0.25 - k * 0.45, 0, 1.55 - k * 0.1)), 0.22, OBS, flat=0.45)
             m.box("BrowPlate", hc + V((0.25, 0, 0.72)), (1.3, 2.2, 0.32), ROCK_D, top=(0.8, 0.85))
             m.box("BrowCrack", hc + V((0.25, 0, 0.9)), (1.1, 0.12, 0.06), GL, glow=True, studs=False)
             smile(m, T, V, hc, 2.0, 2.5, 1.2, GL)
@@ -148,7 +150,7 @@ def SalB_MagmaNewt(m, T, V):
             for s in (1, -1):
                 m.box(f"EyeBump{s}", hc + V((0.45, s * 0.8, 0.6)), (0.95, 0.8, 0.55), ROCK_D, top=(0.75, 0.75))
                 m.spike(f"Horn{s}", hc + V((-0.3, s * 0.85, 0.7)), hc + V((-1.1, s * 1.15, 1.1)), 0.2, OBS, flat=0.6)
-            m.eyes(tuple(hc + V((0.86, 0.9, 0.72))), facing=(0.55, 0.75, 0.35), size=(0.7, 0.42), pupil=0.75, look=(0.4, 0), angry=0.45,
+            m.eyes(tuple(hc + V((0.95, 0.85, 0.75))), facing=(0.75, 0.6, 0.3), size=(0.86, 0.52), pupil=0.72, look=(0.4, 0), angry=0.45,
                    white=GL, glow_white=True, pupil_col=T.rgb(110, 20, 10), brow_col=OBS, brow_h=0.45, brow_up=0.75, depth=0.17)
     body.__exit__(None, None, None)
     return GL
