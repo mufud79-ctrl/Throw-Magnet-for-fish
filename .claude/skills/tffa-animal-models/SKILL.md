@@ -16,8 +16,9 @@ Everything needed is in this folder:
 | `scripts/compare.py` | Reference vs ours side-by-side sheet (system `python3` + Pillow) |
 | `references/style_guide.md` | **Read first.** The style rules, measured from the real game shots |
 | `references/review_checklist.md` | The harsh comparison checklist + known pitfalls and their fixes |
+| `references/hero_build_workflow.md` | **The quality bar for every animal now**: the Chimera method - reference analysis, custom per-animal script, head studies, 4-view review, archive old versions |
 | `references/ref_images/` | Real in-game references (gorilla, T-Rex icon, red dragon, phoenix, pumpkin spider, carrot) |
-| `examples/` | Finished, reviewed builds: `gorilla.py` (studded, front eyes, rainbow), `trex.py` (studded, open jaw, side eyes), `dragon.py` (faceted fantasy, wings), `phoenix.py` (gradient feathers) |
+| `examples/` | Finished, reviewed builds: `chimera.py` (**user-approved hero build**: stalking pose, mane cape, snarl, ringed horns, snake tail), `gorilla.py` (studded, front eyes, rainbow), `trex.py` (studded, open jaw, side eyes), `dragon.py` (faceted fantasy, wings), `phoenix.py` (gradient feathers), `cow.py` |
 
 ## Setup (once per container)
 ```bash
@@ -26,6 +27,10 @@ Everything needed is in this folder:
 `bpy` is Blender as a Python module (~430 MB, about 1 min). `compare.py` uses the system `python3` with Pillow.
 
 ## Workflow
+> **Quality bar (user, after the Chimera): every animal in every remaining zone gets the Chimera level of detail.**
+> Follow `references/hero_build_workflow.md`: analyse a reference first, then a custom `examples/<animal>.py` per animal
+> (archetype one-liners are only a starting sketch), 4-view review sheet, head studies when heads are weak.
+
 1. **Pin the reference.** Use a real in-game shot (a user image, a thumbnail, `references/ref_images/`). Fan art (voxel/Minecraft-like AI images) is NOT the style - ignore it. Note: silhouette, proportions (head size!), colours, face, signature parts.
 2. **Pick the tier look** (style_guide §1): *studded* (common/natural animals) or *faceted* (rare/fantasy: no studs, gradients allowed).
    The user's standing preference: **studs on everything** (incl. dragons: `studded=True`), predators and big beasts

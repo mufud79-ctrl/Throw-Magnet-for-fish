@@ -101,6 +101,9 @@ Triceratops, Spinosaurus, LavaDrake. Known weak spots: mammoth hair strands are 
 plain, frill and sail are flat plates.
 
 ### User feedback to apply to the remaining animals
+- **Quality bar = the custom Chimera** (`examples/chimera.py`, user: "THAT LOOKS SO GOOD!!"). Every animal in every
+  remaining zone gets that level of detail: reference analysis first, a custom script per animal, 4-view review sheet,
+  head studies when heads are weak. See `.claude/skills/tffa-animal-models/references/hero_build_workflow.md`.
 - Quality over speed: **one zone at a time**, review hero + front + side of every animal, fix, then commit.
 - **Studs on everything** (the user rejected stud-less dragons and fur).
 - Predators and big beasts must look **aggressive and muscular**: `snarl=True` (panther-style open jaw) for hunters such
