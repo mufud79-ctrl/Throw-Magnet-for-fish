@@ -925,7 +925,7 @@ def build(name, arch, P, out, views=None):
     if arch is theropod: size = 9 * P.get("s", 1.0) / G
     if arch in (whale, golem, kraken): size = 5
     stud = float(np.clip(size * G / 12, 0.26, 0.6))
-    m = Model(name, out, stud=stud, chamfer=0.16, jitter=P.get("jitter", 0.05))
+    m = Model(name, out, stud=stud, chamfer=0.16, jitter=P.get("jitter", 0.05), faceted=P.get("faceted", False))
     with m.frame(scale=1.0 if arch is theropod else G):
         c = arch(m, P)
     m.done(glow_color=P.get("glow"), views=views or [("hero", 40, 12, 45)])
