@@ -36,7 +36,7 @@ ZONES = [
    ("Meerkat", A, dict(torso=(0.8, 0.65, 1.4), leg=0.4, head=0.75, c1=rgb(212, 180, 128), arm=0.6, arm_w=0.2, lean=0.05, ears="tiny", tail="long", x=[eye_patches(DBROWN)])),
    ("Warthog", Q, dict(body=(2.4, 1.4, 1.4), legs=(0.7, 0.45), head=(1.4, 1.35, 1.2), neck=(0, 0.3), c1=rgb(136, 112, 96), snout=(0.5, 0.95, 0.6), ears="point", tail="tuft", angry=True, x=[tusks("up"), mane_back(DBROWN, 6)])),
    ("Zebra", Q, dict(body=(2.8, 1.3, 1.6), legs=(1.5, 0.48), head=(1.5, 0.95, 0.95), neck=(1.1, 1.0), c1=WHITE, pattern="stripes", pat_c=rgb(36, 36, 42), pat_n=6, snout=(0.5, 0.8, 0.65), snout_c=DGREY, ears="point", tail="tuft", tail_tip=BLACK, feet=BLACK, side_eyes=True, x=[mane_back(BLACK)])),
-   ("Ostrich", B, dict(body=(2.0, 1.6, 1.4), leg=2.0, neck=1.6, head=0.75, c1=rgb(40, 40, 46), neck_c=rgb(226, 182, 172), head_c=rgb(226, 182, 172), leg_c=rgb(226, 182, 172), beak=(0.4, 0.35, 0.22), beak_c=TAN, wing_c=WHITE, tail_c=WHITE)),
+   ("Ostrich", B, dict(fly=False, body=(2.0, 1.6, 1.4), leg=2.0, neck=1.6, head=0.75, c1=rgb(40, 40, 46), neck_c=rgb(226, 182, 172), head_c=rgb(226, 182, 172), leg_c=rgb(226, 182, 172), beak=(0.4, 0.35, 0.22), beak_c=TAN, wing_c=WHITE, tail_c=WHITE)),
    ("Hyena", Q, dict(body=(2.2, 1.25, 1.4), legs=(0.9, 0.45), head=(1.2, 1.15, 1.0), neck=(0.3, 0.5), c1=rgb(196, 164, 112), pattern="spots", pat_c=DBROWN, snout=(0.5, 0.65, 0.5), snout_c=DBROWN, ears="round", tail="tuft", angry=True, x=[mane_back(DBROWN, 4)])),
    ("Giraffe", Q, dict(body=(2.4, 1.4, 1.7), legs=(2.0, 0.48), head=(1.2, 0.9, 0.85), neck=(3.0, 1.2), c1=rgb(242, 190, 80), pattern="spots", pat_c=rgb(160, 96, 42), pat_n=6, snout=(0.45, 0.7, 0.6), snout_c=rgb(230, 200, 150), ears="point", tail="tuft", tail_tip=DBROWN, feet=DBROWN, x=[horns("ossicone", rgb(230, 180, 80)), mane_back(rgb(160, 96, 42), 6)])),
    ("Rhino", Q, dict(body=(3.2, 2.0, 2.0), legs=(0.9, 0.8), head=(1.6, 1.4, 1.2), neck=(0.1, 0.2), c1=GREY, snout=(0.9, 1.15, 0.9), ears="point", tail="short", angry=True, x=[horns("rhino")])),
@@ -51,7 +51,7 @@ ZONES = [
    ("Gorilla", EX, "gorilla"),
  ]),
  ("05_Arctic", [
-   ("Penguin", B, dict(body=(1.4, 1.4, 2.0), leg=0.25, head=1.15, c1=rgb(36, 40, 56), belly=WHITE, beak=(0.42, 0.34, 0.22), beak_c=ORANGE, upright=True, wing=0.5, wing_c=rgb(30, 34, 48))),
+   ("Penguin", B, dict(fly=False, body=(1.4, 1.4, 2.0), leg=0.25, head=1.15, c1=rgb(36, 40, 56), belly=WHITE, beak=(0.42, 0.34, 0.22), beak_c=ORANGE, upright=True, wing=0.5, wing_c=rgb(30, 34, 48))),
    ("ArcticFox", Q, dict(body=(2.0, 0.95, 1.0), legs=(0.7, 0.32), head=(1.0, 1.05, 0.9), neck=(0.2, 0.7), c1=WHITE, snout=(0.5, 0.5, 0.4), ears="point", tail="bushy", tail_tip=LBLUE, iris=LBLUE)),
    ("Seal", seal, dict(c1=rgb(156, 166, 178))),
    ("SnowOwl", B, dict(body=(1.3, 1.3, 1.8), leg=0.3, head=1.35, c1=WHITE, belly=SNOW, beak=(0.25, 0.28, 0.32), beak_c=DGREY, eye=1.45, upright=True, iris=rgb(255, 214, 60), x=[tufts(WHITE)])),
@@ -164,10 +164,15 @@ if __name__ == "__main__":
                 if os.path.isdir(out): shutil.rmtree(out)
                 cmd = [sys.executable, os.path.join(SKILL, "examples", f"{P}.py"), out] + (["--no-render"] if "--no-render" in ARGS else [])
                 subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)
-            else:
+            elif "--child" in ARGS:
                 try:
                     build(name, arch, P, out, views=[("hero", 40, 12, 45), ("front", 0, 8, 45)])
                 except Exception as e:
                     import traceback; traceback.print_exc(); print("FAILED", name, e)
-        if "--sheet" in ARGS and (not want or zone in want or any(n in want for n, _, _ in animals)):
+            else:     # one Blender process per animal: renders leak memory, a whole zone in one process got OOM-killed
+                cmd = [sys.executable, os.path.abspath(__file__), name, "--child"] + [a for a in ARGS if a == "--no-render"]
+                r = subprocess.run(cmd, capture_output=True, text=True)
+                print("\n".join(l for l in r.stdout.splitlines() if l.startswith(("CLIPS", "FAILED", "TRIS"))), flush=True)
+                if r.returncode: print("FAILED", name, r.returncode, r.stderr[-800:], flush=True)
+        if "--sheet" in ARGS and "--child" not in ARGS and (not want or zone in want or any(n in want for n, _, _ in animals)):
             sheet(zone)

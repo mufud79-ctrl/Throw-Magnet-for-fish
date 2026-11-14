@@ -173,8 +173,8 @@ def pattern(m, c, kind, col, n=5, seed=1):
     L, W, H, z0 = c["L"], c["W"], c["H"], c["z0"]; rng = np.random.default_rng(seed)
     if kind == "stripes":
         for k in range(n):
-            x = -L / 2 + L * (k + 0.75) / (n + 0.5)
-            m.box(f"Stripe{k}", (x, 0, z0 + H * 0.1), (L * 0.06 + 0.12, W + 0.1, H * 0.86), col, rot=Ry(0.15 * (-1) ** k), **NS)
+            x = -L / 2 + L * (k + 0.6) / (n + 0.2)
+            m.box(f"Stripe{k}", (x, 0, z0 + H * 0.1), (L * 0.07 + 0.14, W + 0.1, H * 0.86), col, rot=Ry(0.12), **NS)
     elif kind in ("spots", "patches"):
         # chunky square-ish patches kept on the flat middle of the body sides + a few on the back (TFFA giraffe/cow)
         big = kind == "patches"; xs = np.linspace(-L * 0.3, L * 0.3, 3 if big else max(3, n // 2 + 1))
@@ -211,6 +211,9 @@ def quad(m, P):
                     for t in (-1, 0, 1): m.spike(f"Claw{sx}{s}{t}", (b.x + lw * 0.65, b.y + t * lw * 0.35, 0.12), (b.x + lw * 0.95, b.y + t * lw * 0.42, 0.05), lw * 0.12, CLAW)
                 else:
                     m.box(f"Leg{sx}{s}", (x, y, (lh + 0.4) / 2), (lw, lw, lh + 0.4), legc)
+                    if P.get("pattern") == "stripes" and lh > 0.8:
+                        for j, zz in enumerate((lh * 0.4, lh * 0.75)):
+                            m.box(f"LegStripe{sx}{s}{j}", (x, y, zz), (lw + 0.08, lw + 0.08, 0.16), P.get("pat_c", C2), **NS)
                     if feet:
                         fh = min(0.4, lh * 0.28); m.box(f"Foot{sx}{s}", (x + 0.04, y, fh / 2), (lw * 1.1, lw * 1.1, fh), feet, **NS)
     # neck + head
@@ -220,6 +223,15 @@ def quad(m, P):
     if nl > 0.15:
         with m.bone("Neck", base):
             m.seg("Neck", base - d * 0.45, tipn + d * 0.15, hw * 0.82, hw * 0.74, P.get("neck_c", C1), d0=hh * 1.05, d1=hh * 0.9)
+            pk, pc = P.get("pattern"), P.get("pat_c", C2)
+            nrings = max(1, int(nl / 0.55))
+            for k in range(nrings):                         # carry the body pattern up the neck
+                t = (k + 0.6) / (nrings + 0.3); a = base.lerp(tipn, t)
+                if pk == "stripes":
+                    m.seg(f"NeckStripe{k}", a - d * 0.08, a + d * 0.08, hw * 0.82 + 0.1, hw * 0.82 + 0.1, pc, d0=hh * 1.05 + 0.1, d1=hh * 1.0 + 0.1, studs=False)
+                elif pk == "spots":
+                    for s2 in (1, -1):
+                        m.box(f"NeckSpot{k}{s2}", a + Vector((0.08 * (-1) ** k, s2 * (hw * 0.41 + 0.02), 0)), (0.42, 0.12, 0.4), pc, rot=Ry(-nt + math.pi / 2), **NS)
     hc = tipn + Vector((hl * 0.28, 0, hh * 0.12))
     hscale = P.get("head_scale", HEAD_SCALE)
     m.bone("Head", tipn, "Neck" if nl > 0.15 else "Body")
@@ -320,8 +332,8 @@ def ape(m, P):
             m.seg(f"Arm{s}", sh, hand, aw, aw * 0.9, C1)
             m.box(f"Hand{s}", hand + Vector((0.05, 0, -aw * 0.2)), (aw * 1.25, aw * 1.1, aw * 0.8), P.get("face_c", lt(C1, 0.35)), **NS)
         with m.bone(f"Leg_{LR(s)}", (0, s * W * 0.26, lh + 0.1)):
-            m.box(f"Leg{s}", (0, s * W * 0.26, (lh + 0.3) / 2), (aw * 1.15, aw * 1.15, lh + 0.3), C1)
-            m.box(f"Foot{s}", (aw * 0.35, s * W * 0.26, 0.12), (aw * 1.7, aw * 1.15, 0.24), P.get("face_c", lt(C1, 0.35)), **NS)
+            m.box(f"Leg{s}", (0, s * W * 0.26, (lh + 0.3) / 2 + 0.08), (aw * 1.1, aw * 1.1, lh + 0.3 - 0.06), C1)
+            m.box(f"Foot{s}", (aw * 0.35, s * W * 0.26, 0.13), (aw * 1.7, aw * 1.28, 0.26), P.get("face_c", lt(C1, 0.35)), **NS)
     c["tail_end"] = None
     if P.get("tail"):
         c2 = dict(c, L=D, H=H * 0.6, z0=lh + H * 0.1, W=W); tail(m, c2, P["tail"], C1, P.get("tail_tip")); c["tail_end"] = c2.get("tail_end")
