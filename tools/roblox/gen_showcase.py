@@ -102,14 +102,14 @@ def main():
     data = {"outline": OUTLINE, "districts": districts}
     src = TEMPLATE.read_text().replace("__DATA__", lua(data))
     OUT.write_text(src)
-    check = [{"n": m["name"], "id": int(ids[m["name"]]), "rigged": m["rigged"], "glow": m["glow"] is not None}
-             for m in man["models"] if m["name"] in ids]
+    check = [{"n": m["name"], "id": int(ids.get(m["name"], 0)), "rigged": m["rigged"], "glow": m["glow"] is not None}
+             for m in man["models"]]
     CHECK_OUT.write_text(CHECK_TEMPLATE.read_text().replace("__CHECK__", lua(check)))
     n = sum(len(r["items"]) for d in districts for r in d["rows"])
     with_id = sum(1 for d in districts for r in d["rows"] for i in r["items"] if i["id"])
     print(f"{OUT.relative_to(ROOT)}: {n} models, {with_id} with asset IDs, "
           f"{n - with_id} from ServerStorage.ShowcaseImports ({len(src) // 1024} KB); "
-          f"{CHECK_OUT.relative_to(ROOT)}: {len(check)} uploaded assets")
+          f"{CHECK_OUT.relative_to(ROOT)}: checks all {len(check)}")
 
 
 if __name__ == "__main__":
