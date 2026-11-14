@@ -1,7 +1,7 @@
 # Cannon Tame animals (TFFA style)
 
 77 animals in 11 zones (7 per zone), rebuilt in the "Throw Food For Animals" look with the skill in
-`.claude/skills/tffa-animal-models/`. **49 of 77 are done** (rigged + animated); the other 28 still have the old
+`.claude/skills/tffa-animal-models/`. **54 of 77 are done** (rigged + animated); the other 23 still have the old
 CannonTame look and are listed below.
 
 ## Status by zone
@@ -10,7 +10,7 @@ CannonTame look and are listed below.
 | 01_Farm | Chicken, Cow, Duck, Goat, Horse, Pig, Sheep | - |
 | 02_Forest | BrownBear, Fox, Hedgehog, Owl, Rabbit, Raccoon, Squirrel | - |
 | 03_Savanna | Giraffe, Hyena, Meerkat, Ostrich, Rhino, Warthog, Zebra | - |
-| 04_Jungle | Crocodile, Panther | Frog, Gorilla, Monkey, Sloth, Toucan |
+| 04_Jungle | Crocodile, Frog, Gorilla, Monkey, Panther, Sloth, Toucan | - |
 | 05_Arctic | - | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus |
 | 06_Desert | Rattlesnake, Scorpion | Camel, FennecFox, Lizard, SphinxCat, Vulture |
 | 07_IceAge | Mammoth | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
@@ -22,7 +22,7 @@ CannonTame look and are listed below.
 A rebuilt animal has an `anims/` folder; an old one does not.
 
 ## Hero builds (one script per animal)
-Zones 09-11 (and the Chimera/Kraken) are **hero builds**: a dedicated script with a written reference analysis in its
+Zones 09-11, the 04_Jungle Frog/Gorilla/Monkey/Sloth/Toucan (and the Chimera/Kraken) are **hero builds**: a dedicated script with a written reference analysis in its
 docstring, at `.claude/skills/tffa-animal-models/examples/<name>.py`. Highlights:
 
 | Animal | Signature |
@@ -35,6 +35,11 @@ docstring, at `.claude/skills/tffa-animal-models/examples/<name>.py`. Highlights
 | StarWhale | humpback head + constellations; GalaxyDragon = dragon archetype in nebula colours; BlackHoleBeast = void predator under a black-hole orb |
 | EmberWolf | hellhound: molten ribs, fanned 3-tone flame mane, obsidian horns, glowing maw |
 | FireSalamander | user-picked variation "Magma Newt": basalt skin with lava cracks, obsidian spikes, glowing eyes |
+| Frog | strawberry poison dart frog: red with black spots, blue Z-folded legs with toe pads, bulging eye domes, orange throat sac |
+| Gorilla | roaring silverback on the reviewed TFFA gorilla: open jaw with fangs, silver saddle, pecs, deltoids, knuckles |
+| Monkey | cheeky capuchin: heart-shaped face, cocked brow + toothy grin, peeled banana, question-mark tail |
+| Sloth | three-toed sloth: eye stripes, sleepy lids + smile, three huge hooked claws, moss on the back, pink flower |
+| Toucan | toco toucan: giant orange bill with red ridge and black tip, blue eye ring, white bib, red under the tail |
 | LavaRex / MagmaSlug / ObsidianGolem | basalt-armoured T-Rex with magma drool / slug with an erupting volcano shell / golem with a caged crystal heart |
 
 Other rebuilt animals come from one-line archetype specs in `tools/blender/tffa_zoo.py`.
