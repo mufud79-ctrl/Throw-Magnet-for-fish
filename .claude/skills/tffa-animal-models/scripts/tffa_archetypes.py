@@ -500,27 +500,19 @@ def seal(m, P):
 def snake(m, P):
     C1, C2 = P["c1"], P.get("c2", dk(P["c1"]))
     body = m.bone("Body", (0, 0, 0.4)); body.__enter__()
-    for ring, (r, z, w, n) in enumerate(((1.45, 0.45, 1.0, 11), (0.95, 1.2, 0.85, 8))):       # stacked coils
-        for k in range(n):
-            a = 2 * math.pi * k / n + ring * 0.3
-            m.box(f"Coil{ring}_{k}", (r * math.cos(a), r * math.sin(a), z), (1.0 * w * 1.05, 0.9 * w, 0.85 * w), C1, rot=Rz(a + math.pi / 2))
-            if k % 2 == 0: m.box(f"Diamond{ring}_{k}", (r * math.cos(a), r * math.sin(a), z + 0.43 * w), (0.5 * w, 0.5 * w, 0.1), C2, rot=Rz(a + math.pi / 4), **NS)
-    for k in range(4): m.box(f"Rattle{k}", (-1.2, -1.15, 0.75 + 0.36 * k), (0.42 - 0.04 * k, 0.46 - 0.04 * k, 0.3), rgb(226, 206, 156), top=(0.85, 0.85), **NS)
-    m.chain("Neck", [(0.6, 0.0, 1.5), (0.75, 0.0, 2.2), (1.05, 0, 2.65)], [0.85, 0.78, 0.72], C1, bones="Neck")
-    hc = Vector((1.55, 0, 2.8)); hl, hw, hh = 1.4, 1.35, 0.6
-    m.bone("Head", (1.05, 0, 2.65), "Neck2")
-    c = dict(hc=hc, hl=hl, hw=hw, hh=hh, xf=hc.x + hl / 2, C1=C1, C2=C2, head=lambda: m.bone("Head"), back=Vector((0, 0, 1.6)))
+    for k in range(10):
+        a = 2 * math.pi * k / 10; r = 1.35
+        m.box(f"Coil{k}", (r * math.cos(a), r * math.sin(a), 0.4), (1.0, 0.85, 0.8), C1, rot=Rz(a + math.pi / 2))
+        if k % 2 == 0: m.box(f"Diamond{k}", (r * math.cos(a), r * math.sin(a), 0.82), (0.5, 0.5, 0.1), C2, rot=Rz(a + math.pi / 4), **NS)
+    for k in range(3): m.box(f"Rattle{k}", (-1.1 - 0.28 * k, -0.95, 0.6 + 0.32 * k), (0.32, 0.36, 0.28), rgb(220, 200, 150), **NS)
+    m.chain("Neck", [(1.35, 0, 0.6), (0.9, 0.15, 1.5), (0.7, 0.05, 2.4), (0.95, 0, 2.9)], [0.85, 0.75, 0.7, 0.65], C1, bones="Neck")
+    hc = Vector((1.35, 0, 3.05)); hl, hw, hh = 1.2, 1.0, 0.65
+    m.bone("Head", (0.95, 0, 2.9), "Neck3")
+    c = dict(hc=hc, hl=hl, hw=hw, hh=hh, xf=hc.x + hl / 2, C1=C1, C2=C2, head=lambda: m.bone("Head"), back=Vector((0, 0, 1.0)))
     with m.bone("Head"):
-        m.box("Head", hc, (hl, hw, hh), C1, top=(0.75, 0.7), bot=(0.75, 0.7))            # wedge: wide at the back
-        m.box("UpperMouth", hc + Vector((0.1, 0, -hh * 0.45)), (hl * 0.85, hw * 0.62, 0.12), MOUTH, **NS)
-        for s in (1, -1):
-            m.spike(f"Fang{s}", hc + Vector((hl * 0.38, s * hw * 0.2, -hh * 0.45)), hc + Vector((hl * 0.4, s * hw * 0.19, -hh * 0.45 - 0.42)), 0.09, TOOTH, flat=0.5)
-        side_eyes(m, c, dict(P, angry=True, eye=1.3), fwd=0.05, up=0.25)
-        m.bone("Jaw", hc + Vector((-hl * 0.35, 0, -hh * 0.45)), "Head")
-        with m.bone("Jaw"), m.frame(pivot=hc + Vector((-hl * 0.35, 0, -hh * 0.45)), rot=Ry(0.45)):
-            m.box("Jaw", hc + Vector((0.05, 0, -hh * 0.62)), (hl * 0.9, hw * 0.6, 0.22), lt(C1, 0.25))
-            m.box("Tongue", hc + Vector((hl * 0.35, 0, -hh * 0.5)), (hl * 0.7, 0.12, 0.06), MOUTH, **NS)
-            for s in (1, -1): m.box(f"TongueFork{s}", hc + Vector((hl * 0.75, s * 0.09, -hh * 0.5)), (0.2, 0.08, 0.06), MOUTH, rot=Rz(s * 0.4), **NS)
+        m.box("Head", hc, (hl, hw, hh), C1, top=(0.85, 0.85))
+        side_eyes(m, c, dict(P, angry=True, eye=1.25), fwd=0.2, up=0.3)
+        m.box("Tongue", hc + Vector((hl / 2 + 0.25, 0, -0.1)), (0.5, 0.1, 0.05), MOUTH, **NS)
     for fn in P.get("x", []): fn(m, c)
     body.__exit__(None, None, None)
     return c
@@ -627,6 +619,82 @@ def kraken(m, P):
         with m.bone(f"Tent{k}_1"): m.box(f"Sucker{k}", b + o * 2.2 + Vector((0, 0, -1.75)), (0.32, 0.32, 0.12), C2, **NS)
     body.__exit__(None, None, None)
     return c
+
+def dragon(m, P):
+    """Western dragon (the reviewed RedDragon example, parametric). Long neck, horned reptile head with frill crown and
+    teeth, lilac-style belly shield, straight front legs + crouched hind legs with white claws, spade tail, huge raised
+    wings. Build space = studs (no G scaling); size via build(..., s) frame. P: c1 body, c2 dark accents, mem membrane,
+    belly, seg (belly segment colour), knob, horn, eye, glow options belly_glow / wing_glow / eye_glow, spikes (spine col)."""
+    LR = lambda s: "L" if s > 0 else "R"
+    C1 = P["c1"]; C2 = P.get("c2", dk(C1, 0.68)); MEMc = P.get("mem", dk(C1, 0.62)); BEL = P.get("belly", rgb(214, 166, 206))
+    SEG = P.get("seg", dk(BEL, 0.86)); KN = P.get("knob", rgb(200, 180, 220)); HRN = P.get("horn", HORN); EYE = P.get("eye", rgb(255, 214, 60))
+    m.gait = dict(P.get("gait", {}))
+    _b = m.bone("Body", (-0.4, 0, 3.6)); _b.__enter__()
+    # ---- torso: chunky, chest high, hips low; big lilac belly shield covers the whole front
+    m.seg("Torso", (-1.2, 0, 2.6), (0.5, 0, 5.8), 3.8, 4.0, C1, d0=3.6, d1=3.2, **NS)
+    m.seg("Hips", (-2.0, 0, 2.2), (-0.4, 0, 3.0), 3.4, 3.4, C1, d0=2.8, d1=2.8, **NS)
+    m.seg("ChestPlate", (1.15, 0, 1.4), (2.05, 0, 6.0), 2.6, 2.2, BEL, d0=0.7, d1=0.7, **NS)
+    m.seg("BellyPoint", (1.2, 0, 1.9), (1.4, 0, 0.15), 1.8, 0.3, BEL, d0=0.7, d1=0.4, **NS)   # lower belly/tail tip
+    for k in range(3):                                         # a few big chevron segments across the belly shield
+        z = 2.4 + k * 1.25
+        m.box(f"BellySeg{k}", (1.5 + k * 0.2, 0, z), (0.6, 2.5 - k * 0.1, 0.14), dk(BEL, 0.86), rot=Ry(-0.26), **NS)
+
+    # ---- neck + head (short thick neck, big angular head with a crown of frills)
+    m.chain("Neck", [(0.6, 0, 5.4), (1.1, 0, 7.2), (1.4, 0, 8.9)], [2.2, 1.8, 1.6], C1, bones="Neck", **NS)
+    m.chain("NeckBelly", [(1.75, 0, 5.6), (2.0, 0, 7.2), (2.2, 0, 8.7)], [1.7, 1.4, 1.2], BEL, depths=[0.5, 0.5, 0.5], bones="Neck", **NS)
+    m.bone("Head", (1.4, 0, 8.9), "Neck2")
+    with m.bone("Head"), m.frame(pivot=(1.5, 0, 8.2), scale=1.25, move=(0, 0, 1.0)):
+        m.box("Head", (2.0, 0, 8.9), (2.0, 2.0, 1.5), C1, top=(0.75, 0.8), **NS)
+        m.box("Snout", (3.3, 0, 8.65), (1.7, 1.4, 0.95), C1, top=(0.75, 0.8), bot=(1, 0.85), **NS)
+        m.box("Jaw", (2.9, 0, 8.05), (1.9, 1.25, 0.45), C1, rot=Ry(0.15), **NS)
+        m.box("Mouth", (3.0, 0, 8.25), (1.7, 1.15, 0.2), MOUTH, **NS)
+        for s in (1, -1):
+            for k, x in enumerate((2.5, 3.0, 3.5, 3.9)):
+                m.spike(f"Tooth{s}{k}", (x, s * 0.55, 8.3), (x, s * 0.53, 8.0), 0.12, TOOTH, flat=0.4)
+            m.spike(f"Horn{s}", (1.6, s * 0.6, 9.5), (0.9, s * 1.2, 11.0), 0.32, HRN, sides=5)
+            for k in range(4):                                # frill crown around the face
+                m.spike(f"Frill{s}{k}", (1.6 - k * 0.15, s * 0.9, 9.4 - k * 0.4), (1.4 - k * 0.2, s * (1.55 - k * 0.08), 9.6 - k * 0.5), 0.26, C1)
+            m.box(f"Nostril{s}", (4.15, s * 0.3, 8.9), (0.1, 0.2, 0.12), C2, chamfer=0.05, **NS)
+        m.spike("Crest", (2.2, 0, 9.55), (1.7, 0, 10.4), 0.28, C1)
+        m.eyes((2.85, 0.6, 9.25), facing=(1, 0.8, 0.2), size=(0.55, 0.32), pupil=0.75, look=(0.5, 0), angry=0.45,
+               white=EYE, glow_white=P.get("eye_glow", False), brow_col=C2, brow_h=0.5, brow_up=0.75, depth=0.14)
+
+    # ---- legs (front straight, hind crouched) with white claws
+    for s in (1, -1):
+      with m.bone(f"Leg_F{LR(s)}", (0.6, s * 1.7, 4.6)):
+        m.seg(f"UpperArm{s}", (0.6, s * 1.7, 4.8), (1.0, s * 2.2, 2.6), 1.5, 1.25, C1, **NS)
+        m.seg(f"Forearm{s}", (1.0, s * 2.2, 2.8), (1.2, s * 2.15, 0.5), 1.15, 1.0, C1, **NS)
+        m.box(f"Paw{s}", (1.4, s * 2.15, 0.3), (1.4, 1.3, 0.6), C1, top=(0.8, 0.85), **NS)
+        for k in (-1, 0, 1): m.spike(f"Claw{s}{k}", (2.05, s * 2.15 + k * 0.38, 0.25), (2.4, s * 2.15 + k * 0.42, 0.05), 0.12, CLAW)
+      with m.bone(f"Leg_B{LR(s)}", (-1.4, s * 1.8, 3.0)):
+        m.box(f"Thigh{s}", (-1.4, s * 1.8, 2.2), (2.2, 1.2, 2.2), C1, rot=Ry(0.3), top=(0.8, 0.9), **NS)
+        m.seg(f"Shin{s}", (-1.8, s * 1.9, 1.6), (-1.0, s * 1.9, 0.4), 0.9, 0.8, C1, **NS)
+        m.box(f"Foot{s}", (-0.6, s * 1.9, 0.3), (1.4, 1.1, 0.6), C1, top=(0.8, 0.85), **NS)
+        for k in (-1, 0, 1):
+            m.spike(f"HClaw{s}{k}", (0.1, s * 1.9 + k * 0.35, 0.25), (0.45, s * 1.9 + k * 0.4, 0.05), 0.12, CLAW)
+
+    # ---- tail: back and down, belly-coloured underside, spade tip
+    m.chain("Tail", [(-2.6, 0, 2.6), (-4.2, 0, 1.6), (-5.6, 0, 1.0), (-7.0, 0, 0.8)], [1.8, 1.3, 0.8, 0.45], C1, bones="Tail", **NS)
+    with m.bone("Tail3"): m.slab("TailSpade", [(0, 0), (0.9, 0.6), (1.6, 0), (0.9, -0.6)], 0.2, C1, origin=(-6.85, 0, 0.8), xaxis=(-1, 0, 0), yaxis=(0, 1, 0))
+
+    # ---- wings: huge membranes raised up and out, facing forward (the front silhouette is mostly wing)
+    for s in (1, -1):
+        sh, wr, tip = V(-0.6, s * 1.5, 6.2), V(-0.9, s * 2.5, 10.4), V(-1.7, s * 4.9, 15.2)
+        wing = m.bone(f"Wing_{LR(s)}", sh); wing.__enter__()
+        m.seg(f"WingArm{s}", sh, wr, 0.75, 0.6, C1, **NS)
+        m.seg(f"WingFinger{s}", wr, tip, 0.55, 0.25, C1, **NS)
+        m.ball(f"WingKnob{s}", wr + V(0.1, 0, 0.1), 0.45, KN)
+        m.poly(f"Wing{s}", [sh, wr, tip, (-1.9, s * 5.9, 11.2), (-1.8, s * 5.4, 8.2), (-1.4, s * 4.0, 6.6), (-1.0, s * 2.6, 5.4)],
+               0.2, MEMc, glow=P.get("wing_glow", False))
+        for k, (p, q) in enumerate(((wr, V(-1.85, s * 5.7, 9.8)), (wr, V(-1.5, s * 4.6, 7.2)))):   # finger bones
+            m.seg(f"WingBone{s}{k}", p, q, 0.3, 0.14, C1, **NS)
+        wing.__exit__(None, None, None)
+    if P.get("spikes"):
+        for k, (x, z) in enumerate(((-0.2, 6.3), (-1.0, 5.6), (-1.9, 4.6), (-3.2, 3.5), (-4.6, 2.6))):
+            with (m.bone("Body") if k < 3 else m.bone("Tail1" if k == 3 else "Tail2")):
+                m.spike(f"Spine{k}", (x, 0, z - 0.3), (x - 0.5, 0, z + 0.6), 0.32, P["spikes"], flat=0.45, glow=P.get("spike_glow", False))
+    _b.__exit__(None, None, None)
+    return dict(C1=C1, back=V(0, 0, 6.0))
 
 # ============================================================================ accessories (factories -> fn(m, c))
 def feather(m, name, root, direction, length, width, grad, side=(0, 1, 0), glow=False):
@@ -852,6 +920,36 @@ def shoulders(col=None, k=1.0):
         m.box("Haunch", (-L * 0.28, 0, z0 + H * 0.12), (L * 0.36 * k, W * 1.04, H * 0.7 * k), col or c["C1"], top=(0.75, 0.85))
     return fn
 
+def shaggy(col, col2=None, legs=True):
+    """Ice-age shag (mammoth, woolly rhino): long two-tone hair strands hanging off the sides, rump and chest, cheek hair,
+    a high shoulder hump, a domed head and fur sleeves on the upper legs."""
+    col2 = col2 or dk(col, 0.8)
+    def fn(m, c):
+        L, W, H, z0, lh, lw = c["L"], c["W"], c["H"], c["z0"], c["lh"], c["lw"]
+        m.box("ShoulderHump", (L * 0.16, 0, z0 + H * 0.5), (L * 0.52, W * 0.86, H * 0.72), col, top=(0.45, 0.62))
+        n = 8
+        for s in (1, -1):
+            for k in range(n):
+                x = L * 0.42 - L * 0.86 * k / (n - 1); ln = H * (0.95 + 0.25 * ((k * 7 + (s > 0) * 3) % 3) / 2)
+                m.box(f"Strand{s}{k}", (x, s * (W / 2 + 0.06), z0 + H * 0.2 - ln / 2), (L / n * 1.15, 0.34, ln), col if k % 2 else col2,
+                      top=(1, 1), bot=(0.7, 0.85), **NS)
+        for k in range(3):    # rump fringe
+            m.box(f"RumpStrand{k}", (-L / 2 - 0.08, (k - 1) * W * 0.3, z0 - H * 0.05), (0.3, W * 0.34, H * 1.0), col2 if k % 2 else col, bot=(0.8, 0.7), **NS)
+        for k in range(3):    # chest beard under the head
+            m.box(f"ChestStrand{k}", (L / 2 + 0.08, (k - 1) * W * 0.28, z0 - H * 0.1), (0.36, W * 0.32, H * 1.05), col if k % 2 else col2, bot=(0.8, 0.7), **NS)
+        with c["head"]():
+            hc, hl, hw, hh = c["hc"], c["hl"], c["hw"], c["hh"]
+            m.box("HeadDome", hc + Vector((-hl * 0.18, 0, hh * 0.52)), (hl * 0.78, hw * 0.86, hh * 0.6), col, top=(0.5, 0.66))
+            for s in (1, -1):
+                m.box(f"CheekHair{s}", hc + Vector((-hl * 0.1, s * (hw / 2 + 0.06), -hh * 0.2)), (hl * 0.6, 0.3, hh * 0.95), col2, bot=(0.75, 0.8), **NS)
+        if legs:
+            for sx in (1, -1):
+                for s in (1, -1):
+                    x = sx * (L / 2 - lw * 0.62); y = s * (W / 2 - lw * 0.5 - 0.06)
+                    with _in(m, f"Leg_{'F' if sx > 0 else 'B'}{LR(s)}"):
+                        m.box(f"LegFur{sx}{s}", (x, y, lh * 0.62), (lw * 1.32, lw * 1.32, lh * 0.55), col2 if sx > 0 else col, bot=(0.85, 0.85), **NS)
+    return fn
+
 def jaw_teeth(n=6, col=TOOTH):
     """Croc/gator: a row of white blade teeth down each side of a long snout."""
     def fn(m, c):
@@ -1019,10 +1117,11 @@ def build(name, arch, P, out, views=None):
     if os.path.isdir(out): shutil.rmtree(out)
     size = max(P.get("body", P.get("torso", P.get("size", (3, 2, 2))))) if P else 3
     if arch is theropod: size = 9 * P.get("s", 1.0) / G
+    if arch is dragon: size = 9 * P.get("s", 1.0) / G
     if arch in (whale, golem, kraken): size = 5
     stud = float(np.clip(size * G / 12, 0.26, 0.6))
     m = Model(name, out, stud=stud, chamfer=0.16, jitter=P.get("jitter", 0.05), faceted=P.get("faceted", False))
-    with m.frame(scale=1.0 if arch is theropod else G):
+    with m.frame(scale=1.0 if arch is theropod else (P.get("s", 1.0) if arch is dragon else G)):
         c = arch(m, P)
     m.done(glow_color=P.get("glow"), views=views or [("hero", 40, 12, 45)])
     return m

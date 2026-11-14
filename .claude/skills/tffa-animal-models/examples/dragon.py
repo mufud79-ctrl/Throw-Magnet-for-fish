@@ -56,7 +56,7 @@ for s in (1, -1):
 
 # ---- tail: back and down, belly-coloured underside, spade tip
 m.chain("Tail", [(-2.6, 0, 2.6), (-4.2, 0, 1.6), (-5.6, 0, 1.0), (-7.0, 0, 0.8)], [1.8, 1.3, 0.8, 0.45], RED, bones="Tail", **NS)
-with m.bone("Tail3"): m.slab("TailSpade", [(0, 0), (0.9, 0.6), (1.6, 0), (0.9, -0.6)], 0.2, RED, origin=(-7.6, 0, 0.8), xaxis=(-1, 0, 0), yaxis=(0, 1, 0))
+with m.bone("Tail3"): m.slab("TailSpade", [(0, 0), (0.9, 0.6), (1.6, 0), (0.9, -0.6)], 0.2, RED, origin=(-6.85, 0, 0.8), xaxis=(-1, 0, 0), yaxis=(0, 1, 0))
 
 # ---- wings: huge membranes raised up and out, facing forward (the front silhouette is mostly wing)
 for s in (1, -1):
