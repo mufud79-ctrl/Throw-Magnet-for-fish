@@ -14,6 +14,7 @@ Everything needed is in this folder:
 | `scripts/tffa_archetypes.py` | Rigged parametric builders: `quad`, `bird`, `ape`, `theropod`, `frog`, `seal`, `snake`, `scorpion`, `blob`, `golem`, `whale`, `kraken` + accessories (`horns`, `wings`, `tusks`, `mane_back`, `shell`, `plates`, `frill`, ...) and `build(name, arch, spec, out)` |
 | `scripts/tffa_anim.py` | Procedural looping clips from bone names: `Idle` (always), `Walk` (legs/spine/tentacles), `Fly` (wings) |
 | `scripts/compare.py` | Reference vs ours side-by-side sheet (system `python3` + Pillow) |
+| `scripts/review_sheet.py` | Batch review: hero/front/side of several builds in one image (`python3 scripts/review_sheet.py out.png <dir> ...`) |
 | `references/style_guide.md` | **Read first.** The style rules, measured from the real game shots |
 | `references/review_checklist.md` | The harsh comparison checklist + known pitfalls and their fixes |
 | `references/hero_build_workflow.md` | **The quality bar for every animal now**: the Chimera method - reference analysis, custom per-animal script, head studies, 4-view review, archive old versions |
@@ -62,6 +63,10 @@ Everything needed is in this folder:
    rigs + clips are still exported). Previews per animal: hero, front, side - check all three,
    review `<Zone>_overview.png` and `<Zone>_anim_overview.png` animal by animal, fix, rebuild, then commit and move on.
    Quality drops when many animals are generated without review - don't do it.
+   Faster hero-build loop (zones 04-07): write every animal's script first, build 3 at a time in parallel into a scratch
+   folder (`TFFA_ANIM_PREVIEW=0 ... examples/<a>.py <scratch>/<Name> &`; 4 cores -> 3 jobs, ~3 min per batch), review all
+   of them in one `scripts/review_sheet.py` image, fix, rebuild only the fixed ones, then register them in the roster and
+   run `tffa_zoo.py <Names> --sheet` once to write the repo folders + zone overview.
 9. **Deliver**: `<Name>.glb` (import this into Roblox with the 3D Importer, at 1 unit = 1 stud, facing -Z, pivot at the ground centre), `<Name>.fbx`, `<Name>.blend`, `<Name>_Texture.png`, `<Name>_Detail.png` (stud shading + mutation mask), `anims/<Name>_<Clip>.fbx` (one per clip: Roblox Animation
    Editor → Import → From FBX Animation → Loop → Publish; bone names are shared, so one upload per family works for every
    animal with the same bones), and `previews/`. The GLB/FBX hold the skinned mesh + armature + all clips. Each mesh must stay under 20k triangles (the kit asserts this). Typical builds are 3-8k.

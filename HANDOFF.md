@@ -71,10 +71,12 @@ Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07
 - Possible polish: StatueHead and IcebergChunk are plain; FallenStar's glow arms read as a white smear in previews (Neon in Roblox).
 
 ## TFFA-style animals (skill) - CURRENT WORK
-Develop on branch `claude/roblox-animal-models-852c5h`. Commit + push after every zone (another Claude session may push
-to the same branch: `git fetch` + `git rebase origin/claude/roblox-animal-models-852c5h` before pushing; never rebuild a
-zone that session owns). A second session works BOTTOM-UP (11_Space, 10_MythicIsles and 09_Volcano done; next 08_DinoLand,
-then 07, 06...), skipping animals already rebuilt. Per-zone status + Roblox import notes: `models/CannonTame/Animals/README.md`.
+**Branches:** the latest animal work is on `claude/confident-meitner-z0c8yk` (it contains everything from
+`claude/roblox-animal-models-852c5h` plus zones 04_Jungle-07_IceAge; the shared branch has not been fast-forwarded yet, ask
+the user before pushing there). Commit + push after every zone; another Claude session may push to the shared branch, so
+`git fetch` first and never rebuild a zone that session owns. That session worked BOTTOM-UP (11_Space, 10_MythicIsles,
+09_Volcano); a second session worked TOP-DOWN (04_Jungle, 05_Arctic, 06_Desert, 07_IceAge as hero scripts). Before
+starting 08_DinoLand, check every branch for animals that already have an `anims/` folder. Per-zone status + Roblox import notes: `models/CannonTame/Animals/README.md`.
 
 **Skill:** `.claude/skills/tffa-animal-models/` - read `SKILL.md` first (workflow, look options table, kit cheat-sheet),
 then `references/style_guide.md` and `references/review_checklist.md`. Reference models in `models/TFFA/`
@@ -127,18 +129,20 @@ plain, frill and sail are flat plates.
   animation previews for now** (`TFFA_ANIM_PREVIEW=0`).
 
 ### Paste-ready prompt for the next session
-> Continue the TFFA-style rebuild of the Cannon Tame animals on branch `claude/roblox-animal-models-852c5h`.
+> Continue the TFFA-style rebuild of the Cannon Tame animals from branch `claude/confident-meitner-z0c8yk` (latest work).
 > Read `HANDOFF.md` ("TFFA-style animals" section), `.claude/skills/tffa-animal-models/SKILL.md` and
 > `.claude/skills/tffa-animal-models/references/hero_build_workflow.md` first; use the `tffa-animal-models` skill.
 > Set up Blender with `python3 -m venv /tmp/bpyenv && /tmp/bpyenv/bin/pip install bpy numpy`.
 > 5 animals are left, all still in the old look: 08_DinoLand (Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex).
-> Another session may be working bottom-up on the same branch: before each zone, `git fetch` and skip any animal that
-> already has an `anims/` folder. Do ONE zone at a time at the custom-Chimera quality bar (studs everywhere, aggressive +
+> Another session may have started DinoLand: `git fetch` and skip any animal that already has an `anims/` folder on any
+> branch. Build 3 animals at a time in parallel and review them with `scripts/review_sheet.py` (see SKILL.md step 8). Do ONE zone at a time at the custom-Chimera quality bar (studs everywhere, aggressive +
 > muscular predators, `TFFA_ANIM_PREVIEW=0`), review hero/front/side of every animal harshly, fix, rebuild, then commit and
 > push (fetch + rebase first). Show me each zone's overview sheet.
 
 ## Cannons (Cannon Tame, 14 tiers) - IN PROGRESS
 - `tools/blender/cannons.py` builds into `models/CannonTame/Cannons/<NN>_<Theme>/<Theme>Cannon/` (`python cannons.py [tiers] [--no-render] [--sheet]`); that folder's `README.md` has the roster, rig and glow table.
 - Done: 01 Wooden, 02 Iron, 03 Stone, 04 Bamboo, 11 Cyber, 12 Dragon, 13 Galaxy, 14 Celestial. Remaining, built in pairs from both ends: 05 Copper + 10 Toxic, 06 Candy + 09 Lava, 07 Golden + 08 Frost.
+- Update: branch `claude/epic-rubin-syjk53` has all 14 tiers built (05 Copper, 06 Candy, 07 Golden, 08 Frost, 09 Lava, 10 Toxic added
+  there, plus lobby/ranch work); it is NOT merged into `claude/confident-meitner-z0c8yk` yet - merge it rather than rebuilding them.
 - Early tiers use the studded look, late tiers the faceted look with one Neon glow colour. Every cannon is rigged (`Body`, a `Barrel` aim bone at the trunnion, an empty `Muzzle` bone for spawning projectiles) with `Idle` and `Fire` clips.
 - Dragon: the user rejected heads built from boxes, so it reuses the zoo RedDragon head (`examples/dragon.py`) inside a frame. Their reference is `12_Dragon/DragonCannon_reference.webp`. Review harshly against references using a matching lens (about 90 mm telephoto for AI images).
