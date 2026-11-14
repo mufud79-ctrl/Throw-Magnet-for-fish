@@ -54,11 +54,11 @@ with m.bone("Head", (1.6, 0, 2.6), "Neck"), m.frame(pivot=(1.6, 0, 2.6), scale=1
     for s in (1, -1):                                        # the enormous ears: up and out in a wide V
         with m.bone(f"Ear_{LR(s)}", hc + V(-0.15, s * 0.42, 0.42)):
             o = hc + V(-0.12, s * 0.42, 0.38)
-            ax = V(0, s * 0.72, 1.0).normalized()
+            ax = V(0.12, s * 0.72, 1.0).normalized(); wx = V(0, 1.0, -s * 0.72).normalized()   # plate faces forward
             m.slab(f"Ear{s}", [(-0.5, 0), (0.5, 0), (0.42, 0.9), (0.1, 1.95), (-0.1, 1.95), (-0.42, 0.9)], 0.16, SAND,
-                   origin=o, xaxis=(1, 0, 0), yaxis=ax)
+                   origin=o, xaxis=wx, yaxis=ax)
             m.slab(f"EarIn{s}", [(-0.33, 0.1), (0.33, 0.1), (0.28, 0.9), (0.06, 1.65), (-0.06, 1.65), (-0.28, 0.9)], 0.06, EARIN,
-                   origin=o + V(0.1, 0, 0), xaxis=(1, 0, 0), yaxis=ax)
+                   origin=o + V(0.11, 0, 0), xaxis=wx, yaxis=ax)
             for k in range(3):
                 b = o + ax * 0.15 + V(0.15, s * (k - 1) * 0.05, (k - 1) * 0.12)
                 m.spike(f"EarTuft{s}{k}", b, b + V(0.3, -s * 0.1, 0.2), 0.08, WH, flat=0.6)
