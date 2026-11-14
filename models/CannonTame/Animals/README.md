@@ -1,7 +1,7 @@
 # Cannon Tame animals (TFFA style)
 
 77 animals in 11 zones (7 per zone), rebuilt in the "Throw Food For Animals" look with the skill in
-`.claude/skills/tffa-animal-models/`. **54 of 77 are done** (rigged + animated); the other 23 still have the old
+`.claude/skills/tffa-animal-models/`. **61 of 77 are done** (rigged + animated); the other 16 still have the old
 CannonTame look and are listed below.
 
 ## Status by zone
@@ -11,7 +11,7 @@ CannonTame look and are listed below.
 | 02_Forest | BrownBear, Fox, Hedgehog, Owl, Rabbit, Raccoon, Squirrel | - |
 | 03_Savanna | Giraffe, Hyena, Meerkat, Ostrich, Rhino, Warthog, Zebra | - |
 | 04_Jungle | Crocodile, Frog, Gorilla, Monkey, Panther, Sloth, Toucan | - |
-| 05_Arctic | - | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus |
+| 05_Arctic | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus | - |
 | 06_Desert | Rattlesnake, Scorpion | Camel, FennecFox, Lizard, SphinxCat, Vulture |
 | 07_IceAge | Mammoth | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
@@ -22,7 +22,7 @@ CannonTame look and are listed below.
 A rebuilt animal has an `anims/` folder; an old one does not.
 
 ## Hero builds (one script per animal)
-Zones 09-11, the 04_Jungle Frog/Gorilla/Monkey/Sloth/Toucan (and the Chimera/Kraken) are **hero builds**: a dedicated script with a written reference analysis in its
+Zones 05 and 09-11, the 04_Jungle Frog/Gorilla/Monkey/Sloth/Toucan (and the Chimera/Kraken) are **hero builds**: a dedicated script with a written reference analysis in its
 docstring, at `.claude/skills/tffa-animal-models/examples/<name>.py`. Highlights:
 
 | Animal | Signature |
@@ -40,6 +40,13 @@ docstring, at `.claude/skills/tffa-animal-models/examples/<name>.py`. Highlights
 | Monkey | cheeky capuchin: heart-shaped face, cocked brow + toothy grin, peeled banana, question-mark tail |
 | Sloth | three-toed sloth: eye stripes, sleepy lids + smile, three huge hooked claws, moss on the back, pink flower |
 | Toucan | toco toucan: giant orange bill with red ridge and black tip, blue eye ring, white bib, red under the tail |
+| PolarBear | roaring attack posture (head below the hump), frosted ice-blue scruff tips, ice crystals on the back, claw scars |
+| ArcticFox | sly stalking hunter: narrowed ice-blue eyes, half-grin with a fang, neck + cheek ruff, huge curled tail with a frost tip |
+| Husky | lead sled dog: husky mask with widow's peak, ice-blue eyes, panting fangs + tongue, red harness with a gold D-ring |
+| Penguin | stern emperor penguin: orange ear patches, yellow upper chest, long black/orange beak |
+| SnowOwl | landing pose with the wings raised in a wide V, golden glare, black barring, feathered boots |
+| Seal | harbour seal with a fish clamped in its mouth, dappled spots, whiskers, V of hind flippers |
+| Walrus | bull walrus: huge tusks, bristly moustache, blubber folds, battle scars |
 | LavaRex / MagmaSlug / ObsidianGolem | basalt-armoured T-Rex with magma drool / slug with an erupting volcano shell / golem with a caged crystal heart |
 
 Other rebuilt animals come from one-line archetype specs in `tools/blender/tffa_zoo.py`.

@@ -55,13 +55,20 @@ ZONES = [
    ("Gorilla", EX, "silverback"),   # hero build on the reviewed TFFA gorilla (examples/gorilla.py stays the style reference)
  ]),
  ("05_Arctic", [
-   ("Penguin", B, dict(fly=False, body=(1.4, 1.4, 2.0), leg=0.25, head=1.15, c1=rgb(36, 40, 56), belly=WHITE, beak=(0.42, 0.34, 0.22), beak_c=ORANGE, upright=True, wing=0.5, wing_c=rgb(30, 34, 48))),
-   ("ArcticFox", Q, dict(body=(2.0, 0.95, 1.0), legs=(0.7, 0.32), head=(1.0, 1.05, 0.9), neck=(0.2, 0.7), c1=WHITE, snout=(0.5, 0.5, 0.4), ears="point", tail="bushy", tail_tip=LBLUE, iris=LBLUE)),
-   ("Seal", seal, dict(c1=rgb(156, 166, 178))),
-   ("SnowOwl", B, dict(body=(1.3, 1.3, 1.8), leg=0.3, head=1.35, c1=WHITE, belly=SNOW, beak=(0.25, 0.28, 0.32), beak_c=DGREY, eye=1.45, upright=True, iris=rgb(255, 214, 60), x=[tufts(WHITE)])),
-   ("Husky", Q, dict(body=(2.3, 1.2, 1.4), legs=(1.0, 0.48), head=(1.2, 1.15, 1.1), neck=(0.3, 0.6), c1=GREY, belly=WHITE, snout=(0.5, 0.65, 0.5), snout_c=WHITE, ears="point", tail="up", tail_c=GREY, iris=LBLUE)),
-   ("Walrus", seal, dict(c1=rgb(160, 106, 74), s=1.4, angry=True, x=[tusks("walrus"), whiskers()])),
-   ("PolarBear", Q, dict(body=(3.2, 2.3, 2.3), legs=(1.0, 0.85), head=(1.6, 1.7, 1.45), neck=(0.3, 0.4), c1=WHITE, snout=(0.6, 0.95, 0.7), ears="round", tail="short", angry=True, iris=LBLUE)),
+   ("Penguin", EX, "penguin"),   # hero build (reference analysis in the script)
+   # v1: ("Penguin", B, dict(fly=False, body=(1.4, 1.4, 2.0), leg=0.25, head=1.15, c1=rgb(36, 40, 56), belly=WHITE, beak=(0.42, 0.34, 0.22), beak_c=ORANGE, upright=True, wing=0.5, wing_c=rgb(30, 34, 48))),
+   ("ArcticFox", EX, "arcticfox"),   # hero build (reference analysis in the script)
+   # v1: ("ArcticFox", Q, dict(body=(2.0, 0.95, 1.0), legs=(0.7, 0.32), head=(1.0, 1.05, 0.9), neck=(0.2, 0.7), c1=WHITE, snout=(0.5, 0.5, 0.4), ears="point", tail="bushy", tail_tip=LBLUE, iris=LBLUE)),
+   ("Seal", EX, "seal"),   # hero build (reference analysis in the script)
+   # v1: ("Seal", seal, dict(c1=rgb(156, 166, 178))),
+   ("SnowOwl", EX, "snowowl"),   # hero build (reference analysis in the script)
+   # v1: ("SnowOwl", B, dict(body=(1.3, 1.3, 1.8), leg=0.3, head=1.35, c1=WHITE, belly=SNOW, beak=(0.25, 0.28, 0.32), beak_c=DGREY, eye=1.45, upright=True, iris=rgb(255, 214, 60), x=[tufts(WHITE)])),
+   ("Husky", EX, "husky"),   # hero build (reference analysis in the script)
+   # v1: ("Husky", Q, dict(body=(2.3, 1.2, 1.4), legs=(1.0, 0.48), head=(1.2, 1.15, 1.1), neck=(0.3, 0.6), c1=GREY, belly=WHITE, snout=(0.5, 0.65, 0.5), snout_c=WHITE, ears="point", tail="up", tail_c=GREY, iris=LBLUE)),
+   ("Walrus", EX, "walrus"),   # hero build (reference analysis in the script)
+   # v1: ("Walrus", seal, dict(c1=rgb(160, 106, 74), s=1.4, angry=True, x=[tusks("walrus"), whiskers()])),
+   ("PolarBear", EX, "polarbear"),   # hero build (reference analysis in the script)
+   # v1: ("PolarBear", Q, dict(body=(3.2, 2.3, 2.3), legs=(1.0, 0.85), head=(1.6, 1.7, 1.45), neck=(0.3, 0.4), c1=WHITE, snout=(0.6, 0.95, 0.7), ears="round", tail="short", angry=True, iris=LBLUE)),
  ]),
  ("06_Desert", [
    ("Lizard", Q, dict(body=(2.0, 0.95, 0.6), legs=(0.3, 0.32), sprawl=0.25, head=(0.9, 0.85, 0.6), neck=(0, 0.2), c1=rgb(186, 176, 92), pattern="spots", pat_c=rgb(124, 112, 52), snout=(0.5, 0.65, 0.35), tail="long", head_scale=1.2)),

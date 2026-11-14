@@ -85,14 +85,14 @@ An entry is either a one-line archetype spec or `("<Name>", EX, "<script>")` = a
 Replaced versions are kept: models in `models/CannonTame/Animals/_Archive/<Name>_v<n>/`, scripts as `examples/_archive_<name>_v<n>.py`,
 old specs as `# v1:` comments in the roster.
 
-### Status (54 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips; 23 left, all in zones 05-08)
+### Status (61 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips; 16 left, all in zones 06-08)
 | Zone | Done (new kit) | To do (still the old CannonTame look) |
 |---|---|---|
 | 01_Farm | all 7 | - |
 | 02_Forest | all 7 | - |
 | 03_Savanna | all 7 | - |
 | 04_Jungle | all 7: Panther (snarl + muscular, user-approved), Crocodile, + hero scripts Frog (`dartfrog.py`: strawberry poison dart frog), Gorilla (`silverback.py`: roaring silverback), Monkey (`capuchin.py`: cheeky capuchin with banana), Sloth (`sloth.py`: moss + flower), Toucan (`toucan.py`: toco bill) | - |
-| 05_Arctic | - | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus |
+| 05_Arctic | all 7 hero scripts: PolarBear (roaring, frosted scruff, scars), ArcticFox (sly stalker, huge curled tail), Husky (lead sled dog, red harness, mask), Penguin (stern emperor), SnowOwl (wings raised, golden glare), Seal (fish in mouth), Walrus (bull: tusks, moustache, blubber folds, scars) | - |
 | 06_Desert | Rattlesnake, Scorpion | Camel, FennecFox, Lizard, SphinxCat, Vulture |
 | 07_IceAge | Mammoth (shaggy + fierce + muscular + studs, user-approved) | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
@@ -131,7 +131,7 @@ plain, frill and sail are flat plates.
 > Read `HANDOFF.md` ("TFFA-style animals" section), `.claude/skills/tffa-animal-models/SKILL.md` and
 > `.claude/skills/tffa-animal-models/references/hero_build_workflow.md` first; use the `tffa-animal-models` skill.
 > Set up Blender with `python3 -m venv /tmp/bpyenv && /tmp/bpyenv/bin/pip install bpy numpy`.
-> 23 animals are left, all still in the old look: 05_Arctic (all 7), 06_Desert (Camel, FennecFox, Lizard, SphinxCat, Vulture), 07_IceAge (GiantBeaver, GiantSloth,
+> 16 animals are left, all still in the old look: 06_Desert (Camel, FennecFox, Lizard, SphinxCat, Vulture), 07_IceAge (GiantBeaver, GiantSloth,
 > Glyptodon, Sabertooth, WoollyHare, WoollyRhino) and 08_DinoLand (Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex).
 > Another session may be working bottom-up on the same branch: before each zone, `git fetch` and skip any animal that
 > already has an `anims/` folder. Do ONE zone at a time at the custom-Chimera quality bar (studs everywhere, aggressive +
