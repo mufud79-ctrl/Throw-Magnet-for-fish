@@ -81,7 +81,7 @@ then `references/style_guide.md` and `references/review_checklist.md`. Reference
 **Roster:** `tools/blender/tffa_zoo.py` holds every Cannon Tame animal as an archetype spec (one line each), building into
 `models/CannonTame/Animals/<Zone>/<Name>/`. Gorilla, TRex, Cow and Phoenix are built from the skill's example scripts.
 
-### Status (32 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips)
+### Status (53 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips; 24 left, all in zones 04-08)
 | Zone | Done (new kit) | To do (still the old CannonTame look) |
 |---|---|---|
 | 01_Farm | all 7 | - |
@@ -116,20 +116,13 @@ plain, frill and sail are flat plates.
 
 ### Paste-ready prompt for the next session
 > Continue the TFFA-style rebuild of the Cannon Tame animals on branch `claude/roblox-animal-models-852c5h`.
-> Read `HANDOFF.md` ("TFFA-style animals" section) and `.claude/skills/tffa-animal-models/SKILL.md` first; use the
-> `tffa-animal-models` skill. Set up Blender with
-> `python3 -m venv /tmp/bpyenv && /tmp/bpyenv/bin/pip install bpy numpy`.
-> Do ONE zone at a time, starting with the rest of 04_Jungle, then 05_Arctic, 06_Desert, 07_IceAge, 08_DinoLand,
-> 09_Volcano, 11_Space (leave 10_MythicIsles alone). For each zone: edit the specs in `tools/blender/tffa_zoo.py`, run
-> `TFFA_ANIM_PREVIEW=0 /tmp/bpyenv/bin/python tools/blender/tffa_zoo.py <Zone> --sheet`, review hero/front/side
-> of every animal harshly against the style guide and the user feedback above (studs everywhere, aggressive + muscular
-> predators), fix, rebuild, then commit and push (fetch + rebase first). Show me each zone's overview sheet.
-## TFFA-style animals (skill)
-- Skill: `.claude/skills/tffa-animal-models/` (`SKILL.md`, kit `scripts/tffa_kit.py`, renderer, `compare.py`, style guide, harsh-review checklist, real reference shots).
-- Reviewed models in `models/TFFA/`: Gorilla, TRex, RedDragon, Phoenix (each iterated 4-8 rounds against a real game shot) and the Cow quadruped template. See `models/TFFA/TFFA_vs_reference.png`.
-- Supersedes the older `models/CannonTame/` animal look (smooth bevels and big L-studs).
-
-## Cannons (Cannon Tame, 14 tiers) - IN PROGRESS
-- `tools/blender/cannons.py` builds into `models/CannonTame/Cannons/<NN>_<Theme>/<Theme>Cannon/`; see that folder's `README.md` for the roster, rig and glow table.
-- Style guides done: **01 Wooden** (base, studded, four-wheel naval carriage) and **14 Celestial** (final, faceted marble/gold, hovering plinth, wings, crown muzzle, Neon glow). Waiting on user feedback before the 12 middle tiers.
-- Each cannon: rigged (`Body`, `Barrel` aim bone at the trunnion, empty `Muzzle` bone for projectile spawn), clips `Idle` + `Fire`. Helpers `prism`, `ring`, `gem` live in cannons.py on top of the TFFA kit.
+> Read `HANDOFF.md` ("TFFA-style animals" section), `.claude/skills/tffa-animal-models/SKILL.md` and
+> `.claude/skills/tffa-animal-models/references/hero_build_workflow.md` first; use the `tffa-animal-models` skill.
+> Set up Blender with `python3 -m venv /tmp/bpyenv && /tmp/bpyenv/bin/pip install bpy numpy`.
+> 24 animals are left, all still in the old look: the rest of 04_Jungle (Frog, Gorilla, Monkey, Sloth, Toucan),
+> then 05_Arctic (all 7), 06_Desert (Camel, FennecFox, Lizard, SphinxCat, Vulture), 07_IceAge (GiantBeaver, GiantSloth,
+> Glyptodon, Sabertooth, WoollyHare, WoollyRhino) and 08_DinoLand (Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex).
+> Another session may be working bottom-up on the same branch: before each zone, `git fetch` and skip any animal that
+> already has an `anims/` folder. Do ONE zone at a time at the custom-Chimera quality bar (studs everywhere, aggressive +
+> muscular predators, `TFFA_ANIM_PREVIEW=0`), review hero/front/side of every animal harshly, fix, rebuild, then commit and
+> push (fetch + rebase first). Show me each zone's overview sheet.
