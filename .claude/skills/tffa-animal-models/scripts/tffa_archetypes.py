@@ -500,43 +500,58 @@ def seal(m, P):
 def snake(m, P):
     C1, C2 = P["c1"], P.get("c2", dk(P["c1"]))
     body = m.bone("Body", (0, 0, 0.4)); body.__enter__()
-    for k in range(10):
-        a = 2 * math.pi * k / 10; r = 1.35
-        m.box(f"Coil{k}", (r * math.cos(a), r * math.sin(a), 0.4), (1.0, 0.85, 0.8), C1, rot=Rz(a + math.pi / 2))
-        if k % 2 == 0: m.box(f"Diamond{k}", (r * math.cos(a), r * math.sin(a), 0.82), (0.5, 0.5, 0.1), C2, rot=Rz(a + math.pi / 4), **NS)
-    for k in range(3): m.box(f"Rattle{k}", (-1.1 - 0.28 * k, -0.95, 0.6 + 0.32 * k), (0.32, 0.36, 0.28), rgb(220, 200, 150), **NS)
-    m.chain("Neck", [(1.35, 0, 0.6), (0.9, 0.15, 1.5), (0.7, 0.05, 2.4), (0.95, 0, 2.9)], [0.85, 0.75, 0.7, 0.65], C1, bones="Neck")
-    hc = Vector((1.35, 0, 3.05)); hl, hw, hh = 1.2, 1.0, 0.65
-    m.bone("Head", (0.95, 0, 2.9), "Neck3")
-    c = dict(hc=hc, hl=hl, hw=hw, hh=hh, xf=hc.x + hl / 2, C1=C1, C2=C2, head=lambda: m.bone("Head"), back=Vector((0, 0, 1.0)))
+    for ring, (r, z, w, n) in enumerate(((1.45, 0.45, 1.0, 11), (0.95, 1.2, 0.85, 8))):       # stacked coils
+        for k in range(n):
+            a = 2 * math.pi * k / n + ring * 0.3
+            m.box(f"Coil{ring}_{k}", (r * math.cos(a), r * math.sin(a), z), (1.0 * w * 1.05, 0.9 * w, 0.85 * w), C1, rot=Rz(a + math.pi / 2))
+            if k % 2 == 0: m.box(f"Diamond{ring}_{k}", (r * math.cos(a), r * math.sin(a), z + 0.43 * w), (0.5 * w, 0.5 * w, 0.1), C2, rot=Rz(a + math.pi / 4), **NS)
+    for k in range(4): m.box(f"Rattle{k}", (-1.2, -1.15, 0.75 + 0.36 * k), (0.42 - 0.04 * k, 0.46 - 0.04 * k, 0.3), rgb(226, 206, 156), top=(0.85, 0.85), **NS)
+    m.chain("Neck", [(0.6, 0.0, 1.5), (0.75, 0.0, 2.2), (1.05, 0, 2.65)], [0.85, 0.78, 0.72], C1, bones="Neck")
+    hc = Vector((1.55, 0, 2.8)); hl, hw, hh = 1.4, 1.35, 0.6
+    m.bone("Head", (1.05, 0, 2.65), "Neck2")
+    c = dict(hc=hc, hl=hl, hw=hw, hh=hh, xf=hc.x + hl / 2, C1=C1, C2=C2, head=lambda: m.bone("Head"), back=Vector((0, 0, 1.6)))
     with m.bone("Head"):
-        m.box("Head", hc, (hl, hw, hh), C1, top=(0.85, 0.85))
-        side_eyes(m, c, dict(P, angry=True, eye=1.25), fwd=0.2, up=0.3)
-        m.box("Tongue", hc + Vector((hl / 2 + 0.25, 0, -0.1)), (0.5, 0.1, 0.05), MOUTH, **NS)
+        m.box("Head", hc, (hl, hw, hh), C1, top=(0.75, 0.7), bot=(0.75, 0.7))            # wedge: wide at the back
+        m.box("UpperMouth", hc + Vector((0.1, 0, -hh * 0.45)), (hl * 0.85, hw * 0.62, 0.12), MOUTH, **NS)
+        for s in (1, -1):
+            m.spike(f"Fang{s}", hc + Vector((hl * 0.38, s * hw * 0.2, -hh * 0.45)), hc + Vector((hl * 0.4, s * hw * 0.19, -hh * 0.45 - 0.42)), 0.09, TOOTH, flat=0.5)
+        side_eyes(m, c, dict(P, angry=True, eye=1.3), fwd=0.05, up=0.25)
+        m.bone("Jaw", hc + Vector((-hl * 0.35, 0, -hh * 0.45)), "Head")
+        with m.bone("Jaw"), m.frame(pivot=hc + Vector((-hl * 0.35, 0, -hh * 0.45)), rot=Ry(0.45)):
+            m.box("Jaw", hc + Vector((0.05, 0, -hh * 0.62)), (hl * 0.9, hw * 0.6, 0.22), lt(C1, 0.25))
+            m.box("Tongue", hc + Vector((hl * 0.35, 0, -hh * 0.5)), (hl * 0.7, 0.12, 0.06), MOUTH, **NS)
+            for s in (1, -1): m.box(f"TongueFork{s}", hc + Vector((hl * 0.75, s * 0.09, -hh * 0.5)), (0.2, 0.08, 0.06), MOUTH, rot=Rz(s * 0.4), **NS)
     for fn in P.get("x", []): fn(m, c)
     body.__exit__(None, None, None)
     return c
 
 def scorpion(m, P):
     C1, C2 = P["c1"], P.get("c2", dk(P["c1"]))
-    body = m.bone("Body", (0, 0, 0.7)); body.__enter__()
-    m.box("Body", (0, 0, 0.7), (2.2, 1.6, 0.7), C1, top=(0.85, 0.8))
-    m.bone("Head", (1.0, 0, 0.7))
-    c = dict(hc=Vector((1.3, 0, 0.75)), hl=0.8, hw=1.3, hh=0.65, xf=1.7, C1=C1, C2=C2, head=lambda: m.bone("Head"), back=Vector((0, 0, 1.05)))
+    body = m.bone("Body", (0, 0, 0.75)); body.__enter__()
+    m.box("Body", (0, 0, 0.75), (2.3, 1.7, 0.75), C1, top=(0.85, 0.8))
+    for k in range(3): m.box(f"Plate{k}", (-0.6 + k * 0.6, 0, 1.14), (0.42, 1.4, 0.12), C2, **NS)       # back segment plates
+    m.bone("Head", (1.0, 0, 0.75))
+    c = dict(hc=Vector((1.35, 0, 0.8)), hl=0.9, hw=1.4, hh=0.7, xf=1.8, C1=C1, C2=C2, head=lambda: m.bone("Head"), back=Vector((0, 0, 1.1)))
     with m.bone("Head"):
-        m.box("Head", (1.3, 0, 0.75), (0.8, 1.3, 0.65), C1, top=(0.8, 0.85))
-        front_eyes(m, c, dict(P, angry=True, eye=1.3))
+        m.box("Head", (1.35, 0, 0.8), (0.9, 1.4, 0.7), C1, top=(0.8, 0.85))
+        front_eyes(m, c, dict(P, angry=True, eye=1.35))
     for s in (1, -1):
-        for k in range(4):
-            a = Vector((0.6 - 0.5 * k, s * 0.7, 0.6)); b = Vector((0.75 - 0.55 * k, s * 1.55, 0.05))
-            with m.bone(f"Leg_{'F' if k < 2 else 'B'}{LR(s)}", (0.35 - 1.0 * (k >= 2), s * 0.7, 0.6)):
-                m.seg(f"Leg{s}{k}", a, b, 0.18, 0.12, C2, **NS)
-        with m.bone(f"Arm_{LR(s)}", (1.4, s * 0.6, 0.7)):
-            m.seg(f"Arm{s}", (1.4, s * 0.6, 0.7), (2.2, s * 1.05, 0.75), 0.32, 0.28, C1, **NS)
-            m.box(f"ClawA{s}", (2.55, s * 1.12, 0.78), (0.8, 0.42, 0.42), C1, top=(0.8, 0.8), **NS)
-            m.spike(f"ClawB{s}", (2.5, s * 0.85, 0.75), (3.0, s * 0.78, 0.75), 0.15, C2)
-    m.chain("Tail", [(-1.0, 0, 0.8), (-1.85, 0, 1.3), (-2.05, 0, 2.15), (-1.6, 0, 2.85), (-0.9, 0, 3.0)], [0.6, 0.55, 0.5, 0.45, 0.4], C1, bones="Tail")
-    with m.bone("Tail4"): m.spike("Stinger", (-0.9, 0, 3.0), (-0.4, 0, 2.5), 0.22, BLACK)
+        for k in range(4):                         # jointed legs: femur up-and-out, tibia down to the ground
+            hip = Vector((0.65 - 0.5 * k, s * 0.8, 0.75)); knee = hip + Vector((0.05, s * 0.75, 0.45)); foot = Vector((hip.x + 0.12 - 0.05 * k, s * 1.95, 0.05))
+            with m.bone(f"Leg_{'F' if k < 2 else 'B'}{LR(s)}", (0.4 - 1.0 * (k >= 2), s * 0.8, 0.75)):
+                m.seg(f"Femur{s}{k}", hip, knee, 0.26, 0.22, C2, **NS)
+                m.seg(f"Tibia{s}{k}", knee, foot, 0.22, 0.14, C2, **NS)
+        with m.bone(f"Arm_{LR(s)}", (1.5, s * 0.6, 0.8)):
+            el = Vector((2.3, s * 1.15, 0.95))
+            m.seg(f"Arm{s}", (1.5, s * 0.6, 0.8), el, 0.42, 0.36, C1, **NS)
+            m.seg(f"Forearm{s}", el, (2.8, s * 1.05, 0.95), 0.36, 0.34, C1, **NS)
+            m.box(f"Claw{s}", (3.25, s * 1.0, 0.95), (1.05, 0.62, 0.55), C1, top=(0.8, 0.85))
+            m.spike(f"ClawFixed{s}", (3.6, s * 0.86, 0.95), (4.15, s * 0.8, 0.95), 0.2, C2, flat=0.5)
+            m.spike(f"ClawMove{s}", (3.6, s * 1.18, 0.95), (4.1, s * 1.05, 0.95), 0.18, C2, flat=0.5)
+    m.chain("Tail", [(-1.1, 0, 0.85), (-1.95, 0, 1.4), (-2.15, 0, 2.3), (-1.7, 0, 3.0), (-1.0, 0, 3.2)], [0.66, 0.6, 0.55, 0.5, 0.45], C1, bones="Tail")
+    with m.bone("Tail4"):
+        m.box("StingBulb", (-0.75, 0, 3.05), (0.6, 0.55, 0.55), C2, top=(0.8, 0.8))
+        m.spike("Stinger", (-0.5, 0, 2.9), (-0.05, 0, 2.35), 0.2, BLACK, flat=0.6)
     body.__exit__(None, None, None)
     return c
 
@@ -687,16 +702,18 @@ def tusks(kind="walrus", col=HORN):
                 if kind == "walrus": m.spike(f"Tusk{s}", sc + Vector((sl * 0.3, s * sw * 0.25, -sh * 0.3)), sc + Vector((sl * 0.25, s * sw * 0.28, -sh * 0.3 - c["hh"] * 0.9)), sw * 0.08, col, sides=5)
                 elif kind == "up": m.spike(f"Tusk{s}", sc + Vector((sl * 0.3, s * sw * 0.48, -sh * 0.2)), sc + Vector((sl * 0.25, s * sw * 0.62, sh * 0.85)), sw * 0.08, col, sides=5)
                 elif kind == "mammoth":
-                    a = sc + Vector((0, s * sw * 0.42, -sh * 0.3)); b = a + Vector((c["hl"] * 0.7, s * 0.2, -c["hh"] * 0.45)); e = b + Vector((c["hl"] * 0.5, -s * 0.1, c["hh"] * 0.55))
-                    m.seg(f"Tusk{s}", a, b, sw * 0.16, sw * 0.13, col, studs=False); m.spike(f"TuskTip{s}", b, e, sw * 0.07, col, sides=5)
+                    a = sc + Vector((-sl * 0.1, s * sw * 0.44, -sh * 0.35)); b = a + Vector((c["hl"] * 0.5, s * 0.22, -c["hh"] * 0.32)); e = b + Vector((c["hl"] * 0.45, -s * 0.05, c["hh"] * 0.55))
+                    m.seg(f"Tusk{s}", a, b, sw * 0.3, sw * 0.26, col, studs=False); m.seg(f"TuskMid{s}", b - (b - a).normalized() * 0.1, b.lerp(e, 0.6), sw * 0.26, sw * 0.2, col, studs=False)
+                    m.spike(f"TuskTip{s}", b.lerp(e, 0.55), e, sw * 0.11, col, sides=5)
     return fn
 
 def trunk(col):
     def fn(m, c):
         sc, sl, sw, sh = c["sc"], c["sl"], c["sw"], c["sh"]
         with c["head"]():
-            a = sc + Vector((sl / 2, 0, 0)); pts = [a, a + Vector((0.3, 0, -0.7)) * c["hh"], a + Vector((0.4, 0, -1.4)) * c["hh"], a + Vector((0.65, 0, -1.75)) * c["hh"]]
-            m.chain("Trunk", pts, [sw * 0.5, sw * 0.42, sw * 0.34, sw * 0.28], col)
+            hh = c["hh"]; a = sc + Vector((sl * 0.3, 0, -sh * 0.1))      # short, thick, curling forward at the tip
+            pts = [a, a + Vector((0.16, 0, -0.42)) * hh, a + Vector((0.22, 0, -0.8)) * hh, a + Vector((0.42, 0, -0.98)) * hh]
+            m.chain("Trunk", pts, [sw * 0.62, sw * 0.54, sw * 0.46, sw * 0.4], col, bones="Trunk")
     return fn
 
 def mane_back(col, n=5):
