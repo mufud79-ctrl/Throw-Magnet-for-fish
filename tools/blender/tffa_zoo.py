@@ -75,7 +75,7 @@ ZONES = [
    ("Glyptodon", Q, dict(body=(2.9, 2.4, 1.4), legs=(0.55, 0.6), head=(1.0, 1.05, 0.85), neck=(0, 0.2), c1=rgb(124, 102, 82), ears="tiny", tail="thick", x=[shell(rgb(166, 134, 92), rgb(112, 86, 60))])),
    ("WoollyRhino", Q, dict(body=(3.4, 2.1, 2.1), legs=(0.9, 0.8), head=(1.6, 1.4, 1.2), neck=(0.1, 0.2), c1=rgb(146, 102, 62), snout=(0.9, 1.15, 0.9), ears="point", tail="short", angry=True, x=[horns("rhino"), fur_coat(rgb(156, 108, 62))])),
    ("Sabertooth", Q, dict(body=(2.7, 1.4, 1.5), legs=(1.0, 0.52), head=(1.3, 1.25, 1.1), neck=(0.3, 0.5), c1=rgb(216, 164, 92), pattern="stripes", pat_c=rgb(156, 102, 50), pat_n=4, snout=(0.45, 0.75, 0.55), snout_c=CREAM, ears="round", tail="short", angry=True, x=[fangs()])),
-   ("Mammoth", Q, dict(body=(3.8, 2.6, 2.6), legs=(1.5, 0.95), head=(2.0, 2.1, 2.0), neck=(0, 0.3), c1=rgb(118, 64, 36), snout=(0.5, 0.95, 0.9), snout_c=rgb(104, 56, 32), ears="tiny", ear_c=rgb(92, 50, 28), tail="tuft", tail_tip=rgb(70, 38, 22), head_scale=1.3, x=[shaggy(rgb(118, 64, 36), rgb(90, 48, 27)), tusks("mammoth"), trunk(rgb(110, 60, 34))])),
+   ("Mammoth", Q, dict(body=(3.8, 2.6, 2.6), legs=(1.5, 0.95), head=(2.0, 2.1, 2.0), neck=(0, 0.3), c1=rgb(118, 64, 36), snout=(0.5, 0.95, 0.9), snout_c=rgb(104, 56, 32), ears="tiny", ear_c=rgb(92, 50, 28), tail="tuft", tail_tip=rgb(70, 38, 22), head_scale=1.3, fierce=True, muscular=True, x=[shaggy(rgb(118, 64, 36), rgb(90, 48, 27)), tusks("mammoth"), trunk(rgb(110, 60, 34))])),
  ]),
  ("08_DinoLand", [
    ("Compy", theropod, dict(s=0.32, c1=rgb(154, 206, 72), c2=rgb(92, 144, 50))),
@@ -91,7 +91,7 @@ ZONES = [
    ("FireSalamander", Q, dict(body=(2.2, 1.0, 0.65), legs=(0.32, 0.34), sprawl=0.25, head=(1.0, 0.95, 0.6), neck=(0, 0.2), c1=rgb(44, 40, 46), snout=(0.4, 0.75, 0.35), tail="long", head_scale=1.2, glow=rgb(255, 140, 30), x=[glow_bits(rgb(255, 140, 30), 10, 5, "body", 0.35)])),
    ("EmberWolf", Q, dict(body=(2.5, 1.2, 1.4), legs=(1.0, 0.48), head=(1.2, 1.15, 1.0), neck=(0.3, 0.6), c1=rgb(58, 52, 56), snout=(0.5, 0.65, 0.5), ears="point", tail="long", angry=True, iris=rgb(255, 150, 40), glow=rgb(255, 120, 30), x=[flame_mane(rgb(255, 120, 30))])),
    ("ObsidianGolem", golem, dict(c1=rgb(44, 36, 56), c2=rgb(74, 52, 106), glowc=rgb(200, 90, 255), glow=rgb(200, 90, 255))),
-   ("LavaDrake", dragon, dict(s=0.85, faceted=True, c1=rgb(150, 30, 24), c2=rgb(64, 20, 18), mem=rgb(104, 24, 20), belly=rgb(255, 150, 40), seg=rgb(255, 110, 20), belly_glow=True, knob=rgb(255, 150, 40), horn=rgb(44, 32, 32), eye=rgb(255, 170, 50), eye_glow=True, spikes=rgb(44, 30, 30), glow=rgb(255, 110, 20))),
+   ("LavaDrake", dragon, dict(s=0.85, faceted=True, muscular=True, c1=rgb(150, 30, 24), c2=rgb(64, 20, 18), mem=rgb(104, 24, 20), belly=rgb(255, 150, 40), seg=rgb(255, 110, 20), belly_glow=True, knob=rgb(255, 150, 40), horn=rgb(44, 32, 32), eye=rgb(255, 170, 50), eye_glow=True, spikes=rgb(44, 30, 30), glow=rgb(255, 110, 20))),
    ("LavaRex", theropod, dict(s=1.05, c1=rgb(58, 46, 46), c2=rgb(32, 26, 30), belly=rgb(255, 146, 44), iris=rgb(255, 130, 30), eye_glow=True, glow=rgb(255, 110, 20), x=[rex_cracks(rgb(255, 110, 20))])),
    ("Phoenix", EX, "phoenix"),
  ]),

@@ -46,6 +46,11 @@ def front_eyes(m, c, P, k=1.0):
     hc, hl, hw, hh = c["hc"], c["hl"], c["hw"], c["hh"]
     e = hh * 0.36 * P.get("eye", 1.0) * k
     y = max(hw * 0.2, e * 0.62)
+    if P.get("fierce") and not P.get("snarl"):   # slightly aggressive: narrowed eyes, pupils pinned forward, heavy down-slanted brows
+        m.eyes((c["xf"] + 0.01, y, hc.z + hh * 0.16), size=(e * 1.05, e * 0.74), pupil=0.8, look=(0.45, -0.05),
+               angry=0.42, white=P.get("iris", WHITE), brow_col=P.get("brow", _brow(c["C1"])), brow_h=0.5, brow_up=0.64,
+               brow_w=1.22, brow_fwd=0.03, depth=max(0.12, e * 0.2), glow_pupil=P.get("eye_glow", False))
+        return
     if P.get("snarl"):   # aggressive: wide narrowed eyes, pupils pinned forward, thick brows slashing down to the nose
         m.eyes((c["xf"] + 0.01, y + e * 0.05, hc.z + hh * 0.2), size=(e * 1.1, e * 0.58), pupil=0.85, look=(0.55, 0),
                angry=0.55, white=P.get("iris", WHITE), brow_col=P.get("brow", _brow(c["C1"])), brow_h=0.62, brow_up=0.62,
@@ -295,7 +300,7 @@ def quad(m, P):
     hscale = P.get("head_scale", HEAD_SCALE)
     m.bone("Head", tipn, "Neck" if nl > 0.15 else "Body")
     head = _ctx(lambda: m.frame(pivot=tipn, scale=hscale), lambda: m.bone("Head"))
-    c = dict(L=L, W=W, H=H, lh=lh, lw=lw, z0=z0, hc=hc, hl=hl, hw=hw, hh=hh, xf=hc.x + hl / 2, C1=C1, C2=C2,
+    c = dict(L=L, W=W, H=H, lh=lh, lw=lw, z0=z0, hc=hc, hl=hl, hw=hw, hh=hh, xf=hc.x + hl / 2, C1=C1, C2=C2, mus=mus,
              head=head, back=Vector((0, 0, z0 + H / 2)), neck_base=base, neck_tip=tipn, nd=d)
     with head():
         m.box("Head", hc, (hl, hw, hh), P.get("head_c", C1), top=(0.92, 0.92))
@@ -689,6 +694,20 @@ def dragon(m, P):
         for k, (p, q) in enumerate(((wr, V(-1.85, s * 5.7, 9.8)), (wr, V(-1.5, s * 4.6, 7.2)))):   # finger bones
             m.seg(f"WingBone{s}{k}", p, q, 0.3, 0.14, C1, **NS)
         wing.__exit__(None, None, None)
+    if P.get("muscular"):   # heavier, more powerful dragon: pecs, shoulder caps, biceps/forearms, big thighs, thick neck base
+        C = C1
+        m.box("ChestBulk", (0.75, 0, 4.75), (2.4, 5.0, 2.9), C, top=(0.85, 0.95), studs=False)   # barrel chest clearly wider than the torso
+        for s2 in (1, -1): m.box(f"Pec{s2}", (1.65, s2 * 1.55, 4.9), (1.1, 1.5, 2.1), C, top=(0.85, 0.9), studs=False)   # beside the belly shield
+        m.box("Haunch", (-1.7, 0, 3.15), (2.4, 4.1, 2.4), C, top=(0.75, 0.85), studs=False)
+        with m.bone("Neck1"): m.seg("NeckBase", (0.4, 0, 5.0), (0.95, 0, 6.6), 2.75, 2.25, C, d0=2.6, d1=2.2, studs=False)
+        for s in (1, -1):
+            m.box(f"ShoulderCap{s}", (0.6, s * 2.65, 5.2), (2.1, 1.7, 1.9), C, top=(0.7, 0.8), studs=False)
+            with m.bone(f"Leg_F{LR(s)}"):
+                m.seg(f"Bicep{s}", (0.6, s * 2.25, 4.75), (0.95, s * 2.5, 2.95), 2.7, 2.0, C, d0=2.3, d1=1.75, studs=False)
+                m.seg(f"ForearmMuscle{s}", (1.0, s * 2.4, 2.85), (1.15, s * 2.25, 1.0), 2.0, 1.3, C, d0=1.9, d1=1.25, studs=False)
+            with m.bone(f"Leg_B{LR(s)}"):
+                m.box(f"BigThigh{s}", (-1.4, s * 2.25, 2.55), (3.4, 2.2, 3.3), C, rot=Ry(0.3), top=(0.8, 0.9), studs=False)
+                m.seg(f"Calf{s}", (-1.75, s * 2.15, 1.8), (-1.05, s * 2.1, 0.55), 1.7, 1.15, C, studs=False)
     if P.get("spikes"):
         for k, (x, z) in enumerate(((-0.2, 6.3), (-1.0, 5.6), (-1.9, 4.6), (-3.2, 3.5), (-4.6, 2.6))):
             with (m.bone("Body") if k < 3 else m.bone("Tail1" if k == 3 else "Tail2")):
@@ -931,7 +950,7 @@ def shaggy(col, col2=None, legs=True):
         for s in (1, -1):
             for k in range(n):
                 x = L * 0.42 - L * 0.86 * k / (n - 1); ln = H * (0.95 + 0.25 * ((k * 7 + (s > 0) * 3) % 3) / 2)
-                m.box(f"Strand{s}{k}", (x, s * (W / 2 + 0.06), z0 + H * 0.2 - ln / 2), (L / n * 1.15, 0.34, ln), col if k % 2 else col2,
+                m.box(f"Strand{s}{k}", (x, s * (W / 2 * (1.12 if c.get("mus") else 1.0) + 0.06), z0 + H * 0.2 - ln / 2), (L / n * 1.15, 0.34, ln), col if k % 2 else col2,
                       top=(1, 1), bot=(0.7, 0.85), **NS)
         for k in range(3):    # rump fringe
             m.box(f"RumpStrand{k}", (-L / 2 - 0.08, (k - 1) * W * 0.3, z0 - H * 0.05), (0.3, W * 0.34, H * 1.0), col2 if k % 2 else col, bot=(0.8, 0.7), **NS)
