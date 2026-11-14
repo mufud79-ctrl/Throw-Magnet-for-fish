@@ -1,65 +1,67 @@
-"""TFFA Parasaurolophus (DinoLand) - hero build.
+"""TFFA Parasaurolophus (DinoLand) - hero build v2 on the user-approved T-Rex body proportions (v1, a lanky custom build,
+was rejected; T-Rex + Ankylosaurus approved -> chunky TFFA proportions: big head, thick legs, heavy body).
 
-Reference analysis (iconic Parasaurolophus art, most important first):
-1. Silhouette: a big duck-billed hadrosaur in a tripod stance - strong hind legs, body tilted forward, front hands
-   touching down, a long thick tail as counterweight; the LONG TUBULAR CREST sweeping back from the head is the
-   highest point and the signature.
-2. Head: long flat duck bill (lighter) with a widened tip, calm proud side eyes.
-3. Signature: the crest is bright orange with a yellow stripe, joined to the neck by a skin frill; dark vertical
-   stripes over a teal back, pale belly.
-4. Colours: teal green, dark teal stripes, cream belly, orange crest + frill, yellow stripe, tan bill.
-Bones: Body, Neck, Head, Tail1..4, Leg_L/R, Arm_L/R. Studded."""
+Reference analysis (iconic Parasaurolophus):
+1. Silhouette: the chunky T-Rex stance (heavy leaning body, thick legs, long tail), herbivore version with sturdier arms;
+   the LONG TUBULAR CREST sweeping back from the head is the highest point.
+2. Head: a big boxy head with a wide, flat, closed duck bill (lighter colour, flared tip), calm proud side eye.
+3. Signature: orange crest with a gold stripe and a darker tip cap; dark vertical stripes over teal; cream belly/throat.
+4. Colours: teal, dark teal stripes, cream, orange crest, gold stripe, tan bill.
+Bones: Body, Neck, Head, Tail1-4, Leg_L/R, Arm_L/R (same as the theropod family, so clips are shared). Studded."""
 import sys, os, math
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 from tffa_kit import *
 from mathutils import Vector
+import numpy as np
 
-TEAL, TEAL_D, BELLY, CREST, CREST_D, STRIPE, BILL = rgb(62, 156, 134), rgb(32, 92, 80), rgb(242, 228, 192), rgb(246, 122, 40), rgb(206, 84, 30), rgb(252, 214, 70), rgb(232, 198, 140)
-V = lambda *a: Vector(a); LR = lambda s: "L" if s > 0 else "R"
+TEAL, TEAL_D, BELLY, CREST, CREST_D, STRIPE, BILL, BILL_D = rgb(60, 156, 136), rgb(30, 92, 80), rgb(244, 230, 194), rgb(248, 122, 40), rgb(196, 76, 28), rgb(254, 214, 70), rgb(236, 202, 142), rgb(150, 112, 72)
+LR = lambda t: "L" if t > 0 else "R"
+s = 0.95
+S = lambda x, y, z: Vector((x * s, y * s, z * s)); Z = lambda *a: tuple(v * s for v in a)
 
-m = Model("Parasaurolophus", sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else None, stud=0.6, chamfer=0.15, jitter=0.06)
-m.gait = {"amp": 0.85}
-body = m.bone("Body", (0, 0, 4.3)); body.__enter__()
-m.box("Body", (0, 0, 4.3), (4.3, 2.7, 2.7), TEAL, rot=Ry(-0.25), top=(0.85, 0.85), bot=(0.85, 0.88))
-m.box("Belly", (0.5, 0, 3.4), (3.4, 2.3, 1.2), BELLY, rot=Ry(-0.3), studs=False)
-for s in (1, -1):
-    for k, x in enumerate((1.2, 0.3, -0.6, -1.5)):
-        m.box(f"Stripe{s}{k}", (x, s * 1.37, 4.55 + x * 0.22), (0.3, 0.06, 1.4), TEAL_D, rot=Ry(-0.25), studs=False)
-    with m.bone(f"Leg_{LR(s)}", (-0.5, s * 1.3, 4.0)):
-        m.box(f"Thigh{s}", (-0.55, s * 1.35, 3.5), (2.2, 1.1, 2.6), TEAL, rot=Ry(0.25), top=(0.85, 0.9), bot=(0.75, 0.85))
-        m.seg(f"Shin{s}", V(-0.85, s * 1.4, 2.4), V(-0.35, s * 1.4, 0.65), 1.0, 0.85, TEAL)
-        m.box(f"Foot{s}", (0.25, s * 1.4, 0.3), (1.8, 1.15, 0.6), TEAL_D, top=(0.85, 0.9))
-        for t in (-1, 0, 1): m.box(f"Hoof{s}{t}", (1.18, s * 1.4 + t * 0.36, 0.22), (0.3, 0.3, 0.4), BELLY, studs=False)
-    with m.bone(f"Arm_{LR(s)}", (1.8, s * 1.05, 4.0)):
-        m.seg(f"Arm{s}", V(1.8, s * 1.05, 4.0), V(2.3, s * 1.2, 2.2), 0.75, 0.6, TEAL)
-        m.seg(f"Forearm{s}", V(2.3, s * 1.2, 2.3), V(2.55, s * 1.25, 0.45), 0.6, 0.5, TEAL)
-        m.box(f"Hand{s}", (2.7, s * 1.25, 0.22), (0.75, 0.7, 0.44), TEAL_D, studs=False)
-
-pts = [V(-2.0, 0, 4.7), V(-3.8, 0, 4.3), V(-5.5, 0, 4.0), V(-7.0, 0, 3.9), V(-8.2, 0, 4.0)]
-m.chain("Tail", pts, [2.0, 1.5, 1.05, 0.65, 0.3], TEAL, bones="Tail")
+m = Model("Parasaurolophus", sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else None, stud=0.6, chamfer=0.14, jitter=0.07)
+body = m.bone("Body", S(0, 0, 5.0)); body.__enter__()
+m.box("Body", S(0, 0, 5.0), Z(5.4, 3.9, 3.9), TEAL, rot=Ry(-0.35), top=(0.85, 0.85))
+m.box("Belly", S(0.8, 0, 4.2), Z(3.6, 3.1, 2.6), BELLY, rot=Ry(-0.45), studs=False)
+for t in (1, -1):
+    for j, x in enumerate((1.5, 0.5, -0.5, -1.5)):
+        m.box(f"Stripe{t}{j}", S(x, t * 1.98, 5.3 + x * 0.3), Z(0.4, 0.1, 2.0), TEAL_D, rot=Ry(-0.35), studs=False)
+tp = [S(-2.3, 0, 5.3), S(-4.4, 0, 5.4), S(-6.3, 0, 5.6), S(-8.0, 0, 6.0), S(-9.3, 0, 6.5)]
+m.chain("Tail", tp, [v * s for v in (3.0, 2.4, 1.8, 1.2, 0.6)], TEAL, bones="Tail")
 for i in range(3):
     with m.bone(f"Tail{i + 1}"):
-        q = pts[i].lerp(pts[i + 1], 0.5); w = [1.75, 1.27, 0.85][i]
-        for s in (1, -1): m.box(f"TailStripe{i}{s}", q + V(0, s * w * 0.5, 0.1), (0.3, 0.06, w * 0.8), TEAL_D, studs=False)
-
-with m.bone("Neck", (1.8, 0, 5.0)):
-    m.seg("Neck", V(1.6, 0, 4.9), V(2.85, 0, 6.6), 1.55, 1.2, TEAL, d0=1.7, d1=1.3)
-    m.box("Throat", (2.55, 0, 5.6), (0.9, 1.1, 1.4), BELLY, rot=Ry(-0.6), studs=False)
-with m.bone("Head", (2.8, 0, 6.6), "Neck"):
-    hc = V(3.35, 0, 6.9)
-    m.box("Head", hc, (1.65, 1.35, 1.25), TEAL, top=(0.85, 0.88), bot=(0.9, 0.9))
-    m.box("Bill", hc + V(1.2, 0, -0.35), (1.3, 1.15, 0.62), BILL, top=(0.95, 0.95))
-    m.box("BillTip", hc + V(1.95, 0, -0.35), (0.35, 1.4, 0.58), BILL, top=(0.9, 0.95))
-    m.box("BillLine", hc + V(1.4, 0, -0.42), (1.6, 1.42, 0.06), rgb(150, 110, 70), studs=False)
-    for s in (1, -1): m.box(f"Nostril{s}", hc + V(1.75, s * 0.4, -0.08), (0.3, 0.12, 0.1), rgb(110, 80, 50), studs=False)
-    m.eyes(tuple(hc + V(0.15, 0.68, 0.18)), facing=(0.35, 1, 0), size=(0.58, 0.52), pupil=0.66, look=(0.3, 0), angry=0.1,
-           brow_col=TEAL_D, brow_h=0.32, brow_up=0.66, depth=0.13)
-    cp = [hc + V(0.0, 0, 0.45), hc + V(-0.9, 0, 1.2), hc + V(-2.1, 0, 1.55), hc + V(-3.3, 0, 1.45), hc + V(-4.1, 0, 1.15)]   # long tube crest
-    m.chain("Crest", cp, [0.72, 0.66, 0.6, 0.54, 0.46], CREST, studs=False)
-    m.box("CrestTip", cp[-1] + V(-0.15, 0, -0.08), (0.5, 0.5, 0.5), CREST_D, top=(0.8, 0.8), studs=False)
+        q = tp[i].lerp(tp[i + 1], 0.5); w = [2.7, 2.1, 1.5][i] * s
+        for t in (1, -1): m.box(f"TailStripe{i}{t}", q + Vector((0, t * w * 0.5, 0)), (0.4 * s, 0.1, w * 0.8), TEAL_D, studs=False)
+for t in (1, -1):
+    with m.bone(f"Leg_{LR(t)}", S(-0.6, t * 1.9, 4.8)):
+        m.box(f"Thigh{t}", S(-0.6, t * 1.9, 4.0), Z(2.8, 1.5, 3.4), TEAL, rot=Ry(0.25), top=(0.85, 0.9))
+        m.seg(f"Shin{t}", S(-0.9, t * 2.0, 2.6), S(-0.3, t * 2.0, 0.7), 1.3 * s, 1.1 * s, TEAL)
+        m.box(f"Foot{t}", S(0.3, t * 2.0, 0.4), Z(2.4, 1.6, 0.8), TEAL_D)
+        for k in (-1, 0, 1): m.box(f"Hoof{t}{k}", S(1.55, t * 2.0 + k * 0.5, 0.3), Z(0.45, 0.42, 0.55), BELLY, studs=False)
+    with m.bone(f"Arm_{LR(t)}", S(2.3, t * 1.55, 5.2)):
+        m.seg(f"Arm{t}", S(2.3, t * 1.55, 5.2), S(3.0, t * 1.75, 3.9), 0.85 * s, 0.7 * s, TEAL)
+        m.seg(f"Forearm{t}", S(3.0, t * 1.75, 4.0), S(3.45, t * 1.8, 3.0), 0.7 * s, 0.6 * s, TEAL)
+        m.box(f"Hand{t}", S(3.55, t * 1.8, 2.75), Z(0.75, 0.7, 0.55), TEAL_D, studs=False)
+H_ = S(3.2, 0, 7.6)
+with m.bone("Neck", S(1.8, 0, 6.0)):
+    m.seg("Neck", S(1.8, 0, 6.0), S(3.0, 0, 7.7), 3.0 * s, 2.6 * s, TEAL, d0=3.2 * s, d1=2.8 * s)
+    m.box("Throat", S(3.4, 0, 6.6), Z(2.0, 2.6, 2.0), BELLY, rot=Ry(0.2), studs=False)
+with m.bone("Head", H_, "Neck"):
+    hc = S(4.15, 0, 8.55)
+    m.box("Head", hc, Z(2.8, 2.9, 2.3), TEAL, top=(0.88, 0.9), bot=(0.92, 0.92))
+    m.box("Cheek", hc + Vector((0.2, 0, -0.85)) * s, Z(2.3, 2.95, 0.7), BELLY, studs=False)
+    m.box("Bill", hc + Vector((2.2, 0, -0.55)) * s, Z(2.0, 2.4, 1.15), BILL, top=(0.95, 0.95))
+    m.box("BillTip", hc + Vector((3.25, 0, -0.55)) * s, Z(0.55, 2.9, 1.08), BILL, top=(0.92, 0.95))
+    m.box("BillLine", hc + Vector((2.55, 0, -0.68)) * s, Z(2.8, 2.98, 0.1), BILL_D, studs=False)
+    for t in (1, -1): m.box(f"Nostril{t}", hc + Vector((2.95, t * 0.75, -0.02)) * s, Z(0.5, 0.25, 0.18), BILL_D, studs=False)
+    m.eyes(tuple(hc + Vector((0.25, 1.47, 0.35)) * s), facing=(0.3, 1, 0), size=Z(1.15, 1.05), pupil=0.68, look=(0.3, 0), angry=0.1,
+           brow_col=TEAL_D, brow_h=0.38, brow_up=0.66, brow_w=1.2, depth=0.3 * s)
+    cp = [hc + Vector(v) * s for v in ((-0.1, 0, 1.0), (-1.3, 0, 2.2), (-2.9, 0, 2.8), (-4.5, 0, 2.6), (-5.6, 0, 2.0))]
+    m.chain("Crest", cp, [w * s for w in (1.15, 1.05, 0.95, 0.85, 0.7)], CREST, studs=False)
     for i in range(4):
-        a, b = cp[i], cp[i + 1]; d = (b - a).normalized(); up = V(-d.z, 0, d.x)
-        m.seg(f"CrestStripe{i}", a + up * 0.34, b + up * 0.3, 0.44, 0.38, STRIPE, d0=0.1, d1=0.1, studs=False)
+        a, b = cp[i], cp[i + 1]; d = (b - a).normalized(); up = Vector((-d.z, 0, d.x))
+        m.seg(f"CrestStripe{i}", a + up * 0.5 * s, b + up * 0.45 * s, 0.6 * s, 0.5 * s, STRIPE, d0=0.14 * s, d1=0.14 * s, studs=False)
+    m.box("CrestTip", cp[-1] + Vector((-0.25, 0, -0.1)) * s, Z(0.8, 0.82, 0.8), CREST_D, top=(0.8, 0.8), studs=False)
 
 body.__exit__(None, None, None)
-m.done(views=[("hero", 40, 10, 45), ("front", 0, 6, 45), ("side", 90, 4, 50), ("ref", 50, 8, 45)])
+m.done(views=[("hero", 40, 10, 45), ("front", 0, 8, 45), ("side", 90, 4, 50), ("ref", 50, 8, 50)])

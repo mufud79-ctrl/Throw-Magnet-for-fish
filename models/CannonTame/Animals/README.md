@@ -1,8 +1,7 @@
 # Cannon Tame animals (TFFA style)
 
 77 animals in 11 zones (7 per zone), rebuilt in the "Throw Food For Animals" look with the skill in
-`.claude/skills/tffa-animal-models/`. **72 of 77 are done** (rigged + animated); the other 5 still have the old
-CannonTame look and are listed below.
+`.claude/skills/tffa-animal-models/`. **All 77 are done** (rigged + animated, new built-in stud look; no old `_Texture_Studs.png` files remain).
 
 ## Status by zone
 | Zone | Rebuilt (new TFFA style, rigged) | Still old look |
@@ -14,7 +13,7 @@ CannonTame look and are listed below.
 | 05_Arctic | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus | - |
 | 06_Desert | Camel, FennecFox, Lizard (frilled), Rattlesnake, Scorpion, SphinxCat, Vulture | - |
 | 07_IceAge | GiantBeaver, GiantSloth, Glyptodon, Mammoth, Sabertooth, WoollyHare, WoollyRhino | - |
-| 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
+| 08_DinoLand | Ankylosaurus, TRex (user-approved), Compy, Parasaurolophus, Spinosaurus, Stegosaurus, Triceratops (hero builds v2 on the approved T-Rex / Ankylosaurus proportions) | - |
 | 09_Volcano | EmberWolf, FireSalamander, LavaDrake, LavaRex, MagmaSlug, ObsidianGolem, Phoenix | - |
 | 10_MythicIsles | CelestialDragon, Chimera, Griffin, Jackalope, Kraken, Pegasus, Unicorn | - |
 | 11_Space | AlienBlob, AstroDog, BlackHoleBeast, GalaxyDragon, MoonBunny, SpaceCat, StarWhale | - |

@@ -116,7 +116,7 @@ An entry is either a one-line archetype spec or `("<Name>", EX, "<script>")` = a
 Replaced versions are kept: models in `models/CannonTame/Animals/_Archive/<Name>_v<n>/`, scripts as `examples/_archive_<name>_v<n>.py`,
 old specs as `# v1:` comments in the roster.
 
-### Status (72 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips; 5 left, all in 08_DinoLand)
+### Status (77 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips)
 | Zone | Done (new kit) | To do (still the old CannonTame look) |
 |---|---|---|
 | 01_Farm | all 7 | - |
@@ -126,7 +126,7 @@ old specs as `# v1:` comments in the roster.
 | 05_Arctic | all 7 hero scripts: PolarBear (roaring, frosted scruff, scars), ArcticFox (sly stalker, huge curled tail), Husky (lead sled dog, red harness, mask), Penguin (stern emperor), SnowOwl (wings raised, golden glare), Seal (fish in mouth), Walrus (bull: tusks, moustache, blubber folds, scars) | - |
 | 06_Desert | all 7: Rattlesnake, Scorpion + hero scripts Camel (grumpy dromedary, saddle blanket), FennecFox (huge forward ears), Lizard (`frilledlizard.py`: frill flared, mouth gaping), SphinxCat (nemes headdress, usekh collar, glowing emerald eyes), Vulture (mantled wings, bald head, ruff) | - |
 | 07_IceAge | all 7: Mammoth (user-approved) + hero scripts Sabertooth (sabres + gape, frosted ruff), WoollyRhino (charging, hanging coat, two horns), GiantSloth (reared up, huge claws raised), Glyptodon (rosette dome shell, spiked club tail), WoollyHare (frosty tufts, snowshoe feet), GiantBeaver (orange incisors, paddle tail, gnawed stick) | - |
-| 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
+| 08_DinoLand | all 7: Ankylosaurus + TRex (user-approved: "good"); Compy, Parasaurolophus, Spinosaurus, Stegosaurus, Triceratops reworked after "look really bad" onto the approved proportions (theropod body / chunky Ankylosaurus body) | - |
 | 09_Volcano | all 7: EmberWolf, LavaRex, MagmaSlug, ObsidianGolem (hero scripts), FireSalamander (user-picked variation "Magma Newt"), LavaDrake (user-approved), Phoenix (reviewed example, rigged) | - |
 | 10_MythicIsles | all 7: Chimera + Kraken (custom from user references), Pegasus/Unicorn (user-picked horse head H1, equine body), CelestialDragon (dragon archetype), Griffin, Jackalope | - |
 | 11_Space | all 7 hero scripts; MoonBunny = user-picked "Saturn" variation, SpaceCat = user-picked "Alien" variation | - |
@@ -143,6 +143,7 @@ plain, frill and sail are flat plates.
   concepts that change the silhouette (templates: `tools/blender/tffa_space_variants.py`, `tffa_salamander_variants.py`),
   show the sheet, let the user pick, refine, swap it in and archive the old one. Heads that miss: 4 head studies
   (`tools/blender/tffa_head_studies.py`; picks became the `lion_sunburst` / `horse_wedge` head kits).
+- DinoLand lesson: spindly legs + small heads were rejected; the chunky T-Rex (big open-jaw head, thick legs) and the wide, short-legged Ankylosaurus were approved - build on those proportions.
 - User verdicts so far: Chimera "THAT LOOKS SO GOOD!!"; Kraken "alright I guess, not the best"; the first SpaceCat,
   MoonBunny and FireSalamander were rejected (replaced by picked variations). Flames must show all three layers
   (red / orange / glowing yellow fanned apart - see `flame()` in `examples/emberwolf.py`); dark-skinned animals need white
