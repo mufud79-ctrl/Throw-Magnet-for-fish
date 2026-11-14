@@ -17,7 +17,7 @@ VIEWS = [("hero", 35, 16, 50), ("front", 0, 8, 50), ("side", 90, 8, 50), ("back"
 FONT = {
     "A": [".#.", "#.#", "###", "#.#", "#.#"], "C": ["###", "#..", "#..", "#..", "###"], "E": ["###", "#..", "##.", "#..", "###"],
     "H": ["#.#", "#.#", "###", "#.#", "#.#"], "L": ["#..", "#..", "#..", "#..", "###"], "N": ["#...#", "##..#", "#.#.#", "#..##", "#...#"],
-    "O": ["###", "#.#", "#.#", "#.#", "###"], "P": ["###", "#.#", "###", "#..", "#.."], "S": ["###", "#..", "###", "..#", "###"],
+    "O": ["###", "#.#", "#.#", "#.#", "###"], "P": ["###", "#.#", "###", "#..", "#.."], "R": ["##.", "#.#", "##.", "#.#", "#.#"], "S": ["###", "#..", "###", "..#", "###"],
     "$": [".#.", "###", "#..", "###", "..#", "###", ".#."],
 }
 
@@ -140,6 +140,17 @@ def balls(m, name, c, r, col):
     m.ball(f"{name}Top", c + Vector((0, 0, r * 2.4)), r, col, segs=(8, 6))
 
 
+def group(m, name):
+    """Context manager: parts made inside are exported as their own mesh <Name>_<name> (gate doors, screens...)."""
+    import contextlib
+    @contextlib.contextmanager
+    def cm():
+        n0 = len(m.parts); yield
+        if not hasattr(m, "groups"): m.groups = {}
+        m.groups.setdefault(name, []).extend(m.parts[n0:]); del m.parts[n0:]
+    return cm()
+
+
 def done_static(m, glow_color=None, views=None):
     """Like Model.done() without the rig: bake atlas, join, export GLB/FBX/.blend, render previews."""
     import bpy
@@ -147,6 +158,8 @@ def done_static(m, glow_color=None, views=None):
     from mathutils import Matrix, Vector
     m.tex = m._save_png(m._atlas(), f"{m.name}_Texture"); m.detail = m._save_png(m._detail(), f"{m.name}_Detail")
     body = m._join(m.parts, m.name); objs = [body]
+    extra = [m._join(lst, f"{m.name}_{g}") for g, lst in getattr(m, "groups", {}).items()]
+    objs += extra
     glow = m._join(m.glow, f"{m.name}_Glow") if m.glow else None
     if glow: objs.append(glow)
     co = np.array([v.co[:] for o in objs for v in o.data.vertices]); lo, hi = co.min(0), co.max(0)
@@ -158,7 +171,7 @@ def done_static(m, glow_color=None, views=None):
     bsdf = mat.node_tree.nodes["Principled BSDF"]; bsdf.inputs["Roughness"].default_value = 0.6
     tn = mat.node_tree.nodes.new("ShaderNodeTexImage"); tn.image = m.tex; tn.interpolation = "Closest"
     mat.node_tree.links.new(tn.outputs["Color"], bsdf.inputs["Base Color"])
-    body.data.materials.append(mat)
+    for o in [body] + extra: o.data.materials.append(mat)
     if glow:
         gc = glow_color or (1, 1, 1); gm = bpy.data.materials.new(f"{m.name}_Glow_Neon")
         gb = gm.node_tree.nodes["Principled BSDF"]
