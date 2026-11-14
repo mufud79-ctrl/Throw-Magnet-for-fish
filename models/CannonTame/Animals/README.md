@@ -1,7 +1,7 @@
 # Cannon Tame animals (TFFA style)
 
 77 animals in 11 zones (7 per zone), rebuilt in the "Throw Food For Animals" look with the skill in
-`.claude/skills/tffa-animal-models/`. **61 of 77 are done** (rigged + animated); the other 16 still have the old
+`.claude/skills/tffa-animal-models/`. **66 of 77 are done** (rigged + animated); the other 11 still have the old
 CannonTame look and are listed below.
 
 ## Status by zone
@@ -12,7 +12,7 @@ CannonTame look and are listed below.
 | 03_Savanna | Giraffe, Hyena, Meerkat, Ostrich, Rhino, Warthog, Zebra | - |
 | 04_Jungle | Crocodile, Frog, Gorilla, Monkey, Panther, Sloth, Toucan | - |
 | 05_Arctic | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus | - |
-| 06_Desert | Rattlesnake, Scorpion | Camel, FennecFox, Lizard, SphinxCat, Vulture |
+| 06_Desert | Camel, FennecFox, Lizard, Rattlesnake, Scorpion, SphinxCat, Vulture | - |
 | 07_IceAge | Mammoth | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
 | 09_Volcano | EmberWolf, FireSalamander, LavaDrake, LavaRex, MagmaSlug, ObsidianGolem, Phoenix | - |
@@ -22,7 +22,7 @@ CannonTame look and are listed below.
 A rebuilt animal has an `anims/` folder; an old one does not.
 
 ## Hero builds (one script per animal)
-Zones 05 and 09-11, the 04_Jungle Frog/Gorilla/Monkey/Sloth/Toucan (and the Chimera/Kraken) are **hero builds**: a dedicated script with a written reference analysis in its
+Zones 05, 06 and 09-11, the 04_Jungle Frog/Gorilla/Monkey/Sloth/Toucan (and the Chimera/Kraken) are **hero builds**: a dedicated script with a written reference analysis in its
 docstring, at `.claude/skills/tffa-animal-models/examples/<name>.py`. Highlights:
 
 | Animal | Signature |
@@ -47,6 +47,11 @@ docstring, at `.claude/skills/tffa-animal-models/examples/<name>.py`. Highlights
 | SnowOwl | landing pose with the wings raised in a wide V, golden glare, black barring, feathered boots |
 | Seal | harbour seal with a fish clamped in its mouth, dappled spots, whiskers, V of hind flippers |
 | Walrus | bull walrus: huge tusks, bristly moustache, blubber folds, battle scars |
+| Camel | grumpy caravan dromedary: heavy lids + lashes, droopy split lip, buck teeth, red/gold/teal saddle blanket with tassels |
+| FennecFox | enormous forward-facing ears (pink inside, white tufts), amber eyes with tear lines, black tail tip |
+| Lizard | frilled lizard in threat display: red/orange/yellow frill with spokes, gaping yellow mouth, banded whip tail |
+| SphinxCat | pharaoh's temple cat: nemes headdress, usekh collar, kohl eyeliner, glowing emerald eyes + scarab (Neon) |
+| Vulture | lappet-faced vulture mantling: bald red head, huge hooked beak, cream ruff, finger primaries |
 | LavaRex / MagmaSlug / ObsidianGolem | basalt-armoured T-Rex with magma drool / slug with an erupting volcano shell / golem with a caged crystal heart |
 
 Other rebuilt animals come from one-line archetype specs in `tools/blender/tffa_zoo.py`.

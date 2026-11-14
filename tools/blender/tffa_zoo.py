@@ -71,13 +71,18 @@ ZONES = [
    # v1: ("PolarBear", Q, dict(body=(3.2, 2.3, 2.3), legs=(1.0, 0.85), head=(1.6, 1.7, 1.45), neck=(0.3, 0.4), c1=WHITE, snout=(0.6, 0.95, 0.7), ears="round", tail="short", angry=True, iris=LBLUE)),
  ]),
  ("06_Desert", [
-   ("Lizard", Q, dict(body=(2.0, 0.95, 0.6), legs=(0.3, 0.32), sprawl=0.25, head=(0.9, 0.85, 0.6), neck=(0, 0.2), c1=rgb(186, 176, 92), pattern="spots", pat_c=rgb(124, 112, 52), snout=(0.5, 0.65, 0.35), tail="long", head_scale=1.2)),
+   ("Lizard", EX, "frilledlizard"),   # hero build (reference analysis in the script)
+   # v1: ("Lizard", Q, dict(body=(2.0, 0.95, 0.6), legs=(0.3, 0.32), sprawl=0.25, head=(0.9, 0.85, 0.6), neck=(0, 0.2), c1=rgb(186, 176, 92), pattern="spots", pat_c=rgb(124, 112, 52), snout=(0.5, 0.65, 0.35), tail="long", head_scale=1.2)),
    ("Scorpion", scorpion, dict(c1=rgb(64, 52, 52), c2=rgb(150, 64, 40))),
-   ("FennecFox", Q, dict(body=(1.8, 0.95, 1.0), legs=(0.7, 0.32), head=(1.0, 1.05, 0.9), neck=(0.2, 0.7), c1=SAND, belly=WHITE, snout=(0.5, 0.5, 0.4), snout_c=WHITE, ears="fennec", tail="bushy", tail_tip=BLACK)),
+   ("FennecFox", EX, "fennecfox"),   # hero build (reference analysis in the script)
+   # v1: ("FennecFox", Q, dict(body=(1.8, 0.95, 1.0), legs=(0.7, 0.32), head=(1.0, 1.05, 0.9), neck=(0.2, 0.7), c1=SAND, belly=WHITE, snout=(0.5, 0.5, 0.4), snout_c=WHITE, ears="fennec", tail="bushy", tail_tip=BLACK)),
    ("Rattlesnake", snake, dict(c1=rgb(196, 164, 100), c2=rgb(112, 80, 50))),
-   ("Camel", Q, dict(body=(2.8, 1.4, 1.6), legs=(1.9, 0.48), head=(1.3, 0.9, 0.8), neck=(1.6, 1.0), c1=TAN2, snout=(0.5, 0.75, 0.6), snout_c=rgb(190, 150, 100), ears="tiny", tail="tuft", side_eyes=True, x=[hump(2)])),
-   ("Vulture", B, dict(body=(1.8, 1.45, 1.4), leg=0.6, neck=0.4, head=0.75, c1=rgb(72, 56, 46), neck_c=rgb(232, 150, 140), head_c=rgb(232, 150, 140), beak=(0.45, 0.32, 0.32), beak_c=LGREY, angry=True, x=[ruff()])),
-   ("SphinxCat", Q, dict(body=(2.1, 1.2, 1.3), legs=(0.85, 0.42), head=(1.1, 1.15, 1.0), neck=(0.3, 0.7), c1=rgb(234, 192, 162), snout=(0.35, 0.6, 0.45), ears="fennec", tail="long", iris=rgb(130, 230, 120), x=[headdress()])),
+   ("Camel", EX, "camel"),   # hero build (reference analysis in the script)
+   # v1: ("Camel", Q, dict(body=(2.8, 1.4, 1.6), legs=(1.9, 0.48), head=(1.3, 0.9, 0.8), neck=(1.6, 1.0), c1=TAN2, snout=(0.5, 0.75, 0.6), snout_c=rgb(190, 150, 100), ears="tiny", tail="tuft", side_eyes=True, x=[hump(2)])),
+   ("Vulture", EX, "vulture"),   # hero build (reference analysis in the script)
+   # v1: ("Vulture", B, dict(body=(1.8, 1.45, 1.4), leg=0.6, neck=0.4, head=0.75, c1=rgb(72, 56, 46), neck_c=rgb(232, 150, 140), head_c=rgb(232, 150, 140), beak=(0.45, 0.32, 0.32), beak_c=LGREY, angry=True, x=[ruff()])),
+   ("SphinxCat", EX, "sphinxcat"),   # hero build (reference analysis in the script)
+   # v1: ("SphinxCat", Q, dict(body=(2.1, 1.2, 1.3), legs=(0.85, 0.42), head=(1.1, 1.15, 1.0), neck=(0.3, 0.7), c1=rgb(234, 192, 162), snout=(0.35, 0.6, 0.45), ears="fennec", tail="long", iris=rgb(130, 230, 120), x=[headdress()])),
  ]),
  ("07_IceAge", [
    ("WoollyHare", Q, dict(gait=dict(hop=True), body=(1.7, 1.3, 1.3), legs=(0.4, 0.42), head=(1.1, 1.05, 1.0), neck=(0.1, 0.8), c1=CREAM, ears="long", tail="short", snout=(0.25, 0.55, 0.4), snout_c=WHITE, nose_c=PINKC, x=[wool(SNOW)])),
