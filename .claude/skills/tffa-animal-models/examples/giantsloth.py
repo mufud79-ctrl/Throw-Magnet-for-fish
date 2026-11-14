@@ -61,7 +61,7 @@ for s in (1, -1):
 
 with m.bone("Neck", (0.3, 0, 6.9)):
     m.seg("Neck", V(0.2, 0, 6.8), V(0.75, 0, 7.8), 1.7, 1.4, FUR, d0=1.6, d1=1.3)
-with m.bone("Head", (0.7, 0, 7.8), "Neck"), m.frame(pivot=(0.7, 0, 7.8), scale=1.2):
+with m.bone("Head", (0.7, 0, 7.8), "Neck"), m.frame(pivot=(0.7, 0, 7.8), scale=1.45):
     hc = V(1.15, 0, 8.15)
     m.box("Head", hc, (1.5, 1.35, 1.2), FUR, top=(0.8, 0.85), bot=(0.88, 0.9))
     m.box("Muzzle", hc + V(1.0, 0, -0.2), (0.95, 0.95, 0.8), TAN, top=(0.8, 0.85), bot=(0.88, 0.9))

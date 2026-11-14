@@ -53,7 +53,7 @@ with m.bone("Neck", (2.6, 0, 3.9)):
     for k in range(5):                                       # shaggy fringe on the neck
         b = V(2.6 + k * 0.2, (k - 2) * 0.4, 4.9 - k * 0.25)
         m.spike(f"Fringe{k}", b, b + V(0.4, 0, -0.75), 0.32, FUR_D, flat=0.55)
-with m.bone("Head", (3.3, 0, 3.3), "Neck"), m.frame(pivot=(3.3, 0, 3.3), scale=1.1):
+with m.bone("Head", (3.3, 0, 3.3), "Neck"), m.frame(pivot=(3.3, 0, 3.3), scale=1.3):
     hc = V(4.3, 0, 2.95)
     m.box("Head", hc, (2.3, 1.75, 1.55), FACE, top=(0.8, 0.85), bot=(0.88, 0.9))
     m.box("Snout", hc + V(1.4, 0, -0.15), (0.9, 1.45, 1.15), FACE, top=(0.85, 0.9))
@@ -64,12 +64,12 @@ with m.bone("Head", (3.3, 0, 3.3), "Neck"), m.frame(pivot=(3.3, 0, 3.3), scale=1
         with m.bone(f"Ear_{LR(s)}", hc + V(-0.8, s * 0.7, 0.75)):
             m.spike(f"Ear{s}", hc + V(-0.8, s * 0.72, 0.68), hc + V(-1.0, s * 0.95, 1.4), 0.3, FUR, flat=0.6)
     # the horns: a huge front horn sweeping forward-up, a smaller second horn behind it
-    hp = [hc + V(1.55, 0, 0.42), hc + V(2.15, 0, 1.25), hc + V(2.55, 0, 2.35), hc + V(2.75, 0, 3.15)]
-    ws = [0.95, 0.72, 0.48, 0.28]
+    hp = [hc + V(1.55, 0, 0.42), hc + V(1.95, 0, 0.95), hc + V(2.22, 0, 1.6), hc + V(2.35, 0, 2.1)]
+    ws = [0.72, 0.55, 0.38, 0.22]
     for i in range(3):
         m.seg(f"Horn{i}", hp[i], hp[i + 1] + (hp[i + 1] - hp[i]).normalized() * 0.08, ws[i], ws[i + 1], HORN if i < 2 else HORN_D,
               d0=ws[i] * 1.3, d1=ws[i + 1] * 1.3, **NS)
-    m.spike("HornTip", hp[3], hp[3] + V(0.2, 0, 0.55), 0.14, HORN_D, flat=0.8)
+    m.spike("HornTip", hp[3], hp[3] + V(0.12, 0, 0.4), 0.11, HORN_D, flat=0.8)
     m.seg("Horn2", hc + V(0.55, 0, 0.7), hc + V(0.75, 0, 1.7), 0.55, 0.22, HORN, d0=0.7, d1=0.28, **NS)
     m.spike("Horn2Tip", hc + V(0.75, 0, 1.68), hc + V(0.82, 0, 2.05), 0.11, HORN_D, flat=0.8)
     m.eyes(tuple(hc + V(0.2, 0.84, 0.25)), facing=(0.35, 1, 0), size=(0.46, 0.32), pupil=0.72, look=(0.5, 0), angry=0.55,
