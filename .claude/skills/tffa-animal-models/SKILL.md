@@ -76,6 +76,10 @@ Everything needed is in this folder:
 | `side_eyes=True` | quad | eyes on the head sides (long-faced animals) | Horse, Zebra, dinos |
 | `gait=dict(hop=True)` / `fly=False` | quad / bird | bunny-hop walk / flightless bird (no Fly clip) | Rabbit, Ostrich, Penguin |
 | `studded=True` | dragon | TFFA studs on every big dragon part | LavaDrake |
+| `equine=True` | quad | horse build: deep chest + withers, round barrel, high croup + haunches, arched thick neck with a falling mane, cheek block, body-coloured face with a muzzle tip, legs with forearm/gaskin, knee/hock, slim cannon, fetlock, hoof; use with `tail="flow"` | Pegasus, Unicorn |
+| `wings(..., kind="feather", wide=1.7, spread=0.8)` | accessory | short feather wings (`span` 0.55) with broad feathers, each fan tilted out into a V so it reads from the front | Griffin, Pegasus |
+| `horns("jackalope")` | accessory | short antlers splayed outward in front of long ears | Jackalope |
+| `kraken` | archetype | king of the sea: huge head + brow ridge, armoured spiked mantle, toothed maw, 8 thick tentacles (2 reared) with suckers | Kraken |
 | `faceted=True` | any | no studs anywhere (only if the user asks for the smooth fantasy look) | |
 | `s=` | dragon / theropod | overall scale | |
 

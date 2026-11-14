@@ -73,7 +73,7 @@ Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07
 ## TFFA-style animals (skill) - CURRENT WORK
 Develop on branch `claude/roblox-animal-models-852c5h`. Commit + push after every zone (another Claude session may push
 to the same branch: `git fetch` + `git rebase origin/claude/roblox-animal-models-852c5h` before pushing; never rebuild a
-zone that session owns).
+zone that session owns). A second session works BOTTOM-UP (10_MythicIsles done, then 11_Space, 09_Volcano, 08...), skipping animals already rebuilt.
 
 **Skill:** `.claude/skills/tffa-animal-models/` - read `SKILL.md` first (workflow, look options table, kit cheat-sheet),
 then `references/style_guide.md` and `references/review_checklist.md`. Reference models in `models/TFFA/`
@@ -93,7 +93,7 @@ then `references/style_guide.md` and `references/review_checklist.md`. Reference
 | 07_IceAge | Mammoth (shaggy + fierce + muscular + studs, user-approved) | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
 | 09_Volcano | LavaDrake (dragon archetype, muscular, studded, user-approved) | EmberWolf, FireSalamander, LavaRex, MagmaSlug, ObsidianGolem, Phoenix |
-| 10_MythicIsles | first pass by ANOTHER session (WIP, "under review") | leave to that session unless the user says otherwise |
+| 10_MythicIsles | all 7 (bottom-up session: equine Pegasus/Unicorn, king-of-the-sea Kraken, dragon-archetype CelestialDragon, snarling Chimera) | - |
 | 11_Space | - | MoonBunny, AlienBlob, SpaceCat, AstroDog, StarWhale, GalaxyDragon, BlackHoleBeast (no folder yet) |
 
 "Hard set" for future skill work (unusual anatomy, will need adjustments): Crocodile, Scorpion, Rattlesnake, Mammoth,
