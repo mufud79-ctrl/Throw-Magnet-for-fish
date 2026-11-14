@@ -47,18 +47,18 @@ with m.bone("Head", (0.05, 0, 3.0)), m.frame(pivot=(0.05, 0, 3.0), scale=1.12):
            brow_col=GREY, brow_h=0.5, brow_up=0.72, brow_w=1.2, depth=0.14)
 
 for s in (1, -1):                       # wings raised high in a wide V, swept back so they read from front and side
-    sh, el, tip = V(0.0, s * 1.0, 2.75), V(-0.45, s * 2.1, 4.0), V(-0.75, s * 2.9, 5.4)
+    sh, el, tip = V(0.0, s * 1.0, 2.75), V(-0.4, s * 2.0, 3.6), V(-0.65, s * 3.0, 4.5)
     with m.bone(f"Wing_{LR(s)}", sh):
-        m.seg(f"WingArm{s}", sh, el, 0.75, 0.6, WH)
+        m.seg(f"WingArm{s}", sh, el, 0.85, 0.7, WH)
         m.seg(f"WingHand{s}", el, tip, 0.6, 0.35, WH)
         N = 8
         for k in range(N):
             t = k / (N - 1); root = sh.lerp(el, t * 2) if t < 0.5 else el.lerp(tip, (t - 0.5) * 2)
             ang = 0.2 + t * 1.2
             d = (-0.8 * math.cos(ang), s * 0.55 * math.cos(ang), math.sin(ang))
-            L = 1.9 + 2.4 * t ** 0.8
+            L = 1.5 + 1.5 * t ** 0.8
             g = (WH, WH, BAR) if k >= N - 3 else (WH, WH_D, GREY) if k % 2 else (WH, WH, WH_D)
-            feather(f"Feather{s}{k}", root, d, L, 0.6, g, (-0.8, s * 0.55, 0))
+            feather(f"Feather{s}{k}", root, d, L, 0.85, g, (-0.8, s * 0.55, 0))
         for j in range(3):                                                         # black bars across the coverts
             q = sh.lerp(el, 0.3 + 0.3 * j) + V(0.05, s * 0.05, 0.1)
             m.box(f"WingBar{s}{j}", q, (0.12, 0.42, 0.1), BAR, rot=Rx(s * 0.9), **NS)

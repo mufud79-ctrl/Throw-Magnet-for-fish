@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from tffa_kit import *
 
 GREY, GREY_D, BELLY, SPOT = rgb(136, 150, 168), rgb(98, 110, 130), rgb(214, 222, 230), rgb(76, 86, 104)
-FLIP, FISH, FISH_D, BLK = rgb(80, 88, 104), rgb(176, 206, 230), rgb(64, 110, 170), rgb(26, 26, 32)
+FLIP, FISH, FISH_D, BLK = rgb(80, 88, 104), rgb(136, 176, 214), rgb(48, 86, 150), rgb(26, 26, 32)
 LR = lambda s: "L" if s > 0 else "R"
 NS = dict(studs=False)
 m = Model("Seal", sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else None, stud=0.42, chamfer=0.17, jitter=0.04)
@@ -50,7 +50,7 @@ with m.bone("Head", (1.7, 0, 2.6), "Neck"), m.frame(pivot=(1.7, 0, 2.6), scale=1
         m.box(f"Nostril{s}", hc + V(1.17, s * 0.13, -0.08), (0.06, 0.12, 0.08), BLK, **NS)
     for k, (x, y) in enumerate(((-0.2, 0.4), (0.1, -0.35))):
         m.box(f"HeadSpot{k}", hc + V(x, y, 0.66), (0.28, 0.22, 0.06), SPOT, **NS)
-    m.eyes(tuple(hc + V(0.66, 0.42, 0.2)), facing=(0.85, 0.5, 0), size=(0.5, 0.5), pupil=0.86, look=(0.3, 0.1), angry=0.12,
+    m.eyes(tuple(hc + V(0.66, 0.4, 0.08)), facing=(0.85, 0.5, 0), size=(0.44, 0.42), pupil=0.82, look=(0.3, 0.1), angry=0.12,
            brow_col=GREY_D, brow_h=0.35, brow_up=0.78, depth=0.12)
     # the catch: a silver fish clamped crosswise in the mouth
     f0 = hc + V(1.1, 0, -0.62)
