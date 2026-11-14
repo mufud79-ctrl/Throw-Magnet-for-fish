@@ -92,7 +92,7 @@ then `references/style_guide.md` and `references/review_checklist.md`. Reference
 | 06_Desert | Rattlesnake, Scorpion | Camel, FennecFox, Lizard, SphinxCat, Vulture |
 | 07_IceAge | Mammoth (shaggy + fierce + muscular + studs, user-approved) | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
-| 09_Volcano | LavaDrake (dragon archetype, muscular, studded, user-approved) | EmberWolf, FireSalamander, LavaRex, MagmaSlug, ObsidianGolem, Phoenix |
+| 09_Volcano | all 7: EmberWolf, FireSalamander, LavaRex, MagmaSlug, ObsidianGolem as hero scripts (bottom-up session), LavaDrake (user-approved), Phoenix (reviewed example, rigged) | - |
 | 10_MythicIsles | all 7 (bottom-up session: equine Pegasus/Unicorn, king-of-the-sea Kraken, dragon-archetype CelestialDragon, snarling Chimera) | - |
 | 11_Space | all 7 as hero scripts (bottom-up session; `examples/<name>.py`) | - |
 
