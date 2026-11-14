@@ -11,8 +11,8 @@ TFFA kit in `.claude/skills/tffa-animal-models/`. Overview: `Cannons_overview.pn
 | 04 | Bamboo | **done** | studded: lashed bamboo bundle launcher on a mat platform, leaves and coconuts |
 | 05 | Copper | **done** | studded steam cannon: copper barrel with brass rings and a verdigris band, cog-gear wheels, back boiler with smokestack, pressure gauges and valve wheel |
 | 06 | Candy | **done** | studded: pink candy-striped barrel with frosting drips, sprinkles and a cherry, chocolate-bar carriage, frosted donut wheels, lollipops |
-| 07 | Golden | planned | studded, bridge tier |
-| 08 | Frost | planned | faceted + glow |
+| 07 | Golden | **done** | studded bridge tier: gold barrel with ruby/sapphire/emerald inlays, royal crown on the breech, gem-tipped crown muzzle, treasure-chest carriage on gold wheels, spilled coins |
+| 08 | Frost | **done** | faceted: ice barrel with snow caps, frost bands and icicles, ice-shard crown muzzle, snowflake emblems, crystal cluster on an ice block riding a sled |
 | 09 | Lava | **done** | faceted: basalt barrel with magma seams and cracks on a mini volcano (lava rivers, crater, magma pool), spiked crater muzzle |
 | 10 | Toxic | **done** | faceted: sludge launcher on tank treads, hazard stripes, glowing goo canister on the breech, leaking waste drums, dripping nozzle |
 | 11 | Cyber | **done** | faceted: twin-rail railgun with glowing coils on three mech legs |
@@ -38,6 +38,7 @@ Clips: `Idle` (loop: barrel sway, hover, halo and ring spin, wing breathing) and
 ## Glow colours
 | Cannon | Glow parts | Colour |
 |---|---|---|
+| FrostCannon | bore, seams, snowflakes, back snowflake, two crystals, two icicles | `#50D2FF` (80, 210, 255) |
 | LavaCannon | crater magma, lava rivers, pool, seams, cracks, vents, bore, embers | `#FF5400` (255, 84, 0) |
 | ToxicCannon | canister, bore sludge, drips, seams, turret ring, drum goo, puddle | `#46FF28` (70, 255, 40) |
 | CyberCannon | rail strips, coils, charge ball, screens, knee and hub lights | `#FF3CB4` (255, 60, 180) |

@@ -974,7 +974,146 @@ def build_lava(K, out):
     m.done(views=VIEWS, glow_color=GL)
 
 
-BUILDERS = {1: build_wooden, 2: build_iron, 3: build_stone, 4: build_bamboo, 5: build_copper, 6: build_candy, 9: build_lava, 10: build_toxic,
+# ============================================================================== tier 07: Golden (studded bridge tier: royal treasure cannon)
+def build_golden(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    GOLD, GOLD_D, GOLD_L = rgb(255, 196, 46), rgb(214, 140, 24), rgb(255, 226, 120)
+    WOODR, WOODR_D = rgb(150, 44, 40), rgb(104, 30, 30)
+    RUBY, SAPH, EMER, BORE = rgb(236, 32, 60), rgb(40, 110, 255), rgb(30, 200, 110), rgb(40, 26, 20)
+    m = K.Model("GoldenCannon", out, stud=0.28, chamfer=0.18, jitter=0.05)
+    m.gait = {"recoil": 0.38}
+    T = Vector((0.35, 0, 2.9))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.2)):
+        # treasure chest carriage on four gold spoked wheels
+        for x in (-0.95, 0.95):
+            m.box(f"Axle{x}", (x, 0, 0.62), (0.3, 2.2, 0.3), GOLD_D, **ns)
+            for s in (1, -1):
+                spoke_wheel(m, f"W{x}{s}", (x, s * 1.02, 0.62), 0.62, 0.18, GOLD, RUBY, spokes=8, tyre=WOODR_D)
+        m.box("Chest", (0, 0, 1.3), (2.8, 1.7, 1.0), WOODR)
+        m.box("Lid", (0, 0, 1.95), (2.85, 1.75, 0.34), WOODR, top=(0.88, 0.62))
+        for x in (-1.0, 0.0, 1.0):                                    # gold straps over chest and lid
+            m.box(f"Band{x}", (x, 0, 1.3), (0.22, 1.76, 1.04), GOLD, **ns)
+            m.box(f"LidBand{x}", (x, 0, 1.96), (0.22, 1.8, 0.36), GOLD, top=(1, 0.62), **ns)
+        for sx in (1, -1):
+            for s in (1, -1):
+                m.box(f"Corner{sx}{s}", (sx * 1.38, s * 0.83, 0.86), (0.18, 0.18, 0.2), GOLD_D, **ns)
+        m.box("Lock", (1.43, 0, 1.55), (0.12, 0.5, 0.6), GOLD, **ns)
+        m.box("Keyhole", (1.5, 0, 1.52), (0.04, 0.1, 0.24), BORE, chamfer=0.0, **ns)
+        gem(m, "LockGem", (1.5, 0, 1.72), (1, 0, 0), 0.14, 0.12, RUBY, sides=6, glow=False)
+        for s in (1, -1):                                             # gold cheeks with a gem each
+            m.box(f"Cheek{s}", (T.x - 0.05, s * 0.66, 2.45), (1.2, 0.28, 1.0), GOLD, top=(0.72, 1))
+            gem(m, f"CheekGem{s}", (T.x - 0.1, s * 0.82, 2.3), (0, s, 0), 0.18, 0.16, SAPH, sides=6, glow=False)
+            m.box(f"Strap{s}", (T.x, s * 0.66, T.z + 0.04), (0.5, 0.34, 0.22), GOLD_D, **ns)
+        coins = [(1.8, 0.4, 0.05), (1.95, 0.0, 0.05), (1.75, -0.45, 0.05), (1.9, 0.2, 0.13), (2.25, -0.2, 0.05), (1.62, 0.05, 0.05),
+                 (-0.9, 0.55, 2.12), (-0.55, -0.6, 2.1), (-1.25, -0.3, 2.08), (1.05, 0.62, 2.1)]
+        for k, (x, y, z) in enumerate(coins):                          # spilled coins
+            tilt = Vector((0.15 * ((k % 3) - 1), 0.12 * ((k % 2) * 2 - 1), 1)).normalized()
+            prism(m, f"Coin{k}", Vector((x, y, z)), Vector((x, y, z)) + tilt * 0.08, 0.2, 0.2, GOLD_L, chamfer=0.2)
+    with barrel_ctx(m, K, T, 0.14):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        kw = dict(chamfer=0.22)
+        m.seg("Breech", P(-1.95), P(-0.8), 1.16, 1.22, GOLD, **kw)
+        m.seg("Chase", P(-0.9), P(2.05), 1.08, 0.86, GOLD, **kw)
+        m.seg("Bell", P(1.95), P(2.6), 0.86, 1.2, GOLD_L, **kw)
+        for nm, x0, x1, w in (("Ring0", -1.9, -1.66, 1.22), ("Ring1", -0.86, -0.62, 1.12), ("Ring2", 0.82, 1.02, 0.98)):
+            r = octa(w) + 0.07; prism(m, nm, P(x0), P(x1), r, r, GOLD_D, chamfer=0.2)
+        for s in (1, -1):                                             # gem inlays along both sides
+            gem(m, f"Ruby{s}", P(-1.25, 0, s * 0.6), (0, s, 0), 0.2, 0.2, RUBY, sides=6, glow=False)
+            gem(m, f"Saph{s}", P(0.2, 0, s * 0.53), (0, s, 0), 0.17, 0.17, SAPH, sides=6, glow=False)
+            gem(m, f"Emer{s}", P(1.45, 0, s * 0.47), (0, s, 0), 0.15, 0.15, EMER, sides=6, glow=False)
+        # royal crown on the breech
+        cb = Vector(P(-1.25, 0.56))
+        prism(m, "CrownBand", cb, cb + Vector((0, 0, 0.26)), 0.34, 0.38, GOLD_D, chamfer=0.15)
+        for k in range(5):
+            a = 2 * math.pi * k / 5; d = Vector((math.cos(a), math.sin(a), 0))
+            m.spike(f"CrownPt{k}", cb + d * 0.3 + Vector((0, 0, 0.22)), cb + d * 0.36 + Vector((0, 0, 0.62)), 0.11, GOLD)
+            m.ball(f"CrownPearl{k}", cb + d * 0.36 + Vector((0, 0, 0.64)), 0.06, GOLD_L, segs=(6, 4))
+        m.ball("CrownRuby", cb + Vector((0, 0, 0.36)), 0.2, RUBY, segs=(8, 6))
+        # crown muzzle: lip ringed by forward points with gem tips
+        r = octa(1.2) + 0.08
+        prism(m, "Lip", P(2.5), P(2.74), r, r, GOLD_D, chamfer=0.2)
+        prism(m, "Bore", P(2.52), P(2.76), 0.44, 0.44, BORE, chamfer=0.0)
+        for k in range(6):
+            a = 2 * math.pi * k / 6 + math.pi / 6; rd = Vector((0, math.cos(a), math.sin(a)))
+            b = Vector(P(2.62)) + rd * (r * 0.92); tip = b + Vector((0.38, 0, 0)) + rd * 0.32
+            m.spike(f"MuzzlePt{k}", b, tip, 0.16, GOLD)
+            m.ball(f"MuzzleGem{k}", tip, 0.09, (RUBY, EMER, SAPH)[k % 3], segs=(6, 4))
+        prism(m, "Cascabel", P(-2.25), P(-1.93), 0.2, 0.24, GOLD_D)
+        gem(m, "BackRuby", P(-2.3), (-1, 0, 0), 0.4, 0.28, RUBY, sides=6, glow=False, back=0.2)
+        prism(m, "Trunnion", (T.x, -0.92, T.z), (T.x, 0.92, T.z), 0.18, 0.18, GOLD_D)
+        with m.bone("Muzzle", P(2.76)): pass
+    m.done(views=VIEWS)
+
+
+# ============================================================================== tier 08: Frost (faceted ice sled, icy glow)
+def build_frost(K, out):
+    from mathutils import Vector
+    rgb, Ry = K.rgb, K.Ry
+    ICE, ICE_D, ICE_L = rgb(76, 156, 236), rgb(36, 88, 196), rgb(150, 212, 255)
+    SNOW, STEEL, NAVY = rgb(248, 252, 255), rgb(150, 170, 196), rgb(40, 66, 130)
+    GL = rgb(80, 210, 255)
+    m = K.Model("FrostCannon", out, stud=0.4, chamfer=0.16, faceted=True)
+    m.gait = {"recoil": 0.42}
+    T = Vector((0.2, 0, 2.85))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.2)):
+        for s in (1, -1):                                             # sled runners with curled fronts and struts
+            y = s * 0.95
+            m.seg(f"Runner{s}", (-1.85, y, 0.1), (1.45, y, 0.1), 0.16, 0.16, STEEL, d0=0.2, d1=0.2, chamfer=0.2)
+            m.seg(f"Curl{s}a", (1.4, y, 0.1), (1.95, y, 0.42), 0.16, 0.16, STEEL, d0=0.2, d1=0.2, chamfer=0.2)
+            m.seg(f"Curl{s}b", (1.92, y, 0.38), (1.8, y, 0.82), 0.16, 0.14, STEEL, d0=0.2, d1=0.18, chamfer=0.2)
+            for x in (-1.25, 0.0, 1.15):
+                m.seg(f"Strut{s}{x}", (x, y, 0.12), (x, y * 0.92, 0.55), 0.13, 0.13, STEEL, chamfer=0.2)
+        m.box("Deck", (0, 0, 0.72), (3.4, 2.1, 0.36), NAVY)
+        m.box("Block", (0.1, 0, 1.22), (2.0, 1.7, 0.7), ICE, grad=(ICE_D, ICE, ICE_L))
+        for k, (x, y, sx, sy) in enumerate(((-1.25, 0.6, 0.9, 0.7), (1.25, -0.55, 0.8, 0.8), (0.1, 0.0, 1.9, 1.55))):
+            m.box(f"Snow{k}", (x, y, 0.95 if k < 2 else 1.62), (sx, sy, 0.16), SNOW, top=(0.82, 0.8))
+        for s in (1, -1):                                             # ice-crystal yoke pillars with a snowflake each
+            m.box(f"Pillar{s}", (T.x - 0.05, s * 0.74, 2.2), (0.95, 0.28, 1.3), ICE_L, top=(0.6, 1))
+            m.spike(f"PillarTip{s}", (T.x - 0.05, s * 0.74, 2.8), (T.x - 0.15, s * 0.82, 3.55), 0.18, ICE_L)
+            star(m, f"Flake{s}", (T.x - 0.05, s * 0.9, 2.1), (0, s, 0), (0, 0, 1), 0.34, GL, points=8, r=0.08)
+        for k, (p, d, L, r, g) in enumerate((((-1.35, -0.45, 0.9), (-0.3, -0.25, 1), 1.05, 0.26, True),     # crystal cluster
+                                             ((-1.15, -0.75, 0.9), (0.2, -0.6, 1), 0.7, 0.2, False),
+                                             ((-1.55, -0.1, 0.9), (-0.6, 0.1, 1), 0.65, 0.18, False),
+                                             ((1.3, 0.6, 0.9), (0.4, 0.3, 1), 0.6, 0.18, True))):
+            gem(m, f"Crystal{k}", p, d, L, r, GL if g else ICE_L, sides=6, glow=g, back=0.15)
+    with barrel_ctx(m, K, T, 0.16):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
+        G = (ICE_D, ICE, ICE_L)
+        prism(m, "Breech", P(-2.0), P(-0.8), 0.95, 0.9, ICE, grad=G)
+        prism(m, "Chase", P(-0.95), P(2.5), 0.8, 0.64, ICE, grad=G)
+        for nm, x0, x1, r in (("Band0", -0.95, -0.66, 0.95), ("Band1", 0.75, 0.97, 0.8), ("Band2", 1.85, 2.05, 0.75)):
+            prism(m, nm, P(x0), P(x1), r, r, SNOW)
+        for x in (-1.55, 0.2, 1.4):
+            ring(m, f"Seam{x}", P(x), (1, 0, 0), 0.82 - 0.06 * (x > 0) - 0.04 * (x > 1), 0.07, GL, n=8, glow=True, depth=0.1)
+        m.box("CapBreech", P(-1.35, 0.82), (1.15, 0.95, 0.2), SNOW, top=(0.8, 0.75))
+        m.box("CapChase", P(0.0, 0.7), (1.3, 0.8, 0.16), SNOW, top=(0.8, 0.7))
+        for k, (x, L, g) in enumerate(((-1.55, 0.45, False), (-1.1, 0.7, True), (-0.3, 0.4, False), (0.4, 0.55, False),
+                                       (1.1, 0.35, True), (1.7, 0.5, False))):      # icicles under the barrel
+            for s in ((1,) if k % 2 else (-1,)):
+                b = Vector(P(x, -0.62 + 0.04 * x, s * 0.25))
+                m.spike(f"Icicle{k}", b, b - Vector((0, 0, L)), 0.11, GL if g else ICE_L, glow=g)
+        star(m, "BackFlake", P(-2.06), (-1, 0, 0), (0, 0, 1), 0.85, GL, points=8, r=0.18)
+        # frozen muzzle: flare, snow lip, glowing bore, crown of ice shards
+        prism(m, "Flare", P(2.4), P(3.0), 0.66, 1.0, ICE_L)
+        prism(m, "Lip", P(2.95), P(3.15), 1.04, 1.0, SNOW)
+        prism(m, "Bore", P(2.8), P(3.17), 0.62, 0.62, GL, glow=True, chamfer=0.0)
+        for k in range(8):
+            a = 2 * math.pi * k / 8 + math.pi / 8; rd = Vector((0, math.cos(a), math.sin(a)))
+            b = Vector(P(3.05)) + rd * 0.92
+            L = 0.55 if k % 2 else 0.38
+            m.spike(f"Shard{k}", b, b + Vector((L * 0.8, 0, 0)) + rd * L * 0.6, 0.16, ICE_L)
+        prism(m, "Trunnion", (T.x, -1.0, T.z), (T.x, 1.0, T.z), 0.22, 0.22, SNOW)
+        with m.bone("Muzzle", P(3.17)): pass
+    m.done(views=VIEWS, glow_color=GL)
+
+
+BUILDERS = {1: build_wooden, 2: build_iron, 3: build_stone, 4: build_bamboo, 5: build_copper, 6: build_candy,
+            7: build_golden, 8: build_frost, 9: build_lava, 10: build_toxic,
             11: build_cyber, 12: build_dragon, 13: build_galaxy, 14: build_celestial}
 
 
