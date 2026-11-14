@@ -91,7 +91,7 @@ ZONES = [
    ("FireSalamander", Q, dict(body=(2.2, 1.0, 0.65), legs=(0.32, 0.34), sprawl=0.25, head=(1.0, 0.95, 0.6), neck=(0, 0.2), c1=rgb(44, 40, 46), snout=(0.4, 0.75, 0.35), tail="long", head_scale=1.2, glow=rgb(255, 140, 30), x=[glow_bits(rgb(255, 140, 30), 10, 5, "body", 0.35)])),
    ("EmberWolf", Q, dict(body=(2.5, 1.2, 1.4), legs=(1.0, 0.48), head=(1.2, 1.15, 1.0), neck=(0.3, 0.6), c1=rgb(58, 52, 56), snout=(0.5, 0.65, 0.5), ears="point", tail="long", angry=True, iris=rgb(255, 150, 40), glow=rgb(255, 120, 30), x=[flame_mane(rgb(255, 120, 30))])),
    ("ObsidianGolem", golem, dict(c1=rgb(44, 36, 56), c2=rgb(74, 52, 106), glowc=rgb(200, 90, 255), glow=rgb(200, 90, 255))),
-   ("LavaDrake", dragon, dict(s=0.85, faceted=True, muscular=True, c1=rgb(150, 30, 24), c2=rgb(64, 20, 18), mem=rgb(104, 24, 20), belly=rgb(255, 150, 40), seg=rgb(255, 110, 20), belly_glow=True, knob=rgb(255, 150, 40), horn=rgb(44, 32, 32), eye=rgb(255, 170, 50), eye_glow=True, spikes=rgb(44, 30, 30), glow=rgb(255, 110, 20))),
+   ("LavaDrake", dragon, dict(s=0.85, studded=True, muscular=True, c1=rgb(150, 30, 24), c2=rgb(64, 20, 18), mem=rgb(104, 24, 20), belly=rgb(255, 150, 40), seg=rgb(255, 110, 20), belly_glow=True, knob=rgb(255, 150, 40), horn=rgb(44, 32, 32), eye=rgb(255, 170, 50), eye_glow=True, spikes=rgb(44, 30, 30), glow=rgb(255, 110, 20))),
    ("LavaRex", theropod, dict(s=1.05, c1=rgb(58, 46, 46), c2=rgb(32, 26, 30), belly=rgb(255, 146, 44), iris=rgb(255, 130, 30), eye_glow=True, glow=rgb(255, 110, 20), x=[rex_cracks(rgb(255, 110, 20))])),
    ("Phoenix", EX, "phoenix"),
  ]),

@@ -634,6 +634,7 @@ def dragon(m, P):
     C1 = P["c1"]; C2 = P.get("c2", dk(C1, 0.68)); MEMc = P.get("mem", dk(C1, 0.62)); BEL = P.get("belly", rgb(214, 166, 206))
     SEG = P.get("seg", dk(BEL, 0.86)); KN = P.get("knob", rgb(200, 180, 220)); HRN = P.get("horn", HORN); EYE = P.get("eye", rgb(255, 214, 60))
     m.gait = dict(P.get("gait", {}))
+    ST = bool(P.get("studded", False)); NS = dict(studs=ST)       # studded=True: TFFA studs on every big part
     _b = m.bone("Body", (-0.4, 0, 3.6)); _b.__enter__()
     # ---- torso: chunky, chest high, hips low; big lilac belly shield covers the whole front
     m.seg("Torso", (-1.2, 0, 2.6), (0.5, 0, 5.8), 3.8, 4.0, C1, d0=3.6, d1=3.2, **NS)
@@ -696,18 +697,18 @@ def dragon(m, P):
         wing.__exit__(None, None, None)
     if P.get("muscular"):   # heavier, more powerful dragon: pecs, shoulder caps, biceps/forearms, big thighs, thick neck base
         C = C1
-        m.box("ChestBulk", (0.75, 0, 4.75), (2.4, 5.0, 2.9), C, top=(0.85, 0.95), studs=False)   # barrel chest clearly wider than the torso
-        for s2 in (1, -1): m.box(f"Pec{s2}", (1.65, s2 * 1.55, 4.9), (1.1, 1.5, 2.1), C, top=(0.85, 0.9), studs=False)   # beside the belly shield
-        m.box("Haunch", (-1.7, 0, 3.15), (2.4, 4.1, 2.4), C, top=(0.75, 0.85), studs=False)
-        with m.bone("Neck1"): m.seg("NeckBase", (0.4, 0, 5.0), (0.95, 0, 6.6), 2.75, 2.25, C, d0=2.6, d1=2.2, studs=False)
+        m.box("ChestBulk", (0.75, 0, 4.75), (2.4, 5.0, 2.9), C, top=(0.85, 0.95), studs=ST)   # barrel chest clearly wider than the torso
+        for s2 in (1, -1): m.box(f"Pec{s2}", (1.65, s2 * 1.55, 4.9), (1.1, 1.5, 2.1), C, top=(0.85, 0.9), studs=ST)   # beside the belly shield
+        m.box("Haunch", (-1.7, 0, 3.15), (2.4, 4.1, 2.4), C, top=(0.75, 0.85), studs=ST)
+        with m.bone("Neck1"): m.seg("NeckBase", (0.4, 0, 5.0), (0.95, 0, 6.6), 2.75, 2.25, C, d0=2.6, d1=2.2, studs=ST)
         for s in (1, -1):
-            m.box(f"ShoulderCap{s}", (0.6, s * 2.65, 5.2), (2.1, 1.7, 1.9), C, top=(0.7, 0.8), studs=False)
+            m.box(f"ShoulderCap{s}", (0.6, s * 2.65, 5.2), (2.1, 1.7, 1.9), C, top=(0.7, 0.8), studs=ST)
             with m.bone(f"Leg_F{LR(s)}"):
-                m.seg(f"Bicep{s}", (0.6, s * 2.25, 4.75), (0.95, s * 2.5, 2.95), 2.7, 2.0, C, d0=2.3, d1=1.75, studs=False)
-                m.seg(f"ForearmMuscle{s}", (1.0, s * 2.4, 2.85), (1.15, s * 2.25, 1.0), 2.0, 1.3, C, d0=1.9, d1=1.25, studs=False)
+                m.seg(f"Bicep{s}", (0.6, s * 2.25, 4.75), (0.95, s * 2.5, 2.95), 2.7, 2.0, C, d0=2.3, d1=1.75, studs=ST)
+                m.seg(f"ForearmMuscle{s}", (1.0, s * 2.4, 2.85), (1.15, s * 2.25, 1.0), 2.0, 1.3, C, d0=1.9, d1=1.25, studs=ST)
             with m.bone(f"Leg_B{LR(s)}"):
-                m.box(f"BigThigh{s}", (-1.4, s * 2.25, 2.55), (3.4, 2.2, 3.3), C, rot=Ry(0.3), top=(0.8, 0.9), studs=False)
-                m.seg(f"Calf{s}", (-1.75, s * 2.15, 1.8), (-1.05, s * 2.1, 0.55), 1.7, 1.15, C, studs=False)
+                m.box(f"BigThigh{s}", (-1.4, s * 2.25, 2.55), (3.4, 2.2, 3.3), C, rot=Ry(0.3), top=(0.8, 0.9), studs=ST)
+                m.seg(f"Calf{s}", (-1.75, s * 2.15, 1.8), (-1.05, s * 2.1, 0.55), 1.7, 1.15, C, studs=ST)
     if P.get("spikes"):
         for k, (x, z) in enumerate(((-0.2, 6.3), (-1.0, 5.6), (-1.9, 4.6), (-3.2, 3.5), (-4.6, 2.6))):
             with (m.bone("Body") if k < 3 else m.bone("Tail1" if k == 3 else "Tail2")):
@@ -951,22 +952,22 @@ def shaggy(col, col2=None, legs=True):
             for k in range(n):
                 x = L * 0.42 - L * 0.86 * k / (n - 1); ln = H * (0.95 + 0.25 * ((k * 7 + (s > 0) * 3) % 3) / 2)
                 m.box(f"Strand{s}{k}", (x, s * (W / 2 * (1.12 if c.get("mus") else 1.0) + 0.06), z0 + H * 0.2 - ln / 2), (L / n * 1.15, 0.34, ln), col if k % 2 else col2,
-                      top=(1, 1), bot=(0.7, 0.85), **NS)
+                      top=(1, 1), bot=(0.7, 0.85), studs=True)
         for k in range(3):    # rump fringe
-            m.box(f"RumpStrand{k}", (-L / 2 - 0.08, (k - 1) * W * 0.3, z0 - H * 0.05), (0.3, W * 0.34, H * 1.0), col2 if k % 2 else col, bot=(0.8, 0.7), **NS)
+            m.box(f"RumpStrand{k}", (-L / 2 - 0.08, (k - 1) * W * 0.3, z0 - H * 0.05), (0.3, W * 0.34, H * 1.0), col2 if k % 2 else col, bot=(0.8, 0.7), studs=True)
         for k in range(3):    # chest beard under the head
-            m.box(f"ChestStrand{k}", (L / 2 + 0.08, (k - 1) * W * 0.28, z0 - H * 0.1), (0.36, W * 0.32, H * 1.05), col if k % 2 else col2, bot=(0.8, 0.7), **NS)
+            m.box(f"ChestStrand{k}", (L / 2 + 0.08, (k - 1) * W * 0.28, z0 - H * 0.1), (0.36, W * 0.32, H * 1.05), col if k % 2 else col2, bot=(0.8, 0.7), studs=True)
         with c["head"]():
             hc, hl, hw, hh = c["hc"], c["hl"], c["hw"], c["hh"]
             m.box("HeadDome", hc + Vector((-hl * 0.18, 0, hh * 0.52)), (hl * 0.78, hw * 0.86, hh * 0.6), col, top=(0.5, 0.66))
             for s in (1, -1):
-                m.box(f"CheekHair{s}", hc + Vector((-hl * 0.1, s * (hw / 2 + 0.06), -hh * 0.2)), (hl * 0.6, 0.3, hh * 0.95), col2, bot=(0.75, 0.8), **NS)
+                m.box(f"CheekHair{s}", hc + Vector((-hl * 0.1, s * (hw / 2 + 0.06), -hh * 0.2)), (hl * 0.6, 0.3, hh * 0.95), col2, bot=(0.75, 0.8), studs=True)
         if legs:
             for sx in (1, -1):
                 for s in (1, -1):
                     x = sx * (L / 2 - lw * 0.62); y = s * (W / 2 - lw * 0.5 - 0.06)
                     with _in(m, f"Leg_{'F' if sx > 0 else 'B'}{LR(s)}"):
-                        m.box(f"LegFur{sx}{s}", (x, y, lh * 0.62), (lw * 1.32, lw * 1.32, lh * 0.55), col2 if sx > 0 else col, bot=(0.85, 0.85), **NS)
+                        m.box(f"LegFur{sx}{s}", (x, y, lh * 0.62), (lw * 1.32, lw * 1.32, lh * 0.55), col2 if sx > 0 else col, bot=(0.85, 0.85), studs=True)
     return fn
 
 def jaw_teeth(n=6, col=TOOTH):
