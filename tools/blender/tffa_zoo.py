@@ -100,11 +100,15 @@ ZONES = [
    ("Mammoth", Q, dict(body=(3.8, 2.6, 2.6), legs=(1.5, 0.95), head=(2.0, 2.1, 2.0), neck=(0, 0.3), c1=rgb(118, 64, 36), snout=(0.5, 0.95, 0.9), snout_c=rgb(104, 56, 32), ears="tiny", ear_c=rgb(92, 50, 28), tail="tuft", tail_tip=rgb(70, 38, 22), head_scale=1.3, fierce=True, muscular=True, x=[shaggy(rgb(118, 64, 36), rgb(90, 48, 27)), tusks("mammoth"), trunk(rgb(110, 60, 34))])),
  ]),
  ("08_DinoLand", [
-   ("Compy", theropod, dict(s=0.32, c1=rgb(154, 206, 72), c2=rgb(92, 144, 50))),
-   ("Parasaurolophus", Q, dict(body=(3.4, 2.0, 2.2), legs=(1.4, 0.75), head=(1.3, 1.05, 1.0), neck=(1.5, 0.9), c1=rgb(72, 166, 154), pattern="stripes", pat_c=rgb(42, 112, 112), snout=(0.9, 0.85, 0.45), snout_c=rgb(206, 186, 124), tail="thick", side_eyes=True, x=[crest(rgb(236, 142, 60))])),
+   ("Compy", EX, "compy"),   # hero build (reference analysis in the script)
+   # v1: ("Compy", theropod, dict(s=0.32, c1=rgb(154, 206, 72), c2=rgb(92, 144, 50))),
+   ("Parasaurolophus", EX, "parasaurolophus"),   # hero build (reference analysis in the script)
+   # v1: ("Parasaurolophus", Q, dict(body=(3.4, 2.0, 2.2), legs=(1.4, 0.75), head=(1.3, 1.05, 1.0), neck=(1.5, 0.9), c1=rgb(72, 166, 154), pattern="stripes", pat_c=rgb(42, 112, 112), snout=(0.9, 0.85, 0.45), snout_c=rgb(206, 186, 124), tail="thick", side_eyes=True, x=[crest(rgb(236, 142, 60))])),
    ("Triceratops", Q, dict(body=(3.6, 2.6, 2.4), legs=(1.1, 0.9), head=(1.8, 1.9, 1.6), neck=(0, 0.2), c1=rgb(206, 122, 60), snout=(0.6, 0.95, 0.7), tail="thick", side_eyes=True, head_scale=1.2, x=[frill(rgb(246, 184, 70))])),
-   ("Stegosaurus", Q, dict(body=(3.8, 2.2, 2.4), legs=(1.2, 0.9), head=(1.1, 0.95, 0.8), neck=(0.8, 0.0), c1=rgb(112, 156, 82), belly=CREAM, snout=(0.5, 0.65, 0.45), tail="thick", side_eyes=True, x=[plates(rgb(236, 122, 60))])),
-   ("Ankylosaurus", Q, dict(body=(3.8, 2.8, 1.6), legs=(0.7, 0.9), head=(1.4, 1.7, 1.0), neck=(0, 0.1), c1=rgb(146, 124, 72), snout=(0.4, 1.05, 0.6), tail="thick", angry=True, x=[shell(rgb(124, 102, 62), rgb(92, 76, 46), spikes=True), club_tail(rgb(102, 86, 56))])),
+   ("Stegosaurus", EX, "stegosaurus"),   # hero build (reference analysis in the script)
+   # v1: ("Stegosaurus", Q, dict(body=(3.8, 2.2, 2.4), legs=(1.2, 0.9), head=(1.1, 0.95, 0.8), neck=(0.8, 0.0), c1=rgb(112, 156, 82), belly=CREAM, snout=(0.5, 0.65, 0.45), tail="thick", side_eyes=True, x=[plates(rgb(236, 122, 60))])),
+   ("Ankylosaurus", EX, "ankylosaurus"),   # hero build (reference analysis in the script)
+   # v1: ("Ankylosaurus", Q, dict(body=(3.8, 2.8, 1.6), legs=(0.7, 0.9), head=(1.4, 1.7, 1.0), neck=(0, 0.1), c1=rgb(146, 124, 72), snout=(0.4, 1.05, 0.6), tail="thick", angry=True, x=[shell(rgb(124, 102, 62), rgb(92, 76, 46), spikes=True), club_tail(rgb(102, 86, 56))])),
    ("TRex", EX, "trex"),
    ("Spinosaurus", theropod, dict(s=1.1, snout=1.5, c1=rgb(62, 114, 146), c2=rgb(36, 72, 98), x=[sail(rgb(226, 92, 60))])),
  ]),
