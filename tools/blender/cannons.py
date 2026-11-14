@@ -300,7 +300,139 @@ def build_celestial(K, out):
     m.done(views=VIEWS, glow_color=GLOW)
 
 
-BUILDERS = {1: build_wooden, 14: build_celestial}
+# ============================================================================== shared bits for the middle tiers
+def spoke_wheel(m, name, c, r, t, rim, hub, spokes=8, tyre=None, studs=False):
+    """Big spoked wheel in the XZ plane at centre c (axle along Y): faceted rim ring, block spokes, hub."""
+    from mathutils import Vector
+    c = Vector(c)
+    ring(m, name + "Rim", c, (0, 1, 0), r - t * 0.5, t, rim, n=16, depth=t * 1.1)
+    if tyre: ring(m, name + "Tyre", c, (0, 1, 0), r - t * 0.12, t * 0.35, tyre, n=16, depth=t * 1.25)
+    for k in range(spokes):
+        a = 2 * math.pi * k / spokes + math.pi / spokes
+        d = Vector((math.cos(a), 0, math.sin(a)))
+        m.seg(f"{name}Spoke{k}", c + d * 0.15, c + d * (r - t * 0.6), t * 0.55, t * 0.42, rim, studs=studs, chamfer=0.15)
+    prism(m, name + "Hub", c - Vector((0, t * 0.9, 0)), c + Vector((0, t * 0.9, 0)), t * 1.25, t * 1.25, hub, chamfer=0.2)
+
+
+def star(m, name, c, n, u, size, col, glow=True, points=4, r=None):
+    """Flat star (4 or 8 points) in the plane spanned by u and n x u, facing n."""
+    from mathutils import Vector
+    c, n, u = Vector(c), Vector(n).normalized(), Vector(u).normalized(); v = n.cross(u)
+    for k in range(points):
+        a = 2 * math.pi * k / points
+        d = u * math.cos(a) + v * math.sin(a)
+        L = size if k % 2 == 0 or points == 4 else size * 0.6
+        m.spike(f"{name}{k}", c, c + d * L, r or size * 0.28, col, sides=4, glow=glow)
+
+
+def barrel_ctx(m, K, T, elev):
+    """Enter the Barrel bone + its elevation frame (use: with barrel_ctx(...): ...)."""
+    import contextlib
+    @contextlib.contextmanager
+    def cm():
+        with m.bone("Barrel", T), m.frame(pivot=T, rot=K.Ry(-elev)): yield
+    return cm()
+
+
+# ============================================================================== tier 02: Iron (studded field gun)
+def build_iron(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    GUN, GUN_D = rgb(70, 74, 90), rgb(48, 50, 62)
+    RED, RED_D = rgb(200, 52, 42), rgb(150, 36, 32)
+    BRASS, BORE, TYRE = rgb(236, 180, 66), rgb(24, 22, 26), rgb(46, 44, 48)
+    m = K.Model("IronCannon", out, stud=0.28, chamfer=0.18, jitter=0.05)
+    m.gait = {"recoil": 0.35}
+    T = Vector((0.35, 0, 2.05))
+    with m.bone("Body", (0, 0, 1.2)):
+        for s in (1, -1):                                    # two big spoked field wheels
+            spoke_wheel(m, f"W{s}", (0.3, s * 1.12, 1.18), 1.18, 0.24, RED_D, BRASS, spokes=10, tyre=TYRE)
+        m.box("Axle", (0.3, 0, 1.18), (0.34, 2.3, 0.34), GUN_D, studs=False)
+        for s in (1, -1):
+            m.box(f"Cheek{s}", (0.25, s * 0.5, 1.6), (1.25, 0.26, 1.0), RED)
+            m.box(f"Cap{s}", (T.x, s * 0.5, T.z + 0.05), (0.5, 0.32, 0.22), GUN_D, studs=False)
+            m.seg(f"Trail{s}", (0.0, s * 0.48, 1.35), (-2.3, s * 0.2, 0.32), 0.3, 0.26, RED, d0=0.62, d1=0.42)
+        m.box("TrailEnd", (-2.45, 0, 0.26), (0.6, 0.78, 0.5), RED_D)
+        m.box("Spade", (-2.78, 0, 0.18), (0.16, 0.86, 0.36), GUN_D, studs=False)
+        m.box("Transom", (-1.0, 0, 0.92), (0.36, 0.86, 0.3), RED_D)
+        m.box("AmmoBox", (-1.2, 0, 1.18), (0.9, 0.62, 0.42), RED_D)
+        m.box("AmmoLid", (-1.2, 0, 1.42), (0.96, 0.68, 0.1), BRASS, studs=False)
+    with barrel_ctx(m, K, T, 0.2):
+        X = lambda dx: T.x + dx
+        kw = dict(chamfer=0.22)
+        m.seg("Breech", (X(-1.75), 0, T.z), (X(-0.7), 0, T.z), 1.08, 1.14, GUN, **kw)
+        m.seg("Chase", (X(-0.8), 0, T.z), (X(2.05), 0, T.z), 1.0, 0.76, GUN, **kw)
+        m.seg("Swell", (X(1.95), 0, T.z), (X(2.45), 0, T.z), 0.76, 1.02, GUN, **kw)
+        for nm, x0, x1, w in (("Ring0", -1.68, -1.45, 1.14), ("Ring1", -0.78, -0.56, 1.04), ("Ring2", 0.95, 1.12, 0.88)):
+            r = octa(w) + 0.06; prism(m, nm, (X(x0), 0, T.z), (X(x1), 0, T.z), r, r, BRASS, chamfer=0.2)
+        r = octa(1.02) + 0.07; prism(m, "Lip", (X(2.3), 0, T.z), (X(2.52), 0, T.z), r, r, BRASS, chamfer=0.2)
+        prism(m, "Bore", (X(2.3), 0, T.z), (X(2.54), 0, T.z), 0.36, 0.36, BORE, chamfer=0.0)
+        prism(m, "Cascabel", (X(-2.05), 0, T.z), (X(-1.72), 0, T.z), 0.18, 0.22, GUN_D)
+        m.ball("Knob", (X(-2.15), 0, T.z), 0.25, BRASS, segs=(8, 6))
+        prism(m, "Trunnion", (T.x, -0.7, T.z), (T.x, 0.7, T.z), 0.17, 0.17, GUN_D)
+        for s in (1, -1):                                     # dolphin handles on top
+            m.seg(f"Handle{s}", (X(-0.25), s * 0.22, T.z + 0.5), (X(0.25), s * 0.22, T.z + 0.5), 0.12, 0.12, BRASS, d0=0.22, d1=0.22, studs=False)
+        with m.bone("Muzzle", (X(2.54), 0, T.z)): pass
+    m.done(views=VIEWS)
+
+
+# ============================================================================== tier 13: Galaxy (faceted, violet glow)
+def build_galaxy(K, out):
+    from mathutils import Vector
+    rgb = K.rgb
+    SPACE, SPACE_L = rgb(44, 26, 104), rgb(108, 60, 200)
+    LILAC, VOID = rgb(196, 160, 255), rgb(16, 10, 30)
+    GL = rgb(214, 120, 255)
+    m = K.Model("GalaxyCannon", out, stud=0.4, chamfer=0.16, faceted=True)
+    m.gait = {"float": True, "recoil": 0.45}
+    T = Vector((0.15, 0, 3.4))
+    ns = dict(studs=False)
+    with m.bone("Body", (0, 0, 1.2)):
+        # hovering planet with a tilted Saturn ring and three moons
+        m.ball("Planet", (0, 0, 1.4), 1.3, SPACE, segs=(12, 8))
+        m.ball("PlanetCap", (0, 0, 1.78), (1.15, 1.15, 0.85), SPACE_L, segs=(12, 6))
+        ring(m, "Saturn", (0, 0, 1.35), (0.35, 0.15, 1), 2.1, 0.48, LILAC, n=20, depth=0.1)
+        ring(m, "SaturnGlow", (0, 0, 1.35), (0.35, 0.15, 1), 1.7, 0.12, GL, n=20, depth=0.12, glow=True)
+        for k, (a, r_) in enumerate(((0.4, 0.2), (2.5, 0.16), (4.3, 0.24))):
+            m.ball(f"Moon{k}", (2.1 * math.cos(a), 2.1 * math.sin(a), 1.35 - 0.7 * math.cos(a)), r_ * 1.3, rgb(236, 228, 255), segs=(6, 4))
+        prism(m, "Column", (0, 0, 2.4), (0, 0, 2.85), 0.5, 0.42, SPACE)
+        prism(m, "Collar", (0, 0, 2.75), (0, 0, 2.95), 0.78, 0.78, LILAC)
+        for s in (1, -1):                                       # crescent-moon yoke arms
+            m.seg(f"Arm{s}", (T.x - 0.2, s * 0.55, 2.85), (T.x, s * 1.0, T.z), 0.34, 0.32, LILAC, d0=0.7, d1=0.55, **ns)
+            m.seg(f"ArmTip{s}", (T.x, s * 1.0, T.z), (T.x + 0.1, s * 0.85, T.z + 0.75), 0.3, 0.12, LILAC, d0=0.5, d1=0.18, **ns)
+            star(m, f"CapStar{s}", (T.x, s * 1.2, T.z), (0, s, 0), (0, 0, 1), 0.36, GL)
+        for k, p in enumerate(((1.4, 1.4, 2.6), (-1.5, -1.2, 2.3), (-0.6, 1.6, 3.4), (1.0, -1.7, 3.0))):
+            star(m, f"Twinkle{k}", p, (0, 0, 1) if k % 2 else (1, 0, 0), (1, 0, 1) if k % 2 else (0, 1, 1), 0.26, GL)
+    with barrel_ctx(m, K, T, 0.2):
+        X = lambda dx: T.x + dx
+        P = lambda dx, dz=0: (X(dx), 0, T.z + dz)
+        G = (rgb(26, 14, 64), SPACE, SPACE_L)
+        prism(m, "Breech", P(-2.1), P(-0.85), 0.95, 0.9, SPACE, grad=G)
+        prism(m, "Chase", P(-1.0), P(3.0), 0.8, 0.62, SPACE, grad=G)
+        for nm, x0, x1, r in (("Band0", -0.95, -0.65, 0.94), ("Band1", 0.9, 1.12, 0.78), ("Band2", 2.1, 2.3, 0.72)):
+            prism(m, nm, P(x0), P(x1), r, r, LILAC)
+        prism(m, "Trunnion", (T.x, -0.95, T.z), (T.x, 0.95, T.z), 0.24, 0.24, LILAC)
+        for k, a in enumerate((math.pi / 2, math.pi / 2 + 2.2, math.pi / 2 - 2.2)):     # swept rocket fins
+            rd = Vector((0, math.cos(a), math.sin(a)))
+            m.slab(f"Fin{k}", [(-0.9, 0), (0.7, 0), (-0.35, 0.8), (-1.25, 0.95)], 0.14, LILAC,
+                   origin=Vector(P(-1.3)) + rd * 0.8, xaxis=(1, 0, 0), yaxis=rd)
+        star(m, "BackStar", P(-2.15), (-1, 0, 0), (0, 0, 1), 0.95, GL, points=8, r=0.22)
+        for k, (dx, a) in enumerate(((-0.1, 1.0), (0.5, -0.4), (1.6, 2.2), (2.6, 0.3), (-1.6, 2.9))):
+            rd = Vector((0, math.cos(a), math.sin(a)))
+            star(m, f"Dust{k}", Vector(P(dx)) + rd * 0.74, rd, (1, 0, 0), 0.16, GL)
+        # black-hole muzzle: dark flare, void core, spinning accretion disc
+        prism(m, "Flare", P(2.9), P(3.55), 0.66, 1.05, VOID)
+        prism(m, "Lip", P(3.5), P(3.72), 1.1, 1.06, LILAC)
+        prism(m, "Void", P(3.4), P(3.73), 0.74, 0.74, VOID, chamfer=0.0)
+        prism(m, "Core", P(3.2), P(3.8), 0.48, 0.48, GL, glow=True, chamfer=0.0)
+        with m.bone("Halo", P(3.65)):
+            ring(m, "Accretion", P(3.7), (1, 0, 0), 1.3, 0.24, GL, n=16, glow=True, depth=0.08)
+            ring(m, "Accretion2", P(3.62), (1, 0, 0), 1.6, 0.08, LILAC, n=16, depth=0.06)
+        with m.bone("Muzzle", P(3.76)): pass
+    m.done(views=VIEWS, glow_color=GL)
+
+
+BUILDERS = {1: build_wooden, 2: build_iron, 13: build_galaxy, 14: build_celestial}
 
 
 def build_one(t):
