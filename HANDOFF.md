@@ -126,3 +126,9 @@ plain, frill and sail are flat plates.
 > already has an `anims/` folder. Do ONE zone at a time at the custom-Chimera quality bar (studs everywhere, aggressive +
 > muscular predators, `TFFA_ANIM_PREVIEW=0`), review hero/front/side of every animal harshly, fix, rebuild, then commit and
 > push (fetch + rebase first). Show me each zone's overview sheet.
+
+## Cannons (Cannon Tame, 14 tiers) - IN PROGRESS
+- `tools/blender/cannons.py` builds into `models/CannonTame/Cannons/<NN>_<Theme>/<Theme>Cannon/` (`python cannons.py [tiers] [--no-render] [--sheet]`); that folder's `README.md` has the roster, rig and glow table.
+- Done: 01 Wooden, 02 Iron, 03 Stone, 04 Bamboo, 11 Cyber, 12 Dragon, 13 Galaxy, 14 Celestial. Remaining, built in pairs from both ends: 05 Copper + 10 Toxic, 06 Candy + 09 Lava, 07 Golden + 08 Frost.
+- Early tiers use the studded look, late tiers the faceted look with one Neon glow colour. Every cannon is rigged (`Body`, a `Barrel` aim bone at the trunnion, an empty `Muzzle` bone for spawning projectiles) with `Idle` and `Fire` clips.
+- Dragon: the user rejected heads built from boxes, so it reuses the zoo RedDragon head (`examples/dragon.py`) inside a frame. Their reference is `12_Dragon/DragonCannon_reference.webp`. Review harshly against references using a matching lens (about 90 mm telephoto for AI images).
