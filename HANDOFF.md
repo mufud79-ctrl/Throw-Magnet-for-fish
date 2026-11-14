@@ -70,6 +70,60 @@ Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07
 - `tools/blender/zones_blocky.py` builds all 60 props (`python zones_blocky.py [Zone or Prop names] [--no-render]`). No prop may repeat across zones.
 - Possible polish: StatueHead and IcebergChunk are plain; FallenStar's glow arms read as a white smear in previews (Neon in Roblox).
 
+## TFFA-style animals (skill) - CURRENT WORK
+Develop on branch `claude/roblox-animal-models-852c5h`. Commit + push after every zone (another Claude session may push
+to the same branch: `git fetch` + `git rebase origin/claude/roblox-animal-models-852c5h` before pushing; never rebuild a
+zone that session owns). A second session works BOTTOM-UP (10_MythicIsles done, then 11_Space, 09_Volcano, 08...), skipping animals already rebuilt.
+
+**Skill:** `.claude/skills/tffa-animal-models/` - read `SKILL.md` first (workflow, look options table, kit cheat-sheet),
+then `references/style_guide.md` and `references/review_checklist.md`. Reference models in `models/TFFA/`
+(Gorilla, TRex, RedDragon, Phoenix, Cow; see `TFFA_vs_reference.png`).
+**Roster:** `tools/blender/tffa_zoo.py` holds every Cannon Tame animal as an archetype spec (one line each), building into
+`models/CannonTame/Animals/<Zone>/<Name>/`. Gorilla, TRex, Cow and Phoenix are built from the skill's example scripts.
+
+### Status (32 of 77 rebuilt in the new style, rigged with Idle/Walk[/Fly] clips)
+| Zone | Done (new kit) | To do (still the old CannonTame look) |
+|---|---|---|
+| 01_Farm | all 7 | - |
+| 02_Forest | all 7 | - |
+| 03_Savanna | all 7 | - |
+| 04_Jungle | Panther (snarl + muscular, user-approved), Crocodile | Frog, Gorilla, Monkey, Sloth, Toucan (toucan bill-tip fix is in the code, not yet rebuilt) |
+| 05_Arctic | - | ArcticFox, Husky, Penguin, PolarBear, Seal, SnowOwl, Walrus |
+| 06_Desert | Rattlesnake, Scorpion | Camel, FennecFox, Lizard, SphinxCat, Vulture |
+| 07_IceAge | Mammoth (shaggy + fierce + muscular + studs, user-approved) | GiantBeaver, GiantSloth, Glyptodon, Sabertooth, WoollyHare, WoollyRhino |
+| 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
+| 09_Volcano | LavaDrake (dragon archetype, muscular, studded, user-approved) | EmberWolf, FireSalamander, LavaRex, MagmaSlug, ObsidianGolem, Phoenix |
+| 10_MythicIsles | all 7 (bottom-up session: equine Pegasus/Unicorn, king-of-the-sea Kraken, dragon-archetype CelestialDragon, snarling Chimera) | - |
+| 11_Space | all 7 as hero scripts (bottom-up session; `examples/<name>.py`) | - |
+
+"Hard set" for future skill work (unusual anatomy, will need adjustments): Crocodile, Scorpion, Rattlesnake, Mammoth,
+Triceratops, Spinosaurus, LavaDrake. Known weak spots: mammoth hair strands are flat blocks, scorpion tail segments are
+plain, frill and sail are flat plates.
+
+### User feedback to apply to the remaining animals
+- **Quality bar = the custom Chimera** (`examples/chimera.py`, user: "THAT LOOKS SO GOOD!!"). Every animal in every
+  remaining zone gets that level of detail: reference analysis first, a custom script per animal, 4-view review sheet,
+  head studies when heads are weak. See `.claude/skills/tffa-animal-models/references/hero_build_workflow.md`.
+- Quality over speed: **one zone at a time**, review hero + front + side of every animal, fix, then commit.
+- **Studs on everything** (the user rejected stud-less dragons and fur).
+- Predators and big beasts must look **aggressive and muscular**: `snarl=True` (panther-style open jaw) for hunters such
+  as the Sabertooth, EmberWolf and PolarBear; `fierce=True` for big herbivores (WoollyRhino, GiantSloth...);
+  `muscular=True` on both. Rejected looks: "basic house cat", "dog with wings", "starved", "stubby", "elephant through chemo".
+- Dragons (GalaxyDragon, CelestialDragon) must use the `dragon` archetype (`studded=True, muscular=True`), not `quad` + wings.
+- The rattlesnake's coiled build was preferred over a redesign: when an animal already looks good, don't replace it.
+- Keep every model animatable (rig + Idle/Walk, plus Fly for wings, exported automatically by `done()`), but **skip the
+  animation previews for now** (`TFFA_ANIM_PREVIEW=0`).
+
+### Paste-ready prompt for the next session
+> Continue the TFFA-style rebuild of the Cannon Tame animals on branch `claude/roblox-animal-models-852c5h`.
+> Read `HANDOFF.md` ("TFFA-style animals" section) and `.claude/skills/tffa-animal-models/SKILL.md` first; use the
+> `tffa-animal-models` skill. Set up Blender with
+> `python3 -m venv /tmp/bpyenv && /tmp/bpyenv/bin/pip install bpy numpy`.
+> Do ONE zone at a time, starting with the rest of 04_Jungle, then 05_Arctic, 06_Desert, 07_IceAge, 08_DinoLand,
+> 09_Volcano, 11_Space (leave 10_MythicIsles alone). For each zone: edit the specs in `tools/blender/tffa_zoo.py`, run
+> `TFFA_ANIM_PREVIEW=0 /tmp/bpyenv/bin/python tools/blender/tffa_zoo.py <Zone> --sheet`, review hero/front/side
+> of every animal harshly against the style guide and the user feedback above (studs everywhere, aggressive + muscular
+> predators), fix, rebuild, then commit and push (fetch + rebase first). Show me each zone's overview sheet.
 ## TFFA-style animals (skill)
 - Skill: `.claude/skills/tffa-animal-models/` (`SKILL.md`, kit `scripts/tffa_kit.py`, renderer, `compare.py`, style guide, harsh-review checklist, real reference shots).
 - Reviewed models in `models/TFFA/`: Gorilla, TRex, RedDragon, Phoenix (each iterated 4-8 rounds against a real game shot) and the Cow quadruped template. See `models/TFFA/TFFA_vs_reference.png`.

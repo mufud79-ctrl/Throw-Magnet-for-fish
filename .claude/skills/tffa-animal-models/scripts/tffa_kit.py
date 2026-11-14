@@ -62,11 +62,12 @@ def stud_tile(color, variant=0, n=CELL, jitter=0.035):
 
 # ----------------------------------------------------------------------------- model
 class Model:
-    def __init__(self, name, folder=None, stud=1.0, chamfer=0.12, jitter=0.035):
+    def __init__(self, name, folder=None, stud=1.0, chamfer=0.12, jitter=0.035, faceted=False):
         """name: asset name. folder: output dir (default <repo>/models/TFFA/<name>). stud: world size of one stud
         cell (1.0 = true Roblox studs; raise it for big animals so the pattern stays readable).
         chamfer: default bevel as a fraction of a part's smallest dimension (0.08-0.18 reads as TFFA)."""
         self.name, self.stud, self.chamfer, self.jitter = name, stud, chamfer, jitter
+        self.faceted = faceted     # faceted look (rare/mythic): no studs anywhere
         root = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
         self.out = os.path.abspath(folder) if folder else os.path.join(root, "models", "TFFA", name)
         os.makedirs(self.out, exist_ok=True)
@@ -123,7 +124,7 @@ class Model:
             A, B, Cc, D = C[a], C[b], C[c], C[d]
             P = lambda s, t: (A * (1 - s) + B * s) * (1 - t) + (D * (1 - s) + Cc * s) * t
             fu, fv = (B - A).length, (D - A).length
-            st = bool(studs) and not grad and (studs is True or (studs == "top" and kind == "top") or
+            st = bool(studs) and not self.faceted and not grad and (studs is True or (studs == "top" and kind == "top") or
                                                (studs == "sides" and kind == "side")) and min(fu, fv) >= 0.55 * g
             U_, V_ = lines[ua], lines[va]
             for i in range(len(U_) - 1):

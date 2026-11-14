@@ -16,8 +16,9 @@ Everything needed is in this folder:
 | `scripts/compare.py` | Reference vs ours side-by-side sheet (system `python3` + Pillow) |
 | `references/style_guide.md` | **Read first.** The style rules, measured from the real game shots |
 | `references/review_checklist.md` | The harsh comparison checklist + known pitfalls and their fixes |
+| `references/hero_build_workflow.md` | **The quality bar for every animal now**: the Chimera method - reference analysis, custom per-animal script, head studies, 4-view review, archive old versions |
 | `references/ref_images/` | Real in-game references (gorilla, T-Rex icon, red dragon, phoenix, pumpkin spider, carrot) |
-| `examples/` | Finished, reviewed builds: `gorilla.py` (studded, front eyes, rainbow), `trex.py` (studded, open jaw, side eyes), `dragon.py` (faceted fantasy, wings), `phoenix.py` (gradient feathers) |
+| `examples/` | Finished, reviewed builds: `chimera.py` (**user-approved hero build**: stalking pose, mane cape, snarl, ringed horns, snake tail), `gorilla.py` (studded, front eyes, rainbow), `trex.py` (studded, open jaw, side eyes), `dragon.py` (faceted fantasy, wings), `phoenix.py` (gradient feathers), `cow.py` |
 
 ## Setup (once per container)
 ```bash
@@ -26,8 +27,14 @@ Everything needed is in this folder:
 `bpy` is Blender as a Python module (~430 MB, about 1 min). `compare.py` uses the system `python3` with Pillow.
 
 ## Workflow
+> **Quality bar (user, after the Chimera): every animal in every remaining zone gets the Chimera level of detail.**
+> Follow `references/hero_build_workflow.md`: analyse a reference first, then a custom `examples/<animal>.py` per animal
+> (archetype one-liners are only a starting sketch), 4-view review sheet, head studies when heads are weak.
+
 1. **Pin the reference.** Use a real in-game shot (a user image, a thumbnail, `references/ref_images/`). Fan art (voxel/Minecraft-like AI images) is NOT the style - ignore it. Note: silhouette, proportions (head size!), colours, face, signature parts.
 2. **Pick the tier look** (style_guide §1): *studded* (common/natural animals) or *faceted* (rare/fantasy: no studs, gradients allowed).
+   The user's standing preference: **studs on everything** (incl. dragons: `studded=True`), predators and big beasts
+   **aggressive** (`snarl` or `fierce` face) and **muscular** - never "house cat", "dog with wings" or "starved".
 3. **Copy the closest example** to `examples/<animal>.py` and edit. Build in studs: +X forward, +Y = animal's left, +Z up, ground at z = 0. Mirror with `for s in (1, -1)`.
 4. **Build + render** (about 1-2 min per model):
    ```bash
@@ -49,12 +56,47 @@ Everything needed is in this folder:
    rigidly to its bone, generates the clips and checks them in `previews/<Name>_anim.png` (one row per clip, top = Idle).
    Look at that strip: legs must swing in diagonal pairs, wings must flap, nothing may detach. `m.gait = {"fly": False}`
    for flightless birds, `{"hop": True}` for frogs/rabbits, `{"amp": 0.8}` to calm big animals.
-8. **Batch carefully.** For rosters, build ONE zone (5-8 animals) at a time with `tools/blender/tffa_zoo.py <Zone> --sheet`,
+8. **Batch carefully.** For rosters, build ONE zone (5-8 animals) at a time with
+   `TFFA_ANIM_PREVIEW=0 /tmp/bpyenv/bin/python tools/blender/tffa_zoo.py <Zone or Names> --sheet` (each animal runs in its own
+   Blender process - a whole zone in one process got OOM-killed; `TFFA_ANIM_PREVIEW=0` skips the animation strip renders,
+   rigs + clips are still exported). Previews per animal: hero, front, side - check all three,
    review `<Zone>_overview.png` and `<Zone>_anim_overview.png` animal by animal, fix, rebuild, then commit and move on.
    Quality drops when many animals are generated without review - don't do it.
 9. **Deliver**: `<Name>.glb` (import this into Roblox with the 3D Importer, at 1 unit = 1 stud, facing -Z, pivot at the ground centre), `<Name>.fbx`, `<Name>.blend`, `<Name>_Texture.png`, `<Name>_Detail.png` (stud shading + mutation mask), `anims/<Name>_<Clip>.fbx` (one per clip: Roblox Animation
    Editor → Import → From FBX Animation → Loop → Publish; bone names are shared, so one upload per family works for every
    animal with the same bones), and `previews/`. The GLB/FBX hold the skinned mesh + armature + all clips. Each mesh must stay under 20k triangles (the kit asserts this). Typical builds are 3-8k.
+
+## Look options (archetype spec keys, all reviewed with the user)
+| Key | Archetype | Effect | Used on |
+|---|---|---|---|
+| `snarl=True` | quad | open snarling jaw on a `Jaw` bone, red mouth, rows of blade teeth + long fangs, nose-bridge wrinkle, squinted eyes under steep brows (front-facing even with a long snout) | Panther |
+| `fierce=True` | quad | milder aggression: narrowed eyes, pupils forward, heavy down-slanted brows, closed mouth | Mammoth |
+| `muscular=True` | quad | deep chest + tucked waist + big haunches, shoulder blades, side bulges; legs = thick upper leg, lean lower leg, heavy paw with toes | Panther, Mammoth |
+| `muscular=True` | dragon | barrel chest wider than the torso, pecs beside the belly shield, shoulder caps, thick arms, heavy thighs/calves, thick neck base | LavaDrake |
+| `front_back=0.07` | quad | front legs tucked back under the chest (fraction of body length) | Panther |
+| `tail_w=1.7` | quad | thicker `long` tail | Panther |
+| `ears="cat"` | quad | short broad big-cat ears (`point`, `round`, `long`, `floppy`, `big`, `tiny`, `fennec` also exist) | Panther |
+| `nostrils=True` | quad | two nostril slits instead of a nose plate | Horse |
+| `head_scale=` | quad | head size (default 1.3; TFFA heads are big) | Croc 1.35, Mammoth 1.3 |
+| `side_eyes=True` | quad | eyes on the head sides (long-faced animals) | Horse, Zebra, dinos |
+| `gait=dict(hop=True)` / `fly=False` | quad / bird | bunny-hop walk / flightless bird (no Fly clip) | Rabbit, Ostrich, Penguin |
+| `studded=True` | dragon | TFFA studs on every big dragon part | LavaDrake |
+| `equine=True` | quad | horse build: deep chest + withers, round barrel, high croup + haunches, arched thick neck with a falling mane, cheek block, body-coloured face with a muzzle tip, legs with forearm/gaskin, knee/hock, slim cannon, fetlock, hoof; use with `tail="flow"` | Pegasus, Unicorn |
+| `wings(..., kind="feather", wide=1.7, spread=0.8)` | accessory | short feather wings (`span` 0.55) with broad feathers, each fan tilted out into a V so it reads from the front | Griffin, Pegasus |
+| `horns("jackalope")` | accessory | short antlers splayed outward in front of long ears | Jackalope |
+| `kraken` | archetype | king of the sea: huge head + brow ridge, armoured spiked mantle, toothed maw, 8 thick tentacles (2 reared) with suckers | Kraken |
+| `faceted=True` | any | no studs anywhere (only if the user asks for the smooth fantasy look) | |
+| `s=` | dragon / theropod | overall scale | |
+
+Accessories (`x=[...]`): `shaggy(col, col2)` (ice-age fur: studded hair strands, shoulder hump, domed head, cheek hair,
+leg fur), `tusks("mammoth"|"walrus"|"up")`, `trunk(col)`, `jaw_teeth(n)` (croc tooth rows), `fangs(length=)`,
+`horns(...)`, `wings(col, span, glow, membrane, kind="bat"|"feather")`, `mane_back`, `shell`, `plates`, `frill`, `crest`,
+`sail`, `spine_spikes`, `hedgehog_spikes`, `beard`, `wool`, `mask`, `eye_patches`, `hump`, `club_tail`, `whiskers`,
+`comb`, `tufts`, `bill_tip`, `ruff`, `glow_bits`, `flame_mane`, `headdress`, `astro`, `hole_ring`, `chimera_bits`,
+`crescent`, `talons`, `beak_head`, `rex_cracks`.
+Archetypes: `quad`, `bird`, `ape`, `theropod` (= the reviewed T-Rex), `dragon` (= the reviewed RedDragon: long neck,
+horned frilled head, belly shield, spade tail, membrane wings), `frog`, `seal`, `snake`, `scorpion`, `blob`, `golem`,
+`whale`, `kraken`.
 
 ## Kit cheat-sheet (all sizes in studs, colours from `rgb(r, g, b)`)
 ```python

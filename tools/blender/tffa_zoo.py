@@ -46,8 +46,8 @@ ZONES = [
    ("Toucan", B, dict(body=(1.4, 1.15, 1.5), leg=0.5, head=1.05, c1=rgb(36, 36, 42), belly=YELLOW, beak=(1.5, 0.65, 0.6), beak_c=ORANGE, wing_c=rgb(30, 30, 36), x=[bill_tip()])),
    ("Monkey", A, dict(torso=(1.0, 0.85, 1.3), leg=0.6, head=1.05, c1=BROWN, face_c=NOUGAT, ears="round", ear_c=NOUGAT, tail="long")),
    ("Sloth", A, dict(torso=(1.4, 1.1, 1.5), leg=0.45, head=1.05, lean=0.1, c1=rgb(176, 154, 122), face_c=CREAM, x=[eye_patches(DBROWN)])),
-   ("Panther", Q, dict(body=(2.6, 1.2, 1.3), legs=(0.9, 0.45), head=(1.2, 1.15, 1.0), neck=(0.3, 0.5), c1=rgb(44, 42, 56), snout=(0.4, 0.65, 0.5), snout_c=rgb(60, 58, 72), ears="point", tail="long", angry=True, iris=rgb(180, 240, 70))),
-   ("Crocodile", Q, dict(body=(3.6, 1.8, 1.0), legs=(0.45, 0.5), sprawl=0.3, head=(1.4, 1.5, 0.8), neck=(0, 0.1), c1=rgb(72, 120, 62), belly=CREAM, snout=(1.9, 1.15, 0.55), tail="thick", angry=True, head_scale=1.15, x=[spine_spikes(rgb(52, 86, 46), 7), fangs()])),
+   ("Panther", Q, dict(body=(3.8, 1.7, 1.55), legs=(1.65, 0.64), head=(1.55, 1.55, 1.0), neck=(0.6, 0.22), c1=rgb(52, 48, 68), snout=(1.0, 1.0, 0.72), snout_c=rgb(54, 52, 70), nose_c=rgb(18, 18, 24), feet=rgb(30, 28, 40), ears="cat", tail="long", tail_w=1.7, tail_c=rgb(40, 38, 52), angry=True, snarl=True, iris=rgb(205, 250, 60), brow=rgb(16, 16, 22), head_scale=1.3, muscular=True, front_back=0.07, x=[])),
+   ("Crocodile", Q, dict(body=(3.4, 1.9, 1.15), legs=(0.45, 0.55), sprawl=0.3, head=(1.5, 1.65, 0.95), neck=(0, 0.1), c1=rgb(72, 128, 62), belly=CREAM, snout=(1.9, 1.3, 0.62), snout_c=rgb(82, 140, 70), tail="thick", angry=True, head_scale=1.35, eye=1.5, side_eyes=True, x=[spine_spikes(rgb(52, 92, 46), 7), jaw_teeth(7)])),
    ("Gorilla", EX, "gorilla"),
  ]),
  ("05_Arctic", [
@@ -75,7 +75,7 @@ ZONES = [
    ("Glyptodon", Q, dict(body=(2.9, 2.4, 1.4), legs=(0.55, 0.6), head=(1.0, 1.05, 0.85), neck=(0, 0.2), c1=rgb(124, 102, 82), ears="tiny", tail="thick", x=[shell(rgb(166, 134, 92), rgb(112, 86, 60))])),
    ("WoollyRhino", Q, dict(body=(3.4, 2.1, 2.1), legs=(0.9, 0.8), head=(1.6, 1.4, 1.2), neck=(0.1, 0.2), c1=rgb(146, 102, 62), snout=(0.9, 1.15, 0.9), ears="point", tail="short", angry=True, x=[horns("rhino"), fur_coat(rgb(156, 108, 62))])),
    ("Sabertooth", Q, dict(body=(2.7, 1.4, 1.5), legs=(1.0, 0.52), head=(1.3, 1.25, 1.1), neck=(0.3, 0.5), c1=rgb(216, 164, 92), pattern="stripes", pat_c=rgb(156, 102, 50), pat_n=4, snout=(0.45, 0.75, 0.55), snout_c=CREAM, ears="round", tail="short", angry=True, x=[fangs()])),
-   ("Mammoth", Q, dict(body=(4.0, 2.6, 2.8), legs=(1.5, 0.9), head=(2.0, 2.1, 2.0), neck=(0, 0.3), c1=rgb(124, 78, 46), snout=(0.5, 0.95, 0.9), ears="tiny", tail="short", head_scale=1.15, x=[tusks("mammoth"), trunk(rgb(124, 78, 46)), fur_coat(rgb(134, 84, 48), 7), hump(1, rgb(112, 70, 40))])),
+   ("Mammoth", Q, dict(body=(3.8, 2.6, 2.6), legs=(1.5, 0.95), head=(2.0, 2.1, 2.0), neck=(0, 0.3), c1=rgb(118, 64, 36), snout=(0.5, 0.95, 0.9), snout_c=rgb(104, 56, 32), ears="tiny", ear_c=rgb(92, 50, 28), tail="tuft", tail_tip=rgb(70, 38, 22), head_scale=1.3, fierce=True, muscular=True, x=[shaggy(rgb(118, 64, 36), rgb(90, 48, 27)), tusks("mammoth"), trunk(rgb(110, 60, 34))])),
  ]),
  ("08_DinoLand", [
    ("Compy", theropod, dict(s=0.32, c1=rgb(154, 206, 72), c2=rgb(92, 144, 50))),
@@ -91,32 +91,41 @@ ZONES = [
    ("FireSalamander", Q, dict(body=(2.2, 1.0, 0.65), legs=(0.32, 0.34), sprawl=0.25, head=(1.0, 0.95, 0.6), neck=(0, 0.2), c1=rgb(44, 40, 46), snout=(0.4, 0.75, 0.35), tail="long", head_scale=1.2, glow=rgb(255, 140, 30), x=[glow_bits(rgb(255, 140, 30), 10, 5, "body", 0.35)])),
    ("EmberWolf", Q, dict(body=(2.5, 1.2, 1.4), legs=(1.0, 0.48), head=(1.2, 1.15, 1.0), neck=(0.3, 0.6), c1=rgb(58, 52, 56), snout=(0.5, 0.65, 0.5), ears="point", tail="long", angry=True, iris=rgb(255, 150, 40), glow=rgb(255, 120, 30), x=[flame_mane(rgb(255, 120, 30))])),
    ("ObsidianGolem", golem, dict(c1=rgb(44, 36, 56), c2=rgb(74, 52, 106), glowc=rgb(200, 90, 255), glow=rgb(200, 90, 255))),
-   ("LavaDrake", Q, dict(body=(3.0, 1.8, 1.8), legs=(1.1, 0.72), head=(1.4, 1.2, 1.0), neck=(1.4, 0.8), c1=rgb(176, 40, 30), belly=rgb(255, 170, 60), snout=(0.8, 0.85, 0.6), tail="dragon", angry=True, iris=rgb(255, 170, 50), side_eyes=True, glow=rgb(255, 110, 20),
-        x=[horns("goat", rgb(44, 32, 32)), wings(rgb(176, 40, 30), 1.0, True, rgb(255, 110, 20)), spine_spikes(rgb(64, 32, 32), 6)])),
+   ("LavaDrake", dragon, dict(s=0.85, studded=True, muscular=True, c1=rgb(150, 30, 24), c2=rgb(64, 20, 18), mem=rgb(104, 24, 20), belly=rgb(255, 150, 40), seg=rgb(255, 110, 20), belly_glow=True, knob=rgb(255, 150, 40), horn=rgb(44, 32, 32), eye=rgb(255, 170, 50), eye_glow=True, spikes=rgb(44, 30, 30), glow=rgb(255, 110, 20))),
    ("LavaRex", theropod, dict(s=1.05, c1=rgb(58, 46, 46), c2=rgb(32, 26, 30), belly=rgb(255, 146, 44), iris=rgb(255, 130, 30), eye_glow=True, glow=rgb(255, 110, 20), x=[rex_cracks(rgb(255, 110, 20))])),
    ("Phoenix", EX, "phoenix"),
  ]),
  ("10_MythicIsles", [
-   ("Jackalope", Q, dict(gait=dict(hop=True), body=(1.6, 1.1, 1.1), legs=(0.42, 0.38), head=(1.0, 1.0, 0.95), neck=(0.1, 0.8), c1=rgb(196, 154, 112), belly=WHITE, ears="long", tail="short", tail_c=WHITE, snout=(0.25, 0.55, 0.4), snout_c=WHITE, nose_c=PINKC, x=[horns("antler", rgb(236, 214, 172))])),
-   ("Griffin", Q, dict(body=(2.7, 1.5, 1.6), legs=(1.0, 0.52), head=(1.2, 1.15, 1.1), neck=(0.6, 0.8), c1=rgb(216, 164, 92), head_c=WHITE, neck_c=WHITE, snout=(0.55, 0.55, 0.45), snout_c=YELLOW, nose_c=YELLOW, tail="tuft", angry=True, x=[wings(rgb(150, 104, 62), 1.0, False, rgb(250, 230, 200), kind="feather"), talons(), beak_head()])),
-   ("Pegasus", Q, dict(body=(3.0, 1.4, 1.7), legs=(1.7, 0.5), head=(1.6, 1.0, 1.0), neck=(1.3, 1.0), c1=WHITE, snout=(0.6, 0.85, 0.75), snout_c=rgb(242, 232, 242), ears="point", tail="tuft", tail_c=LBLUE, tail_tip=LBLUE, feet=GOLD, side_eyes=True, x=[mane_back(LBLUE), wings(rgb(236, 240, 255), 1.1, False, LBLUE, kind="feather")])),
-   ("Unicorn", Q, dict(body=(3.0, 1.4, 1.7), legs=(1.7, 0.5), head=(1.6, 1.0, 1.0), neck=(1.3, 1.0), c1=WHITE, snout=(0.6, 0.85, 0.75), snout_c=rgb(255, 230, 245), ears="point", tail="tuft", tail_c=PINK, tail_tip=LAVENDER, feet=GOLD, side_eyes=True, glow=rgb(255, 220, 120), x=[mane_back(PINK), horns("unicorn", GOLD, True)])),
-   ("Chimera", Q, dict(body=(2.7, 1.5, 1.6), legs=(1.0, 0.56), head=(1.3, 1.25, 1.1), neck=(0.3, 0.5), c1=rgb(216, 164, 92), mane=rgb(146, 72, 40), snout=(0.45, 0.75, 0.55), snout_c=CREAM, ears="round", tail="long", angry=True, x=[chimera_bits()])),
-   ("Kraken", kraken, dict(c1=rgb(176, 52, 92), c2=rgb(112, 30, 62))),
-   ("CelestialDragon", Q, dict(body=(3.2, 1.8, 1.8), legs=(1.2, 0.72), head=(1.5, 1.25, 1.1), neck=(1.6, 0.8), c1=rgb(246, 246, 255), belly=GOLD, snout=(0.9, 0.9, 0.65), tail="dragon", tail_tip=GOLD, angry=True, iris=CYAN, side_eyes=True, glow=rgb(120, 230, 255),
-        x=[horns("goat", GOLD), wings(rgb(240, 240, 255), 1.15, False, rgb(200, 230, 255)), spine_spikes(rgb(120, 230, 255), 6, True), whiskers(GOLD)])),
+   ("Jackalope", Q, dict(gait=dict(hop=True), body=(1.6, 1.15, 1.15), legs=(0.42, 0.4), head=(1.0, 1.05, 0.95), neck=(0.1, 0.8), c1=rgb(196, 154, 112), belly=WHITE, ears="long", tail="short", tail_c=WHITE, snout=(0.25, 0.55, 0.4), snout_c=WHITE, nose_c=PINKC, fierce=True, x=[horns("jackalope", rgb(236, 214, 172)), buck_teeth()])),
+   ("Griffin", Q, dict(body=(2.8, 1.6, 1.6), legs=(1.0, 0.56), head=(1.2, 1.15, 1.1), neck=(0.6, 0.8), c1=rgb(216, 164, 92), head_c=WHITE, neck_c=WHITE, snout=(0.55, 0.55, 0.45), snout_c=YELLOW, nose_c=YELLOW, tail="tuft", tail_tip=rgb(150, 104, 62), angry=True, fierce=True, muscular=True, head_scale=1.5, x=[wings(rgb(150, 104, 62), 0.55, False, rgb(250, 230, 200), kind="feather", wide=1.7, spread=0.8), talons(), beak_head()])),
+   ("Pegasus", Q, dict(equine=True, head_kit="horse_wedge", head_k=0.74, body=(3.0, 1.45, 1.6), legs=(1.6, 0.5), head=(1.3, 0.95, 1.0), neck=(1.3, 1.0), c1=WHITE, snout_c=rgb(242, 232, 242), mane_c=LBLUE, tail="flow", tail_c=LBLUE, tail_tip=rgb(110, 170, 240), feet=GOLD, x=[mane_back(LBLUE), wings(rgb(236, 240, 255), 0.55, False, LBLUE, kind="feather", wide=1.7, spread=0.8)])),
+   ("Unicorn", Q, dict(equine=True, head_kit="horse_wedge", head_k=0.74, body=(3.0, 1.45, 1.6), legs=(1.6, 0.5), head=(1.3, 0.95, 1.0), neck=(1.3, 1.0), c1=WHITE, snout_c=rgb(255, 230, 245), mane_c=PINK, horn=GOLD, tail="flow", tail_c=PINK, tail_tip=LAVENDER, feet=GOLD, glow=rgb(255, 220, 120), x=[mane_back(PINK)])),
+   ("Chimera", EX, "chimera"),   # custom build from the user reference; v1 (quad + chimera_bits) archived in models/CannonTame/Animals/_Archive/Chimera_v1
+   # v1: ("Chimera", Q, dict(head_kit="lion_sunburst", head_k=0.62, snarl=True, body=(3.4, 1.75, 1.7), legs=(1.35, 0.66), head=(1.5, 1.5, 1.0), neck=(0.5, -0.12), c1=rgb(196, 140, 82), mane=rgb(120, 62, 34), mane2=rgb(156, 86, 42), snout_c=rgb(232, 204, 156), nose_c=rgb(50, 30, 26), iris=rgb(255, 140, 30), eye_glow=True, glow=rgb(255, 140, 30), tail=None, muscular=True, front_back=0.07, x=[chimera_bits(), talons()])),
+   ("Kraken", EX, "kraken"),   # custom hero build from the user reference; v1 archived in models/CannonTame/Animals/_Archive/Kraken_v1
+   # v1: ("Kraken", kraken, dict(c1=rgb(150, 28, 52), c2=rgb(84, 16, 34), sucker=rgb(236, 150, 150), iris=rgb(255, 214, 60))),
+   ("CelestialDragon", dragon, dict(s=0.85, studded=True, muscular=True, c1=rgb(238, 240, 255), c2=rgb(150, 170, 220), mem=rgb(150, 200, 255), belly=GOLD, seg=rgb(214, 150, 30), knob=rgb(120, 230, 255), horn=GOLD, eye=CYAN, eye_glow=True, spikes=rgb(120, 230, 255), glow=rgb(120, 230, 255))),
  ]),
- ("11_Space", [
-   ("MoonBunny", Q, dict(gait=dict(hop=True), body=(1.6, 1.2, 1.2), legs=(0.45, 0.4), head=(1.1, 1.05, 1.0), neck=(0.1, 0.8), c1=rgb(206, 210, 226), pattern="spots", pat_c=rgb(152, 158, 180), pat_n=3, ears="long", tail="short", tail_c=WHITE, snout=(0.25, 0.55, 0.4), snout_c=WHITE, nose_c=PINKC, glow=rgb(255, 240, 150), x=[crescent(rgb(255, 240, 150))])),
-   ("AlienBlob", blob, dict(c1=rgb(112, 232, 92), size=(2.4, 2.2, 2.0), eye_y=(0.45, 0.0, -0.45), glow=rgb(200, 255, 120), x=[glow_bits(rgb(200, 255, 120), 4, 9, "top", 0.3)])),
-   ("SpaceCat", Q, dict(body=(2.1, 1.2, 1.3), legs=(0.85, 0.45), head=(1.2, 1.2, 1.05), neck=(0.3, 0.7), c1=rgb(74, 52, 124), snout=(0.35, 0.6, 0.45), snout_c=rgb(110, 84, 160), ears="point", tail="long", iris=CYAN, glow=rgb(150, 220, 255), x=[glow_bits(rgb(150, 220, 255), 10, 11, "body", 0.22), astro(rgb(224, 224, 238), rgb(120, 200, 255))])),
-   ("AstroDog", Q, dict(body=(2.3, 1.3, 1.4), legs=(0.9, 0.48), head=(1.2, 1.15, 1.1), neck=(0.3, 0.6), c1=WHITE, snout=(0.5, 0.65, 0.5), snout_c=rgb(242, 222, 202), ears="floppy", ear_c=rgb(206, 144, 92), tail="short", glow=CYAN, x=[astro()])),
-   ("StarWhale", whale, dict(c1=rgb(44, 44, 116), belly=rgb(124, 112, 206), glow=rgb(255, 240, 180), x=[glow_bits(rgb(255, 240, 180), 14, 21, "body", 0.3), glow_bits(rgb(255, 240, 180), 8, 22, "top", 0.3)])),
-   ("GalaxyDragon", Q, dict(body=(3.2, 1.8, 1.8), legs=(1.2, 0.72), head=(1.5, 1.25, 1.1), neck=(1.6, 0.8), c1=rgb(64, 32, 116), belly=rgb(42, 164, 206), snout=(0.9, 0.9, 0.65), tail="dragon", tail_tip=MAGENTA, angry=True, iris=MAGENTA, side_eyes=True, glow=rgb(255, 120, 230),
-        x=[horns("goat", rgb(204, 164, 255)), wings(rgb(64, 32, 116), 1.2, False, rgb(124, 62, 206)), spine_spikes(rgb(255, 120, 230), 6, True), glow_bits(rgb(255, 240, 200), 10, 31, "body", 0.2)])),
-   ("BlackHoleBeast", Q, dict(body=(2.7, 1.4, 1.6), legs=(1.0, 0.52), head=(1.3, 1.25, 1.1), neck=(0.3, 0.5), c1=rgb(30, 26, 40), snout=(0.5, 0.7, 0.5), snout_c=rgb(46, 40, 60), ears="point", tail="long", angry=True, iris=rgb(210, 110, 255), glow=rgb(200, 90, 255),
-        x=[hole_ring(rgb(200, 90, 255)), spine_spikes(rgb(124, 52, 206), 6, True)])),
+ ("11_Space", [      # hero builds (reference analysis in each script's docstring); v1 one-line specs kept below as comments
+   ("MoonBunny", EX, "moonbunny"),
+   ("AlienBlob", EX, "alienblob"),
+   ("SpaceCat", EX, "spacecat"),
+   ("AstroDog", EX, "astrodog"),
+   ("StarWhale", EX, "starwhale"),
+   ("GalaxyDragon", EX, "galaxydragon"),
+   ("BlackHoleBeast", EX, "blackholebeast"),
  ]),
+# v1  ("11_Space", [
+# v1    ("MoonBunny", Q, dict(gait=dict(hop=True), body=(1.6, 1.2, 1.2), legs=(0.45, 0.4), head=(1.1, 1.05, 1.0), neck=(0.1, 0.8), c1=rgb(206, 210, 226), pattern="spots", pat_c=rgb(152, 158, 180), pat_n=3, ears="long", tail="short", tail_c=WHITE, snout=(0.25, 0.55, 0.4), snout_c=WHITE, nose_c=PINKC, glow=rgb(255, 240, 150), x=[crescent(rgb(255, 240, 150))])),
+# v1    ("AlienBlob", blob, dict(c1=rgb(112, 232, 92), size=(2.4, 2.2, 2.0), eye_y=(0.45, 0.0, -0.45), glow=rgb(200, 255, 120), x=[glow_bits(rgb(200, 255, 120), 4, 9, "top", 0.3)])),
+# v1    ("SpaceCat", Q, dict(body=(2.1, 1.2, 1.3), legs=(0.85, 0.45), head=(1.2, 1.2, 1.05), neck=(0.3, 0.7), c1=rgb(74, 52, 124), snout=(0.35, 0.6, 0.45), snout_c=rgb(110, 84, 160), ears="point", tail="long", iris=CYAN, glow=rgb(150, 220, 255), x=[glow_bits(rgb(150, 220, 255), 10, 11, "body", 0.22), astro(rgb(224, 224, 238), rgb(120, 200, 255))])),
+# v1    ("AstroDog", Q, dict(body=(2.3, 1.3, 1.4), legs=(0.9, 0.48), head=(1.2, 1.15, 1.1), neck=(0.3, 0.6), c1=WHITE, snout=(0.5, 0.65, 0.5), snout_c=rgb(242, 222, 202), ears="floppy", ear_c=rgb(206, 144, 92), tail="short", glow=CYAN, x=[astro()])),
+# v1    ("StarWhale", whale, dict(c1=rgb(44, 44, 116), belly=rgb(124, 112, 206), glow=rgb(255, 240, 180), x=[glow_bits(rgb(255, 240, 180), 14, 21, "body", 0.3), glow_bits(rgb(255, 240, 180), 8, 22, "top", 0.3)])),
+# v1    ("GalaxyDragon", Q, dict(body=(3.2, 1.8, 1.8), legs=(1.2, 0.72), head=(1.5, 1.25, 1.1), neck=(1.6, 0.8), c1=rgb(64, 32, 116), belly=rgb(42, 164, 206), snout=(0.9, 0.9, 0.65), tail="dragon", tail_tip=MAGENTA, angry=True, iris=MAGENTA, side_eyes=True, glow=rgb(255, 120, 230),
+# v1         x=[horns("goat", rgb(204, 164, 255)), wings(rgb(64, 32, 116), 1.2, False, rgb(124, 62, 206)), spine_spikes(rgb(255, 120, 230), 6, True), glow_bits(rgb(255, 240, 200), 10, 31, "body", 0.2)])),
+# v1    ("BlackHoleBeast", Q, dict(body=(2.7, 1.4, 1.6), legs=(1.0, 0.52), head=(1.3, 1.25, 1.1), neck=(0.3, 0.5), c1=rgb(30, 26, 40), snout=(0.5, 0.7, 0.5), snout_c=rgb(46, 40, 60), ears="point", tail="long", angry=True, iris=rgb(210, 110, 255), glow=rgb(200, 90, 255),
+# v1         x=[hole_ring(rgb(200, 90, 255)), spine_spikes(rgb(124, 52, 206), 6, True)])),
+# v1  ]),
 ]
 
 def sheet(zone):
@@ -166,7 +175,7 @@ if __name__ == "__main__":
                 subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)
             elif "--child" in ARGS:
                 try:
-                    build(name, arch, P, out, views=[("hero", 40, 12, 45), ("front", 0, 8, 45)])
+                    build(name, arch, P, out, views=[("hero", 40, 12, 45), ("front", 0, 8, 45), ("side", 90, 4, 45)])
                 except Exception as e:
                     import traceback; traceback.print_exc(); print("FAILED", name, e)
             else:     # one Blender process per animal: renders leak memory, a whole zone in one process got OOM-killed

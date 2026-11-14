@@ -46,6 +46,16 @@ def front_eyes(m, c, P, k=1.0):
     hc, hl, hw, hh = c["hc"], c["hl"], c["hw"], c["hh"]
     e = hh * 0.36 * P.get("eye", 1.0) * k
     y = max(hw * 0.2, e * 0.62)
+    if P.get("fierce") and not P.get("snarl"):   # slightly aggressive: narrowed eyes, pupils pinned forward, heavy down-slanted brows
+        m.eyes((c["xf"] + 0.01, y, hc.z + hh * 0.16), size=(e * 1.05, e * 0.74), pupil=0.8, look=(0.45, -0.05),
+               angry=0.42, white=P.get("iris", WHITE), brow_col=P.get("brow", _brow(c["C1"])), brow_h=0.5, brow_up=0.64,
+               brow_w=1.22, brow_fwd=0.03, depth=max(0.12, e * 0.2), glow_pupil=P.get("eye_glow", False))
+        return
+    if P.get("snarl"):   # aggressive: wide narrowed eyes, pupils pinned forward, thick brows slashing down to the nose
+        m.eyes((c["xf"] + 0.01, y + e * 0.05, hc.z + hh * 0.2), size=(e * 1.1, e * 0.58), pupil=0.85, look=(0.55, 0),
+               angry=0.55, white=P.get("iris", WHITE), brow_col=P.get("brow", _brow(c["C1"])), brow_h=0.62, brow_up=0.62,
+               brow_w=1.3, brow_fwd=0.04, depth=max(0.12, e * 0.2), glow_pupil=P.get("eye_glow", False))
+        return
     m.eyes((c["xf"] + 0.01, y, hc.z + hh * 0.14), size=(e, e * 0.95), pupil=0.62, look=(0.3, -0.1),
            angry=0.3 if P.get("angry") else -0.05, white=P.get("iris", WHITE), brow_col=P.get("brow", _brow(c["C1"])),
            brow_h=0.34, brow_up=0.66, depth=max(0.12, e * 0.2), glow_pupil=P.get("eye_glow", False))
@@ -70,6 +80,11 @@ def ears(m, c, kind, col, inner=None):
                     top=(0.25, 0.3), rot=Rx(-s * 0.15), **NS)
               m.box(f"EarIn{s}", (hc.x - hl * 0.15 + hl * 0.1, s * hw * 0.3, top + hh * 0.17), (hl * 0.12, hw * 0.16, hh * 0.38), inner,
                     top=(0.3, 0.3), rot=Rx(-s * 0.15), **NS)
+          elif kind == "cat":            # big cats: short, broad, low triangles set wide apart
+              m.box(f"Ear{s}", (hc.x - hl * 0.18, s * hw * 0.36, top + hh * 0.1), (hl * 0.3, hw * 0.3, hh * 0.3), col,
+                    top=(0.3, 0.35), rot=Rx(-s * 0.3), **NS)
+              m.box(f"EarIn{s}", (hc.x - hl * 0.18 + hl * 0.1, s * hw * 0.37, top + hh * 0.07), (0.08, hw * 0.16, hh * 0.18), dk(col, 0.6),
+                    top=(0.3, 0.3), rot=Rx(-s * 0.3), **NS)
           elif kind == "fennec":
               m.box(f"Ear{s}", (hc.x - hl * 0.2, s * hw * 0.36, top + hh * 0.45), (hl * 0.38, hw * 0.34, hh * 1.0), col,
                     top=(0.25, 0.3), rot=Rx(-s * 0.3), **NS)
@@ -91,13 +106,51 @@ def ears(m, c, kind, col, inner=None):
           elif kind == "tiny":
               m.box(f"Ear{s}", (hc.x - hl * 0.2, s * hw * 0.34, top + hh * 0.06), (hl * 0.18, hw * 0.18, hh * 0.2), col, **NS)
 
+def snarl_jaw(m, c, P):
+    """Aggressive TFFA head (T-Rex icon / pumpkin monster language): upper muzzle + dropped lower jaw on a Jaw bone,
+    red mouth, rows of white blade teeth with long front fangs, nose bridge wrinkle."""
+    hc, hl, hw, hh, C1 = c["hc"], c["hl"], c["hw"], c["hh"], c["C1"]
+    sl, sw, sh = P.get("snout", (hl * 0.45, hw * 0.7, hh * 0.5)); scol = P.get("snout_c", C1)
+    xf = c["xf"]; zt = hc.z - hh * 0.08                     # muzzle top sits high: long flat predator face
+    sc = Vector((xf + sl / 2 - 0.05, 0, zt - sh * 0.35)); c.update(sc=sc, sl=sl, sw=sw, sh=sh)
+    m.box("Snout", sc, (sl + 0.1, sw, sh * 0.7), scol, top=(0.88, 0.9))
+    m.box("Bridge", sc + Vector((-sl * 0.15, 0, sh * 0.38)), (sl * 0.55, sw * 0.62, sh * 0.16), dk(scol, 0.85), **NS)   # snarl wrinkle
+    m.box("Nose", sc + Vector((sl / 2 + 0.04, 0, sh * 0.2)), (0.12, sw * 0.4, sh * 0.26), P.get("nose_c", NOSE), chamfer=0.1, **NS)
+    m.box("UpperGum", sc + Vector((0, 0, -sh * 0.36)), (sl * 0.98, sw * 0.86, sh * 0.12), MOUTH, **NS)
+    m.box("MouthBack", Vector((xf - 0.05, 0, sc.z - sh * 0.55)), (0.4, sw * 0.8, sh * 0.6), GUM, **NS)
+    nt = max(3, int(sl / 0.22))
+    for s in (1, -1):
+        for k in range(nt):
+            x = sc.x + sl / 2 - 0.08 - (sl - 0.1) * k / max(1, nt - 1) * 0.85; L = sh * (0.85 if k == 0 else 0.5)
+            m.spike(f"ToothU{s}{k}", (x, s * sw * 0.38, sc.z - sh * 0.38), (x, s * sw * 0.36, sc.z - sh * 0.38 - L), sw * 0.1, TOOTH, flat=0.35)
+    hinge = Vector((xf - 0.1, 0, sc.z - sh * 0.45))
+    m.bone("Jaw", hinge, "Head")
+    with m.bone("Jaw"), m.frame(pivot=hinge, rot=Ry(P.get("gape", 0.42))):
+        jc = Vector((xf + sl * 0.42, 0, sc.z - sh * 0.62))
+        m.box("Jaw", jc, (sl * 0.92, sw * 0.88, sh * 0.32), dk(scol, 0.92), bot=(0.9, 0.85))
+        m.box("Tongue", jc + Vector((-sl * 0.05, 0, sh * 0.18)), (sl * 0.7, sw * 0.45, sh * 0.08), TONGUE, **NS)
+        m.box("LowerGum", jc + Vector((0, 0, sh * 0.15)), (sl * 0.88, sw * 0.8, sh * 0.06), MOUTH, **NS)
+        for s in (1, -1):
+            for k in range(nt - 1):
+                x = jc.x + sl * 0.4 - 0.08 - (sl * 0.8) * k / max(1, nt - 2); L = sh * (0.6 if k == 0 else 0.38)
+                m.spike(f"ToothL{s}{k}", (x, s * sw * 0.36, jc.z + sh * 0.14), (x, s * sw * 0.34, jc.z + sh * 0.14 + L), sw * 0.09, TOOTH, flat=0.35)
+
 def snout_block(m, c, P):
+    if P.get("snarl"): return snarl_jaw(m, c, P)
     hc, hl, hw, hh, C1 = c["hc"], c["hl"], c["hw"], c["hh"], c["C1"]
     sl, sw, sh = P.get("snout", (hl * 0.3, hw * 0.62, hh * 0.45))
     sc = Vector((c["xf"] + sl / 2 - 0.04, 0, hc.z - hh * 0.22))
     c.update(sc=sc, sl=sl, sw=sw, sh=sh)
     if sl <= 0: return
     scol = P.get("snout_c", C1)
+    if P.get("equine"):   # long horse face in the head colour, tapering, with a separate soft muzzle tip
+        m.box("Snout", sc, (sl, sw, sh), P.get("head_c", C1), top=(0.86, 0.9), bot=(0.95, 0.95), studs=sl > 0.5)
+        tip = sc + Vector((sl * 0.36, 0, -sh * 0.06)); c["sc"] = sc
+        m.box("Muzzle", tip, (sl * 0.36, sw * 1.06, sh * 0.92), scol, top=(0.9, 0.9))
+        for s in (1, -1):
+            m.box(f"Nostril{s}", tip + Vector((sl * 0.18, s * sw * 0.24, sh * 0.12)), (0.1, sw * 0.16, sh * 0.22), P.get("nose_c", NOSE), chamfer=0.1, **NS)
+        m.box("MouthLine", tip + Vector((sl * 0.16, 0, -sh * 0.25)), (0.08, sw * 0.7, 0.06), dk(scol, 0.6), **NS)
+        return
     m.box("Snout", sc, (sl, sw, sh), scol, top=(0.92, 0.92), studs=sl > 0.5)
     ncol = P.get("nose_c", NOSE)
     if P.get("nostrils"):            # horses, camels, cattle-likes: two dark slits instead of a nose plate
@@ -125,7 +178,8 @@ def tail(m, c, kind, col, tip=None):
         m.box("Tail", tb + Vector((-0.15 * k, 0, 0.1)), (0.35 * k, 0.25 * k, 0.35 * k), col, rot=Ry(0.6), **NS)
     elif kind == "long":
         pts = [tb, tb + Vector((-1.0, 0, -0.25)) * k, tb + Vector((-1.9, 0, -0.1)) * k, tb + Vector((-2.6, 0, 0.35)) * k]
-        m.chain("Tail", pts, [0.38 * k, 0.3 * k, 0.24 * k, 0.16 * k], col, studs=False, bones="Tail"); end = pts[-1]
+        tw = c.get("tail_w", 1.0)
+        m.chain("Tail", pts, [0.38 * k * tw, 0.3 * k * tw, 0.24 * k * tw, 0.16 * k * tw], col, studs=False, bones="Tail"); end = pts[-1]
     elif kind == "bushy":
         m.box("Tail", tb + Vector((-0.75, 0, 0.35)) * k, (1.5 * k, 0.85 * k, 0.85 * k), col, rot=Ry(0.55), top=(0.8, 0.85))
         m.box("TailTip", tb + Vector((-1.55, 0, 0.92)) * k, (0.6 * k, 0.75 * k, 0.75 * k), tip or WHITE, rot=Ry(0.55), top=(0.6, 0.65)); end = tb + Vector((-1.7, 0, 1.0)) * k
@@ -138,6 +192,13 @@ def tail(m, c, kind, col, tip=None):
         m.box("Tuft", b + Vector((-0.05, 0, -0.2 * k)), (0.38 * k, 0.38 * k, 0.55 * k), tip or dk(col, 0.6), top=(0.6, 0.6), **NS); end = b
     elif kind == "flat":
         m.box("Tail", tb + Vector((-0.9, 0, -0.45)) * k, (1.6 * k, 1.0 * k, 0.22 * k), tip or dk(col), **NS); end = tb + Vector((-1.7, 0, -0.45)) * k
+    elif kind == "flow":    # horse tail: set high, arches out then falls in a long, widening sweep
+        tb = tb + Vector((0.05, 0, H * 0.25)); c["tail_bone"] = "Tail4"
+        pts = [tb, tb + Vector((-0.55, 0, 0.12)) * k, tb + Vector((-0.95, 0, -0.35)) * k, tb + Vector((-1.15, 0, -1.1)) * k, tb + Vector((-1.1, 0, -1.85)) * k]
+        m.chain("Tail", pts, [0.32 * k, 0.42 * k, 0.5 * k, 0.5 * k, 0.32 * k], col, depths=[0.3 * k, 0.32 * k, 0.34 * k, 0.32 * k, 0.24 * k], studs=False, bones="Tail")
+        if tip:
+            with m.bone("Tail4"): m.seg("TailTip", pts[3], pts[4] + Vector((0.05, 0, -0.15)) * k, 0.5 * k, 0.3 * k, tip, d0=0.33 * k, d1=0.24 * k, **NS)
+        end = pts[-1]
     elif kind in ("thick", "dragon"):
         w = W * 0.55
         pts = [tb + Vector((0.3, 0, -0.1)), tb + Vector((-1.4, 0, -0.35)) * 1, tb + Vector((-2.8, 0, -0.45)), tb + Vector((-4.0, 0, -0.35)),
@@ -190,6 +251,71 @@ def pattern(m, c, kind, col, n=5, seed=1):
         m.box("Saddle", (0, 0, z0 + H / 2 + 0.03), (L * 0.6, W * 0.8, 0.14), col, **NS)
 
 # ============================================================================ archetypes
+# ============================================================================ head kits (user-picked head studies)
+# Built in "study space" (studs; neck joint at HEAD_KIT_PIVOT, face toward +X). quad(head_kit=...) maps them onto the neck tip.
+HEAD_KIT_PIVOT = Vector((-0.6, 0, 3.0))
+
+def lion_head_sunburst(m, P):
+    """User-approved lion head (study L2): round head in a sunburst of mane spikes, closed mouth, whisker pads, fangs
+    over the lip, fierce brows. Keys: c1 (fur), mane, mane2, snout_c (pads/chin), nose_c."""
+    FUR = P.get("head_c", P["c1"]); MANE = P.get("mane", rgb(150, 70, 34)); MANE2 = P.get("mane2", lt(MANE, 0.25))
+    CR = P.get("snout_c", rgb(245, 227, 181)); NOSEC = P.get("nose_c", rgb(60, 34, 30))
+    m.box("ManeDisk", (-0.7, 0, 3.0), (1.1, 3.4, 3.4), MANE, top=(0.85, 0.85))
+    for k in range(14):
+        a = 2 * math.pi * k / 14; y, z = math.cos(a), math.sin(a); L = 3.0 if k % 2 else 2.5
+        m.spike(f"Ray{k}", (-0.7, y * 1.3, 3.0 + z * 1.3), (-1.0, y * L, 3.0 + z * L), 0.6, MANE2 if k % 2 else MANE, sides=4)
+    for s in (1, -1):
+        m.box(f"Ear{s}", (-0.2, s * 1.05, 4.15), (0.5, 0.55, 0.55), FUR, top=(0.7, 0.8))
+    m.box("Head", (0.2, 0, 3.0), (2.2, 2.5, 2.2), FUR, top=(0.86, 0.88), bot=(0.9, 0.92))
+    sn = P.get("snarl", False); pz = 0.12 if sn else 0.0
+    for s in (1, -1):
+        m.box(f"Pad{s}", (1.55, s * 0.42, 2.6 + pz), (0.8, 0.85, 0.75), CR, top=(0.85, 0.9))
+    m.box("Nose", (1.98, 0, 2.98 + pz), (0.18, 0.72, 0.42), NOSEC, bot=(0.9, 0.45), studs=False)
+    m.box("Bridge", (1.3, 0, 3.25 + pz), (1.0, 0.7, 0.35), dk(FUR, 0.85), studs=False)
+    if sn:    # snarl: open jaw, rows of blade teeth, long fangs top and bottom, tongue
+        m.box("Mouth", (1.4, 0, 2.25), (0.8, 1.15, 0.5), MOUTH, studs=False)
+        m.teeth("ToothT", (1.87, -0.42, 2.38), (1.87, 0.42, 2.38), 4, 0.2, 0.08)
+        for s in (1, -1):
+            m.spike(f"Fang{s}", (1.9, s * 0.38, 2.42), (1.95, s * 0.38, 1.8), 0.11, TOOTH, flat=0.35)
+        with m.frame(pivot=(0.7, 0, 2.3), rot=Ry(0.42)):
+            m.box("Jaw", (1.3, 0, 1.95), (1.15, 1.1, 0.4), CR)
+            m.box("Tongue", (1.25, 0, 2.17), (0.85, 0.75, 0.12), TONGUE, studs=False)
+            m.teeth("ToothB", (1.78, -0.36, 2.12), (1.78, 0.36, 2.12), 3, 0.18, 0.08, down=False)
+            for s in (1, -1): m.spike(f"FangB{s}", (1.8, s * 0.42, 2.1), (1.84, s * 0.42, 2.55), 0.1, TOOTH, flat=0.35)
+    else:
+        m.box("Chin", (1.3, 0, 2.05), (0.8, 0.9, 0.45), CR)
+        for s in (1, -1):
+            m.spike(f"Fang{s}", (1.92, s * 0.33, 2.32), (1.95, s * 0.33, 1.85), 0.1, TOOTH, flat=0.35)
+    m.eyes((1.12, 0.6, 3.45 + pz), size=(0.7, 0.55 if not sn else 0.46), pupil=0.66 if not sn else 0.8, look=(0.35, -0.1),
+           angry=0.35 if not sn else 0.5, white=P.get("iris", WHITE), glow_white=P.get("eye_glow", False),
+           brow_col=dk(MANE, 0.7), brow_h=0.42 if not sn else 0.5, brow_up=0.66, depth=0.16)
+
+def horse_head_wedge(m, P):
+    """User-approved horse head (study H1, snout fixed): skull at the poll, long face pitched nose-down, deep cheek,
+    muzzle flush with the face and slightly tapered, flared nostrils on the front corners, soft lower lip, calm side
+    eyes, upright ears, forelock. Keys: c1/head_c, snout_c, nose_c, mane_c (forelock), horn (colour: unicorn horn)."""
+    WH = P.get("head_c", P["c1"]); MZ = P.get("snout_c", lt(WH, 0.2)); HN = P.get("nose_c", rgb(107, 71, 82)); MN = P.get("mane_c", dk(WH))
+    with m.frame(pivot=(-0.6, 0, 3.2), rot=Ry(0.55)):
+        m.box("Skull", (0.0, 0, 3.35), (1.7, 1.5, 1.5), WH, top=(0.9, 0.9))
+        m.box("Cheek", (-0.1, 0, 2.65), (1.4, 1.45, 0.9), WH, bot=(0.75, 0.85))
+        m.box("Face", (1.35, 0, 3.18), (1.6, 1.22, 1.2), WH, top=(0.88, 0.9), bot=(0.95, 0.95))
+        m.box("Muzzle", (2.38, 0, 3.08), (0.62, 1.16, 1.02), MZ, top=(0.86, 0.9), bot=(0.96, 0.96))
+        m.box("Lip", (2.28, 0, 2.5), (0.66, 0.92, 0.28), MZ, top=(0.95, 0.95), bot=(0.85, 0.85))
+        m.box("MouthLine", (2.33, 0, 2.66), (0.62, 0.86, 0.05), dk(MZ, 0.55), studs=False)
+        for s in (1, -1):
+            m.box(f"Flare{s}", (2.6, s * 0.43, 3.22), (0.3, 0.26, 0.36), MZ, studs=False)
+            m.box(f"Nostril{s}", (2.74, s * 0.4, 3.24), (0.08, 0.13, 0.24), HN, rot=Rz(s * 0.5), studs=False)
+            m.box(f"Ear{s}", (-0.35, s * 0.45, 4.35), (0.35, 0.3, 0.8), WH, top=(0.3, 0.5))
+            m.box(f"EarIn{s}", (-0.2, s * 0.45, 4.3), (0.06, 0.16, 0.5), P.get("ear_in", lt(PINK, 0.1)), top=(0.4, 0.6), studs=False)
+        m.box("Forelock", (0.35, 0, 4.15), (0.8, 0.6, 0.45), MN, top=(0.6, 0.8), studs=False)
+        if P.get("horn"):
+            m.spike("Horn", (0.5, 0, 4.0), (0.0, 0, 6.3), 0.27, P["horn"], sides=6, glow=P.get("horn_glow", True))
+            for k in range(3): m.box(f"HornRing{k}", (0.45 - k * 0.07, 0, 4.25 + k * 0.38), (0.4 - k * 0.07, 0.4 - k * 0.07, 0.07), dk(P["horn"], 0.8), studs=False)
+        m.eyes((0.35, 0.77, 3.55), facing=(0.3, 1, 0), size=(0.62, 0.56), pupil=0.66, look=(0.35, 0), angry=0.05,
+               white=P.get("iris", WHITE), brow_col=dk(WH, 0.7), brow_h=0.3, brow_up=0.62, depth=0.14)
+
+HEAD_KITS = dict(lion_sunburst=lion_head_sunburst, horse_wedge=horse_head_wedge)
+
 def quad(m, P):
     """Four-legged animal (cow template generalised). Bones: Body, Leg_FL/FR/BL/BR, Neck, Head, Ear_L/R, Tail1..n."""
     L, W, H = P["body"]; lh, lw = P["legs"]; lw *= 1.2
@@ -197,18 +323,58 @@ def quad(m, P):
     z0 = lh + H / 2
     m.gait = dict(P.get("gait", {}))
     body = m.bone("Body", (0, 0, z0)); body.__enter__()
-    m.box("Body", (0, 0, z0), (L, W, H), C1, top=(0.92, 1.0), bot=(0.96, 1.0))
+    mus = P.get("muscular", False); eq = P.get("equine", False)
+    if eq:    # horse build: deep chest + withers, round barrel, high rounded croup with big haunches, shoulder muscle
+        m.box("Barrel", (0, 0, z0 - H * 0.04), (L * 0.6, W * 0.98, H * 0.9), C1, top=(0.95, 0.95), bot=(0.82, 0.88))
+        m.box("Chest", (L * 0.28, 0, z0), (L * 0.4, W * 1.04, H * 1.1), C1, top=(0.85, 0.9), bot=(0.7, 0.82))
+        m.box("Croup", (-L * 0.29, 0, z0 + H * 0.08), (L * 0.42, W * 1.06, H * 1.04), C1, top=(0.78, 0.86), bot=(0.78, 0.9))
+        m.box("Withers", (L * 0.27, 0, z0 + H * 0.52), (L * 0.3, W * 0.5, H * 0.3), C1, top=(0.45, 0.7))
+        m.box("Breast", (L * 0.47, 0, z0 - H * 0.05), (L * 0.14, W * 0.8, H * 0.75), C1, top=(0.8, 0.9), bot=(0.7, 0.8))
+        for s in (1, -1):
+            m.box(f"Haunch{s}", (-L * 0.31, s * W * 0.46, z0 - H * 0.04), (L * 0.34, W * 0.2, H * 0.8), C1, top=(0.75, 0.8), bot=(0.7, 0.8))
+            m.box(f"Shoulder{s}", (L * 0.3, s * W * 0.48, z0 - H * 0.06), (L * 0.24, W * 0.16, H * 0.7), C1, top=(0.7, 0.8), bot=(0.75, 0.8), rot=Ry(-0.25))
+    elif mus:   # predator build: deep chest, tucked waist, big haunches, raised shoulder blades, side muscle bulges
+        m.box("Chest", (L * 0.24, 0, z0 + H * 0.04), (L * 0.52, W * 1.08, H * 1.18), C1, top=(0.78, 0.84), bot=(0.82, 0.88))
+        m.box("Waist", (-L * 0.03, 0, z0 + H * 0.1), (L * 0.46, W * 0.94, H * 0.86), C1, top=(0.95, 0.94), bot=(0.92, 0.92))
+        m.box("Haunch", (-L * 0.3, 0, z0 + H * 0.06), (L * 0.42, W * 1.02, H * 1.02), C1, top=(0.8, 0.84), bot=(0.85, 0.9))
+        for s in (1, -1):
+            m.box(f"ShoulderBlade{s}", (L * 0.2, s * W * 0.27, z0 + H * 0.62), (L * 0.3, W * 0.36, H * 0.42), C1, top=(0.55, 0.7))
+            m.box(f"HaunchBulge{s}", (-L * 0.3, s * W * 0.47, z0 - H * 0.02), (L * 0.34, W * 0.22, H * 0.78), C1, top=(0.8, 0.8), bot=(0.75, 0.8))
+            m.box(f"ChestBulge{s}", (L * 0.3, s * W * 0.5, z0 - H * 0.1), (L * 0.26, W * 0.16, H * 0.72), C1, top=(0.85, 0.8), bot=(0.7, 0.8))
+    else:
+        m.box("Body", (0, 0, z0), (L, W, H), C1, top=(0.92, 1.0), bot=(0.96, 1.0))
     if BEL: m.box("Belly", (L * 0.04, 0, z0 - H * 0.3), (L * 0.84, W + 0.06, H * 0.42), BEL)
     legc = P.get("leg_c", C1); feet = P.get("feet")
     for sx in (1, -1):
         for s in (1, -1):
-            x = sx * (L / 2 - lw * 0.62); y = s * (W / 2 - lw * 0.5 - 0.06)   # inset: a face coplanar with the body side z-fights (black in renders, flicker in Roblox)
+            x = sx * (L / 2 - lw * 0.62) - (L * P.get("front_back", 0.0) if sx > 0 else 0); y = s * (W / 2 - lw * 0.5 - 0.06)   # front_back: tuck front legs under the chest; inset: a face coplanar with the body side z-fights (black in renders, flicker in Roblox)
             with m.bone(f"Leg_{'F' if sx > 0 else 'B'}{LR(s)}", (x, y, lh + 0.15)):
                 if sprawl:
                     a = Vector((x, y, z0 - H * 0.15)); b = Vector((x + sx * 0.1, s * (W / 2 + sprawl * 1.6), 0.25))
                     m.seg(f"Leg{sx}{s}", a, b, lw, lw * 0.9, legc)
                     m.box(f"Foot{sx}{s}", (b.x + 0.15, b.y, 0.15), (lw * 1.4, lw * 1.2, 0.3), feet or legc, **NS)
                     for t in (-1, 0, 1): m.spike(f"Claw{sx}{s}{t}", (b.x + lw * 0.65, b.y + t * lw * 0.35, 0.12), (b.x + lw * 0.95, b.y + t * lw * 0.42, 0.05), lw * 0.12, CLAW)
+                elif eq:    # horse leg: muscled forearm/gaskin, knee or hock joint, slim cannon, fetlock, hoof
+                    front = sx > 0; hoof = feet or dk(legc, 0.5)
+                    if front:
+                        m.box(f"Forearm{sx}{s}", (x, y, lh * 0.74 + 0.1), (lw * 1.3, lw * 1.15, lh * 0.62 + 0.25), legc, bot=(0.65, 0.75))
+                        m.box(f"Knee{sx}{s}", (x + 0.02, y, lh * 0.44), (lw * 0.85, lw * 0.85, lh * 0.14), legc)
+                        m.box(f"Cannon{sx}{s}", (x, y, lh * 0.24), (lw * 0.62, lw * 0.66, lh * 0.36), legc)
+                    else:
+                        m.box(f"Gaskin{sx}{s}", (x - 0.04, y, lh * 0.74 + 0.12), (lw * 1.5, lw * 1.2, lh * 0.62 + 0.3), legc, bot=(0.6, 0.75), rot=Ry(-0.2))
+                        m.box(f"Hock{sx}{s}", (x - lw * 0.28, y, lh * 0.45), (lw * 0.9, lw * 0.8, lh * 0.16), legc, rot=Ry(0.25))
+                        m.box(f"Cannon{sx}{s}", (x - lw * 0.14, y, lh * 0.24), (lw * 0.62, lw * 0.66, lh * 0.38), legc)
+                    fx = x - (0 if front else lw * 0.1)
+                    m.box(f"Fetlock{sx}{s}", (fx + 0.03, y, lh * 0.08 + 0.2), (lw * 0.82, lw * 0.82, 0.22), legc, studs=False)
+                    m.box(f"Hoof{sx}{s}", (fx + 0.05, y, 0.15), (lw * 1.0, lw * 0.95, 0.3), hoof, top=(0.82, 0.86), **NS)
+                elif mus:   # thick muscled upper leg tapering into a lean lower leg and a heavy paw
+                    front = sx > 0
+                    m.box(f"UpperLeg{sx}{s}", (x - sx * 0.04, y, lh * 0.72 + 0.12), (lw * (1.35 if front else 1.55), lw * 1.22, lh * 0.78 + 0.25), legc,
+                          top=(1.0, 1.0), bot=(0.72, 0.78), rot=Ry(0 if front else 0.18))
+                    m.box(f"LowerLeg{sx}{s}", (x + (0.0 if front else 0.06), y, lh * 0.3), (lw * 0.88, lw * 0.9, lh * 0.62), legc)
+                    m.box(f"Paw{sx}{s}", (x + lw * 0.18, y, 0.16), (lw * 1.35, lw * 1.12, 0.32), feet or legc, top=(0.85, 0.9))
+                    for t in (-1, 0, 1):
+                        m.box(f"Toe{sx}{s}{t}", (x + lw * 0.86, y + t * lw * 0.34, 0.1), (lw * 0.2, lw * 0.26, 0.2), dk(feet or legc, 0.8), **NS)
                 else:
                     m.box(f"Leg{sx}{s}", (x, y, (lh + 0.4) / 2), (lw, lw, lh + 0.4), legc)
                     if P.get("pattern") == "stripes" and lh > 0.8:
@@ -222,7 +388,12 @@ def quad(m, P):
     tipn = base + d * nl
     if nl > 0.15:
         with m.bone("Neck", base):
-            m.seg("Neck", base - d * 0.45, tipn + d * 0.15, hw * 0.82, hw * 0.74, P.get("neck_c", C1), d0=hh * 1.05, d1=hh * 0.9)
+            if eq:    # thick, deep-based arched neck: two blocks, the upper one tipped forward, plus a crest along the top
+                mid = base.lerp(tipn, 0.5) + Vector((-0.08, 0, 0.12))
+                m.seg("Neck", base - d * 0.5 + Vector((0, 0, -H * 0.15)), mid, hw * 0.92, hw * 0.82, P.get("neck_c", C1), d0=hh * 1.75, d1=hh * 1.2)
+                m.seg("NeckTop", mid - d * 0.2, tipn + d * 0.2, hw * 0.82, hw * 0.72, P.get("neck_c", C1), d0=hh * 1.2, d1=hh * 0.9)
+            else:
+                m.seg("Neck", base - d * 0.45, tipn + d * 0.15, hw * 0.82, hw * 0.74, P.get("neck_c", C1), d0=hh * 1.05, d1=hh * 0.9)
             pk, pc = P.get("pattern"), P.get("pat_c", C2)
             nrings = max(1, int(nl / 0.55))
             for k in range(nrings):                         # carry the body pattern up the neck
@@ -236,16 +407,24 @@ def quad(m, P):
     hscale = P.get("head_scale", HEAD_SCALE)
     m.bone("Head", tipn, "Neck" if nl > 0.15 else "Body")
     head = _ctx(lambda: m.frame(pivot=tipn, scale=hscale), lambda: m.bone("Head"))
-    c = dict(L=L, W=W, H=H, lh=lh, lw=lw, z0=z0, hc=hc, hl=hl, hw=hw, hh=hh, xf=hc.x + hl / 2, C1=C1, C2=C2,
+    c = dict(L=L, W=W, H=H, lh=lh, lw=lw, z0=z0, hc=hc, hl=hl, hw=hw, hh=hh, xf=hc.x + hl / 2, C1=C1, C2=C2, mus=mus, eq=eq,
              head=head, back=Vector((0, 0, z0 + H / 2)), neck_base=base, neck_tip=tipn, nd=d)
-    with head():
+    if P.get("head_kit"):
+        hk = P.get("head_k", 0.8)
+        head = _ctx(lambda: m.frame(pivot=HEAD_KIT_PIVOT, scale=hk, move=tipn - HEAD_KIT_PIVOT), lambda: m.bone("Head"))
+        c.update(head=head, head_kit=P["head_kit"], sc=hc, sl=hl * 0.3, sw=hw * 0.6, sh=hh * 0.45)
+        with head(): HEAD_KITS[P["head_kit"]](m, P)
+    else:
+      with head():
         m.box("Head", hc, (hl, hw, hh), P.get("head_c", C1), top=(0.92, 0.92))
+        if eq: m.box("Cheek", hc + Vector((-hl * 0.18, 0, -hh * 0.32)), (hl * 0.62, hw * 0.96, hh * 0.55), P.get("head_c", C1), bot=(0.8, 0.85))
         snout_block(m, c, P)
-        long_face = c["sl"] > hl * 0.45 or P.get("side_eyes")
+        long_face = (c["sl"] > hl * 0.45 or P.get("side_eyes")) and not P.get("snarl")
         (side_eyes if long_face else front_eyes)(m, c, P)
         ears(m, c, P.get("ears"), P.get("ear_c", P.get("head_c", C1)))
         if P.get("mane"):
             m.box("Mane", hc + Vector((-hl * 0.3, 0, 0.05)), (hl * 0.7, hw * 1.55, hh * 1.5), P["mane"], top=(0.8, 0.85))
+    c["tail_w"] = P.get("tail_w", 1.0)
     tail(m, c, P.get("tail"), P.get("tail_c", C1), P.get("tail_tip"))
     pattern(m, c, P.get("pattern"), P.get("pat_c", C2), P.get("pat_n", 5))
     for fn in P.get("x", []): fn(m, c)
@@ -459,24 +638,31 @@ def snake(m, P):
 
 def scorpion(m, P):
     C1, C2 = P["c1"], P.get("c2", dk(P["c1"]))
-    body = m.bone("Body", (0, 0, 0.7)); body.__enter__()
-    m.box("Body", (0, 0, 0.7), (2.2, 1.6, 0.7), C1, top=(0.85, 0.8))
-    m.bone("Head", (1.0, 0, 0.7))
-    c = dict(hc=Vector((1.3, 0, 0.75)), hl=0.8, hw=1.3, hh=0.65, xf=1.7, C1=C1, C2=C2, head=lambda: m.bone("Head"), back=Vector((0, 0, 1.05)))
+    body = m.bone("Body", (0, 0, 0.75)); body.__enter__()
+    m.box("Body", (0, 0, 0.75), (2.3, 1.7, 0.75), C1, top=(0.85, 0.8))
+    for k in range(3): m.box(f"Plate{k}", (-0.6 + k * 0.6, 0, 1.14), (0.42, 1.4, 0.12), C2, **NS)       # back segment plates
+    m.bone("Head", (1.0, 0, 0.75))
+    c = dict(hc=Vector((1.35, 0, 0.8)), hl=0.9, hw=1.4, hh=0.7, xf=1.8, C1=C1, C2=C2, head=lambda: m.bone("Head"), back=Vector((0, 0, 1.1)))
     with m.bone("Head"):
-        m.box("Head", (1.3, 0, 0.75), (0.8, 1.3, 0.65), C1, top=(0.8, 0.85))
-        front_eyes(m, c, dict(P, angry=True, eye=1.3))
+        m.box("Head", (1.35, 0, 0.8), (0.9, 1.4, 0.7), C1, top=(0.8, 0.85))
+        front_eyes(m, c, dict(P, angry=True, eye=1.35))
     for s in (1, -1):
-        for k in range(4):
-            a = Vector((0.6 - 0.5 * k, s * 0.7, 0.6)); b = Vector((0.75 - 0.55 * k, s * 1.55, 0.05))
-            with m.bone(f"Leg_{'F' if k < 2 else 'B'}{LR(s)}", (0.35 - 1.0 * (k >= 2), s * 0.7, 0.6)):
-                m.seg(f"Leg{s}{k}", a, b, 0.18, 0.12, C2, **NS)
-        with m.bone(f"Arm_{LR(s)}", (1.4, s * 0.6, 0.7)):
-            m.seg(f"Arm{s}", (1.4, s * 0.6, 0.7), (2.2, s * 1.05, 0.75), 0.32, 0.28, C1, **NS)
-            m.box(f"ClawA{s}", (2.55, s * 1.12, 0.78), (0.8, 0.42, 0.42), C1, top=(0.8, 0.8), **NS)
-            m.spike(f"ClawB{s}", (2.5, s * 0.85, 0.75), (3.0, s * 0.78, 0.75), 0.15, C2)
-    m.chain("Tail", [(-1.0, 0, 0.8), (-1.85, 0, 1.3), (-2.05, 0, 2.15), (-1.6, 0, 2.85), (-0.9, 0, 3.0)], [0.6, 0.55, 0.5, 0.45, 0.4], C1, bones="Tail")
-    with m.bone("Tail4"): m.spike("Stinger", (-0.9, 0, 3.0), (-0.4, 0, 2.5), 0.22, BLACK)
+        for k in range(4):                         # jointed legs: femur up-and-out, tibia down to the ground
+            hip = Vector((0.65 - 0.5 * k, s * 0.8, 0.75)); knee = hip + Vector((0.05, s * 0.75, 0.45)); foot = Vector((hip.x + 0.12 - 0.05 * k, s * 1.95, 0.05))
+            with m.bone(f"Leg_{'F' if k < 2 else 'B'}{LR(s)}", (0.4 - 1.0 * (k >= 2), s * 0.8, 0.75)):
+                m.seg(f"Femur{s}{k}", hip, knee, 0.26, 0.22, C2, **NS)
+                m.seg(f"Tibia{s}{k}", knee, foot, 0.22, 0.14, C2, **NS)
+        with m.bone(f"Arm_{LR(s)}", (1.5, s * 0.6, 0.8)):
+            el = Vector((2.3, s * 1.15, 0.95))
+            m.seg(f"Arm{s}", (1.5, s * 0.6, 0.8), el, 0.42, 0.36, C1, **NS)
+            m.seg(f"Forearm{s}", el, (2.8, s * 1.05, 0.95), 0.36, 0.34, C1, **NS)
+            m.box(f"Claw{s}", (3.25, s * 1.0, 0.95), (1.05, 0.62, 0.55), C1, top=(0.8, 0.85))
+            m.spike(f"ClawFixed{s}", (3.6, s * 0.86, 0.95), (4.15, s * 0.8, 0.95), 0.2, C2, flat=0.5)
+            m.spike(f"ClawMove{s}", (3.6, s * 1.18, 0.95), (4.1, s * 1.05, 0.95), 0.18, C2, flat=0.5)
+    m.chain("Tail", [(-1.1, 0, 0.85), (-1.95, 0, 1.4), (-2.15, 0, 2.3), (-1.7, 0, 3.0), (-1.0, 0, 3.2)], [0.66, 0.6, 0.55, 0.5, 0.45], C1, bones="Tail")
+    with m.bone("Tail4"):
+        m.box("StingBulb", (-0.75, 0, 3.05), (0.6, 0.55, 0.55), C2, top=(0.8, 0.8))
+        m.spike("Stinger", (-0.5, 0, 2.9), (-0.05, 0, 2.35), 0.2, BLACK, flat=0.6)
     body.__exit__(None, None, None)
     return c
 
@@ -539,18 +725,155 @@ def whale(m, P):
     return c
 
 def kraken(m, P):
-    C1, C2 = P["c1"], P.get("c2", dk(P["c1"]))
-    body = m.bone("Body", (0.3, 0, 2.5)); body.__enter__()
-    m.box("Mantle", (-0.6, 0, 4.4), (2.6, 2.6, 3.4), C1, top=(0.45, 0.5), rot=Ry(0.3))
-    m.box("Head", (0.5, 0, 2.5), (2.4, 2.8, 2.0), C1, top=(0.9, 0.9))
-    c = dict(hc=Vector((0.5, 0, 2.5)), hl=2.4, hw=2.8, hh=2.0, xf=1.7, C1=C1, C2=C2, head=lambda: nullcontext(), back=Vector((0, 0, 5)))
-    front_eyes(m, c, dict(P, angry=True, iris=rgb(255, 214, 60)))
+    """King of the sea: huge wide head with a heavy brow ridge, an armoured mantle rooted on the head (spiked ridge, fins,
+    scars), angry eyes, a toothed maw, eight thick tentacles with sucker rows (six planted wide, the two front ones reared
+    up to strike). Bones: Body, Tent<k>_0..3. Keys: c1, c2 (plates/brows), sucker, iris, s (scale)."""
+    C1, C2 = P["c1"], P.get("c2", dk(P["c1"])); SUC = P.get("sucker", lt(C1, 0.45)); k_ = P.get("s", 1.0)
+    V = lambda x, y, z: Vector((x, y, z)) * k_
+    hz = 3.2; hl, hw, hh = 3.2, 4.0, 2.9
+    body = m.bone("Body", V(0.3, 0, hz)); body.__enter__()
+    hc = V(0.6, 0, hz)
+    m.box("Head", hc, V(hl, hw, hh), C1, top=(0.88, 0.9), bot=(0.9, 0.92))
+    m.box("Skirt", V(0.5, 0, hz - hh / 2 - 0.1), V(2.6, 3.0, 0.9), C1, top=(1.1, 1.05), bot=(0.8, 0.8))   # roots the tentacles
+    # armoured mantle: bottom sunk into the head, leaning back; tip cap; spiked ridge; fins; scar plates
+    mb = hz + hh / 2 - 0.6
+    m.box("Mantle", V(-0.4, 0, mb + 1.85), V(3.5, 3.8, 3.7), C1, top=(0.62, 0.66), bot=(0.92, 0.9), shift=(-0.8 * k_, 0))
+    m.box("MantleTip", V(-1.4, 0, mb + 4.1), V(2.0, 2.3, 1.2), C1, top=(0.45, 0.5), shift=(-0.35 * k_, 0))
+    for j in range(5):
+        t = j / 4; p = V(-0.4 + 1.45 - t * 2.4 - 0.25, 0, mb + 0.75 + t * 3.5)
+        m.box(f"Plate{j}", p, V(0.95, 1.2 - 0.12 * j, 0.32), C2, rot=Ry(-0.9 + 0.25 * t), top=(0.7, 0.8))
+        m.spike(f"Ridge{j}", p, p + V(-0.25, 0, 0.75 - 0.08 * j), 0.28 * k_, dk(C2, 0.6), flat=0.45)
+    for s in (1, -1):
+        fb = V(-1.1, s * 1.25, mb + 3.2)
+        m.slab(f"Fin{s}", [(0, 0), (1.6, 0.3), (2.1, 1.3), (0.6, 1.0)], 0.25 * k_, C2, origin=fb, xaxis=(-0.45, s * 0.55, 0.7), yaxis=(0.2, s * 0.98, -0.1))
+        for j, (dx, dz, w) in enumerate(((0.0, 1.6, 0.8), (-0.7, 2.8, 0.6), (0.4, 0.4, 0.55))):
+            m.box(f"Scar{s}{j}", V(-0.4 + dx, s * 1.76, mb + dz), V(w, 0.12, w * 0.75), dk(C1, 0.75), studs=False)
+    # face: heavy brow ridge, angry eyes, gaping maw with blade teeth
+    xf = hc.x + hl * k_ / 2
+    c = dict(hc=hc, hl=hl * k_, hw=hw * k_, hh=hh * k_, xf=xf, C1=C1, C2=C2, head=lambda: nullcontext(), back=V(0, 0, hz + 6))
+    m.box("BrowRidge", hc + V(hl * 0.44, 0, hh * 0.5), V(0.7, hw * 0.96, 0.5), C2, top=(0.7, 0.92))
+    front_eyes(m, c, dict(P, angry=True, iris=P.get("iris", rgb(255, 214, 60)), brow=dk(C2, 0.55), eye=1.2))
+    mz = hc.z - hh * 0.3 * k_
+    m.box("Maw", Vector((xf + 0.02, 0, mz)), V(0.3, 1.6, 0.75), MOUTH, studs=False)
+    m.box("LipTop", Vector((xf + 0.12, 0, mz + 0.48 * k_)), V(0.4, 1.9, 0.26), C2)
+    m.box("LipBot", Vector((xf + 0.12, 0, mz - 0.48 * k_)), V(0.4, 1.9, 0.26), C2)
+    m.teeth("ToothT", (xf + 0.2, -0.75 * k_, mz + 0.36 * k_), (xf + 0.2, 0.75 * k_, mz + 0.36 * k_), 5, 0.38 * k_, 0.12 * k_, fangs=(0, 4))
+    m.teeth("ToothB", (xf + 0.2, -0.6 * k_, mz - 0.36 * k_), (xf + 0.2, 0.6 * k_, mz - 0.36 * k_), 4, 0.3 * k_, 0.11 * k_, down=False)
+    # tentacles
+    bz = hz - hh / 2 + 0.1
     for k in range(8):
-        a = 2 * math.pi * (k + 0.5) / 8; o = Vector((math.cos(a), math.sin(a), 0)); b = Vector((0.5, 0, 1.6)) + o * 0.9
-        pts = [b, b + o * 1.0 + Vector((0, 0, -1.1)), b + o * 2.2 + Vector((0, 0, -1.4)), b + o * 3.0 + Vector((0, 0, -0.9)), b + o * 3.3 + Vector((0, 0, 0.0))]
-        m.chain(f"Tent{k}", pts, [0.75, 0.6, 0.45, 0.32, 0.18], C1, bones=[f"Tent{k}_{j}" for j in range(4)])
-        with m.bone(f"Tent{k}_1"): m.box(f"Sucker{k}", b + o * 2.2 + Vector((0, 0, -1.75)), (0.32, 0.32, 0.12), C2, **NS)
+        a = 2 * math.pi * (k + 0.5) / 8; o = Vector((math.cos(a), math.sin(a), 0)); b = V(0.5, 0, bz) + o * 1.15 * k_
+        fwd = Vector((1, 0, 0)); side = Vector((0, math.sin(a), 0))
+        if k in (0, 7):     # reared strikers: out, up high, curling over toward the front
+            sd = side.normalized()
+            pts = [b, b + (o * 1.2 + Vector((0.2, 0, -0.9))) * k_, b + (sd * 2.4 + fwd * 1.3 + Vector((0, 0, -0.2))) * k_,
+                   b + (sd * 3.0 + fwd * 2.2 + Vector((0, 0, 1.4))) * k_, b + (sd * 2.6 + fwd * 2.4 + Vector((0, 0, 2.9))) * k_]
+        else:               # planted wide; tips curl up
+            pts = [b, b + (o * 1.3 + Vector((0, 0, -1.25))) * k_, b + (o * 2.7 + Vector((0, 0, -1.55))) * k_,
+                   b + (o * 3.9 + Vector((0, 0, -1.5))) * k_, b + (o * 4.6 + Vector((0, 0, -0.6))) * k_]
+        ws = [1.3, 1.1, 0.85, 0.58, 0.28]
+        m.chain(f"Tent{k}", pts, [w * k_ for w in ws], C1, bones=[f"Tent{k}_{j}" for j in range(4)])
+        for j in (1, 2):    # sucker rows on the underside
+            with m.bone(f"Tent{k}_{j}"):
+                for t in (0.3, 0.75):
+                    q = pts[j].lerp(pts[j + 1], t); w = (ws[j] + (ws[j + 1] - ws[j]) * t) * k_
+                    if k in (0, 7): q = q + Vector((0, 0, 0)) - side.normalized() * w * 0.48 if side.length else q
+                    else: q = q + Vector((0, 0, -w * 0.47))
+                    m.box(f"Sucker{k}{j}{t}", q, (w * 0.5, w * 0.5, w * 0.16) if k not in (0, 7) else (w * 0.5, w * 0.16, w * 0.5), SUC, studs=False)
     body.__exit__(None, None, None)
+    return c
+
+def dragon(m, P):
+    """Western dragon (the reviewed RedDragon example, parametric). Long neck, horned reptile head with frill crown and
+    teeth, lilac-style belly shield, straight front legs + crouched hind legs with white claws, spade tail, huge raised
+    wings. Build space = studs (no G scaling); size via build(..., s) frame. P: c1 body, c2 dark accents, mem membrane,
+    belly, seg (belly segment colour), knob, horn, eye, glow options belly_glow / wing_glow / eye_glow, spikes (spine col)."""
+    LR = lambda s: "L" if s > 0 else "R"
+    C1 = P["c1"]; C2 = P.get("c2", dk(C1, 0.68)); MEMc = P.get("mem", dk(C1, 0.62)); BEL = P.get("belly", rgb(214, 166, 206))
+    SEG = P.get("seg", dk(BEL, 0.86)); KN = P.get("knob", rgb(200, 180, 220)); HRN = P.get("horn", HORN); EYE = P.get("eye", rgb(255, 214, 60))
+    m.gait = dict(P.get("gait", {}))
+    ST = bool(P.get("studded", False)); NS = dict(studs=ST)       # studded=True: TFFA studs on every big part
+    _b = m.bone("Body", (-0.4, 0, 3.6)); _b.__enter__()
+    # ---- torso: chunky, chest high, hips low; big lilac belly shield covers the whole front
+    m.seg("Torso", (-1.2, 0, 2.6), (0.5, 0, 5.8), 3.8, 4.0, C1, d0=3.6, d1=3.2, **NS)
+    m.seg("Hips", (-2.0, 0, 2.2), (-0.4, 0, 3.0), 3.4, 3.4, C1, d0=2.8, d1=2.8, **NS)
+    m.seg("ChestPlate", (1.15, 0, 1.4), (2.05, 0, 6.0), 2.6, 2.2, BEL, d0=0.7, d1=0.7, **NS)
+    m.seg("BellyPoint", (1.2, 0, 1.9), (1.4, 0, 0.15), 1.8, 0.3, BEL, d0=0.7, d1=0.4, **NS)   # lower belly/tail tip
+    for k in range(3):                                         # a few big chevron segments across the belly shield
+        z = 2.4 + k * 1.25
+        m.box(f"BellySeg{k}", (1.5 + k * 0.2, 0, z), (0.6, 2.5 - k * 0.1, 0.14), dk(BEL, 0.86), rot=Ry(-0.26), **NS)
+
+    # ---- neck + head (short thick neck, big angular head with a crown of frills)
+    m.chain("Neck", [(0.6, 0, 5.4), (1.1, 0, 7.2), (1.4, 0, 8.9)], [2.2, 1.8, 1.6], C1, bones="Neck", **NS)
+    m.chain("NeckBelly", [(1.75, 0, 5.6), (2.0, 0, 7.2), (2.2, 0, 8.7)], [1.7, 1.4, 1.2], BEL, depths=[0.5, 0.5, 0.5], bones="Neck", **NS)
+    m.bone("Head", (1.4, 0, 8.9), "Neck2")
+    with m.bone("Head"), m.frame(pivot=(1.5, 0, 8.2), scale=1.25, move=(0, 0, 1.0)):
+        m.box("Head", (2.0, 0, 8.9), (2.0, 2.0, 1.5), C1, top=(0.75, 0.8), **NS)
+        m.box("Snout", (3.3, 0, 8.65), (1.7, 1.4, 0.95), C1, top=(0.75, 0.8), bot=(1, 0.85), **NS)
+        m.box("Jaw", (2.9, 0, 8.05), (1.9, 1.25, 0.45), C1, rot=Ry(0.15), **NS)
+        m.box("Mouth", (3.0, 0, 8.25), (1.7, 1.15, 0.2), MOUTH, **NS)
+        for s in (1, -1):
+            for k, x in enumerate((2.5, 3.0, 3.5, 3.9)):
+                m.spike(f"Tooth{s}{k}", (x, s * 0.55, 8.3), (x, s * 0.53, 8.0), 0.12, TOOTH, flat=0.4)
+            m.spike(f"Horn{s}", (1.6, s * 0.6, 9.5), (0.9, s * 1.2, 11.0), 0.32, HRN, sides=5)
+            for k in range(4):                                # frill crown around the face
+                m.spike(f"Frill{s}{k}", (1.6 - k * 0.15, s * 0.9, 9.4 - k * 0.4), (1.4 - k * 0.2, s * (1.55 - k * 0.08), 9.6 - k * 0.5), 0.26, C1)
+            m.box(f"Nostril{s}", (4.15, s * 0.3, 8.9), (0.1, 0.2, 0.12), C2, chamfer=0.05, **NS)
+        m.spike("Crest", (2.2, 0, 9.55), (1.7, 0, 10.4), 0.28, C1)
+        m.eyes((2.85, 0.6, 9.25), facing=(1, 0.8, 0.2), size=(0.55, 0.32), pupil=0.75, look=(0.5, 0), angry=0.45,
+               white=EYE, glow_white=P.get("eye_glow", False), brow_col=C2, brow_h=0.5, brow_up=0.75, depth=0.14)
+
+    # ---- legs (front straight, hind crouched) with white claws
+    for s in (1, -1):
+      with m.bone(f"Leg_F{LR(s)}", (0.6, s * 1.7, 4.6)):
+        m.seg(f"UpperArm{s}", (0.6, s * 1.7, 4.8), (1.0, s * 2.2, 2.6), 1.5, 1.25, C1, **NS)
+        m.seg(f"Forearm{s}", (1.0, s * 2.2, 2.8), (1.2, s * 2.15, 0.5), 1.15, 1.0, C1, **NS)
+        m.box(f"Paw{s}", (1.4, s * 2.15, 0.3), (1.4, 1.3, 0.6), C1, top=(0.8, 0.85), **NS)
+        for k in (-1, 0, 1): m.spike(f"Claw{s}{k}", (2.05, s * 2.15 + k * 0.38, 0.25), (2.4, s * 2.15 + k * 0.42, 0.05), 0.12, CLAW)
+      with m.bone(f"Leg_B{LR(s)}", (-1.4, s * 1.8, 3.0)):
+        m.box(f"Thigh{s}", (-1.4, s * 1.8, 2.2), (2.2, 1.2, 2.2), C1, rot=Ry(0.3), top=(0.8, 0.9), **NS)
+        m.seg(f"Shin{s}", (-1.8, s * 1.9, 1.6), (-1.0, s * 1.9, 0.4), 0.9, 0.8, C1, **NS)
+        m.box(f"Foot{s}", (-0.6, s * 1.9, 0.3), (1.4, 1.1, 0.6), C1, top=(0.8, 0.85), **NS)
+        for k in (-1, 0, 1):
+            m.spike(f"HClaw{s}{k}", (0.1, s * 1.9 + k * 0.35, 0.25), (0.45, s * 1.9 + k * 0.4, 0.05), 0.12, CLAW)
+
+    # ---- tail: back and down, belly-coloured underside, spade tip
+    m.chain("Tail", [(-2.6, 0, 2.6), (-4.2, 0, 1.6), (-5.6, 0, 1.0), (-7.0, 0, 0.8)], [1.8, 1.3, 0.8, 0.45], C1, bones="Tail", **NS)
+    with m.bone("Tail3"): m.slab("TailSpade", [(0, 0), (0.9, 0.6), (1.6, 0), (0.9, -0.6)], 0.2, C1, origin=(-6.85, 0, 0.8), xaxis=(-1, 0, 0), yaxis=(0, 1, 0))
+
+    # ---- wings: huge membranes raised up and out, facing forward (the front silhouette is mostly wing)
+    for s in (1, -1):
+        sh, wr, tip = V(-0.6, s * 1.5, 6.2), V(-0.9, s * 2.5, 10.4), V(-1.7, s * 4.9, 15.2)
+        wing = m.bone(f"Wing_{LR(s)}", sh); wing.__enter__()
+        m.seg(f"WingArm{s}", sh, wr, 0.75, 0.6, C1, **NS)
+        m.seg(f"WingFinger{s}", wr, tip, 0.55, 0.25, C1, **NS)
+        m.ball(f"WingKnob{s}", wr + V(0.1, 0, 0.1), 0.45, KN)
+        m.poly(f"Wing{s}", [sh, wr, tip, (-1.9, s * 5.9, 11.2), (-1.8, s * 5.4, 8.2), (-1.4, s * 4.0, 6.6), (-1.0, s * 2.6, 5.4)],
+               0.2, MEMc, glow=P.get("wing_glow", False))
+        for k, (p, q) in enumerate(((wr, V(-1.85, s * 5.7, 9.8)), (wr, V(-1.5, s * 4.6, 7.2)))):   # finger bones
+            m.seg(f"WingBone{s}{k}", p, q, 0.3, 0.14, C1, **NS)
+        wing.__exit__(None, None, None)
+    if P.get("muscular"):   # heavier, more powerful dragon: pecs, shoulder caps, biceps/forearms, big thighs, thick neck base
+        C = C1
+        m.box("ChestBulk", (0.75, 0, 4.75), (2.4, 5.0, 2.9), C, top=(0.85, 0.95), studs=ST)   # barrel chest clearly wider than the torso
+        for s2 in (1, -1): m.box(f"Pec{s2}", (1.65, s2 * 1.55, 4.9), (1.1, 1.5, 2.1), C, top=(0.85, 0.9), studs=ST)   # beside the belly shield
+        m.box("Haunch", (-1.7, 0, 3.15), (2.4, 4.1, 2.4), C, top=(0.75, 0.85), studs=ST)
+        with m.bone("Neck1"): m.seg("NeckBase", (0.4, 0, 5.0), (0.95, 0, 6.6), 2.75, 2.25, C, d0=2.6, d1=2.2, studs=ST)
+        for s in (1, -1):
+            m.box(f"ShoulderCap{s}", (0.6, s * 2.65, 5.2), (2.1, 1.7, 1.9), C, top=(0.7, 0.8), studs=ST)
+            with m.bone(f"Leg_F{LR(s)}"):
+                m.seg(f"Bicep{s}", (0.6, s * 2.25, 4.75), (0.95, s * 2.5, 2.95), 2.7, 2.0, C, d0=2.3, d1=1.75, studs=ST)
+                m.seg(f"ForearmMuscle{s}", (1.0, s * 2.4, 2.85), (1.15, s * 2.25, 1.0), 2.0, 1.3, C, d0=1.9, d1=1.25, studs=ST)
+            with m.bone(f"Leg_B{LR(s)}"):
+                m.box(f"BigThigh{s}", (-1.4, s * 2.25, 2.55), (3.4, 2.2, 3.3), C, rot=Ry(0.3), top=(0.8, 0.9), studs=ST)
+                m.seg(f"Calf{s}", (-1.75, s * 2.15, 1.8), (-1.05, s * 2.1, 0.55), 1.7, 1.15, C, studs=ST)
+    if P.get("spikes"):
+        for k, (x, z) in enumerate(((-0.2, 6.3), (-1.0, 5.6), (-1.9, 4.6), (-3.2, 3.5), (-4.6, 2.6))):
+            with (m.bone("Body") if k < 3 else m.bone("Tail1" if k == 3 else "Tail2")):
+                m.spike(f"Spine{k}", (x, 0, z - 0.3), (x - 0.5, 0, z + 0.6), 0.32, P["spikes"], flat=0.45, glow=P.get("spike_glow", False))
+    c = dict(C1=C1, C2=C2, back=V(0, 0, 6.0), head=lambda: m.bone("Head"))
+    for fn in P.get("x", []): fn(m, c)          # extras use explicit bones (m.bone("Head"), "Body", "Tail2", ...)
+    _b.__exit__(None, None, None)
     return c
 
 # ============================================================================ accessories (factories -> fn(m, c))
@@ -559,24 +882,29 @@ def feather(m, name, root, direction, length, width, grad, side=(0, 1, 0), glow=
     pts = [(0, 0), (width / 2, length * 0.18), (width * 0.42, length * 0.8), (0, length), (-width * 0.42, length * 0.8), (-width / 2, length * 0.18)]
     m.slab(name, pts, max(0.1, width * 0.2), grad[0], origin=root, xaxis=sd, yaxis=d, grad=grad, chamfer=0.3, glow=glow)
 
-def feather_wings(m, c, col, tipc=None, span=1.0, glow=False, n=8):
-    """Raised fan wings of blade feathers (phoenix/griffin/pegasus). Spread sideways + swept back so they read front and side."""
+def feather_wings(m, c, col, tipc=None, span=1.0, glow=False, n=8, wide=1.0, spread=0.0):
+    """Raised fan wings of blade feathers (phoenix/griffin/pegasus). Spread sideways + swept back so they read front and side.
+    spread (0-1) tilts each whole fan outward about the body axis (rigidly, so the fan keeps its shape) into a V."""
+    from mathutils import Matrix
     W, H, z0, L = c["W"], c["H"], c["z0"], c["L"]; k = H * span; tipc = tipc or lt(col, 0.4)
     for s in (1, -1):
-        sh = Vector((L * 0.1, s * W * 0.42, z0 + H * 0.3)); el = sh + Vector((-0.4, s * 0.55, 0.9)) * k; tp = el + Vector((-0.3, s * 0.3, 1.0)) * k
+        R = Matrix.Rotation(-s * spread * 0.9, 3, "X")
+        sh = Vector((L * 0.1, s * W * 0.42, z0 + H * 0.3)); el = sh + R @ Vector((-0.4, s * 0.55, 0.9)) * k; tp = el + R @ Vector((-0.3, s * 0.3, 1.0)) * k
         wb = m.bone(f"Wing_{LR(s)}", sh, "Body"); wb.__enter__()
         m.seg(f"WingArm{s}", sh, el, 0.45 * k, 0.35 * k, col, studs=False)
         m.seg(f"WingHand{s}", el, tp, 0.35 * k, 0.2 * k, col, studs=False)
         for j in range(n):
             t = j / (n - 1); root = sh.lerp(el, t * 2) if t < 0.5 else el.lerp(tp, (t - 0.5) * 2)
             ang = 0.25 + t * 1.15
-            d = (-0.8 * math.cos(ang), s * 0.6 * math.cos(ang), math.sin(ang))
-            feather(m, f"Feather{s}{j}", root, d, (1.2 + 1.9 * t ** 0.8) * k, 0.38 * k, (dk(col, 0.9), col, tipc), side=(-0.8, s * 0.6, 0), glow=glow)
+            d = R @ Vector((-0.8 * math.cos(ang), s * 0.6 * math.cos(ang), math.sin(ang)))
+            feather(m, f"Feather{s}{j}", root, d, (1.2 + 1.9 * t ** 0.8) * k, 0.38 * k * wide, (dk(col, 0.9), col, tipc), side=R @ Vector((-0.8, s * 0.6, 0)), glow=glow)
         wb.__exit__(None, None, None)
 
-def wings(col, span=1.0, glow=False, membrane=None, kind="bat"):
+def wings(col, span=1.0, glow=False, membrane=None, kind="bat", wide=1.0, spread=0.0):
+    """wide (feather wings): feather width multiplier, so short wings (span 0.5-0.6) still read as a broad fan.
+    spread (feather wings): 0-1, swings arm + feathers sideways into a V so the wings read from the front."""
     def fn(m, c):
-        if kind == "feather": return feather_wings(m, c, col, membrane, span, glow)
+        if kind == "feather": return feather_wings(m, c, col, membrane, span, glow, wide=wide, spread=spread)
         W, H, z0, L = c["W"], c["H"], c["z0"], c["L"]; k = H * span * 1.1; mem = membrane or dk(col, 0.65)
         for s in (1, -1):
             sh = Vector((L * 0.12, s * W * 0.42, z0 + H * 0.35)); wr = sh + Vector((-0.2, s * 0.6, 1.9)) * k
@@ -611,6 +939,12 @@ def horns(kind, col=HORN, glow=False):
                     m.seg(f"Antler{s}", b, t1, hh * 0.13, hh * 0.1, col, studs=False)
                     for j, f_ in enumerate((0.45, 0.8)):
                         p = b.lerp(t1, f_); m.seg(f"Tine{s}{j}", p, p + Vector((0.28, s * 0.18, 0.32)) * hh, hh * 0.09, hh * 0.06, col, studs=False)
+                elif kind == "jackalope":
+                    b = Vector((hc.x + hl * 0.12, s * hw * 0.3, top - 0.05)); t1 = b + Vector((0.15, s * 0.75, 0.6)) * hh
+                    m.seg(f"Antler{s}", b, t1, hh * 0.15, hh * 0.1, col, studs=False)
+                    m.seg(f"AntlerTop{s}", t1, t1 + Vector((-0.1, s * 0.2, 0.45)) * hh, hh * 0.1, hh * 0.07, col, studs=False)
+                    for j, (f_, d_) in enumerate(((0.45, (0.35, s * 0.05, 0.4)), (1.0, (0.3, s * 0.35, 0.15)))):
+                        p = b.lerp(t1, f_); m.seg(f"Tine{s}{j}", p, p + Vector(d_) * hh, hh * 0.09, hh * 0.06, col, studs=False)
             if kind == "rhino":
                 sc, sl, sh = c["sc"], c["sl"], c["sh"]
                 m.spike("Horn", sc + Vector((sl * 0.25, 0, sh / 2 - 0.05)), sc + Vector((sl * 0.55, 0, sh / 2 + hh * 0.85)), hh * 0.22, col, sides=5)
@@ -627,16 +961,18 @@ def tusks(kind="walrus", col=HORN):
                 if kind == "walrus": m.spike(f"Tusk{s}", sc + Vector((sl * 0.3, s * sw * 0.25, -sh * 0.3)), sc + Vector((sl * 0.25, s * sw * 0.28, -sh * 0.3 - c["hh"] * 0.9)), sw * 0.08, col, sides=5)
                 elif kind == "up": m.spike(f"Tusk{s}", sc + Vector((sl * 0.3, s * sw * 0.48, -sh * 0.2)), sc + Vector((sl * 0.25, s * sw * 0.62, sh * 0.85)), sw * 0.08, col, sides=5)
                 elif kind == "mammoth":
-                    a = sc + Vector((0, s * sw * 0.42, -sh * 0.3)); b = a + Vector((c["hl"] * 0.7, s * 0.2, -c["hh"] * 0.45)); e = b + Vector((c["hl"] * 0.5, -s * 0.1, c["hh"] * 0.55))
-                    m.seg(f"Tusk{s}", a, b, sw * 0.16, sw * 0.13, col, studs=False); m.spike(f"TuskTip{s}", b, e, sw * 0.07, col, sides=5)
+                    a = sc + Vector((-sl * 0.1, s * sw * 0.44, -sh * 0.35)); b = a + Vector((c["hl"] * 0.5, s * 0.22, -c["hh"] * 0.32)); e = b + Vector((c["hl"] * 0.45, -s * 0.05, c["hh"] * 0.55))
+                    m.seg(f"Tusk{s}", a, b, sw * 0.3, sw * 0.26, col, studs=False); m.seg(f"TuskMid{s}", b - (b - a).normalized() * 0.1, b.lerp(e, 0.6), sw * 0.26, sw * 0.2, col, studs=False)
+                    m.spike(f"TuskTip{s}", b.lerp(e, 0.55), e, sw * 0.11, col, sides=5)
     return fn
 
 def trunk(col):
     def fn(m, c):
         sc, sl, sw, sh = c["sc"], c["sl"], c["sw"], c["sh"]
         with c["head"]():
-            a = sc + Vector((sl / 2, 0, 0)); pts = [a, a + Vector((0.3, 0, -0.7)) * c["hh"], a + Vector((0.4, 0, -1.4)) * c["hh"], a + Vector((0.65, 0, -1.75)) * c["hh"]]
-            m.chain("Trunk", pts, [sw * 0.5, sw * 0.42, sw * 0.34, sw * 0.28], col)
+            hh = c["hh"]; a = sc + Vector((sl * 0.3, 0, -sh * 0.1))      # short, thick, curling forward at the tip
+            pts = [a, a + Vector((0.16, 0, -0.42)) * hh, a + Vector((0.22, 0, -0.8)) * hh, a + Vector((0.42, 0, -0.98)) * hh]
+            m.chain("Trunk", pts, [sw * 0.62, sw * 0.54, sw * 0.46, sw * 0.4], col, bones="Trunk")
     return fn
 
 def mane_back(col, n=5):
@@ -644,9 +980,15 @@ def mane_back(col, n=5):
         if "neck_tip" not in c: return
         a, b = c["neck_base"], c["neck_tip"]; d = c["nd"]; up = Vector((-d.z, 0, d.x))
         with _in(m, "Neck"):
-          for k in range(n):
-            p = a.lerp(b, k / max(1, n - 1)) + up * c["hh"] * 0.55
+          eq = c.get("eq"); nn = n + 1 if eq else n
+          for k in range(nn):
+            t = k / max(1, nn - 1)
+            p = a.lerp(b, t) + up * c["hh"] * ((0.85 - 0.3 * t) if eq else 0.55)
             m.box(f"Mane{k}", p, (c["hl"] * 0.42, c["hw"] * 0.42, c["hh"] * 0.8), col, rot=Ry(-0.5), top=(0.55, 0.8), **NS)
+            if eq:            # long mane falling down both sides of the arched neck
+                for s in (1, -1):
+                    m.box(f"ManeSide{k}{s}", p + Vector((0.05, s * c["hw"] * 0.38, -c["hh"] * 0.45)), (c["hl"] * 0.36, c["hw"] * 0.16, c["hh"] * (1.1 - 0.3 * t)), col, rot=Ry(-0.4), bot=(0.6, 0.8), **NS)
+        if c.get("head_kit"): return                       # head kits carry their own forelock
         with c["head"]():                                  # forelock tuft on top of the head
             m.box("Forelock", c["hc"] + Vector((-c["hl"] * 0.2, 0, c["hh"] * 0.55)), (c["hl"] * 0.45, c["hw"] * 0.42, c["hh"] * 0.4), col, top=(0.6, 0.8), **NS)
     return fn
@@ -760,11 +1102,60 @@ def hedgehog_spikes(col):
                 m.spike(f"Quill{i}{j}", (x, y, z0 + H * 0.65 - abs(j) * 0.1), (x - 0.35, y * 1.5, z0 + H * 1.1 - abs(j) * 0.2), 0.14, lt(col, 0.25))
     return fn
 
-def fangs(col=TOOTH):
+def fangs(col=TOOTH, length=0.45):
     def fn(m, c):
         sc, sl, sw, sh = c["sc"], c["sl"], c["sw"], c["sh"]
         with c["head"]():
-            for s in (1, -1): m.spike(f"Fang{s}", sc + Vector((sl * 0.35, s * sw * 0.3, -sh * 0.4)), sc + Vector((sl * 0.38, s * sw * 0.3, -sh * 0.4 - c["hh"] * 0.45)), sw * 0.1, col, flat=0.5)
+            for s in (1, -1): m.spike(f"Fang{s}", sc + Vector((sl * 0.35, s * sw * 0.3, -sh * 0.4)), sc + Vector((sl * 0.38, s * sw * 0.3, -sh * 0.4 - c["hh"] * length)), sw * 0.1, col, flat=0.5)
+    return fn
+
+def shoulders(col=None, k=1.0):
+    """Big-cat / predator shoulder hump: a muscular block over the front legs (separates a panther from a house cat)."""
+    def fn(m, c):
+        L, W, H, z0 = c["L"], c["W"], c["H"], c["z0"]
+        m.box("Shoulders", (L * 0.24, 0, z0 + H * 0.28), (L * 0.42 * k, W * 1.08, H * 0.75 * k), col or c["C1"], top=(0.7, 0.85))
+        m.box("Haunch", (-L * 0.28, 0, z0 + H * 0.12), (L * 0.36 * k, W * 1.04, H * 0.7 * k), col or c["C1"], top=(0.75, 0.85))
+    return fn
+
+def shaggy(col, col2=None, legs=True):
+    """Ice-age shag (mammoth, woolly rhino): long two-tone hair strands hanging off the sides, rump and chest, cheek hair,
+    a high shoulder hump, a domed head and fur sleeves on the upper legs."""
+    col2 = col2 or dk(col, 0.8)
+    def fn(m, c):
+        L, W, H, z0, lh, lw = c["L"], c["W"], c["H"], c["z0"], c["lh"], c["lw"]
+        m.box("ShoulderHump", (L * 0.16, 0, z0 + H * 0.5), (L * 0.52, W * 0.86, H * 0.72), col, top=(0.45, 0.62))
+        n = 8
+        for s in (1, -1):
+            for k in range(n):
+                x = L * 0.42 - L * 0.86 * k / (n - 1); ln = H * (0.95 + 0.25 * ((k * 7 + (s > 0) * 3) % 3) / 2)
+                m.box(f"Strand{s}{k}", (x, s * (W / 2 * (1.12 if c.get("mus") else 1.0) + 0.06), z0 + H * 0.2 - ln / 2), (L / n * 1.15, 0.34, ln), col if k % 2 else col2,
+                      top=(1, 1), bot=(0.7, 0.85), studs=True)
+        for k in range(3):    # rump fringe
+            m.box(f"RumpStrand{k}", (-L / 2 - 0.08, (k - 1) * W * 0.3, z0 - H * 0.05), (0.3, W * 0.34, H * 1.0), col2 if k % 2 else col, bot=(0.8, 0.7), studs=True)
+        for k in range(3):    # chest beard under the head
+            m.box(f"ChestStrand{k}", (L / 2 + 0.08, (k - 1) * W * 0.28, z0 - H * 0.1), (0.36, W * 0.32, H * 1.05), col if k % 2 else col2, bot=(0.8, 0.7), studs=True)
+        with c["head"]():
+            hc, hl, hw, hh = c["hc"], c["hl"], c["hw"], c["hh"]
+            m.box("HeadDome", hc + Vector((-hl * 0.18, 0, hh * 0.52)), (hl * 0.78, hw * 0.86, hh * 0.6), col, top=(0.5, 0.66))
+            for s in (1, -1):
+                m.box(f"CheekHair{s}", hc + Vector((-hl * 0.1, s * (hw / 2 + 0.06), -hh * 0.2)), (hl * 0.6, 0.3, hh * 0.95), col2, bot=(0.75, 0.8), studs=True)
+        if legs:
+            for sx in (1, -1):
+                for s in (1, -1):
+                    x = sx * (L / 2 - lw * 0.62); y = s * (W / 2 - lw * 0.5 - 0.06)
+                    with _in(m, f"Leg_{'F' if sx > 0 else 'B'}{LR(s)}"):
+                        m.box(f"LegFur{sx}{s}", (x, y, lh * 0.62), (lw * 1.32, lw * 1.32, lh * 0.55), col2 if sx > 0 else col, bot=(0.85, 0.85), studs=True)
+    return fn
+
+def jaw_teeth(n=6, col=TOOTH):
+    """Croc/gator: a row of white blade teeth down each side of a long snout."""
+    def fn(m, c):
+        sc, sl, sw, sh = c["sc"], c["sl"], c["sw"], c["sh"]
+        with c["head"]():
+            for s in (1, -1):
+                for k in range(n):
+                    x = sc.x - sl / 2 + sl * (k + 0.5) / n
+                    m.spike(f"JawTooth{s}{k}", (x, s * (sw / 2 - 0.02), sc.z - sh * 0.2), (x, s * (sw / 2 + 0.02), sc.z - sh * 0.2 - sh * 0.55), sw * 0.07, col, flat=0.35)
     return fn
 
 def buck_teeth(col=WHITE):
@@ -836,20 +1227,63 @@ def hole_ring(col):
             m.box(f"Ring{k}", p, (0.3, 0.55, 0.3), col, rot=Rx(a), glow=True, **NS)
     return fn
 
-def chimera_bits(goat=rgb(236, 228, 210), snake_c=rgb(80, 170, 70)):
+def chimera_bits(goat=rgb(205, 184, 150), snake_c=rgb(72, 104, 52), horn=rgb(52, 40, 38), horn_tip=rgb(184, 60, 40), fur=rgb(120, 62, 34)):
+    """Chimera extras: goat head sprouting from the left shoulder with huge curved horns (dark -> red tips), a wild fur
+    ridge down the back, and a thick scaled snake tail curling round the right side with its fanged mouth open
+    (use with tail=None; the snake gets bones Tail1..5)."""
     def fn(m, c):
         L, W, H, z0 = c["L"], c["W"], c["H"], c["z0"]
-        p = Vector((-L * 0.05, 0, z0 + H / 2))
-        m.seg("GoatNeck", p, p + Vector((0.2, 0, 1.0)), 0.6, 0.55, goat)
-        gh = p + Vector((0.4, 0, 1.4)); m.box("GoatHead", gh, (0.9, 0.75, 0.75), goat)
-        for s in (1, -1):
-            m.seg(f"GoatHorn{s}", gh + Vector((-0.1, s * 0.2, 0.35)), gh + Vector((-0.6, s * 0.3, 0.9)), 0.18, 0.1, HORN, studs=False)
-            m.box(f"GoatEye{s}", gh + Vector((0.2, s * 0.38, 0.1)), (0.22, 0.05, 0.18), WHITE, **NS)
-        e = c.get("tail_end")
-        if e is not None:
-          with _in(m, c.get("tail_bone", "Tail3")):
-            m.box("SnakeHead", e + Vector((-0.25, 0, 0.25)), (0.7, 0.5, 0.4), snake_c)
-            for s in (1, -1): m.box(f"SnakeEye{s}", e + Vector((-0.1, s * 0.26, 0.32)), (0.18, 0.05, 0.14), rgb(255, 214, 60), **NS)
+        with _in(m, "Body"):
+            for k in range(7):                                     # fur ridge: shoulders -> mid back
+                x = L * (0.3 - k * 0.1); h = 0.75 - 0.07 * k
+                p = Vector((x, 0, z0 + H * 0.52))
+                m.spike(f"Ridge{k}", p, p + Vector((-0.45, 0, h)), 0.32, fur if k % 2 else lt(fur, 0.2), flat=0.5)
+                for s in (1, -1):
+                    m.spike(f"RidgeS{k}{s}", p + Vector((0.05, s * W * 0.25, -0.1)), p + Vector((-0.4, s * (W * 0.25 + 0.3), h * 0.6)), 0.24, fur, flat=0.5)
+            # goat: short neck out of the left shoulder, head looking forward
+            p = Vector((L * 0.3, W * 0.38, z0 + H * 0.45)); q = p + Vector((0.55, 0.5, 0.65))
+            m.seg("GoatNeck", p, q, 0.7, 0.6, goat, d0=0.75, d1=0.6)
+            gh = q + Vector((0.3, 0.1, 0.2))
+            gf = m.frame(pivot=q, scale=1.35); gf.__enter__()
+            m.box("GoatHead", gh, (0.85, 0.6, 0.62), goat, top=(0.85, 0.9))
+            m.box("GoatSnout", gh + Vector((0.5, 0, -0.1)), (0.42, 0.42, 0.4), lt(goat, 0.2), top=(0.85, 0.9))
+            m.box("GoatNose", gh + Vector((0.72, 0, -0.02)), (0.05, 0.26, 0.1), dk(goat, 0.4), studs=False)
+            m.box("GoatBeard", gh + Vector((0.4, 0, -0.5)), (0.22, 0.22, 0.42), dk(goat, 0.75), top=(0.4, 0.5), rot=Ry(0.2))
+            for s in (1, -1):
+                m.box(f"GoatEye{s}", gh + Vector((0.18, s * 0.31, 0.1)), (0.24, 0.05, 0.13), rgb(255, 190, 40), studs=False, glow=True)
+                m.box(f"GoatPupil{s}", gh + Vector((0.18, s * 0.335, 0.1)), (0.14, 0.03, 0.05), PUPIL, studs=False)
+                m.box(f"GoatBrow{s}", gh + Vector((0.18, s * 0.31, 0.22)), (0.3, 0.07, 0.07), dk(goat, 0.5), rot=Ry(0.3), studs=False)
+                m.box(f"GoatEar{s}", gh + Vector((-0.2, s * 0.45, 0.08)), (0.2, 0.4, 0.1), goat, rot=Rx(s * 0.5), studs=False)
+                a0 = gh + Vector((0.05, s * 0.17, 0.3))      # swept back, then up, thick at the base
+                pts = [a0, a0 + Vector((-0.45, s * 0.14, 0.5)), a0 + Vector((-0.95, s * 0.26, 1.05)), a0 + Vector((-1.15, s * 0.34, 1.75))]
+                m.chain(f"GoatHorn{s}", pts, [0.36, 0.3, 0.23, 0.16], horn, studs=False)
+                m.seg(f"GoatHornRed{s}", pts[2].lerp(pts[3], 0.35), pts[3], 0.21, 0.165, horn_tip, studs=False)
+                m.spike(f"GoatHornTip{s}", pts[-1], pts[-1] + Vector((-0.05, s * 0.06, 0.75)), 0.12, horn_tip, sides=5)
+            gf.__exit__(None, None, None)
+        # snake tail: back and down, round the right flank, raised head looking forward with open fanged mouth
+        tb = Vector((-L / 2 + 0.15, 0, z0 + H * 0.15))
+        pts = [tb, tb + Vector((-0.8, 0, -0.45)), tb + Vector((-1.4, -0.55, -0.95)), tb + Vector((-1.1, -1.5, -1.2)),
+               tb + Vector((-0.2, -2.0, -1.0)), tb + Vector((0.35, -1.9, 0.0))]
+        ws = [0.5, 0.56, 0.52, 0.47, 0.42, 0.36]
+        m.chain("Snake", pts, ws, snake_c, bones="Tail")
+        for i in range(1, len(pts) - 1):                          # pale belly scales + dark back diamonds
+            with m.bone(f"Tail{i}"):
+                q = pts[i].lerp(pts[i + 1], 0.5); w = (ws[i] + ws[i + 1]) / 2
+                m.box(f"Belly{i}", q + Vector((0, 0, -w * 0.46)), (w * 0.55, w * 0.55, w * 0.14), lt(snake_c, 0.45), studs=False)
+                m.box(f"Diamond{i}", q + Vector((0, 0, w * 0.47)), (w * 0.4, w * 0.4, w * 0.1), dk(snake_c, 0.6), rot=Rz(0.785), studs=False)
+        e = pts[-1]
+        with m.bone("Tail5"):
+            hd = e + Vector((0.3, 0.05, 0.25))
+            m.box("SnakeHead", hd, (0.85, 0.62, 0.38), snake_c, top=(0.85, 0.9))
+            m.box("SnakeMouth", hd + Vector((0.05, 0, -0.24)), (0.7, 0.5, 0.12), MOUTH, studs=False)
+            for s in (1, -1):
+                m.box(f"SnakeEye{s}", hd + Vector((0.12, s * 0.32, 0.08)), (0.24, 0.05, 0.16), rgb(255, 214, 60), studs=False, glow=True)
+                m.box(f"SnakePupil{s}", hd + Vector((0.12, s * 0.345, 0.08)), (0.05, 0.03, 0.15), PUPIL, studs=False)
+                m.box(f"SnakeBrow{s}", hd + Vector((0.1, s * 0.31, 0.2)), (0.32, 0.08, 0.08), dk(snake_c, 0.5), rot=Ry(0.25), studs=False)
+                m.spike(f"SnakeFang{s}", hd + Vector((0.34, s * 0.18, -0.15)), hd + Vector((0.38, s * 0.18, -0.48)), 0.06, TOOTH, flat=0.3)
+            with m.frame(pivot=hd + Vector((-0.35, 0, -0.2)), rot=Ry(0.5)):
+                m.box("SnakeJaw", hd + Vector((0.05, 0, -0.32)), (0.75, 0.55, 0.16), lt(snake_c, 0.35))
+                for s in (1, -1): m.spike(f"SnakeFangB{s}", hd + Vector((0.34, s * 0.15, -0.26)), hd + Vector((0.36, s * 0.15, -0.02)), 0.05, TOOTH, flat=0.3)
     return fn
 
 def whiskers(col=rgb(240, 236, 220)):
@@ -901,7 +1335,7 @@ def tufts(col):
 
 def bill_tip(col=BLACK):
     def fn(m, c):
-        with c["head"](): m.box("BillTip", c["sc"] + Vector((c["sl"] * 0.4, 0, 0)), (c["sl"] * 0.2, c["sw"] * 0.75, c["sh"] * 0.95), col, **NS)
+        with c["head"](): m.box("BillTip", c["sc"] + Vector((c["sl"] * 0.4, 0, -c["sh"] * 0.05)), (c["sl"] * 0.2, c["sw"] * 0.52, c["sh"] * 0.62), col, top=(0.7, 0.7), **NS)
     return fn
 
 def ruff(col=WHITE):
@@ -923,10 +1357,11 @@ def build(name, arch, P, out, views=None):
     if os.path.isdir(out): shutil.rmtree(out)
     size = max(P.get("body", P.get("torso", P.get("size", (3, 2, 2))))) if P else 3
     if arch is theropod: size = 9 * P.get("s", 1.0) / G
+    if arch is dragon: size = 9 * P.get("s", 1.0) / G
     if arch in (whale, golem, kraken): size = 5
     stud = float(np.clip(size * G / 12, 0.26, 0.6))
-    m = Model(name, out, stud=stud, chamfer=0.16, jitter=P.get("jitter", 0.05))
-    with m.frame(scale=1.0 if arch is theropod else G):
+    m = Model(name, out, stud=stud, chamfer=0.16, jitter=P.get("jitter", 0.05), faceted=P.get("faceted", False))
+    with m.frame(scale=1.0 if arch is theropod else (P.get("s", 1.0) if arch is dragon else G)):
         c = arch(m, P)
     m.done(glow_color=P.get("glow"), views=views or [("hero", 40, 12, 45)])
     return m
