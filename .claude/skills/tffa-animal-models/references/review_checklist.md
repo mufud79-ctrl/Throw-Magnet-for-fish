@@ -51,4 +51,5 @@ Stop only when a fresh pass finds nothing at the silhouette, proportion or face 
 | Black bar on the image edge | outline wrap | (fixed: padded dilation) |
 | Black square holes on small animals | bevel wider than a stud cell inverted faces | (fixed: grid lines inside the chamfer zone are dropped) |
 | Idle shows legs mid-stride | unkeyed bones kept the previous clip's pose | (fixed: every clip keys every bone) |
+| Black squares where legs meet the body | leg face coplanar with the body side (Cycles black, Roblox z-fight) | inset parts a little; never let two faces share a plane |
 | Spots stick out as slabs near the rump | patches placed over the tapered/chamfered ends | keep patterns on the flat middle (archetype `pattern` does) |

@@ -202,7 +202,7 @@ def quad(m, P):
     legc = P.get("leg_c", C1); feet = P.get("feet")
     for sx in (1, -1):
         for s in (1, -1):
-            x = sx * (L / 2 - lw * 0.62); y = s * (W / 2 - lw * 0.5)
+            x = sx * (L / 2 - lw * 0.62); y = s * (W / 2 - lw * 0.5 - 0.06)   # inset: a face coplanar with the body side z-fights (black in renders, flicker in Roblox)
             with m.bone(f"Leg_{'F' if sx > 0 else 'B'}{LR(s)}", (x, y, lh + 0.15)):
                 if sprawl:
                     a = Vector((x, y, z0 - H * 0.15)); b = Vector((x + sx * 0.1, s * (W / 2 + sprawl * 1.6), 0.25))
@@ -861,7 +861,7 @@ def talons(col=rgb(250, 210, 60)):
     def fn(m, c):
         for sx in (1, -1):
             for s in (1, -1):
-                x = sx * (c["L"] / 2 - c["lw"] * 0.62); y = s * (c["W"] / 2 - c["lw"] * 0.5)
+                x = sx * (c["L"] / 2 - c["lw"] * 0.62); y = s * (c["W"] / 2 - c["lw"] * 0.5 - 0.06)
                 with _in(m, f"Leg_{'F' if sx > 0 else 'B'}{LR(s)}"):
                   for t in (-1, 0, 1): m.spike(f"Talon{sx}{s}{t}", (x + c["lw"] * 0.45, y + t * c["lw"] * 0.3, 0.12), (x + c["lw"] * 0.85, y + t * c["lw"] * 0.38, 0.03), c["lw"] * 0.12, CLAW)
     return fn
