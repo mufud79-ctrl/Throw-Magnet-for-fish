@@ -62,13 +62,13 @@ for s in (1, -1):
 with m.bone("Neck", (2.6, 0, 4.3)):
     m.seg("Neck", V(2.2, 0, 4.4), V(3.2, 0, 3.7), 2.0, 1.8, FUR, d0=2.2, d1=1.9)
     # goat: neck out of the mane above-left of the lion head, pale head, slit-pupil eyes, huge ringed C-curved horns
-    m.seg("GoatNeck", V(2.2, 0, 4.85), V(3.35, 0, 5.45), 1.3, 1.1, GOAT, d0=1.35, d1=1.15)
+    m.seg("GoatNeck", V(2.2, 0, 4.6), V(3.3, 0, 4.75), 1.3, 1.1, GOAT, d0=1.35, d1=1.15)
     g = V(3.45, 0, 5.95)
-    gf = m.frame(pivot=g, scale=1.5, move=(0.45, 0, -0.25)); gf.__enter__()   # goat head ~60% of the lion head, centred above it (user)
+    gf = m.frame(pivot=g, scale=1.5, move=(0.4, 0, -1.1)); gf.__enter__()   # goat head ~60% of the lion head, centred above it (user)
     m.box("GoatHead", g, (1.15, 0.9, 0.9), GOAT, top=(0.85, 0.9))
     m.box("GoatSnout", g + V(0.72, 0, -0.18), (0.6, 0.62, 0.55), GOAT, top=(0.8, 0.85), bot=(0.9, 0.9))
     m.box("GoatNose", g + V(1.03, 0, -0.08), (0.06, 0.36, 0.14), dk(GOAT, 0.45), studs=False)
-    m.box("GoatBeard", g + V(0.55, 0, -0.68), (0.28, 0.3, 0.5), dk(GOAT, 0.8), top=(0.4, 0.5), rot=Ry(0.2), studs=False)
+    m.box("GoatBeard", g + V(0.62, 0, -0.52), (0.24, 0.26, 0.24), dk(GOAT, 0.8), top=(0.5, 0.6), rot=Ry(0.2), studs=False)
     for s in (1, -1):
         m.box(f"GoatEar{s}", g + V(-0.2, s * 0.62, 0.12), (0.26, 0.55, 0.14), GOAT, rot=Rx(s * 0.35), studs=False)
         m.box(f"GoatEye{s}", g + V(0.3, s * 0.46, 0.12), (0.32, 0.06, 0.2), rgb(255, 200, 40), studs=False, glow=True)
