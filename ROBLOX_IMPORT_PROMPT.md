@@ -13,7 +13,9 @@ Your working tree is sitting on old files (your branch was cut from `636292e`, s
    ```
    git fetch origin claude/roblox-animal-models-852c5h
    git checkout origin/claude/roblox-animal-models-852c5h -- models/ ROBLOX_IMPORT_PROMPT.md
-   git log -1 --format=%h origin/claude/roblox-animal-models-852c5h     # must be abe6def or newer
+   git log -1 --format=%h origin/claude/roblox-animal-models-852c5h     # must be 0629e40 or newer
+   # remove old-only leftovers the checkout above cannot delete:
+   git ls-files models/CannonTame | grep -vxF -f <(git ls-tree -r --name-only origin/claude/roblox-animal-models-852c5h -- models/CannonTame) | xargs -r git rm -q
    ```
    Then confirm the Chicken is the new one: `models/CannonTame/Animals/01_Farm/Chicken/` must contain `anims/` and
    `Chicken_Detail.png` and must NOT contain `Chicken_Texture_Studs.png`. The new Chicken has a three-point comb, block eyes
