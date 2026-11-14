@@ -480,8 +480,8 @@ def build_dragon(K, out):
     the jaws wide open around a big fireball bore, swept-back horns, narrow glowing eyes; black/gold stepped carriage."""
     from mathutils import Vector
     rgb, Ry = K.rgb, K.Ry
-    RED, RED_D = rgb(196, 34, 46), rgb(128, 18, 32)
-    BELLY, HORN = rgb(242, 214, 156), rgb(240, 220, 170)
+    RED, RED_D = rgb(188, 22, 32), rgb(130, 12, 24)        # the zoo RedDragon palette
+    BELLY, HORN = rgb(214, 166, 206), K.HORN
     BLACK2, GOLD = rgb(30, 28, 36), rgb(236, 186, 70)
     GLD = rgb(255, 92, 12)
     m = K.Model("DragonCannon", out, stud=0.4, chamfer=0.16, faceted=True)
@@ -542,41 +542,35 @@ def build_dragon(K, out):
         m.seg("TailBelly", P(-2.25, -0.5), P(-2.95, -0.4), 0.62, 0.42, BELLY, chamfer=0.2)
         m.spike("TailTip", P(-3.15, 1.25), P(-3.0, 1.75), 0.18, HORN, flat=0.4)
 
-        # ---- head: wedge skull, upper jaw tilted up, lower jaw dropped -> wide gape around the fireball bore
-        hinge = Vector(P(1.45, -0.05))
-        with m.frame(pivot=hinge, scale=1.0, move=(0.05, 0, 0.12)):
-            with m.frame(pivot=hinge, rot=Ry(-0.28)):
-                wedge("Skull", X(1.25), X(2.45), (1.8, T.z - 0.15, T.z + 1.12), (1.3, T.z - 0.05, T.z + 0.9), RED)
-                wedge("Snout", X(2.35), X(3.5), (1.25, T.z - 0.05, T.z + 0.86), (0.8, T.z - 0.02, T.z + 0.5), RED)
-                wedge("Roof", X(1.6), X(3.45), (1.05, T.z - 0.12, T.z), (0.6, T.z - 0.08, T.z + 0.02), K.MOUTH, ch=0.05)
+        # ---- head: the zoo RedDragon's head (examples/dragon.py), jaw opened around a fireball bore.
+        # Coordinates below are the RedDragon's own; the outer frame drops that head onto the front of the barrel.
+        HP = Vector((1.5, 0, 9.2))                     # RedDragon head pivot (after its own scale/move frame)
+        k = 0.8
+        with m.frame(pivot=HP, scale=k, move=Vector(P(1.4, 0.55 - 0.875 * k)) - HP), \
+             m.frame(pivot=(1.5, 0, 8.2), scale=1.25, move=(0, 0, 1.0)):
+            m.box("Head", (2.0, 0, 8.9), (2.0, 2.0, 1.5), RED, top=(0.75, 0.8))
+            m.box("Snout", (3.3, 0, 8.7), (1.7, 1.4, 0.85), RED, top=(0.75, 0.8), bot=(1, 0.85))
+            m.box("Roof", (3.0, 0, 8.28), (1.7, 1.15, 0.1), K.MOUTH)
+            m.box("Throat", (2.2, 0, 8.0), (0.8, 1.3, 1.0), K.MOUTH)
+            for s in (1, -1):
+                for j, x in enumerate((2.5, 3.0, 3.5, 3.95)):
+                    m.spike(f"Tooth{s}{j}", (x, s * 0.55, 8.3), (x, s * 0.53, 7.9 - 0.12 * (j == 3)), 0.13, K.TOOTH, flat=0.4)
+                m.spike(f"Horn{s}", (1.6, s * 0.6, 9.5), (0.9, s * 1.2, 11.0), 0.32, HORN, sides=5)
+                for j in range(4):                                     # frill crown around the face
+                    m.spike(f"Frill{s}{j}", (1.6 - j * 0.15, s * 0.9, 9.4 - j * 0.4), (1.4 - j * 0.2, s * (1.55 - j * 0.08), 9.6 - j * 0.5), 0.26, RED)
+                m.box(f"Nostril{s}", (4.15, s * 0.3, 8.9), (0.1, 0.2, 0.12), RED_D, chamfer=0.05)
+            m.spike("Crest", (2.2, 0, 9.55), (1.7, 0, 10.4), 0.28, RED)
+            m.eyes((2.85, 0.6, 9.25), facing=(1, 0.8, 0.2), size=(0.55, 0.32), pupil=0.75, look=(0.5, 0), angry=0.45,
+                   white=rgb(255, 214, 60), brow_col=RED_D, brow_h=0.5, brow_up=0.75, depth=0.14)
+            with m.frame(pivot=(2.0, 0, 8.2), rot=Ry(0.5)):            # jaw dropped open
+                m.box("Jaw", (2.9, 0, 7.95), (1.9, 1.25, 0.45), RED)
+                m.box("JawFloor", (2.9, 0, 8.2), (1.6, 1.0, 0.08), K.MOUTH)
+                m.box("Chin", (2.8, 0, 7.75), (1.6, 0.9, 0.1), BELLY)
                 for s in (1, -1):
-                    m.hexa(f"Brow{s}", [(X(1.75), s * 0.62, T.z + 0.84), (X(2.7), s * 0.5, T.z + 0.72), (X(2.7), s * 0.95, T.z + 0.72),
-                                        (X(1.75), s * 1.0, T.z + 0.84),
-                                        (X(1.75), s * 0.62, T.z + 1.2), (X(2.7), s * 0.5, T.z + 0.92), (X(2.7), s * 0.95, T.z + 0.92),
-                                        (X(1.75), s * 1.0, T.z + 1.2)], RED_D, chamfer=0.12)
-                    for k, (dx, L) in enumerate(((1.95, 0.36), (2.45, 0.34), (2.95, 0.36), (3.35, 0.55))):
-                        w = 0.5 - (dx - 1.95) * 0.13
-                        b = Vector(P(dx, -0.04, s * w))
-                        m.spike(f"UTooth{s}{k}", b, b + Vector((0.05, 0, -L)), 0.12, K.TOOTH, flat=0.4)
-                    m.seg(f"Horn{s}", P(1.5, 1.0, s * 0.5), P(0.95, 1.5, s * 0.62), 0.44, 0.32, HORN, chamfer=0.2)
-                    m.seg(f"Horn2{s}", P(1.0, 1.45, s * 0.62), P(0.55, 2.05, s * 0.68), 0.32, 0.22, HORN, chamfer=0.2)
-                    m.spike(f"HornTip{s}", P(0.58, 2.0, s * 0.68), P(0.15, 2.55, s * 0.7), 0.13, HORN)
-                    m.slab(f"Frill{s}", [(0, 0), (0.55, 0.05), (-0.45, 0.5)], 0.09, RED_D, origin=P(1.35, 0.25, s * 0.82),
-                           xaxis=(1, 0, 0), yaxis=(0, s * 0.85, 0.5))
-                m.eyes(P(2.15, 0.62, 0.72), facing=(0.35, 1, 0.15), size=(0.62, 0.26), pupil=0.5, look=(0.3, 0.2),
-                       brow=False, white=rgb(255, 222, 50), depth=0.12)
-            with m.frame(pivot=hinge, rot=Ry(0.7)):
-                wedge("Jaw", X(1.35), X(3.05), (1.4, T.z - 0.58, T.z - 0.06), (0.72, T.z - 0.42, T.z - 0.12), RED)
-                wedge("JawFloor", X(1.6), X(2.9), (1.0, T.z - 0.12, T.z - 0.02), (0.55, T.z - 0.15, T.z - 0.06), K.MOUTH, ch=0.05)
-                wedge("Chin", X(1.5), X(2.9), (1.0, T.z - 0.64, T.z - 0.5), (0.5, T.z - 0.48, T.z - 0.38), BELLY, ch=0.1)
-                for s in (1, -1):
-                    for k, (dx, L) in enumerate(((1.95, 0.3), (2.4, 0.32), (2.85, 0.45))):
-                        w = 0.5 - (dx - 1.95) * 0.17
-                        b = Vector(P(dx, -0.08, s * w))
-                        m.spike(f"LTooth{s}{k}", b, b + Vector((0.05, 0, L)), 0.11, K.TOOTH, flat=0.4)
-            m.box("Throat", P(1.55, 0.05), (0.5, 1.2, 1.0), K.MOUTH)
-            m.ball("Fireball", P(2.1, 0.0), 0.7, GLD, segs=(10, 8), glow=True)
-            with m.bone("Muzzle", P(2.7, 0.05)): pass
+                    for j, x in enumerate((2.6, 3.1, 3.6)):
+                        m.spike(f"LTooth{s}{j}", (x, s * 0.5, 8.15), (x, s * 0.48, 8.5), 0.12, K.TOOTH, flat=0.4)
+            m.ball("Fireball", (2.75, 0, 8.1), 0.62, GLD, segs=(10, 8), glow=True)
+            with m.bone("Muzzle", (3.3, 0, 8.1)): pass
         prism(m, "Trunnion", (T.x, -0.92, T.z), (T.x, 0.92, T.z), 0.2, 0.2, BLACK2)
     m.done(views=VIEWS + [("ref", 56, 12, 90)], glow_color=GLD)
 
