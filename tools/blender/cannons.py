@@ -475,67 +475,117 @@ def build_stone(K, out):
 
 # ============================================================================== tier 12: Dragon (faceted, fire glow)
 def build_dragon(K, out):
+    """Matches the user reference (12_Dragon/DragonCannon_reference.webp): the barrel IS a fat dragon body with red scale
+    plates, a cream belly band, white spine spikes and a curled tail; a huge open-jawed head with a fireball deep in the
+    mouth; black carriage with gold trim, bat-wing emblems and black wheels with gold spokes."""
     from mathutils import Vector
-    rgb, Ry = K.rgb, K.Ry
-    RED, RED_D, BELLY = rgb(200, 30, 42), rgb(126, 14, 30), rgb(246, 196, 112)
-    HORN, BASALT, BASALT_D, GOLD = rgb(246, 238, 220), rgb(70, 60, 72), rgb(48, 40, 52), rgb(255, 200, 50)
-    GLD = rgb(255, 150, 40)
+    rgb, Ry, Rx = K.rgb, K.Ry, K.Rx
+    RED, RED_D, SCALE = rgb(190, 32, 44), rgb(124, 16, 30), rgb(160, 22, 36)
+    BELLY, BELLY_D, HORN = rgb(240, 214, 160), rgb(206, 174, 116), rgb(236, 214, 162)
+    BLACK2, GOLD = rgb(26, 24, 30), rgb(232, 190, 92)
+    GLD = rgb(255, 112, 24)
     m = K.Model("DragonCannon", out, stud=0.4, chamfer=0.16, faceted=True)
     m.gait = {"recoil": 0.4}
-    T = Vector((0.0, 0, 2.9))
+    T = Vector((-0.2, 0, 2.3))
+
+    def hexa_trap(name, x0, x1, z0, z1, w0, w1, col):
+        """Prism along X with a trapezoid cross-section: width w0 at z0 (bottom), w1 at z1 (top)."""
+        C = [(x0, -w0 / 2, z0), (x1, -w0 / 2, z0), (x1, w0 / 2, z0), (x0, w0 / 2, z0),
+             (x0, -w1 / 2, z1), (x1, -w1 / 2, z1), (x1, w1 / 2, z1), (x0, w1 / 2, z1)]
+        m.hexa(name, C, col, chamfer=0.12)
+
     with m.bone("Body", (0, 0, 1.0)):
-        m.box("Crag", (0, 0, 0.45), (2.9, 2.3, 0.9), BASALT, top=(0.85, 0.85))
-        m.box("Crag2", (0.15, -0.2, 1.05), (1.9, 1.7, 0.6), BASALT_D, top=(0.75, 0.8), rot=K.Rz(0.2))
-        for k, (x, y, z) in enumerate(((1.15, 0.7, 0.95), (1.0, -0.6, 0.95), (-1.1, 0.75, 0.95), (1.3, 0.1, 0.94), (-0.9, -0.8, 0.95))):
-            prism(m, f"Coin{k}", (x, y, z - 0.03), (x, y, z + 0.06), 0.2, 0.2, GOLD, chamfer=0.3)
-        gem(m, "HoardGem", (1.2, -0.1, 1.1), (0.3, 0, 1), 0.32, 0.18, rgb(60, 220, 120), glow=False)
-        for s in (1, -1):                                     # dragon arms holding the trunnions
-            m.seg(f"UpperArm{s}", (-0.35, s * 0.75, 1.15), (0.15, s * 1.15, 2.1), 0.6, 0.5, RED, chamfer=0.22)
-            m.seg(f"Forearm{s}", (0.15, s * 1.15, 2.0), (T.x, s * 0.95, T.z - 0.15), 0.48, 0.42, RED, chamfer=0.22)
-            m.box(f"Hand{s}", (T.x, s * 0.98, T.z - 0.05), (0.55, 0.36, 0.45), RED_D)
-            for dx in (-0.22, 0.0, 0.22):
-                m.spike(f"Claw{s}{dx}", (T.x + dx, s * 0.95, T.z + 0.12), (T.x + dx * 1.3, s * 0.62, T.z + 0.62), 0.09, HORN, flat=0.5)
-            m.spike(f"Elbow{s}", (0.15, s * 1.15, 2.05), (-0.35, s * 1.5, 2.25), 0.14, HORN)
-            with m.bone("Wing_L" if s > 0 else "Wing_R", (-0.5, s * 0.95, 1.4)):    # folded wings behind
-                m.seg(f"WingBone{s}", (-0.5, s * 0.95, 1.4), (-1.5, s * 1.55, 3.5), 0.22, 0.14, RED, chamfer=0.2)
-                m.ball(f"WingKnob{s}", (-1.5, s * 1.55, 3.5), 0.16, GOLD, segs=(6, 4))
-                m.poly(f"Membrane{s}", [(-0.5, s * 0.95, 1.4), (-1.5, s * 1.55, 3.5), (-2.4, s * 1.45, 2.4), (-2.1, s * 1.25, 1.6),
-                                        (-1.4, s * 1.05, 1.2)], 0.1, RED_D)
-    with barrel_ctx(m, K, T, 0.18):
+        # four black wheels with gold spoke dashes and hubs
+        for x in (-1.75, 0.75):
+            m.box(f"Axle{x}", (x, 0, 0.62), (0.3, 2.5, 0.3), BLACK2)
+            for s in (1, -1):
+                c = Vector((x, s * 1.28, 0.62))
+                prism(m, f"Wheel{x}{s}", c - Vector((0, 0.2, 0)), c + Vector((0, 0.2, 0)), 0.62, 0.62, BLACK2, sides=12, chamfer=0.2)
+                prism(m, f"Hub{x}{s}", c, c + Vector((0, s * 0.3, 0)), 0.16, 0.13, GOLD, sides=8)
+                for k in range(10):
+                    a = 2 * math.pi * k / 10; d = Vector((math.cos(a), 0, math.sin(a)))
+                    m.box(f"Spoke{x}{s}{k}", c + d * 0.38 + Vector((0, s * 0.21, 0)), (0.26, 0.04, 0.07), GOLD, rot=Ry(-a), chamfer=0.1)
+        # bed + cheek plates: a gold plate behind a slightly smaller black plate = gold trim around the edge
+        m.box("Bed", (-0.5, 0, 0.82), (3.2, 2.0, 0.55), BLACK2)
+        m.box("BedFront", (1.15, 0, 0.95), (0.3, 1.7, 0.75), BLACK2, top=(1, 0.95))
+        m.box("BedStep", (1.32, 0, 0.72), (0.2, 1.5, 0.35), BLACK2)
+        for s in (1, -1):
+            for nm, (x0, x1, z0, z1) in (("Front", (-0.75, 0.95, 0.6, 2.05)), ("Back", (-2.15, -0.6, 0.6, 1.55))):
+                cx, cz, L, H = (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0, z1 - z0
+                m.box(f"Trim{nm}{s}", (cx, s * 1.02, cz), (L + 0.1, 0.16, H + 0.1), GOLD)
+                m.box(f"Cheek{nm}{s}", (cx, s * 1.06, cz), (L - 0.06, 0.16, H - 0.06), BLACK2)
+            m.box(f"Cap{s}", (T.x, s * 1.04, T.z - 0.02), (0.62, 0.3, 0.42), BLACK2)
+            m.box(f"CapTrim{s}", (T.x, s * 1.0, T.z - 0.02), (0.7, 0.24, 0.5), GOLD)
+            # bat-wing emblem on the rear plate, pointing back
+            m.slab(f"Emblem{s}", [(0, 0), (-0.25, 0.4), (-0.65, 0.5), (-0.55, 0.2), (-0.8, 0.12), (-0.6, -0.08), (-0.75, -0.25),
+                                   (-0.35, -0.15)], 0.08, RED, origin=(-0.7, s * 1.16, 1.25), xaxis=(1, 0, 0), yaxis=(0, 0, 1))
+
+    with barrel_ctx(m, K, T, 0.06):
         X = lambda dx: T.x + dx
         P = lambda dx, dz=0, y=0: (X(dx), y, T.z + dz)
-        m.chain("Tail", [P(-1.0), P(-1.9, -0.1), P(-2.6, -0.45), P(-2.95, -1.0)], [1.0, 0.72, 0.46, 0.22], RED, chamfer=0.22)
-        m.slab("TailSpade", [(-0.35, 0), (0.35, 0), (0, -0.6)], 0.12, HORN, origin=P(-2.95, -0.95), xaxis=(1, 0, 0), yaxis=(0.3, 0, 1))
-        m.seg("Neck", P(-1.2), P(1.7), 1.04, 0.88, RED, chamfer=0.22)
-        for i in range(5):
-            m.box(f"Plate{i}", P(-0.9 + i * 0.55, -0.45), (0.44, 0.72, 0.16), BELLY)
-        for i in range(7):
-            x = -2.3 + i * 0.6; h = 0.5 if i % 2 else 0.36
-            base = Vector(P(x, 0.38 if x > -1.2 else 0.25 - 0.1 * (-1.2 - x)))
-            m.spike(f"Spine{i}", base, base + Vector((-0.25, 0, h)), 0.2, HORN, flat=0.3)
-        # head: skull + snout, jaw hinged open, fireball in the mouth
-        m.box("Skull", P(2.15, 0.15), (1.3, 1.25, 0.82), RED, top=(0.85, 0.9))
-        m.box("Snout", P(3.0, 0.1), (1.05, 0.95, 0.52), RED, top=(0.8, 0.85))
-        m.box("Brow", P(2.35, 0.55), (0.7, 1.15, 0.2), RED_D, top=(0.8, 0.9))
-        m.teeth("UpperTeeth", P(2.6, -0.17, 0.36), P(3.45, -0.17, 0.33), 4, 0.24, 0.08, fangs=(0,))
-        m.teeth("UpperTeethR", P(2.6, -0.17, -0.36), P(3.45, -0.17, -0.33), 4, 0.24, 0.08, fangs=(0,))
-        m.box("MouthIn", P(2.2, -0.25), (0.8, 0.9, 0.5), K.MOUTH)
-        with m.frame(pivot=P(1.8, -0.3), rot=Ry(0.32)):
-            m.box("Jaw", P(2.7, -0.5), (1.6, 0.86, 0.3), RED)
-            m.box("JawBelly", P(2.6, -0.67), (1.4, 0.7, 0.1), BELLY)
-            m.teeth("LowerTeeth", P(2.3, -0.33, 0.33), P(3.35, -0.33, 0.3), 4, 0.2, 0.07, down=False)
-            m.teeth("LowerTeethR", P(2.3, -0.33, -0.33), P(3.35, -0.33, -0.3), 4, 0.2, 0.07, down=False)
-        m.ball("Fireball", P(2.85, -0.28), 0.36, GLD, segs=(8, 6), glow=True)
-        m.eyes(P(2.45, 0.38, 0.6), facing=(0.35, 1, 0), size=(0.42, 0.28), pupil=0.75, look=(0.3, 0), angry=0.5,
-               brow_col=RED_D, glow_white=True, depth=0.14)
-        for s in (1, -1):
-            m.spike(f"Horn{s}", P(1.75, 0.42, s * 0.42), P(0.75, 1.2, s * 0.8), 0.22, HORN)
-            m.spike(f"Horn2{s}", P(1.95, 0.2, s * 0.6), P(1.25, 0.45, s * 1.05), 0.14, HORN)
-            m.slab(f"Frill{s}", [(0, 0), (0.7, 0), (-0.4, 0.55)], 0.08, RED_D, origin=P(1.6, 0.0, s * 0.62),
-                   xaxis=(1, 0, 0), yaxis=(0, s * 0.9, 0.4))
-        prism(m, "Trunnion", (T.x, -0.92, T.z), (T.x, 0.92, T.z), 0.2, 0.2, RED_D)
-        with m.bone("Muzzle", P(3.4, -0.28)): pass
-    m.done(views=VIEWS, glow_color=GLD)
+        R0 = 0.98
+        # fat dragon body
+        prism(m, "BodyBack", P(-1.95), P(-0.2), 0.86, R0, RED, sides=10)
+        prism(m, "BodyFront", P(-0.3), P(1.5), R0, 0.94, RED, sides=10)
+        hexa_trap("Belly", X(-1.9), X(1.7), T.z - 1.0, T.z - 0.3, 0.95, 2.0, BELLY)
+        for i in range(7):                                         # belly segment ridges
+            x = -1.6 + i * 0.5
+            hexa_trap(f"Ridge{i}", X(x), X(x + 0.07), T.z - 1.02, T.z - 0.32, 0.99, 2.04, BELLY_D)
+        # overlapping scale plates (rows around the upper body, staggered, pointing back)
+        for row, ang in enumerate((0, 38, -38, 72, -72)):
+            a = math.radians(ang); rd = Vector((0, -math.sin(a), math.cos(a))); tg = Vector((0, math.cos(a), math.sin(a)))
+            for j in range(8):
+                x = -1.65 + j * 0.42 + (0.21 if row % 2 else 0)
+                if x > 1.35: continue
+                m.slab(f"Scale{row}{j}", [(0.22, -0.24), (0.22, 0.24), (-0.08, 0.22), (-0.26, 0), (-0.08, -0.22)], 0.07, SCALE,
+                       origin=Vector(P(x)) + rd * (R0 - 0.01), xaxis=(1, 0, 0), yaxis=tg)
+        for i in range(7):                                         # white spine spikes, biggest behind the head
+            x = 1.15 - i * 0.45; h = 0.55 - i * 0.045
+            b = Vector(P(x, R0 - 0.05))
+            m.spike(f"Spine{i}", b, b + Vector((-0.22, 0, h)), 0.2, HORN if i else K.TOOTH, flat=0.35)
+        # curled tail with a cream underside and a spike tip
+        pts = [P(-1.8, -0.1), P(-2.55, -0.05), P(-3.0, 0.4), P(-3.1, 1.0)]
+        m.chain("Tail", pts, [1.25, 0.82, 0.52, 0.28], RED, chamfer=0.2)
+        m.seg("TailBelly", P(-2.0, -0.45), P(-2.75, -0.35), 0.8, 0.5, BELLY, chamfer=0.2)
+        m.spike("TailTip", P(-3.1, 0.95), P(-3.0, 1.3), 0.16, HORN, flat=0.4)
+        m.spike("TailSpike", P(-2.6, 0.35), P(-2.9, 0.85), 0.14, HORN, flat=0.35)
+
+        # ---- head: upper skull tilted up, jaw dropped -> ~50 deg gape; fireball deep inside
+        hinge = Vector(P(1.45, -0.05))
+        with m.frame(pivot=hinge, scale=1.22, move=(0.12, 0, 0.3)):
+            with m.frame(pivot=hinge, rot=Ry(-0.04)):
+                m.box("Skull", P(2.0, 0.42), (1.5, 1.5, 1.08), RED, top=(0.7, 0.8), shift=(-0.15, 0))
+                m.box("Snout", P(2.9, 0.3), (1.25, 1.08, 0.6), RED, top=(0.72, 0.85), shift=(-0.12, 0))
+                m.box("Nose", P(3.45, 0.28), (0.42, 0.86, 0.5), RED, top=(0.55, 0.8), shift=(-0.1, 0))
+                m.box("Roof", P(2.6, 0.04), (1.9, 0.98, 0.1), K.MOUTH)
+                for s in (1, -1):
+                    m.box(f"Brow{s}", P(2.25, 0.8, s * 0.5), (0.9, 0.5, 0.3), RED_D, rot=Rx(s * 0.25) @ Ry(0.22))
+                    m.box(f"Nostril{s}", P(3.58, 0.48, s * 0.22), (0.06, 0.14, 0.1), RED_D, chamfer=0.1)
+                    for k, (dx, L) in enumerate(((1.9, 0.34), (2.3, 0.32), (2.7, 0.38), (3.1, 0.3), (3.45, 0.5))):
+                        b = Vector(P(dx, 0.08, s * (0.44 if dx < 3.3 else 0.3)))
+                        m.spike(f"UTooth{s}{k}", b, b + Vector((0.04, 0, -L)), 0.1, K.TOOTH, flat=0.4)
+                    # long cream horns sweeping up and back
+                    m.seg(f"HornBase{s}", P(1.6, 0.8, s * 0.45), P(0.95, 1.15, s * 0.6), 0.36, 0.26, HORN, chamfer=0.2)
+                    m.seg(f"HornMid{s}", P(1.0, 1.12, s * 0.6), P(0.4, 1.5, s * 0.66), 0.26, 0.18, HORN, chamfer=0.2)
+                    m.spike(f"HornTip{s}", P(0.44, 1.46, s * 0.66), P(0.2, 2.05, s * 0.7), 0.1, HORN)
+                    m.slab(f"Frill{s}", [(0, 0), (0.6, 0.05), (-0.45, 0.5)], 0.08, RED_D, origin=P(1.45, 0.15, s * 0.72),
+                           xaxis=(1, 0, 0), yaxis=(0, s * 0.85, 0.5))
+                m.eyes(P(2.3, 0.6, 0.7), facing=(0.4, 1, 0.1), size=(0.46, 0.19), pupil=0.85, look=(0.3, 0.1), angry=0.45,
+                       brow=False, glow_white=True, depth=0.14)
+            with m.frame(pivot=hinge, rot=Ry(0.6)):
+                m.box("Jaw", P(2.3, -0.42), (1.65, 1.18, 0.44), RED, top=(1, 1), bot=(0.85, 0.85))
+                m.box("Chin", P(3.05, -0.36), (0.4, 0.92, 0.44), RED, top=(0.9, 0.9), bot=(0.75, 0.8))
+                m.box("JawBelly", P(2.3, -0.66), (1.45, 0.86, 0.12), BELLY)
+                m.box("Tongue", P(2.15, -0.2), (0.95, 0.6, 0.08), K.TONGUE)
+                for s in (1, -1):
+                    for k, (dx, L) in enumerate(((1.85, 0.28), (2.25, 0.32), (2.65, 0.3), (3.02, 0.42))):
+                        b = Vector(P(dx, -0.22, s * (0.42 if dx < 2.9 else 0.28)))
+                        m.spike(f"LTooth{s}{k}", b, b + Vector((0.03, 0, L)), 0.09, K.TOOTH, flat=0.4)
+            m.box("Throat", P(1.75, 0.0), (0.7, 1.15, 0.95), K.MOUTH)
+            m.ball("Fireball", P(2.05, 0.02), 0.52, GLD, segs=(10, 8), glow=True)
+            with m.bone("Muzzle", P(2.6, 0.0)): pass
+        prism(m, "Trunnion", (T.x, -1.0, T.z), (T.x, 1.0, T.z), 0.2, 0.2, BLACK2)
+    m.done(views=VIEWS + [("ref", 50, 12, 50)], glow_color=GLD)
 
 
 # ============================================================================== tier 04: Bamboo (studded bundle launcher)
