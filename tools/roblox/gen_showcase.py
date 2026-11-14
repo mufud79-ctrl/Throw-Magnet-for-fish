@@ -4,7 +4,8 @@
 
 Reads game/manifest.json and game/asset_ids.json (optional; models without an ID are cloned
 from ServerStorage.ShowcaseImports in Studio) and fills tools/roblox/showcase_template.lua.
-Re-run after every upload batch so the new IDs are baked in.
+Also writes game/CheckUploads.lua, which reports what Roblox built from each uploaded asset
+(MeshParts, textures, Bones, _Glow part). Re-run after every upload batch so the new IDs are baked in.
 """
 import json
 import re
@@ -14,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[2]
 GAME = ROOT / "game"
 TEMPLATE = Path(__file__).with_name("showcase_template.lua")
 OUT = GAME / "ShowcaseBuilder.lua"
+CHECK_TEMPLATE = Path(__file__).with_name("check_template.lua")
+CHECK_OUT = GAME / "CheckUploads.lua"
 OUTLINE = "#1B1530"   # ui/README.md: outline colour used everywhere
 
 # key, sign title, floor colour, fish-style pedestal, yaw (deg) so the side profile faces the walkway
@@ -99,10 +102,14 @@ def main():
     data = {"outline": OUTLINE, "districts": districts}
     src = TEMPLATE.read_text().replace("__DATA__", lua(data))
     OUT.write_text(src)
+    check = [{"n": m["name"], "id": int(ids[m["name"]]), "rigged": m["rigged"], "glow": m["glow"] is not None}
+             for m in man["models"] if m["name"] in ids]
+    CHECK_OUT.write_text(CHECK_TEMPLATE.read_text().replace("__CHECK__", lua(check)))
     n = sum(len(r["items"]) for d in districts for r in d["rows"])
     with_id = sum(1 for d in districts for r in d["rows"] for i in r["items"] if i["id"])
     print(f"{OUT.relative_to(ROOT)}: {n} models, {with_id} with asset IDs, "
-          f"{n - with_id} from ServerStorage.ShowcaseImports ({len(src) // 1024} KB)")
+          f"{n - with_id} from ServerStorage.ShowcaseImports ({len(src) // 1024} KB); "
+          f"{CHECK_OUT.relative_to(ROOT)}: {len(check)} uploaded assets")
 
 
 if __name__ == "__main__":

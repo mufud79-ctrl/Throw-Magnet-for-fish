@@ -16,6 +16,8 @@ Flags:
                     (MeshParts, Bones, textures). Needs the key to also have
                     Legacy Assets: Manage (asset delivery) and network access to the CDN.
 
+The ROBLOX_* variables can also live in a git-ignored .env file at the repo root.
+
 Resumable: names already in asset_ids.json are skipped, and the file is rewritten after every
 success, so an interrupted run loses nothing. Failures are logged to game/upload_failures.json
 and the batch carries on. Standard library only.
@@ -80,6 +82,16 @@ def multipart(fields, file_field, filename, content, ctype):
             f"filename=\"{filename}\"\r\nContent-Type: {ctype}\r\n\r\n").encode()
     out += content + f"\r\n--{boundary}--\r\n".encode()
     return out, f"multipart/form-data; boundary={boundary}"
+
+
+def load_dotenv():
+    """Fill missing ROBLOX_* vars from a git-ignored .env at the repo root (KEY=value lines)."""
+    env = ROOT / ".env"
+    if env.exists():
+        for line in env.read_text().splitlines():
+            k, sep, v = line.strip().partition("=")
+            if sep and k.startswith("ROBLOX_") and not os.environ.get(k):
+                os.environ[k] = v.strip().strip('"').strip("'")
 
 
 def creator():
@@ -258,6 +270,7 @@ def main():
     ap.add_argument("--delay", type=float, default=2.0)
     ap.add_argument("--inspect", nargs="+", metavar="NAME")
     args = ap.parse_args()
+    load_dotenv()
     if args.inspect:
         return run_inspect(args.inspect)
     models = json.loads(MANIFEST.read_text())["models"]

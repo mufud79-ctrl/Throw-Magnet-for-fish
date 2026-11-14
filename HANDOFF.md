@@ -69,3 +69,10 @@ Zones: 01_Pond, 02_River, 03_Swamp, 04_CoralReef, 05_OpenOcean, 06_FrozenSea, 07
   - The user rejected both smooth sculpted props and faceted low-poly ones.
 - `tools/blender/zones_blocky.py` builds all 60 props (`python zones_blocky.py [Zone or Prop names] [--no-render]`). No prop may repeat across zones.
 - Possible polish: StatueHead and IcebergChunk are plain; FallenStar's glow arms read as a white smear in previews (Neon in Roblox).
+
+## Roblox integration (in progress, step 1 of several: model showcase)
+Code in `tools/roblox/`, generated data and Luau in `game/`; full instructions and the Studio checklist in `game/README.md`.
+- **Done:** `build_manifest.py` writes `game/manifest.json` (140 models: 50 fish, 15 baits, 15 dumbbells, 60 zone props; glow colours parsed from `models/README.md`, rarity colours from `ui/README.md`). `upload.py` uploads the FBXs as Model assets through Open Cloud (resumable, `--only`, `--dry-run`, `--format glb`, `--glb-fallback`, `--inspect`) into `game/asset_ids.json`. `gen_showcase.py` writes `game/ShowcaseBuilder.lua` (command-bar layout of all models on the Baseplate) and `game/CheckUploads.lua` (reports MeshParts, textures, Bones and `_Glow` per uploaded asset).
+- **Not yet done:** no API key has been used yet, so nothing is uploaded and the generated Luau has not run in Studio. Next: run `game/DESKTOP_PROMPT.md` in a desktop session (3-model test upload, then the full batch, then build the showcase).
+- **Known issue:** SunkenContainer has a glow colour in `models/README.md` but no `_Glow` mesh.
+- **Later steps (not started):** upload and test the 12 animation clips, import `ui/FishingUI.rbxmx` and fill in its image IDs, the stud-texture toggle, then the Rojo setup and gameplay (magnet throw, catching, index).
