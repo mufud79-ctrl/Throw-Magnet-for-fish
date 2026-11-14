@@ -871,8 +871,10 @@ def dragon(m, P):
         for k, (x, z) in enumerate(((-0.2, 6.3), (-1.0, 5.6), (-1.9, 4.6), (-3.2, 3.5), (-4.6, 2.6))):
             with (m.bone("Body") if k < 3 else m.bone("Tail1" if k == 3 else "Tail2")):
                 m.spike(f"Spine{k}", (x, 0, z - 0.3), (x - 0.5, 0, z + 0.6), 0.32, P["spikes"], flat=0.45, glow=P.get("spike_glow", False))
+    c = dict(C1=C1, C2=C2, back=V(0, 0, 6.0), head=lambda: m.bone("Head"))
+    for fn in P.get("x", []): fn(m, c)          # extras use explicit bones (m.bone("Head"), "Body", "Tail2", ...)
     _b.__exit__(None, None, None)
-    return dict(C1=C1, back=V(0, 0, 6.0))
+    return c
 
 # ============================================================================ accessories (factories -> fn(m, c))
 def feather(m, name, root, direction, length, width, grad, side=(0, 1, 0), glow=False):

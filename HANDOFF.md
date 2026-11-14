@@ -94,7 +94,7 @@ then `references/style_guide.md` and `references/review_checklist.md`. Reference
 | 08_DinoLand | Spinosaurus, Triceratops | Ankylosaurus, Compy, Parasaurolophus, Stegosaurus, TRex |
 | 09_Volcano | LavaDrake (dragon archetype, muscular, studded, user-approved) | EmberWolf, FireSalamander, LavaRex, MagmaSlug, ObsidianGolem, Phoenix |
 | 10_MythicIsles | all 7 (bottom-up session: equine Pegasus/Unicorn, king-of-the-sea Kraken, dragon-archetype CelestialDragon, snarling Chimera) | - |
-| 11_Space | - | MoonBunny, AlienBlob, SpaceCat, AstroDog, StarWhale, GalaxyDragon, BlackHoleBeast (no folder yet) |
+| 11_Space | all 7 as hero scripts (bottom-up session; `examples/<name>.py`) | - |
 
 "Hard set" for future skill work (unusual anatomy, will need adjustments): Crocodile, Scorpion, Rattlesnake, Mammoth,
 Triceratops, Spinosaurus, LavaDrake. Known weak spots: mammoth hair strands are flat blocks, scorpion tail segments are
