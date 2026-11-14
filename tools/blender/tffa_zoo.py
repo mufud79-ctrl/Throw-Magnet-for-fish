@@ -46,7 +46,7 @@ ZONES = [
    ("Toucan", B, dict(body=(1.4, 1.15, 1.5), leg=0.5, head=1.05, c1=rgb(36, 36, 42), belly=YELLOW, beak=(1.5, 0.65, 0.6), beak_c=ORANGE, wing_c=rgb(30, 30, 36), x=[bill_tip()])),
    ("Monkey", A, dict(torso=(1.0, 0.85, 1.3), leg=0.6, head=1.05, c1=BROWN, face_c=NOUGAT, ears="round", ear_c=NOUGAT, tail="long")),
    ("Sloth", A, dict(torso=(1.4, 1.1, 1.5), leg=0.45, head=1.05, lean=0.1, c1=rgb(176, 154, 122), face_c=CREAM, x=[eye_patches(DBROWN)])),
-   ("Panther", Q, dict(body=(3.6, 1.6, 1.45), legs=(1.5, 0.62), head=(1.55, 1.55, 1.0), neck=(0.35, 0.2), c1=rgb(52, 48, 68), snout=(0.8, 1.05, 0.75), snout_c=rgb(54, 52, 70), nose_c=rgb(18, 18, 24), feet=rgb(30, 28, 40), ears="cat", tail="long", tail_w=1.7, tail_c=rgb(40, 38, 52), angry=True, snarl=True, iris=rgb(205, 250, 60), brow=rgb(16, 16, 22), head_scale=1.3, muscular=True, x=[])),
+   ("Panther", Q, dict(body=(4.0, 1.55, 1.4), legs=(1.9, 0.6), head=(1.55, 1.55, 1.0), neck=(0.75, 0.22), c1=rgb(52, 48, 68), snout=(1.0, 1.0, 0.72), snout_c=rgb(54, 52, 70), nose_c=rgb(18, 18, 24), feet=rgb(30, 28, 40), ears="cat", tail="long", tail_w=1.7, tail_c=rgb(40, 38, 52), angry=True, snarl=True, iris=rgb(205, 250, 60), brow=rgb(16, 16, 22), head_scale=1.3, muscular=True, x=[])),
    ("Crocodile", Q, dict(body=(3.4, 1.9, 1.15), legs=(0.45, 0.55), sprawl=0.3, head=(1.5, 1.65, 0.95), neck=(0, 0.1), c1=rgb(72, 128, 62), belly=CREAM, snout=(1.9, 1.3, 0.62), snout_c=rgb(82, 140, 70), tail="thick", angry=True, head_scale=1.35, eye=1.5, side_eyes=True, x=[spine_spikes(rgb(52, 92, 46), 7), jaw_teeth(7)])),
    ("Gorilla", EX, "gorilla"),
  ]),

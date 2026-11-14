@@ -241,7 +241,7 @@ def quad(m, P):
     mus = P.get("muscular", False)
     if mus:   # predator build: deep chest, tucked waist, big haunches, raised shoulder blades, side muscle bulges
         m.box("Chest", (L * 0.24, 0, z0 + H * 0.04), (L * 0.52, W * 1.08, H * 1.18), C1, top=(0.78, 0.84), bot=(0.82, 0.88))
-        m.box("Waist", (-L * 0.03, 0, z0 + H * 0.14), (L * 0.46, W * 0.84, H * 0.76), C1, top=(0.95, 0.92), bot=(0.9, 0.9))
+        m.box("Waist", (-L * 0.03, 0, z0 + H * 0.2), (L * 0.46, W * 0.82, H * 0.66), C1, top=(0.95, 0.92), bot=(0.88, 0.88))
         m.box("Haunch", (-L * 0.3, 0, z0 + H * 0.06), (L * 0.42, W * 1.02, H * 1.02), C1, top=(0.8, 0.84), bot=(0.85, 0.9))
         for s in (1, -1):
             m.box(f"ShoulderBlade{s}", (L * 0.2, s * W * 0.27, z0 + H * 0.62), (L * 0.3, W * 0.36, H * 0.42), C1, top=(0.55, 0.7))
@@ -264,7 +264,7 @@ def quad(m, P):
                     front = sx > 0
                     m.box(f"UpperLeg{sx}{s}", (x - sx * 0.04, y, lh * 0.72 + 0.12), (lw * (1.35 if front else 1.55), lw * 1.22, lh * 0.78 + 0.25), legc,
                           top=(1.0, 1.0), bot=(0.72, 0.78), rot=Ry(0 if front else 0.18))
-                    m.box(f"LowerLeg{sx}{s}", (x + (0.0 if front else 0.06), y, lh * 0.3), (lw * 0.86, lw * 0.86, lh * 0.62), legc)
+                    m.box(f"LowerLeg{sx}{s}", (x + (0.0 if front else 0.06), y, lh * 0.3), (lw * 0.74, lw * 0.78, lh * 0.62), legc)
                     m.box(f"Paw{sx}{s}", (x + lw * 0.18, y, 0.16), (lw * 1.35, lw * 1.12, 0.32), feet or legc, top=(0.85, 0.9))
                     for t in (-1, 0, 1):
                         m.box(f"Toe{sx}{s}{t}", (x + lw * 0.86, y + t * lw * 0.34, 0.1), (lw * 0.2, lw * 0.26, 0.2), dk(feet or legc, 0.8), **NS)
