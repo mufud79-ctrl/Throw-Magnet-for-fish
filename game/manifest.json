@@ -1,0 +1,1897 @@
+{
+ "rarityOrder": [
+  "Common",
+  "Uncommon",
+  "Rare",
+  "Epic",
+  "Legendary",
+  "Mythic",
+  "Secret",
+  "Divine",
+  "Celestial"
+ ],
+ "rarityColors": {
+  "Common": "#B4BCC8",
+  "Uncommon": "#5BD15B",
+  "Rare": "#3FA3FF",
+  "Epic": "#A35BFF",
+  "Legendary": "#FFB020",
+  "Mythic": "#FF4F7A",
+  "Secret": "#1C1C24",
+  "Divine": "#FFF1C4",
+  "Celestial": "#8A4DFF"
+ },
+ "models": [
+  {
+   "name": "Minnow",
+   "category": "Fish",
+   "group": "Common",
+   "order": 1,
+   "fbx": "models/Common/Minnow/Minnow.fbx",
+   "glb": "models/Common/Minnow/Minnow.glb",
+   "glow": null,
+   "meshes": [
+    "Minnow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Goldfish",
+   "category": "Fish",
+   "group": "Common",
+   "order": 2,
+   "fbx": "models/Common/Goldfish/Goldfish.fbx",
+   "glb": "models/Common/Goldfish/Goldfish.glb",
+   "glow": null,
+   "meshes": [
+    "Goldfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Bluegill",
+   "category": "Fish",
+   "group": "Common",
+   "order": 3,
+   "fbx": "models/Common/Bluegill/Bluegill.fbx",
+   "glb": "models/Common/Bluegill/Bluegill.glb",
+   "glow": null,
+   "meshes": [
+    "Bluegill"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Guppy",
+   "category": "Fish",
+   "group": "Common",
+   "order": 4,
+   "fbx": "models/Common/Guppy/Guppy.fbx",
+   "glb": "models/Common/Guppy/Guppy.glb",
+   "glow": null,
+   "meshes": [
+    "Guppy"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Perch",
+   "category": "Fish",
+   "group": "Common",
+   "order": 5,
+   "fbx": "models/Common/Perch/Perch.fbx",
+   "glb": "models/Common/Perch/Perch.glb",
+   "glow": null,
+   "meshes": [
+    "Perch"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Carp",
+   "category": "Fish",
+   "group": "Common",
+   "order": 6,
+   "fbx": "models/Common/Carp/Carp.fbx",
+   "glb": "models/Common/Carp/Carp.glb",
+   "glow": null,
+   "meshes": [
+    "Carp"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Catfish",
+   "category": "Fish",
+   "group": "Common",
+   "order": 7,
+   "fbx": "models/Common/Catfish/Catfish.fbx",
+   "glb": "models/Common/Catfish/Catfish.glb",
+   "glow": null,
+   "meshes": [
+    "Catfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Sardine",
+   "category": "Fish",
+   "group": "Common",
+   "order": 8,
+   "fbx": "models/Common/Sardine/Sardine.fbx",
+   "glb": "models/Common/Sardine/Sardine.glb",
+   "glow": null,
+   "meshes": [
+    "Sardine"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Clownfish",
+   "category": "Fish",
+   "group": "Common",
+   "order": 9,
+   "fbx": "models/Common/Clownfish/Clownfish.fbx",
+   "glb": "models/Common/Clownfish/Clownfish.glb",
+   "glow": null,
+   "meshes": [
+    "Clownfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "BlueTang",
+   "category": "Fish",
+   "group": "Common",
+   "order": 10,
+   "fbx": "models/Common/BlueTang/BlueTang.fbx",
+   "glb": "models/Common/BlueTang/BlueTang.glb",
+   "glow": null,
+   "meshes": [
+    "BlueTang"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Koi",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 1,
+   "fbx": "models/Uncommon/Koi/Koi.fbx",
+   "glb": "models/Uncommon/Koi/Koi.glb",
+   "glow": null,
+   "meshes": [
+    "Koi"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "LargemouthBass",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 2,
+   "fbx": "models/Uncommon/LargemouthBass/LargemouthBass.fbx",
+   "glb": "models/Uncommon/LargemouthBass/LargemouthBass.glb",
+   "glow": null,
+   "meshes": [
+    "LargemouthBass"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "RainbowTrout",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 3,
+   "fbx": "models/Uncommon/RainbowTrout/RainbowTrout.fbx",
+   "glb": "models/Uncommon/RainbowTrout/RainbowTrout.glb",
+   "glow": null,
+   "meshes": [
+    "RainbowTrout"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Salmon",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 4,
+   "fbx": "models/Uncommon/Salmon/Salmon.fbx",
+   "glb": "models/Uncommon/Salmon/Salmon.glb",
+   "glow": null,
+   "meshes": [
+    "Salmon"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Mudskipper",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 5,
+   "fbx": "models/Uncommon/Mudskipper/Mudskipper.fbx",
+   "glb": "models/Uncommon/Mudskipper/Mudskipper.glb",
+   "glow": null,
+   "meshes": [
+    "Mudskipper"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Pufferfish",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 6,
+   "fbx": "models/Uncommon/Pufferfish/Pufferfish.fbx",
+   "glb": "models/Uncommon/Pufferfish/Pufferfish.glb",
+   "glow": null,
+   "meshes": [
+    "Pufferfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Angelfish",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 7,
+   "fbx": "models/Uncommon/Angelfish/Angelfish.fbx",
+   "glb": "models/Uncommon/Angelfish/Angelfish.glb",
+   "glow": null,
+   "meshes": [
+    "Angelfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Flounder",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 8,
+   "fbx": "models/Uncommon/Flounder/Flounder.fbx",
+   "glb": "models/Uncommon/Flounder/Flounder.glb",
+   "glow": null,
+   "meshes": [
+    "Flounder"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Seahorse",
+   "category": "Fish",
+   "group": "Uncommon",
+   "order": 9,
+   "fbx": "models/Uncommon/Seahorse/Seahorse.fbx",
+   "glb": "models/Uncommon/Seahorse/Seahorse.glb",
+   "glow": null,
+   "meshes": [
+    "Seahorse"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Pike",
+   "category": "Fish",
+   "group": "Rare",
+   "order": 1,
+   "fbx": "models/Rare/Pike/Pike.fbx",
+   "glb": "models/Rare/Pike/Pike.glb",
+   "glow": null,
+   "meshes": [
+    "Pike"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Sturgeon",
+   "category": "Fish",
+   "group": "Rare",
+   "order": 2,
+   "fbx": "models/Rare/Sturgeon/Sturgeon.fbx",
+   "glb": "models/Rare/Sturgeon/Sturgeon.glb",
+   "glow": null,
+   "meshes": [
+    "Sturgeon"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Piranha",
+   "category": "Fish",
+   "group": "Rare",
+   "order": 3,
+   "fbx": "models/Rare/Piranha/Piranha.fbx",
+   "glb": "models/Rare/Piranha/Piranha.glb",
+   "glow": null,
+   "meshes": [
+    "Piranha"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "ElectricEel",
+   "category": "Fish",
+   "group": "Rare",
+   "order": 4,
+   "fbx": "models/Rare/ElectricEel/ElectricEel.fbx",
+   "glb": "models/Rare/ElectricEel/ElectricEel.glb",
+   "glow": "#78E6FF",
+   "meshes": [
+    "ElectricEel",
+    "ElectricEel_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Lionfish",
+   "category": "Fish",
+   "group": "Rare",
+   "order": 5,
+   "fbx": "models/Rare/Lionfish/Lionfish.fbx",
+   "glb": "models/Rare/Lionfish/Lionfish.glb",
+   "glow": null,
+   "meshes": [
+    "Lionfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "MorayEel",
+   "category": "Fish",
+   "group": "Rare",
+   "order": 6,
+   "fbx": "models/Rare/MorayEel/MorayEel.fbx",
+   "glb": "models/Rare/MorayEel/MorayEel.glb",
+   "glow": null,
+   "meshes": [
+    "MorayEel"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Icefish",
+   "category": "Fish",
+   "group": "Rare",
+   "order": 7,
+   "fbx": "models/Rare/Icefish/Icefish.fbx",
+   "glb": "models/Rare/Icefish/Icefish.glb",
+   "glow": "#8CE6FF",
+   "meshes": [
+    "Icefish",
+    "Icefish_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Lanternfish",
+   "category": "Fish",
+   "group": "Rare",
+   "order": 8,
+   "fbx": "models/Rare/Lanternfish/Lanternfish.fbx",
+   "glb": "models/Rare/Lanternfish/Lanternfish.glb",
+   "glow": "#78D2FF",
+   "meshes": [
+    "Lanternfish",
+    "Lanternfish_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "AlligatorGar",
+   "category": "Fish",
+   "group": "Epic",
+   "order": 1,
+   "fbx": "models/Epic/AlligatorGar/AlligatorGar.fbx",
+   "glb": "models/Epic/AlligatorGar/AlligatorGar.glb",
+   "glow": null,
+   "meshes": [
+    "AlligatorGar"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Arapaima",
+   "category": "Fish",
+   "group": "Epic",
+   "order": 2,
+   "fbx": "models/Epic/Arapaima/Arapaima.fbx",
+   "glb": "models/Epic/Arapaima/Arapaima.glb",
+   "glow": null,
+   "meshes": [
+    "Arapaima"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "MantaRay",
+   "category": "Fish",
+   "group": "Epic",
+   "order": 3,
+   "fbx": "models/Epic/MantaRay/MantaRay.fbx",
+   "glb": "models/Epic/MantaRay/MantaRay.glb",
+   "glow": null,
+   "meshes": [
+    "MantaRay"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "HammerheadShark",
+   "category": "Fish",
+   "group": "Epic",
+   "order": 4,
+   "fbx": "models/Epic/HammerheadShark/HammerheadShark.fbx",
+   "glb": "models/Epic/HammerheadShark/HammerheadShark.glb",
+   "glow": null,
+   "meshes": [
+    "HammerheadShark"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "GreenlandShark",
+   "category": "Fish",
+   "group": "Epic",
+   "order": 5,
+   "fbx": "models/Epic/GreenlandShark/GreenlandShark.fbx",
+   "glb": "models/Epic/GreenlandShark/GreenlandShark.glb",
+   "glow": "#C8FFDC",
+   "meshes": [
+    "GreenlandShark",
+    "GreenlandShark_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Anglerfish",
+   "category": "Fish",
+   "group": "Epic",
+   "order": 6,
+   "fbx": "models/Epic/Anglerfish/Anglerfish.fbx",
+   "glb": "models/Epic/Anglerfish/Anglerfish.glb",
+   "glow": "#B4FFC8",
+   "meshes": [
+    "Anglerfish",
+    "Anglerfish_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Blobfish",
+   "category": "Fish",
+   "group": "Epic",
+   "order": 7,
+   "fbx": "models/Epic/Blobfish/Blobfish.fbx",
+   "glb": "models/Epic/Blobfish/Blobfish.glb",
+   "glow": null,
+   "meshes": [
+    "Blobfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "GreatWhiteShark",
+   "category": "Fish",
+   "group": "Legendary",
+   "order": 1,
+   "fbx": "models/Legendary/GreatWhiteShark/GreatWhiteShark.fbx",
+   "glb": "models/Legendary/GreatWhiteShark/GreatWhiteShark.glb",
+   "glow": null,
+   "meshes": [
+    "GreatWhiteShark"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Sailfish",
+   "category": "Fish",
+   "group": "Legendary",
+   "order": 2,
+   "fbx": "models/Legendary/Sailfish/Sailfish.fbx",
+   "glb": "models/Legendary/Sailfish/Sailfish.glb",
+   "glow": null,
+   "meshes": [
+    "Sailfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "CrystalPike",
+   "category": "Fish",
+   "group": "Legendary",
+   "order": 3,
+   "fbx": "models/Legendary/CrystalPike/CrystalPike.fbx",
+   "glb": "models/Legendary/CrystalPike/CrystalPike.glb",
+   "glow": "#5AE6FF",
+   "meshes": [
+    "CrystalPike",
+    "CrystalPike_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Oarfish",
+   "category": "Fish",
+   "group": "Legendary",
+   "order": 4,
+   "fbx": "models/Legendary/Oarfish/Oarfish.fbx",
+   "glb": "models/Legendary/Oarfish/Oarfish.glb",
+   "glow": null,
+   "meshes": [
+    "Oarfish"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "MagmaEel",
+   "category": "Fish",
+   "group": "Legendary",
+   "order": 5,
+   "fbx": "models/Legendary/MagmaEel/MagmaEel.fbx",
+   "glb": "models/Legendary/MagmaEel/MagmaEel.glb",
+   "glow": "#FF781E",
+   "meshes": [
+    "MagmaEel",
+    "MagmaEel_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Coelacanth",
+   "category": "Fish",
+   "group": "Legendary",
+   "order": 6,
+   "fbx": "models/Legendary/Coelacanth/Coelacanth.fbx",
+   "glb": "models/Legendary/Coelacanth/Coelacanth.glb",
+   "glow": null,
+   "meshes": [
+    "Coelacanth"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "AuroraRay",
+   "category": "Fish",
+   "group": "Mythic",
+   "order": 1,
+   "fbx": "models/Mythic/AuroraRay/AuroraRay.fbx",
+   "glb": "models/Mythic/AuroraRay/AuroraRay.glb",
+   "glow": "#5AFFB4",
+   "meshes": [
+    "AuroraRay",
+    "AuroraRay_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "GhostShark",
+   "category": "Fish",
+   "group": "Mythic",
+   "order": 2,
+   "fbx": "models/Mythic/GhostShark/GhostShark.fbx",
+   "glb": "models/Mythic/GhostShark/GhostShark.glb",
+   "glow": "#B4F0FF",
+   "meshes": [
+    "GhostShark",
+    "GhostShark_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "EmberKoi",
+   "category": "Fish",
+   "group": "Mythic",
+   "order": 3,
+   "fbx": "models/Mythic/EmberKoi/EmberKoi.fbx",
+   "glb": "models/Mythic/EmberKoi/EmberKoi.glb",
+   "glow": "#FF8C28",
+   "meshes": [
+    "EmberKoi",
+    "EmberKoi_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "GoldenArowana",
+   "category": "Fish",
+   "group": "Mythic",
+   "order": 4,
+   "fbx": "models/Mythic/GoldenArowana/GoldenArowana.fbx",
+   "glb": "models/Mythic/GoldenArowana/GoldenArowana.glb",
+   "glow": null,
+   "meshes": [
+    "GoldenArowana"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "Megalodon",
+   "category": "Fish",
+   "group": "Secret",
+   "order": 1,
+   "fbx": "models/Secret/Megalodon/Megalodon.fbx",
+   "glb": "models/Secret/Megalodon/Megalodon.glb",
+   "glow": "#FF2828",
+   "meshes": [
+    "Megalodon",
+    "Megalodon_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "HydraEel",
+   "category": "Fish",
+   "group": "Secret",
+   "order": 2,
+   "fbx": "models/Secret/HydraEel/HydraEel.fbx",
+   "glb": "models/Secret/HydraEel/HydraEel.glb",
+   "glow": "#B4FF3C",
+   "meshes": [
+    "HydraEel",
+    "HydraEel_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "SeaSerpent",
+   "category": "Fish",
+   "group": "Secret",
+   "order": 3,
+   "fbx": "models/Secret/SeaSerpent/SeaSerpent.fbx",
+   "glb": "models/Secret/SeaSerpent/SeaSerpent.glb",
+   "glow": "#5AF0FF",
+   "meshes": [
+    "SeaSerpent",
+    "SeaSerpent_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "DragonKoi",
+   "category": "Fish",
+   "group": "Divine",
+   "order": 1,
+   "fbx": "models/Divine/DragonKoi/DragonKoi.fbx",
+   "glb": "models/Divine/DragonKoi/DragonKoi.glb",
+   "glow": null,
+   "meshes": [
+    "DragonKoi"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "SeraphFish",
+   "category": "Fish",
+   "group": "Divine",
+   "order": 2,
+   "fbx": "models/Divine/SeraphFish/SeraphFish.fbx",
+   "glb": "models/Divine/SeraphFish/SeraphFish.glb",
+   "glow": "#FFC440",
+   "meshes": [
+    "SeraphFish",
+    "SeraphFish_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "StarfallWhaleShark",
+   "category": "Fish",
+   "group": "Celestial",
+   "order": 1,
+   "fbx": "models/Celestial/StarfallWhaleShark/StarfallWhaleShark.fbx",
+   "glb": "models/Celestial/StarfallWhaleShark/StarfallWhaleShark.glb",
+   "glow": "#FFF0BE",
+   "meshes": [
+    "StarfallWhaleShark",
+    "StarfallWhaleShark_Glow"
+   ],
+   "rigged": true
+  },
+  {
+   "name": "BreadCrumbs",
+   "category": "Bait",
+   "group": "Common",
+   "order": 1,
+   "fbx": "models/Baits/Common/BreadCrumbs/BreadCrumbs.fbx",
+   "glb": "models/Baits/Common/BreadCrumbs/BreadCrumbs.glb",
+   "glow": null,
+   "meshes": [
+    "BreadCrumbs"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "Earthworm",
+   "category": "Bait",
+   "group": "Common",
+   "order": 2,
+   "fbx": "models/Baits/Common/Earthworm/Earthworm.fbx",
+   "glb": "models/Baits/Common/Earthworm/Earthworm.glb",
+   "glow": null,
+   "meshes": [
+    "Earthworm"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "CornKernels",
+   "category": "Bait",
+   "group": "Common",
+   "order": 3,
+   "fbx": "models/Baits/Common/CornKernels/CornKernels.fbx",
+   "glb": "models/Baits/Common/CornKernels/CornKernels.glb",
+   "glow": null,
+   "meshes": [
+    "CornKernels"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "Cricket",
+   "category": "Bait",
+   "group": "Uncommon",
+   "order": 1,
+   "fbx": "models/Baits/Uncommon/Cricket/Cricket.fbx",
+   "glb": "models/Baits/Uncommon/Cricket/Cricket.glb",
+   "glow": null,
+   "meshes": [
+    "Cricket"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "Shrimp",
+   "category": "Bait",
+   "group": "Uncommon",
+   "order": 2,
+   "fbx": "models/Baits/Uncommon/Shrimp/Shrimp.fbx",
+   "glb": "models/Baits/Uncommon/Shrimp/Shrimp.glb",
+   "glow": null,
+   "meshes": [
+    "Shrimp"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SpinnerLure",
+   "category": "Bait",
+   "group": "Uncommon",
+   "order": 3,
+   "fbx": "models/Baits/Uncommon/SpinnerLure/SpinnerLure.fbx",
+   "glb": "models/Baits/Uncommon/SpinnerLure/SpinnerLure.glb",
+   "glow": null,
+   "meshes": [
+    "SpinnerLure"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SquidChunk",
+   "category": "Bait",
+   "group": "Rare",
+   "order": 1,
+   "fbx": "models/Baits/Rare/SquidChunk/SquidChunk.fbx",
+   "glb": "models/Baits/Rare/SquidChunk/SquidChunk.glb",
+   "glow": null,
+   "meshes": [
+    "SquidChunk"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "GlowWorm",
+   "category": "Bait",
+   "group": "Rare",
+   "order": 2,
+   "fbx": "models/Baits/Rare/GlowWorm/GlowWorm.fbx",
+   "glb": "models/Baits/Rare/GlowWorm/GlowWorm.glb",
+   "glow": "#50F0FF",
+   "meshes": [
+    "GlowWorm",
+    "GlowWorm_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "FrozenKrill",
+   "category": "Bait",
+   "group": "Rare",
+   "order": 3,
+   "fbx": "models/Baits/Rare/FrozenKrill/FrozenKrill.fbx",
+   "glb": "models/Baits/Rare/FrozenKrill/FrozenKrill.glb",
+   "glow": null,
+   "meshes": [
+    "FrozenKrill"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "RawSteak",
+   "category": "Bait",
+   "group": "Epic",
+   "order": 1,
+   "fbx": "models/Baits/Epic/RawSteak/RawSteak.fbx",
+   "glb": "models/Baits/Epic/RawSteak/RawSteak.glb",
+   "glow": null,
+   "meshes": [
+    "RawSteak"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "MagmaPepper",
+   "category": "Bait",
+   "group": "Epic",
+   "order": 2,
+   "fbx": "models/Baits/Epic/MagmaPepper/MagmaPepper.fbx",
+   "glb": "models/Baits/Epic/MagmaPepper/MagmaPepper.glb",
+   "glow": "#FF7A1C",
+   "meshes": [
+    "MagmaPepper",
+    "MagmaPepper_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "PhantomJelly",
+   "category": "Bait",
+   "group": "Legendary",
+   "order": 1,
+   "fbx": "models/Baits/Legendary/PhantomJelly/PhantomJelly.fbx",
+   "glb": "models/Baits/Legendary/PhantomJelly/PhantomJelly.glb",
+   "glow": "#A0FFE6",
+   "meshes": [
+    "PhantomJelly",
+    "PhantomJelly_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "RuneCookie",
+   "category": "Bait",
+   "group": "Legendary",
+   "order": 2,
+   "fbx": "models/Baits/Legendary/RuneCookie/RuneCookie.fbx",
+   "glb": "models/Baits/Legendary/RuneCookie/RuneCookie.glb",
+   "glow": "#46FFC8",
+   "meshes": [
+    "RuneCookie",
+    "RuneCookie_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "DragonPearl",
+   "category": "Bait",
+   "group": "Mythic",
+   "order": 1,
+   "fbx": "models/Baits/Mythic/DragonPearl/DragonPearl.fbx",
+   "glb": "models/Baits/Mythic/DragonPearl/DragonPearl.glb",
+   "glow": "#FFBE50",
+   "meshes": [
+    "DragonPearl",
+    "DragonPearl_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "StardustMorsel",
+   "category": "Bait",
+   "group": "Celestial",
+   "order": 1,
+   "fbx": "models/Baits/Celestial/StardustMorsel/StardustMorsel.fbx",
+   "glb": "models/Baits/Celestial/StardustMorsel/StardustMorsel.glb",
+   "glow": "#FFEC96",
+   "meshes": [
+    "StardustMorsel",
+    "StardustMorsel_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "RustyDumbbell",
+   "category": "Gym",
+   "group": "01_Rusty",
+   "order": 1,
+   "fbx": "models/Gym/01_Rusty/RustyDumbbell/RustyDumbbell.fbx",
+   "glb": "models/Gym/01_Rusty/RustyDumbbell/RustyDumbbell.glb",
+   "glow": null,
+   "meshes": [
+    "RustyDumbbell"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "RubberDumbbell",
+   "category": "Gym",
+   "group": "02_Rubber",
+   "order": 1,
+   "fbx": "models/Gym/02_Rubber/RubberDumbbell/RubberDumbbell.fbx",
+   "glb": "models/Gym/02_Rubber/RubberDumbbell/RubberDumbbell.glb",
+   "glow": null,
+   "meshes": [
+    "RubberDumbbell"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "ChromeDumbbell",
+   "category": "Gym",
+   "group": "03_Chrome",
+   "order": 1,
+   "fbx": "models/Gym/03_Chrome/ChromeDumbbell/ChromeDumbbell.fbx",
+   "glb": "models/Gym/03_Chrome/ChromeDumbbell/ChromeDumbbell.glb",
+   "glow": null,
+   "meshes": [
+    "ChromeDumbbell"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "NeonSportDumbbell",
+   "category": "Gym",
+   "group": "04_NeonSport",
+   "order": 1,
+   "fbx": "models/Gym/04_NeonSport/NeonSportDumbbell/NeonSportDumbbell.fbx",
+   "glb": "models/Gym/04_NeonSport/NeonSportDumbbell/NeonSportDumbbell.glb",
+   "glow": null,
+   "meshes": [
+    "NeonSportDumbbell"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "GoldenDumbbell",
+   "category": "Gym",
+   "group": "05_Golden",
+   "order": 1,
+   "fbx": "models/Gym/05_Golden/GoldenDumbbell/GoldenDumbbell.fbx",
+   "glb": "models/Gym/05_Golden/GoldenDumbbell/GoldenDumbbell.glb",
+   "glow": null,
+   "meshes": [
+    "GoldenDumbbell"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "CrystalDumbbell",
+   "category": "Gym",
+   "group": "06_Crystal",
+   "order": 1,
+   "fbx": "models/Gym/06_Crystal/CrystalDumbbell/CrystalDumbbell.fbx",
+   "glb": "models/Gym/06_Crystal/CrystalDumbbell/CrystalDumbbell.glb",
+   "glow": "#78E6FF",
+   "meshes": [
+    "CrystalDumbbell",
+    "CrystalDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "LavaDumbbell",
+   "category": "Gym",
+   "group": "07_Lava",
+   "order": 1,
+   "fbx": "models/Gym/07_Lava/LavaDumbbell/LavaDumbbell.fbx",
+   "glb": "models/Gym/07_Lava/LavaDumbbell/LavaDumbbell.glb",
+   "glow": "#FF781E",
+   "meshes": [
+    "LavaDumbbell",
+    "LavaDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "TikiDumbbell",
+   "category": "Gym",
+   "group": "08_Tiki",
+   "order": 1,
+   "fbx": "models/Gym/08_Tiki/TikiDumbbell/TikiDumbbell.fbx",
+   "glb": "models/Gym/08_Tiki/TikiDumbbell/TikiDumbbell.glb",
+   "glow": null,
+   "meshes": [
+    "TikiDumbbell"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "CyberDumbbell",
+   "category": "Gym",
+   "group": "09_Cyber",
+   "order": 1,
+   "fbx": "models/Gym/09_Cyber/CyberDumbbell/CyberDumbbell.fbx",
+   "glb": "models/Gym/09_Cyber/CyberDumbbell/CyberDumbbell.glb",
+   "glow": "#00E6FF",
+   "meshes": [
+    "CyberDumbbell",
+    "CyberDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "ToxicDumbbell",
+   "category": "Gym",
+   "group": "10_Toxic",
+   "order": 1,
+   "fbx": "models/Gym/10_Toxic/ToxicDumbbell/ToxicDumbbell.fbx",
+   "glb": "models/Gym/10_Toxic/ToxicDumbbell/ToxicDumbbell.glb",
+   "glow": "#96FF28",
+   "meshes": [
+    "ToxicDumbbell",
+    "ToxicDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "KrakenDumbbell",
+   "category": "Gym",
+   "group": "11_Kraken",
+   "order": 1,
+   "fbx": "models/Gym/11_Kraken/KrakenDumbbell/KrakenDumbbell.fbx",
+   "glb": "models/Gym/11_Kraken/KrakenDumbbell/KrakenDumbbell.glb",
+   "glow": "#5AF0FF",
+   "meshes": [
+    "KrakenDumbbell",
+    "KrakenDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "DragonDumbbell",
+   "category": "Gym",
+   "group": "12_Dragon",
+   "order": 1,
+   "fbx": "models/Gym/12_Dragon/DragonDumbbell/DragonDumbbell.fbx",
+   "glb": "models/Gym/12_Dragon/DragonDumbbell/DragonDumbbell.glb",
+   "glow": "#FF5A1E",
+   "meshes": [
+    "DragonDumbbell",
+    "DragonDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "GalaxyDumbbell",
+   "category": "Gym",
+   "group": "13_Galaxy",
+   "order": 1,
+   "fbx": "models/Gym/13_Galaxy/GalaxyDumbbell/GalaxyDumbbell.fbx",
+   "glb": "models/Gym/13_Galaxy/GalaxyDumbbell/GalaxyDumbbell.glb",
+   "glow": "#C8A0FF",
+   "meshes": [
+    "GalaxyDumbbell",
+    "GalaxyDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "AngelicDumbbell",
+   "category": "Gym",
+   "group": "14_Angelic",
+   "order": 1,
+   "fbx": "models/Gym/14_Angelic/AngelicDumbbell/AngelicDumbbell.fbx",
+   "glb": "models/Gym/14_Angelic/AngelicDumbbell/AngelicDumbbell.glb",
+   "glow": "#FFDC78",
+   "meshes": [
+    "AngelicDumbbell",
+    "AngelicDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "VoidDumbbell",
+   "category": "Gym",
+   "group": "15_Void",
+   "order": 1,
+   "fbx": "models/Gym/15_Void/VoidDumbbell/VoidDumbbell.fbx",
+   "glb": "models/Gym/15_Void/VoidDumbbell/VoidDumbbell.glb",
+   "glow": "#BE50FF",
+   "meshes": [
+    "VoidDumbbell",
+    "VoidDumbbell_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "LilyPads",
+   "category": "Zone",
+   "group": "01_Pond",
+   "order": 1,
+   "fbx": "models/Zones/01_Pond/LilyPads/LilyPads.fbx",
+   "glb": "models/Zones/01_Pond/LilyPads/LilyPads.glb",
+   "glow": null,
+   "meshes": [
+    "LilyPads"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "Reeds",
+   "category": "Zone",
+   "group": "01_Pond",
+   "order": 2,
+   "fbx": "models/Zones/01_Pond/Reeds/Reeds.fbx",
+   "glb": "models/Zones/01_Pond/Reeds/Reeds.glb",
+   "glow": null,
+   "meshes": [
+    "Reeds"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SunkenRowBoat",
+   "category": "Zone",
+   "group": "01_Pond",
+   "order": 3,
+   "fbx": "models/Zones/01_Pond/SunkenRowBoat/SunkenRowBoat.fbx",
+   "glb": "models/Zones/01_Pond/SunkenRowBoat/SunkenRowBoat.glb",
+   "glow": null,
+   "meshes": [
+    "SunkenRowBoat"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SunkenLog",
+   "category": "Zone",
+   "group": "01_Pond",
+   "order": 4,
+   "fbx": "models/Zones/01_Pond/SunkenLog/SunkenLog.fbx",
+   "glb": "models/Zones/01_Pond/SunkenLog/SunkenLog.glb",
+   "glow": null,
+   "meshes": [
+    "SunkenLog"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "GiantPondSnail",
+   "category": "Zone",
+   "group": "01_Pond",
+   "order": 5,
+   "fbx": "models/Zones/01_Pond/GiantPondSnail/GiantPondSnail.fbx",
+   "glb": "models/Zones/01_Pond/GiantPondSnail/GiantPondSnail.glb",
+   "glow": null,
+   "meshes": [
+    "GiantPondSnail"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "DockPilings",
+   "category": "Zone",
+   "group": "01_Pond",
+   "order": 6,
+   "fbx": "models/Zones/01_Pond/DockPilings/DockPilings.fbx",
+   "glb": "models/Zones/01_Pond/DockPilings/DockPilings.glb",
+   "glow": null,
+   "meshes": [
+    "DockPilings"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "RiverBoulders",
+   "category": "Zone",
+   "group": "02_River",
+   "order": 1,
+   "fbx": "models/Zones/02_River/RiverBoulders/RiverBoulders.fbx",
+   "glb": "models/Zones/02_River/RiverBoulders/RiverBoulders.glb",
+   "glow": null,
+   "meshes": [
+    "RiverBoulders"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "DriftwoodSnag",
+   "category": "Zone",
+   "group": "02_River",
+   "order": 2,
+   "fbx": "models/Zones/02_River/DriftwoodSnag/DriftwoodSnag.fbx",
+   "glb": "models/Zones/02_River/DriftwoodSnag/DriftwoodSnag.glb",
+   "glow": null,
+   "meshes": [
+    "DriftwoodSnag"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "BeaverDamWall",
+   "category": "Zone",
+   "group": "02_River",
+   "order": 3,
+   "fbx": "models/Zones/02_River/BeaverDamWall/BeaverDamWall.fbx",
+   "glb": "models/Zones/02_River/BeaverDamWall/BeaverDamWall.glb",
+   "glow": null,
+   "meshes": [
+    "BeaverDamWall"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "MusselBed",
+   "category": "Zone",
+   "group": "02_River",
+   "order": 4,
+   "fbx": "models/Zones/02_River/MusselBed/MusselBed.fbx",
+   "glb": "models/Zones/02_River/MusselBed/MusselBed.glb",
+   "glow": null,
+   "meshes": [
+    "MusselBed"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "StreamWeed",
+   "category": "Zone",
+   "group": "02_River",
+   "order": 5,
+   "fbx": "models/Zones/02_River/StreamWeed/StreamWeed.fbx",
+   "glb": "models/Zones/02_River/StreamWeed/StreamWeed.glb",
+   "glow": null,
+   "meshes": [
+    "StreamWeed"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SunkenBridgePost",
+   "category": "Zone",
+   "group": "02_River",
+   "order": 6,
+   "fbx": "models/Zones/02_River/SunkenBridgePost/SunkenBridgePost.fbx",
+   "glb": "models/Zones/02_River/SunkenBridgePost/SunkenBridgePost.glb",
+   "glow": null,
+   "meshes": [
+    "SunkenBridgePost"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "MangroveRoots",
+   "category": "Zone",
+   "group": "03_Swamp",
+   "order": 1,
+   "fbx": "models/Zones/03_Swamp/MangroveRoots/MangroveRoots.fbx",
+   "glb": "models/Zones/03_Swamp/MangroveRoots/MangroveRoots.glb",
+   "glow": null,
+   "meshes": [
+    "MangroveRoots"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "GatorSkull",
+   "category": "Zone",
+   "group": "03_Swamp",
+   "order": 2,
+   "fbx": "models/Zones/03_Swamp/GatorSkull/GatorSkull.fbx",
+   "glb": "models/Zones/03_Swamp/GatorSkull/GatorSkull.glb",
+   "glow": null,
+   "meshes": [
+    "GatorSkull"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "BogGlowBulbs",
+   "category": "Zone",
+   "group": "03_Swamp",
+   "order": 3,
+   "fbx": "models/Zones/03_Swamp/BogGlowBulbs/BogGlowBulbs.fbx",
+   "glb": "models/Zones/03_Swamp/BogGlowBulbs/BogGlowBulbs.glb",
+   "glow": "#C8FF5A",
+   "meshes": [
+    "BogGlowBulbs",
+    "BogGlowBulbs_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SunkenLantern",
+   "category": "Zone",
+   "group": "03_Swamp",
+   "order": 4,
+   "fbx": "models/Zones/03_Swamp/SunkenLantern/SunkenLantern.fbx",
+   "glb": "models/Zones/03_Swamp/SunkenLantern/SunkenLantern.glb",
+   "glow": "#FFDC78",
+   "meshes": [
+    "SunkenLantern",
+    "SunkenLantern_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "CypressKnees",
+   "category": "Zone",
+   "group": "03_Swamp",
+   "order": 5,
+   "fbx": "models/Zones/03_Swamp/CypressKnees/CypressKnees.fbx",
+   "glb": "models/Zones/03_Swamp/CypressKnees/CypressKnees.glb",
+   "glow": null,
+   "meshes": [
+    "CypressKnees"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "MethaneVent",
+   "category": "Zone",
+   "group": "03_Swamp",
+   "order": 6,
+   "fbx": "models/Zones/03_Swamp/MethaneVent/MethaneVent.fbx",
+   "glb": "models/Zones/03_Swamp/MethaneVent/MethaneVent.glb",
+   "glow": null,
+   "meshes": [
+    "MethaneVent"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "BrainCoral",
+   "category": "Zone",
+   "group": "04_CoralReef",
+   "order": 1,
+   "fbx": "models/Zones/04_CoralReef/BrainCoral/BrainCoral.fbx",
+   "glb": "models/Zones/04_CoralReef/BrainCoral/BrainCoral.glb",
+   "glow": null,
+   "meshes": [
+    "BrainCoral"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "StaghornCoral",
+   "category": "Zone",
+   "group": "04_CoralReef",
+   "order": 2,
+   "fbx": "models/Zones/04_CoralReef/StaghornCoral/StaghornCoral.fbx",
+   "glb": "models/Zones/04_CoralReef/StaghornCoral/StaghornCoral.glb",
+   "glow": null,
+   "meshes": [
+    "StaghornCoral"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SeaFan",
+   "category": "Zone",
+   "group": "04_CoralReef",
+   "order": 3,
+   "fbx": "models/Zones/04_CoralReef/SeaFan/SeaFan.fbx",
+   "glb": "models/Zones/04_CoralReef/SeaFan/SeaFan.glb",
+   "glow": null,
+   "meshes": [
+    "SeaFan"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "Anemone",
+   "category": "Zone",
+   "group": "04_CoralReef",
+   "order": 4,
+   "fbx": "models/Zones/04_CoralReef/Anemone/Anemone.fbx",
+   "glb": "models/Zones/04_CoralReef/Anemone/Anemone.glb",
+   "glow": null,
+   "meshes": [
+    "Anemone"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "GiantClam",
+   "category": "Zone",
+   "group": "04_CoralReef",
+   "order": 5,
+   "fbx": "models/Zones/04_CoralReef/GiantClam/GiantClam.fbx",
+   "glb": "models/Zones/04_CoralReef/GiantClam/GiantClam.glb",
+   "glow": null,
+   "meshes": [
+    "GiantClam"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "TubeSponge",
+   "category": "Zone",
+   "group": "04_CoralReef",
+   "order": 6,
+   "fbx": "models/Zones/04_CoralReef/TubeSponge/TubeSponge.fbx",
+   "glb": "models/Zones/04_CoralReef/TubeSponge/TubeSponge.glb",
+   "glow": null,
+   "meshes": [
+    "TubeSponge"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "MooringBuoy",
+   "category": "Zone",
+   "group": "05_OpenOcean",
+   "order": 1,
+   "fbx": "models/Zones/05_OpenOcean/MooringBuoy/MooringBuoy.fbx",
+   "glb": "models/Zones/05_OpenOcean/MooringBuoy/MooringBuoy.glb",
+   "glow": "#FFE678",
+   "meshes": [
+    "MooringBuoy",
+    "MooringBuoy_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "KelpStalks",
+   "category": "Zone",
+   "group": "05_OpenOcean",
+   "order": 2,
+   "fbx": "models/Zones/05_OpenOcean/KelpStalks/KelpStalks.fbx",
+   "glb": "models/Zones/05_OpenOcean/KelpStalks/KelpStalks.glb",
+   "glow": null,
+   "meshes": [
+    "KelpStalks"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SunkenContainer",
+   "category": "Zone",
+   "group": "05_OpenOcean",
+   "order": 3,
+   "fbx": "models/Zones/05_OpenOcean/SunkenContainer/SunkenContainer.fbx",
+   "glb": "models/Zones/05_OpenOcean/SunkenContainer/SunkenContainer.glb",
+   "glow": "#78E6FF",
+   "meshes": [
+    "SunkenContainer"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "CrabTrap",
+   "category": "Zone",
+   "group": "05_OpenOcean",
+   "order": 4,
+   "fbx": "models/Zones/05_OpenOcean/CrabTrap/CrabTrap.fbx",
+   "glb": "models/Zones/05_OpenOcean/CrabTrap/CrabTrap.glb",
+   "glow": null,
+   "meshes": [
+    "CrabTrap"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SunkenAnchor",
+   "category": "Zone",
+   "group": "05_OpenOcean",
+   "order": 5,
+   "fbx": "models/Zones/05_OpenOcean/SunkenAnchor/SunkenAnchor.fbx",
+   "glb": "models/Zones/05_OpenOcean/SunkenAnchor/SunkenAnchor.glb",
+   "glow": null,
+   "meshes": [
+    "SunkenAnchor"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "DriftNet",
+   "category": "Zone",
+   "group": "05_OpenOcean",
+   "order": 6,
+   "fbx": "models/Zones/05_OpenOcean/DriftNet/DriftNet.fbx",
+   "glb": "models/Zones/05_OpenOcean/DriftNet/DriftNet.glb",
+   "glow": null,
+   "meshes": [
+    "DriftNet"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "IceCrystals",
+   "category": "Zone",
+   "group": "06_FrozenSea",
+   "order": 1,
+   "fbx": "models/Zones/06_FrozenSea/IceCrystals/IceCrystals.fbx",
+   "glb": "models/Zones/06_FrozenSea/IceCrystals/IceCrystals.glb",
+   "glow": "#78E6FF",
+   "meshes": [
+    "IceCrystals",
+    "IceCrystals_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "IcebergChunk",
+   "category": "Zone",
+   "group": "06_FrozenSea",
+   "order": 2,
+   "fbx": "models/Zones/06_FrozenSea/IcebergChunk/IcebergChunk.fbx",
+   "glb": "models/Zones/06_FrozenSea/IcebergChunk/IcebergChunk.glb",
+   "glow": null,
+   "meshes": [
+    "IcebergChunk"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "IcicleArch",
+   "category": "Zone",
+   "group": "06_FrozenSea",
+   "order": 3,
+   "fbx": "models/Zones/06_FrozenSea/IcicleArch/IcicleArch.fbx",
+   "glb": "models/Zones/06_FrozenSea/IcicleArch/IcicleArch.glb",
+   "glow": null,
+   "meshes": [
+    "IcicleArch"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "FrozenRelic",
+   "category": "Zone",
+   "group": "06_FrozenSea",
+   "order": 4,
+   "fbx": "models/Zones/06_FrozenSea/FrozenRelic/FrozenRelic.fbx",
+   "glb": "models/Zones/06_FrozenSea/FrozenRelic/FrozenRelic.glb",
+   "glow": "#78E6FF",
+   "meshes": [
+    "FrozenRelic",
+    "FrozenRelic_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "PolarSeaStars",
+   "category": "Zone",
+   "group": "06_FrozenSea",
+   "order": 5,
+   "fbx": "models/Zones/06_FrozenSea/PolarSeaStars/PolarSeaStars.fbx",
+   "glb": "models/Zones/06_FrozenSea/PolarSeaStars/PolarSeaStars.glb",
+   "glow": null,
+   "meshes": [
+    "PolarSeaStars"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "WhiteSoftCoral",
+   "category": "Zone",
+   "group": "06_FrozenSea",
+   "order": 6,
+   "fbx": "models/Zones/06_FrozenSea/WhiteSoftCoral/WhiteSoftCoral.fbx",
+   "glb": "models/Zones/06_FrozenSea/WhiteSoftCoral/WhiteSoftCoral.glb",
+   "glow": null,
+   "meshes": [
+    "WhiteSoftCoral"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "WhaleRibcage",
+   "category": "Zone",
+   "group": "07_DeepAbyss",
+   "order": 1,
+   "fbx": "models/Zones/07_DeepAbyss/WhaleRibcage/WhaleRibcage.fbx",
+   "glb": "models/Zones/07_DeepAbyss/WhaleRibcage/WhaleRibcage.glb",
+   "glow": null,
+   "meshes": [
+    "WhaleRibcage"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "TubeWorms",
+   "category": "Zone",
+   "group": "07_DeepAbyss",
+   "order": 2,
+   "fbx": "models/Zones/07_DeepAbyss/TubeWorms/TubeWorms.fbx",
+   "glb": "models/Zones/07_DeepAbyss/TubeWorms/TubeWorms.glb",
+   "glow": "#FF466E",
+   "meshes": [
+    "TubeWorms",
+    "TubeWorms_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SubmarineWreck",
+   "category": "Zone",
+   "group": "07_DeepAbyss",
+   "order": 3,
+   "fbx": "models/Zones/07_DeepAbyss/SubmarineWreck/SubmarineWreck.fbx",
+   "glb": "models/Zones/07_DeepAbyss/SubmarineWreck/SubmarineWreck.glb",
+   "glow": "#78E6FF",
+   "meshes": [
+    "SubmarineWreck",
+    "SubmarineWreck_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "GlowPolyps",
+   "category": "Zone",
+   "group": "07_DeepAbyss",
+   "order": 4,
+   "fbx": "models/Zones/07_DeepAbyss/GlowPolyps/GlowPolyps.fbx",
+   "glb": "models/Zones/07_DeepAbyss/GlowPolyps/GlowPolyps.glb",
+   "glow": "#BE78FF",
+   "meshes": [
+    "GlowPolyps",
+    "GlowPolyps_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "EyeRock",
+   "category": "Zone",
+   "group": "07_DeepAbyss",
+   "order": 5,
+   "fbx": "models/Zones/07_DeepAbyss/EyeRock/EyeRock.fbx",
+   "glb": "models/Zones/07_DeepAbyss/EyeRock/EyeRock.glb",
+   "glow": "#FFE650",
+   "meshes": [
+    "EyeRock",
+    "EyeRock_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "TrenchSpire",
+   "category": "Zone",
+   "group": "07_DeepAbyss",
+   "order": 6,
+   "fbx": "models/Zones/07_DeepAbyss/TrenchSpire/TrenchSpire.fbx",
+   "glb": "models/Zones/07_DeepAbyss/TrenchSpire/TrenchSpire.glb",
+   "glow": "#5ADCFF",
+   "meshes": [
+    "TrenchSpire",
+    "TrenchSpire_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "BlackSmoker",
+   "category": "Zone",
+   "group": "08_VolcanicVent",
+   "order": 1,
+   "fbx": "models/Zones/08_VolcanicVent/BlackSmoker/BlackSmoker.fbx",
+   "glb": "models/Zones/08_VolcanicVent/BlackSmoker/BlackSmoker.glb",
+   "glow": "#FF781E",
+   "meshes": [
+    "BlackSmoker",
+    "BlackSmoker_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "BasaltColumns",
+   "category": "Zone",
+   "group": "08_VolcanicVent",
+   "order": 2,
+   "fbx": "models/Zones/08_VolcanicVent/BasaltColumns/BasaltColumns.fbx",
+   "glb": "models/Zones/08_VolcanicVent/BasaltColumns/BasaltColumns.glb",
+   "glow": null,
+   "meshes": [
+    "BasaltColumns"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "ObsidianShards",
+   "category": "Zone",
+   "group": "08_VolcanicVent",
+   "order": 3,
+   "fbx": "models/Zones/08_VolcanicVent/ObsidianShards/ObsidianShards.fbx",
+   "glb": "models/Zones/08_VolcanicVent/ObsidianShards/ObsidianShards.glb",
+   "glow": null,
+   "meshes": [
+    "ObsidianShards"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "MagmaPool",
+   "category": "Zone",
+   "group": "08_VolcanicVent",
+   "order": 4,
+   "fbx": "models/Zones/08_VolcanicVent/MagmaPool/MagmaPool.fbx",
+   "glb": "models/Zones/08_VolcanicVent/MagmaPool/MagmaPool.glb",
+   "glow": "#FF6E14",
+   "meshes": [
+    "MagmaPool",
+    "MagmaPool_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "SulfurCrystals",
+   "category": "Zone",
+   "group": "08_VolcanicVent",
+   "order": 5,
+   "fbx": "models/Zones/08_VolcanicVent/SulfurCrystals/SulfurCrystals.fbx",
+   "glb": "models/Zones/08_VolcanicVent/SulfurCrystals/SulfurCrystals.glb",
+   "glow": null,
+   "meshes": [
+    "SulfurCrystals"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "VolcanicBomb",
+   "category": "Zone",
+   "group": "08_VolcanicVent",
+   "order": 6,
+   "fbx": "models/Zones/08_VolcanicVent/VolcanicBomb/VolcanicBomb.fbx",
+   "glb": "models/Zones/08_VolcanicVent/VolcanicBomb/VolcanicBomb.glb",
+   "glow": "#FF6414",
+   "meshes": [
+    "VolcanicBomb",
+    "VolcanicBomb_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "BrokenPillar",
+   "category": "Zone",
+   "group": "09_SunkenRuins",
+   "order": 1,
+   "fbx": "models/Zones/09_SunkenRuins/BrokenPillar/BrokenPillar.fbx",
+   "glb": "models/Zones/09_SunkenRuins/BrokenPillar/BrokenPillar.glb",
+   "glow": null,
+   "meshes": [
+    "BrokenPillar"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "StatueHead",
+   "category": "Zone",
+   "group": "09_SunkenRuins",
+   "order": 2,
+   "fbx": "models/Zones/09_SunkenRuins/StatueHead/StatueHead.fbx",
+   "glb": "models/Zones/09_SunkenRuins/StatueHead/StatueHead.glb",
+   "glow": null,
+   "meshes": [
+    "StatueHead"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "TreasureChest",
+   "category": "Zone",
+   "group": "09_SunkenRuins",
+   "order": 3,
+   "fbx": "models/Zones/09_SunkenRuins/TreasureChest/TreasureChest.fbx",
+   "glb": "models/Zones/09_SunkenRuins/TreasureChest/TreasureChest.glb",
+   "glow": "#FFD25A",
+   "meshes": [
+    "TreasureChest",
+    "TreasureChest_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "Archway",
+   "category": "Zone",
+   "group": "09_SunkenRuins",
+   "order": 4,
+   "fbx": "models/Zones/09_SunkenRuins/Archway/Archway.fbx",
+   "glb": "models/Zones/09_SunkenRuins/Archway/Archway.glb",
+   "glow": null,
+   "meshes": [
+    "Archway"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "Amphorae",
+   "category": "Zone",
+   "group": "09_SunkenRuins",
+   "order": 5,
+   "fbx": "models/Zones/09_SunkenRuins/Amphorae/Amphorae.fbx",
+   "glb": "models/Zones/09_SunkenRuins/Amphorae/Amphorae.glb",
+   "glow": null,
+   "meshes": [
+    "Amphorae"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "TridentAltar",
+   "category": "Zone",
+   "group": "09_SunkenRuins",
+   "order": 6,
+   "fbx": "models/Zones/09_SunkenRuins/TridentAltar/TridentAltar.fbx",
+   "glb": "models/Zones/09_SunkenRuins/TridentAltar/TridentAltar.glb",
+   "glow": "#5AF0DC",
+   "meshes": [
+    "TridentAltar",
+    "TridentAltar_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "FallenStar",
+   "category": "Zone",
+   "group": "10_StarfallLake",
+   "order": 1,
+   "fbx": "models/Zones/10_StarfallLake/FallenStar/FallenStar.fbx",
+   "glb": "models/Zones/10_StarfallLake/FallenStar/FallenStar.glb",
+   "glow": "#FFEC8C",
+   "meshes": [
+    "FallenStar",
+    "FallenStar_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "StarCrystalCoral",
+   "category": "Zone",
+   "group": "10_StarfallLake",
+   "order": 2,
+   "fbx": "models/Zones/10_StarfallLake/StarCrystalCoral/StarCrystalCoral.fbx",
+   "glb": "models/Zones/10_StarfallLake/StarCrystalCoral/StarCrystalCoral.glb",
+   "glow": "#78DCFF",
+   "meshes": [
+    "StarCrystalCoral",
+    "StarCrystalCoral_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "MeteorChunk",
+   "category": "Zone",
+   "group": "10_StarfallLake",
+   "order": 3,
+   "fbx": "models/Zones/10_StarfallLake/MeteorChunk/MeteorChunk.fbx",
+   "glb": "models/Zones/10_StarfallLake/MeteorChunk/MeteorChunk.glb",
+   "glow": "#DC8CFF",
+   "meshes": [
+    "MeteorChunk",
+    "MeteorChunk_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "ConstellationStone",
+   "category": "Zone",
+   "group": "10_StarfallLake",
+   "order": 4,
+   "fbx": "models/Zones/10_StarfallLake/ConstellationStone/ConstellationStone.fbx",
+   "glb": "models/Zones/10_StarfallLake/ConstellationStone/ConstellationStone.glb",
+   "glow": "#FFF0BE",
+   "meshes": [
+    "ConstellationStone",
+    "ConstellationStone_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "NebulaPortal",
+   "category": "Zone",
+   "group": "10_StarfallLake",
+   "order": 5,
+   "fbx": "models/Zones/10_StarfallLake/NebulaPortal/NebulaPortal.fbx",
+   "glb": "models/Zones/10_StarfallLake/NebulaPortal/NebulaPortal.glb",
+   "glow": "#C878FF",
+   "meshes": [
+    "NebulaPortal",
+    "NebulaPortal_Glow"
+   ],
+   "rigged": false
+  },
+  {
+   "name": "OrbitingOrbs",
+   "category": "Zone",
+   "group": "10_StarfallLake",
+   "order": 6,
+   "fbx": "models/Zones/10_StarfallLake/OrbitingOrbs/OrbitingOrbs.fbx",
+   "glb": "models/Zones/10_StarfallLake/OrbitingOrbs/OrbitingOrbs.glb",
+   "glow": "#FFFFFF",
+   "meshes": [
+    "OrbitingOrbs",
+    "OrbitingOrbs_Glow"
+   ],
+   "rigged": false
+  }
+ ]
+}
