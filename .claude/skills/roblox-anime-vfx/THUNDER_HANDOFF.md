@@ -46,7 +46,25 @@ This is the first fruit built to the "design first, user approves everything, th
    (search "THUNDER FRUIT"), PNGs in `assets/textures`, previews/GIFs in `assets/previews`.
 7. **Drums float behind the current model** (no frame; do NOT regenerate the god model). 8 drums in a ring.
 
-## Waiting on the user
+## Progress (session 2)
+- **Drum ring approved + exported**: one connected gold horseshoe arch (user overrode "no frame"), 8 drums (crest
+  between the top pair), tassels. `scripts/drum_ring.py` -> `assets/meshes/drum_ring/` (glb, blend, FBX with armature
+  Root > Drum_1..8 > Tassel_1..8; drums numbered left to right over the top = Drum Barrage order). Built in god space.
+  Refs: `drum_sheet_v1.png` (drum), `drum_ring_sheet_v1.png` (frame).
+- **Cutscene pitch v1 approved** ("Start"): `assets/source_art/god_mode/cutscene/` (storyboard_v1.jpg, shot1..7,
+  beat_sheet_v1.md): sky eye, heartbeats, one-frame strike, pour + silhouette swap, drum forge, slow-mo assembly,
+  first beat scar circle. Supersedes the draft below.
+- **God cleanup done**: `scripts/god_cleanup.py` -> `assets/meshes/thunder_god/thunder_god_clean.*` (Body 18k, Cape
+  4k, Mane 6k tris).
+- **God rig v1 (waiting on user approval, FBX not exported yet)**: `scripts/god_rig.py` -> `thunder_god_rig.blend/json`.
+  R15 bone names + chains (Cape_{L,C,R}_1..4, Mane_1..6_1..3, Sash_{L,R}_1/2/Tassel, Hakama_{F,B}_1..2). Bone heat
+  gave rigid torn weights on this mesh, so body weights are analytic (position bands blended across joints) +
+  Laplacian smoothing. `--preview DIR` writes test-pose GLBs; `--export` writes `thunder_god.fbx`.
+- Base moves (Z..M) are being built in a sub-session on branch `claude/thunder-moves-950cm0` (notes in
+  `THUNDER_MOVES_NOTES.md` there). God-mode moves stay here.
+- `lab/model_views.mjs` takes an optional `WxH` viewport; materials named `XRAY*` draw on top (skeleton overlays).
+
+## Waiting on the user (original list)
 - **Drum reference sheet** `assets/source_art/god_mode/drum_sheet_v1.png` (front/side/3-4 of one taiko drum:
   red lacquer, gold rims + rivets, cream skin with black/gold tomoe, gold bands). Get approval first, then model
   it in Blender (simple enough to build procedurally; or Meshy multi-image if the user prefers).
