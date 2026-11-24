@@ -132,23 +132,45 @@ local function evalColor(c, k)
 	return hexColor(c[#c][2])
 end
 
--- position of a (possibly moving) attachment at effect time t: at -> move.to with ease and a vertical arc
+-- position of a (possibly moving) attachment at effect time t (same rules as the previewer):
+--   path  { {t, {x,y,z}, ease?}, ... } polyline keyed on absolute effect time (zig-zags, multi-leg routes)
+--   move  {from, to, t0, t1, ease, arc} one eased leg with a vertical arc
+--   wave  {amp, freq, axis, phase, t0} adds axis * amp * sin(2*pi*freq*(t - t0) + phase deg); amp may be keys
 local function attachPos(L, t)
 	local at = L.at or { 0, 0, 0 }
-	local m = L.move
-	if not m then
-		return v3(at)
+	local p
+	if L.path then
+		p = v3(evalKeys(L.path, t, at))
+	elseif not L.move then
+		p = v3(at)
+	else
+		local m = L.move
+		local span = m.t1 - m.t0
+		local k = math.clamp(span > 0 and (t - m.t0) / span or 1, 0, 1)
+		local e = ease(k, m.ease)
+		local from = v3(m.from or at)
+		local to = v3(m.to)
+		p = from:Lerp(to, e)
+		if m.arc then
+			p += Vector3.new(0, math.sin(math.pi * e) * m.arc, 0)
+		end
 	end
-	local span = m.t1 - m.t0
-	local k = math.clamp(span > 0 and (t - m.t0) / span or 1, 0, 1)
-	local e = ease(k, m.ease)
-	local from = v3(m.from or at)
-	local to = v3(m.to)
-	local p = from:Lerp(to, e)
-	if m.arc then
-		p += Vector3.new(0, math.sin(math.pi * e) * m.arc, 0)
+	local w = L.wave
+	if w then
+		local amp = evalKeys(w.amp, t, 1)
+		local s = amp * math.sin(2 * math.pi * (w.freq or 1) * (t - (w.t0 or 0)) + (w.phase or 0) * math.pi / 180)
+		p += v3(w.axis or { 1, 0, 0 }) * s
 	end
 	return p
+end
+
+-- texture swapping (strip variants): L.textures cycled every L.swap seconds of the item's age
+local function swapName(L, age)
+	if L.textures then
+		local i = math.floor(math.max(0, age) / (L.swap or 0.05)) % #L.textures
+		return L.textures[i + 1]
+	end
+	return L.texture
 end
 
 local function anglesOf(r)
@@ -419,6 +441,202 @@ local function makeBeam(play, L)
 		beam:Destroy()
 		a0:Destroy()
 		a1:Destroy()
+	end
+	return item
+end
+
+-- Ribbon trail: a real Trail on two attachments carried by an invisible part that rides path / move / wave.
+-- Trail points age on real time (Roblox can't pause a Trail), so during a hit-stop the head holds still and the
+-- tail keeps fading; the previewer plays it the same way. Attachments sit +-width/2 along `up` (in the cast
+-- frame); with faceCamera the Trail turns its width toward the camera instead.
+local TEXTURE_MODES = { Stretch = Enum.TextureMode.Stretch, Wrap = Enum.TextureMode.Wrap, Static = Enum.TextureMode.Static }
+local function makeTrail(play, L)
+	local item = {}
+	local holder = anchoredPart({ Transparency = 1, Size = Vector3.new(0.2, 0.2, 0.2) })
+	holder.Name = "TrailHolder"
+	local up = v3(L.up or { 0, 1, 0 }).Unit
+	local half = (L.width or 2) / 2
+	local a0 = Instance.new("Attachment")
+	local a1 = Instance.new("Attachment")
+	a0.Position = -up * half
+	a1.Position = up * half
+	a0.Parent = holder
+	a1.Parent = holder
+	local trail = Instance.new("Trail")
+	trail.Attachment0 = a0
+	trail.Attachment1 = a1
+	trail.Lifetime = L.lifetime or 0.5
+	trail.MinLength = 0.05
+	trail.FaceCamera = L.faceCamera == true
+	trail.WidthScale = numberSequence(L.widthScale or 1)
+	trail.Transparency = numberSequence(L.transparency or 0)
+	trail.Color = colorSequence(L.color or "#ffffff")
+	trail.Texture = Assets.texture(swapName(L, 0))
+	trail.TextureMode = TEXTURE_MODES[L.textureMode or "Stretch"]
+	trail.TextureLength = L.textureLength or 6
+	trail.LightEmission = L.lightEmission or 1
+	trail.LightInfluence = 0
+	trail.Brightness = L.brightness or 1
+	trail.Enabled = false
+	trail.Parent = holder
+	local t0 = L.t0 or 0
+	local t1 = L.t1 or play.spec.duration or 2
+	local current
+	holder.CFrame = play.origin * CFrame.new(attachPos(L, t0))
+	holder.Parent = play.folder
+	function item:step(t)
+		local live = t >= t0 and t <= t1
+		if live then
+			holder.CFrame = play.origin * CFrame.new(attachPos(L, t))
+			local name = swapName(L, t - t0)
+			if name ~= current then
+				current = name
+				trail.Texture = Assets.texture(name)
+			end
+		end
+		trail.Enabled = live
+	end
+	function item:destroy()
+		trail.Enabled = false
+		task.delay(L.lifetime or 0.5, function()
+			holder:Destroy()
+		end)
+	end
+	return item
+end
+
+-- Volumetric beam: a Neon/ForceField cylinder core (+ optional wider sheath) and one or more sets of crossed
+-- Beams (FaceCamera off) fanned evenly around the axis, so the beam has body from every angle.
+-- Beam plane orientation: with FaceCamera off a Beam lies in the plane of its attachments' secondary axis (Y)
+-- and the beam direction. PLANE_WIDTH_AXIS picks which attachment axis carries the width; flip it to "Z" if
+-- the planes render edge-on in Studio (not verified in Studio from this environment).
+local PLANE_WIDTH_AXIS = "Y"
+local function makeVBeam(play, L)
+	local item = {}
+	local life = L.life or 1
+	local t0 = L.t0 or 0
+	local function cylinder(spec)
+		if not spec then
+			return nil
+		end
+		local p = anchoredPart({ Shape = Enum.PartType.Cylinder, Material = MATERIALS[spec.material or "Neon"] or Enum.Material.Neon, Transparency = 1, Size = Vector3.one })
+		return { spec = spec, part = p }
+	end
+	local cyls = {}
+	for _, c in ipairs({ cylinder(L.core), cylinder(L.sheath) }) do
+		table.insert(cyls, c)
+	end
+	local sets = {}
+	local planeSpecs = L.planes and (L.planes[1] and L.planes or { L.planes }) or {}
+	for _, pl in ipairs(planeSpecs) do
+		local set = { pl = pl, beams = {}, current = nil }
+		for i = 1, pl.count or 3 do
+			local a0 = Instance.new("Attachment")
+			local a1 = Instance.new("Attachment")
+			a0.Parent = play.root
+			a1.Parent = play.root
+			local beam = Instance.new("Beam")
+			beam.Attachment0 = a0
+			beam.Attachment1 = a1
+			beam.FaceCamera = false
+			beam.Segments = 2
+			beam.TextureMode = Enum.TextureMode.Wrap
+			beam.TextureLength = pl.textureLength or 8
+			beam.TextureSpeed = pl.textureSpeed or 0
+			beam.LightEmission = pl.lightEmission or 1
+			beam.LightInfluence = 0
+			beam.Brightness = pl.brightness or 1
+			beam.Enabled = false
+			beam.Parent = play.root
+			table.insert(set.beams, { beam = beam, a0 = a0, a1 = a1, i = i })
+		end
+		table.insert(sets, set)
+	end
+	function item:step(t)
+		local age = t - t0
+		local on = age >= 0 and age < life
+		for _, c in ipairs(cyls) do
+			if not on and c.part.Parent then
+				c.part.Parent = nil
+			end
+		end
+		for _, set in ipairs(sets) do
+			for _, b in ipairs(set.beams) do
+				b.beam.Enabled = on
+			end
+		end
+		if not on then
+			return
+		end
+		local k = age / life
+		local a = v3(evalKeys(L.from, k, { 0, 0, 0 }))
+		local full = v3(evalKeys(L.to, k, L.to))
+		local b = a:Lerp(full, evalKeys(L.reach, k, 1))
+		local len = (b - a).Magnitude
+		local dir = len > 1e-3 and (b - a) / len or Vector3.new(0, 0, -1)
+		local mid = (a + b) / 2
+		for _, c in ipairs(cyls) do
+			local r = evalKeys(c.spec.radius, k, 0.5)
+			if len < 1e-3 or r < 1e-3 then
+				c.part.Parent = nil
+			else
+				c.part.Size = Vector3.new(len, r * 2, r * 2)
+				-- cylinder axis is the part's X: lookAt points -Z at the target, a quarter turn about Y maps X onto it
+				c.part.CFrame = play.origin * CFrame.lookAt(mid, b) * CFrame.Angles(0, math.pi / 2, 0)
+				c.part.Color = c.spec.color and evalColor(c.spec.color, k) or Color3.new(1, 1, 1)
+				c.part.Transparency = math.clamp(evalKeys(c.spec.transparency, k, 0), 0, 1)
+				c.part.Parent = play.folder
+			end
+		end
+		local ref = math.abs(dir.Y) < 0.95 and Vector3.yAxis or Vector3.xAxis
+		local base = dir:Cross(ref).Unit
+		local base2 = dir:Cross(base)
+		for _, set in ipairs(sets) do
+			local pl = set.pl
+			local n = pl.count or 3
+			local w = evalKeys(pl.width, k, 1)
+			local w0 = type(w) == "table" and w[1] or w
+			local w1 = type(w) == "table" and w[2] or w
+			local tw = ((pl.twist or 0) * age + (pl.angle or 0)) * RAD
+			local name = swapName(pl, age)
+			local col = ColorSequence.new(pl.color and evalColor(pl.color, k) or Color3.new(1, 1, 1))
+			local tr = NumberSequence.new(math.clamp(evalKeys(pl.transparency, k, 0), 0, 1))
+			for _, bm in ipairs(set.beams) do
+				local ang = tw + ((bm.i - 1) / n) * math.pi
+				local side = base * math.cos(ang) + base2 * math.sin(ang)
+				local normal = dir:Cross(side)
+				local cf0, cf1
+				if PLANE_WIDTH_AXIS == "Y" then
+					cf0 = CFrame.fromMatrix(a, dir, side, normal)
+					cf1 = CFrame.fromMatrix(b, dir, side, normal)
+				else
+					cf0 = CFrame.fromMatrix(a, dir, normal, -side)
+					cf1 = CFrame.fromMatrix(b, dir, normal, -side)
+				end
+				bm.a0.CFrame = cf0
+				bm.a1.CFrame = cf1
+				bm.beam.Width0 = w0
+				bm.beam.Width1 = w1
+				bm.beam.Color = col
+				bm.beam.Transparency = tr
+				if name ~= set.current then
+					bm.beam.Texture = Assets.texture(name)
+				end
+			end
+			set.current = name
+		end
+	end
+	function item:destroy()
+		for _, c in ipairs(cyls) do
+			c.part:Destroy()
+		end
+		for _, set in ipairs(sets) do
+			for _, b in ipairs(set.beams) do
+				b.beam:Destroy()
+				b.a0:Destroy()
+				b.a1:Destroy()
+			end
+		end
 	end
 	return item
 end
@@ -898,6 +1116,10 @@ function AnimeVFX.Play(effect, origin, opts)
 			it = makeBeam(play, L)
 		elseif L.type == "bolt" then
 			it = makeBolt(play, L)
+		elseif L.type == "trail" then
+			it = makeTrail(play, L)
+		elseif L.type == "vbeam" then
+			it = makeVBeam(play, L)
 		end
 		if it then
 			table.insert(items, it)

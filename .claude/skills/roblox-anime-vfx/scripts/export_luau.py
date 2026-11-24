@@ -52,8 +52,12 @@ def used_assets(spec):
     for L in spec.get("layers", []):
         if L["type"] == "emitter":
             tex.add(L["props"]["Texture"])
-        elif L["type"] == "beam":
-            tex.add(L["texture"])
+        elif L["type"] in ("beam", "trail"):
+            tex.update(L.get("textures") or [L["texture"]])
+        elif L["type"] == "vbeam":
+            pls = L.get("planes") or []
+            for pl in (pls if isinstance(pls, list) else [pls]):
+                tex.update(pl.get("textures") or [pl["texture"]])
         elif L["type"] == "shell":
             meshes.add(L["mesh"])
             if L.get("texture"):

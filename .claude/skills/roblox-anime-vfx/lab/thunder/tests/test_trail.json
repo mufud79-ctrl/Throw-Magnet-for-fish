@@ -1,0 +1,884 @@
+{
+ "name": "test_trail",
+ "title": "Trail test",
+ "element": "Thunder",
+ "archetype": "test",
+ "duration": 2.4,
+ "layers": [
+  {
+   "type": "trail",
+   "path": [
+    [
+     0.2,
+     [
+      0,
+      3,
+      0
+     ]
+    ],
+    [
+     0.3,
+     [
+      -6,
+      3.5,
+      -8
+     ]
+    ],
+    [
+     0.4,
+     [
+      5,
+      3,
+      -14
+     ]
+    ],
+    [
+     0.5,
+     [
+      -3,
+      3.2,
+      -22
+     ]
+    ],
+    [
+     0.6,
+     [
+      0,
+      3,
+      -28
+     ]
+    ]
+   ],
+   "t0": 0.2,
+   "t1": 0.6,
+   "lifetime": 0.7,
+   "width": 3.4,
+   "faceCamera": true,
+   "texture": "thunder_strip_1_glow",
+   "textureMode": "Stretch",
+   "color": "#2a3350",
+   "transparency": [
+    [
+     0,
+     0.25
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     0.6
+    ],
+    [
+     0.5,
+     1.2
+    ],
+    [
+     1,
+     1.6
+    ]
+   ],
+   "lightEmission": 0,
+   "brightness": 1
+  },
+  {
+   "type": "trail",
+   "path": [
+    [
+     0.2,
+     [
+      0,
+      3,
+      0
+     ]
+    ],
+    [
+     0.3,
+     [
+      -6,
+      3.5,
+      -8
+     ]
+    ],
+    [
+     0.4,
+     [
+      5,
+      3,
+      -14
+     ]
+    ],
+    [
+     0.5,
+     [
+      -3,
+      3.2,
+      -22
+     ]
+    ],
+    [
+     0.6,
+     [
+      0,
+      3,
+      -28
+     ]
+    ]
+   ],
+   "t0": 0.2,
+   "t1": 0.6,
+   "lifetime": 0.5,
+   "width": 3.6,
+   "faceCamera": true,
+   "textures": [
+    "thunder_strip_1_glow",
+    "thunder_strip_2_glow",
+    "thunder_strip_3_glow",
+    "thunder_strip_4_glow"
+   ],
+   "swap": 0.05,
+   "textureMode": "Stretch",
+   "color": [
+    [
+     0,
+     "#3a5cff"
+    ],
+    [
+     1,
+     "#2a1a9a"
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0.1
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.3
+    ]
+   ],
+   "lightEmission": 0.5,
+   "brightness": 1.4
+  },
+  {
+   "type": "trail",
+   "path": [
+    [
+     0.2,
+     [
+      0,
+      3,
+      0
+     ]
+    ],
+    [
+     0.3,
+     [
+      -6,
+      3.5,
+      -8
+     ]
+    ],
+    [
+     0.4,
+     [
+      5,
+      3,
+      -14
+     ]
+    ],
+    [
+     0.5,
+     [
+      -3,
+      3.2,
+      -22
+     ]
+    ],
+    [
+     0.6,
+     [
+      0,
+      3,
+      -28
+     ]
+    ]
+   ],
+   "t0": 0.2,
+   "t1": 0.6,
+   "lifetime": 0.5,
+   "width": 2.4,
+   "faceCamera": true,
+   "textures": [
+    "thunder_strip_1_mid",
+    "thunder_strip_2_mid",
+    "thunder_strip_3_mid",
+    "thunder_strip_4_mid"
+   ],
+   "swap": 0.05,
+   "textureMode": "Stretch",
+   "color": [
+    [
+     0,
+     "#6fe0ff"
+    ],
+    [
+     0.5,
+     "#3a5cff"
+    ],
+    [
+     1,
+     "#2a1a9a"
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.6,
+     0.4
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.3
+    ]
+   ],
+   "lightEmission": 0.7,
+   "brightness": 1.4
+  },
+  {
+   "type": "trail",
+   "path": [
+    [
+     0.2,
+     [
+      0,
+      3,
+      0
+     ]
+    ],
+    [
+     0.3,
+     [
+      -6,
+      3.5,
+      -8
+     ]
+    ],
+    [
+     0.4,
+     [
+      5,
+      3,
+      -14
+     ]
+    ],
+    [
+     0.5,
+     [
+      -3,
+      3.2,
+      -22
+     ]
+    ],
+    [
+     0.6,
+     [
+      0,
+      3,
+      -28
+     ]
+    ]
+   ],
+   "t0": 0.2,
+   "t1": 0.6,
+   "lifetime": 0.5,
+   "width": 1.4,
+   "faceCamera": true,
+   "textures": [
+    "thunder_strip_1_core",
+    "thunder_strip_2_core",
+    "thunder_strip_3_core",
+    "thunder_strip_4_core"
+   ],
+   "swap": 0.05,
+   "textureMode": "Stretch",
+   "color": [
+    [
+     0,
+     "#ffffff"
+    ],
+    [
+     0.2,
+     "#bff3ff"
+    ],
+    [
+     0.5,
+     "#6fe0ff"
+    ],
+    [
+     1,
+     "#3a5cff"
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.3,
+     0.3
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.3
+    ]
+   ],
+   "lightEmission": 1,
+   "brightness": 1.4
+  },
+  {
+   "move": {
+    "from": [
+     8,
+     4,
+     0
+    ],
+    "to": [
+     8,
+     4,
+     -30
+    ],
+    "t0": 0.9,
+    "t1": 1.9
+   },
+   "wave": {
+    "amp": [
+     [
+      0.9,
+      0.5
+     ],
+     [
+      1.4,
+      2.4
+     ],
+     [
+      1.9,
+      0.6
+     ]
+    ],
+    "freq": 1.6,
+    "axis": [
+     1,
+     0,
+     0
+    ],
+    "phase": 0,
+    "t0": 0.9
+   },
+   "t0": 0.9,
+   "t1": 1.9,
+   "faceCamera": true,
+   "type": "trail",
+   "lifetime": 0.55,
+   "width": 2.2,
+   "texture": "thunder_strip_2_glow",
+   "textureMode": "Stretch",
+   "color": "#3a5cff",
+   "transparency": [
+    [
+     0,
+     0.2
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.4
+    ]
+   ],
+   "lightEmission": 0.4,
+   "brightness": 1.2
+  },
+  {
+   "move": {
+    "from": [
+     8,
+     4,
+     0
+    ],
+    "to": [
+     8,
+     4,
+     -30
+    ],
+    "t0": 0.9,
+    "t1": 1.9
+   },
+   "wave": {
+    "amp": [
+     [
+      0.9,
+      0.5
+     ],
+     [
+      1.4,
+      2.4
+     ],
+     [
+      1.9,
+      0.6
+     ]
+    ],
+    "freq": 1.6,
+    "axis": [
+     1,
+     0,
+     0
+    ],
+    "phase": 0,
+    "t0": 0.9
+   },
+   "t0": 0.9,
+   "t1": 1.9,
+   "faceCamera": true,
+   "type": "trail",
+   "lifetime": 0.45,
+   "width": 1.1,
+   "textures": [
+    "thunder_strip_1_core",
+    "thunder_strip_2_core",
+    "thunder_strip_3_core",
+    "thunder_strip_4_core"
+   ],
+   "swap": 0.05,
+   "textureMode": "Wrap",
+   "textureLength": 7,
+   "color": [
+    [
+     0,
+     "#ffffff"
+    ],
+    [
+     0.3,
+     "#6fe0ff"
+    ],
+    [
+     1,
+     "#3a5cff"
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.2
+    ]
+   ],
+   "lightEmission": 1,
+   "brightness": 1.4
+  },
+  {
+   "move": {
+    "from": [
+     8,
+     4,
+     0
+    ],
+    "to": [
+     8,
+     4,
+     -30
+    ],
+    "t0": 0.9,
+    "t1": 1.9
+   },
+   "wave": {
+    "amp": [
+     [
+      0.9,
+      0.5
+     ],
+     [
+      1.4,
+      2.4
+     ],
+     [
+      1.9,
+      0.6
+     ]
+    ],
+    "freq": 1.6,
+    "axis": [
+     1,
+     0,
+     0
+    ],
+    "phase": 120,
+    "t0": 0.9
+   },
+   "t0": 0.9,
+   "t1": 1.9,
+   "faceCamera": true,
+   "type": "trail",
+   "lifetime": 0.55,
+   "width": 2.2,
+   "texture": "thunder_strip_2_glow",
+   "textureMode": "Stretch",
+   "color": "#3a5cff",
+   "transparency": [
+    [
+     0,
+     0.2
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.4
+    ]
+   ],
+   "lightEmission": 0.4,
+   "brightness": 1.2
+  },
+  {
+   "move": {
+    "from": [
+     8,
+     4,
+     0
+    ],
+    "to": [
+     8,
+     4,
+     -30
+    ],
+    "t0": 0.9,
+    "t1": 1.9
+   },
+   "wave": {
+    "amp": [
+     [
+      0.9,
+      0.5
+     ],
+     [
+      1.4,
+      2.4
+     ],
+     [
+      1.9,
+      0.6
+     ]
+    ],
+    "freq": 1.6,
+    "axis": [
+     1,
+     0,
+     0
+    ],
+    "phase": 120,
+    "t0": 0.9
+   },
+   "t0": 0.9,
+   "t1": 1.9,
+   "faceCamera": true,
+   "type": "trail",
+   "lifetime": 0.45,
+   "width": 1.1,
+   "textures": [
+    "thunder_strip_1_core",
+    "thunder_strip_2_core",
+    "thunder_strip_3_core",
+    "thunder_strip_4_core"
+   ],
+   "swap": 0.05,
+   "textureMode": "Wrap",
+   "textureLength": 7,
+   "color": [
+    [
+     0,
+     "#ffffff"
+    ],
+    [
+     0.3,
+     "#6fe0ff"
+    ],
+    [
+     1,
+     "#3a5cff"
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.2
+    ]
+   ],
+   "lightEmission": 1,
+   "brightness": 1.4
+  },
+  {
+   "move": {
+    "from": [
+     8,
+     4,
+     0
+    ],
+    "to": [
+     8,
+     4,
+     -30
+    ],
+    "t0": 0.9,
+    "t1": 1.9
+   },
+   "wave": {
+    "amp": [
+     [
+      0.9,
+      0.5
+     ],
+     [
+      1.4,
+      2.4
+     ],
+     [
+      1.9,
+      0.6
+     ]
+    ],
+    "freq": 1.6,
+    "axis": [
+     1,
+     0,
+     0
+    ],
+    "phase": 240,
+    "t0": 0.9
+   },
+   "t0": 0.9,
+   "t1": 1.9,
+   "faceCamera": true,
+   "type": "trail",
+   "lifetime": 0.55,
+   "width": 2.2,
+   "texture": "thunder_strip_2_glow",
+   "textureMode": "Stretch",
+   "color": "#3a5cff",
+   "transparency": [
+    [
+     0,
+     0.2
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.4
+    ]
+   ],
+   "lightEmission": 0.4,
+   "brightness": 1.2
+  },
+  {
+   "move": {
+    "from": [
+     8,
+     4,
+     0
+    ],
+    "to": [
+     8,
+     4,
+     -30
+    ],
+    "t0": 0.9,
+    "t1": 1.9
+   },
+   "wave": {
+    "amp": [
+     [
+      0.9,
+      0.5
+     ],
+     [
+      1.4,
+      2.4
+     ],
+     [
+      1.9,
+      0.6
+     ]
+    ],
+    "freq": 1.6,
+    "axis": [
+     1,
+     0,
+     0
+    ],
+    "phase": 240,
+    "t0": 0.9
+   },
+   "t0": 0.9,
+   "t1": 1.9,
+   "faceCamera": true,
+   "type": "trail",
+   "lifetime": 0.45,
+   "width": 1.1,
+   "textures": [
+    "thunder_strip_1_core",
+    "thunder_strip_2_core",
+    "thunder_strip_3_core",
+    "thunder_strip_4_core"
+   ],
+   "swap": 0.05,
+   "textureMode": "Wrap",
+   "textureLength": 7,
+   "color": [
+    [
+     0,
+     "#ffffff"
+    ],
+    [
+     0.3,
+     "#6fe0ff"
+    ],
+    [
+     1,
+     "#3a5cff"
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "widthScale": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0.2
+    ]
+   ],
+   "lightEmission": 1,
+   "brightness": 1.4
+  }
+ ],
+ "hitstop": [
+  {
+   "t": 0.4,
+   "dur": 0.15
+  }
+ ],
+ "camera": {
+  "pos": [
+   16,
+   8,
+   -4
+  ],
+  "look": [
+   2,
+   3,
+   -14
+  ]
+ },
+ "poster": 0.5,
+ "caster": false
+}

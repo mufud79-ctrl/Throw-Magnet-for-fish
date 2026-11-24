@@ -2,7 +2,7 @@
 // Coordinates are Roblox studs: Y up, the caster stands at the origin facing -Z.
 //
 // Layer types: emitter (ParticleEmitter), shell (Part + SpecialMesh FileMesh), beam (Beam),
-// bolt (neon zig-zag parts). Effect tracks: lights (PointLight), debris (crater slabs / flung rocks),
+// bolt (neon zig-zag parts), trail (Trail ribbon), vbeam (volumetric beam: cylinder core + crossed Beams). Effect tracks: lights (PointLight), debris (crater slabs / flung rocks),
 // shakes (camera), grade (ColorCorrection keys), impact (impact frames).
 // Fidelity: particle maths follow Roblox semantics (sequences + envelopes, NumberRange, Speed/Spread,
 // Acceleration, Drag, Rotation, flipbooks, Orientation modes, LightEmission blend, ZOffset,
@@ -70,15 +70,31 @@ function rot2(a, b, t, which) {
 }
 function hash(x) { x = Math.imul(x ^ (x >>> 16), 0x45d9f3b); x = Math.imul(x ^ (x >>> 16), 0x45d9f3b); return (x ^ (x >>> 16)) >>> 0; }
 const quatOf = (R) => new THREE.Quaternion().setFromEuler(new THREE.Euler((R || [0, 0, 0])[0] * DEG, (R || [0, 0, 0])[1] * DEG, (R || [0, 0, 0])[2] * DEG, 'XYZ'));
-// position of a moving attachment: at + move.{to - from} eased over [t0, t1] (absolute effect time)
+// position of a moving attachment at absolute effect time t:
+//   path  [[t, [x,y,z], ease?], ...]  polyline keyed on absolute time (zig-zags, multi-leg routes), or
+//   move  {from, to, t0, t1, ease, arc}  one eased leg with a vertical arc,
+//   wave  {amp, freq, axis, phase, t0}  adds axis * amp * sin(2*pi*freq*(t - t0) + phase deg); amp may be
+//         keys on absolute time (S-curves that tighten or die out).
 function attachPos(L, t) {
   const at = L.at || [0, 0, 0];
-  if (!L.move) return at;
-  const m = L.move, k = Math.max(0, Math.min(1, (t - m.t0) / ((m.t1 - m.t0) || 1)));
-  const e = ease(k, m.ease), from = m.from || at, to = m.to;
-  const arc = m.arc ? Math.sin(Math.PI * e) * m.arc : 0;
-  return [from[0] + (to[0] - from[0]) * e, from[1] + (to[1] - from[1]) * e + arc, from[2] + (to[2] - from[2]) * e];
+  let p;
+  if (L.path) p = evalKeys(L.path, t, at);
+  else if (!L.move) p = at;
+  else {
+    const m = L.move, k = Math.max(0, Math.min(1, (t - m.t0) / ((m.t1 - m.t0) || 1)));
+    const e = ease(k, m.ease), from = m.from || at, to = m.to;
+    const arc = m.arc ? Math.sin(Math.PI * e) * m.arc : 0;
+    p = [from[0] + (to[0] - from[0]) * e, from[1] + (to[1] - from[1]) * e + arc, from[2] + (to[2] - from[2]) * e];
+  }
+  if (L.wave) {
+    const w = L.wave, ax = w.axis || [1, 0, 0], amp = evalKeys(w.amp, t, 1);
+    const s = amp * Math.sin(2 * Math.PI * (w.freq || 1) * (t - (w.t0 || 0)) + (w.phase || 0) * DEG);
+    p = [p[0] + ax[0] * s, p[1] + ax[1] * s, p[2] + ax[2] * s];
+  }
+  return p;
 }
+// texture swapping (strip variants): textures [...] cycled every `swap` seconds of the item's age
+const swapName = (L, age) => L.textures ? L.textures[Math.max(0, Math.floor(age / (L.swap || 0.05))) % L.textures.length] : L.texture;
 
 // ---------------------------------------------------------------- textures / meshes
 const texCache = {};
@@ -367,6 +383,153 @@ class Beam {
   }
 }
 
+// ---------------------------------------------------------------- ribbon trail (Trail on two attachments)
+// A Roblox Trail is emitted by two attachments on a part that rides `path`/`move`/`wave`. Roblox ages trail
+// points on real time, so this does too: a hit-stop stops the head (no new length) while the tail keeps fading.
+// Widths: `width` studs between the attachments (along `up`, or facing the camera with faceCamera), scaled by
+// `widthScale` over the point's age; `transparency`, `color` are sequences over the point's age.
+// TextureMode: Stretch (whole trail = one texture), Wrap (repeats every textureLength studs from the head),
+// Static (texture pinned to where the trail was laid down).
+class Trail {
+  constructor(L, scene, player) {
+    this.L = L; this.P = player;
+    const n = this.max = 400;
+    const geo = new THREE.BufferGeometry();
+    this.pos = new Float32Array(n * 2 * 3); this.uv = new Float32Array(n * 2 * 2); this.col = new Float32Array(n * 2 * 4);
+    const idx = [];
+    for (let i = 0; i < n - 1; i++) { const a = i * 2; idx.push(a, a + 1, a + 3, a, a + 3, a + 2); }
+    geo.setAttribute('position', new THREE.BufferAttribute(this.pos, 3).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute('uv', new THREE.BufferAttribute(this.uv, 2).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute('color4', new THREE.BufferAttribute(this.col, 4).setUsage(THREE.DynamicDrawUsage));
+    geo.setIndex(idx);
+    for (const nm of L.textures || [L.texture]) texture(nm, true);
+    this.mat = new THREE.ShaderMaterial({
+      uniforms: { map: { value: texture(swapName(L, 0), true) }, le: { value: L.lightEmission ?? 1 }, bright: { value: L.brightness || 1 } },
+      vertexShader: PVERT, fragmentShader: PFRAG, transparent: true, depthWrite: false, side: THREE.DoubleSide,
+      blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
+    });
+    this.mesh = new THREE.Mesh(geo, this.mat);
+    this.mesh.frustumCulled = false; this.mesh.renderOrder = 28 + (L.order || 0) * 0.001;
+    scene.add(this.mesh);
+    // cumulative path length on effect time (for Static texture mode)
+    const T = this.P.fx.duration, step = 1 / 120; this.cum = [0]; let prev = attachPos(L, 0);
+    for (let i = 1; i * step <= T + step; i++) { const q = attachPos(L, i * step); this.cum.push(this.cum[i - 1] + Math.hypot(q[0] - prev[0], q[1] - prev[1], q[2] - prev[2])); prev = q; }
+  }
+  cumAt(te) { const f = Math.max(0, te * 120), i = Math.min(this.cum.length - 2, Math.floor(f)), k = Math.min(1, f - i); return this.cum[i] + (this.cum[i + 1] - this.cum[i]) * k; }
+  draw(cam, t, real) {
+    const L = this.L, P = this.P, life = L.lifetime || 0.5;
+    const rt0 = P.realOf(L.t0 || 0), rt1 = P.realOf(L.t1 ?? P.fx.duration);
+    const head = Math.min(real, rt1), tail = Math.max(rt0, real - life);
+    if (head <= tail + 1e-4) { this.mesh.visible = false; return; }
+    const pts = [], step = 1 / 60;
+    for (let r = head; r > tail; r -= step) pts.push(r);
+    pts.push(tail);
+    if (pts.length > this.max) pts.length = this.max;
+    const X = pts.map((r) => attachPos(L, P.effectTime(r)));
+    const W = L.width || 2, up = norm(L.up || [0, 1, 0], [0, 1, 0]), cp = cam.position, mode = L.textureMode || 'Stretch';
+    let total = 0; const dist = [0];
+    for (let i = 1; i < X.length; i++) { total += Math.hypot(X[i][0] - X[i - 1][0], X[i][1] - X[i - 1][1], X[i][2] - X[i - 1][2]); dist.push(total); }
+    const Pp = this.pos, U = this.uv, C = this.col, tl = L.textureLength || 6;
+    for (let i = 0; i < X.length; i++) {
+      const k = Math.min(1, (real - pts[i]) / life), x = X[i];
+      let side;
+      if (L.faceCamera) {
+        const a = X[Math.max(0, i - 1)], b = X[Math.min(X.length - 1, i + 1)];
+        const tg = norm([a[0] - b[0], a[1] - b[1], a[2] - b[2]], [0, 0, -1]);
+        side = norm(cross(tg, [cp.x - x[0], cp.y - x[1], cp.z - x[2]]), up);
+      } else side = up;
+      const w = W * Math.max(0, evalNum(L.widthScale ?? 1, k)) / 2;
+      Pp.set([x[0] - side[0] * w, x[1] - side[1] * w, x[2] - side[2] * w, x[0] + side[0] * w, x[1] + side[1] * w, x[2] + side[2] * w], i * 6);
+      const u = mode === 'Wrap' ? dist[i] / tl : mode === 'Static' ? -this.cumAt(P.effectTime(pts[i])) / tl : (total > 0 ? dist[i] / total : 0);
+      U.set([u, 0, u, 1], i * 4);
+      const col = evalCol(L.color || '#ffffff', k), al = Math.max(0, Math.min(1, 1 - evalNum(L.transparency ?? 0, k)));
+      C.set([col[0], col[1], col[2], al, col[0], col[1], col[2], al], i * 8);
+    }
+    const geo = this.mesh.geometry;
+    geo.setDrawRange(0, (X.length - 1) * 6);
+    geo.attributes.position.needsUpdate = geo.attributes.uv.needsUpdate = geo.attributes.color4.needsUpdate = true;
+    this.mat.uniforms.map.value = texture(swapName(L, t - (L.t0 || 0)), true);
+    this.mesh.visible = true;
+  }
+}
+
+// ---------------------------------------------------------------- volumetric beam (core cylinder + crossed planes)
+// Roblox build: a Neon/ForceField cylinder Part for the solid core (and an optional wider `sheath`), plus
+// `planes.count` Beams with FaceCamera off, fanned evenly around the axis so the energy reads from every angle.
+// Planes taper (width [w0, w1]), scroll (textureSpeed), twist around the axis (deg/s) and swap textures.
+const CVERT = SVERT;
+class VBeam {
+  constructor(L, scene) {
+    this.L = L; this.group = new THREE.Group(); scene.add(this.group);
+    const cyl = new THREE.CylinderGeometry(1, 1, 1, 28, 1, false);
+    const mk = (spec, order) => {
+      if (!spec) return null;
+      const mat = new THREE.ShaderMaterial({ uniforms: { map: { value: null }, hasMap: { value: 0 }, color: { value: new THREE.Color() }, alpha: { value: 1 }, mode: { value: SMODES[spec.material || 'Neon'] },
+        bright: { value: spec.brightness || 1 }, offset: { value: new THREE.Vector2() }, tile: { value: new THREE.Vector2(1, 1) } },
+        vertexShader: CVERT, fragmentShader: SFRAG, transparent: true, depthWrite: false,
+        blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor });
+      const m = new THREE.Mesh(cyl, mat); m.frustumCulled = false; m.renderOrder = order; this.group.add(m); return m;
+    };
+    this.core = mk(L.core, 26 + (L.order || 0) * 0.001);
+    this.sheath = mk(L.sheath, 27 + (L.order || 0) * 0.001);
+    // planes: one plane set or a list of sets (e.g. dark anchor + glow + hot core), each its own Beams in Roblox
+    this.sets = (L.planes ? (Array.isArray(L.planes) ? L.planes : [L.planes]) : []).map((pl, j) => {
+      const n = pl.count || 3, geo = new THREE.BufferGeometry();
+      const set = { pl, pos: new Float32Array(n * 4 * 3), uv: new Float32Array(n * 4 * 2) };
+      const idx = []; for (let i = 0; i < n; i++) { const a = i * 4; idx.push(a, a + 1, a + 2, a, a + 2, a + 3); }
+      geo.setAttribute('position', new THREE.BufferAttribute(set.pos, 3).setUsage(THREE.DynamicDrawUsage));
+      geo.setAttribute('uv', new THREE.BufferAttribute(set.uv, 2).setUsage(THREE.DynamicDrawUsage));
+      geo.setIndex(idx);
+      for (const nm of pl.textures || [pl.texture]) texture(nm, true);
+      set.mat = new THREE.ShaderMaterial({
+        uniforms: { map: { value: texture(swapName(pl, 0), true) }, color: { value: new THREE.Color() }, alpha: { value: 1 }, le: { value: pl.lightEmission ?? 1 }, bright: { value: pl.brightness || 1 } },
+        vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+        fragmentShader: `uniform sampler2D map; uniform vec3 color; uniform float alpha, le, bright; varying vec2 vUv;
+          void main(){ vec4 t = texture2D(map, vUv); float a = t.a * alpha; gl_FragColor = vec4(t.rgb * color * bright * a, a * (1.0 - le)); }`,
+        transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
+      });
+      set.mesh = new THREE.Mesh(geo, set.mat); set.mesh.frustumCulled = false; set.mesh.renderOrder = 31 + j * 0.01 + (L.order || 0) * 0.001;
+      this.group.add(set.mesh);
+      return set;
+    });
+  }
+  draw(cam, t) {
+    const L = this.L, life = L.life || 1, age = t - (L.t0 || 0);
+    if (age < 0 || age >= life) { this.group.visible = false; return; }
+    this.group.visible = true;
+    const k = age / life, a = evalKeys(L.from, k, [0, 0, 0]), bFull = evalKeys(L.to, k, L.to), reach = evalKeys(L.reach, k, 1);
+    const b = [a[0] + (bFull[0] - a[0]) * reach, a[1] + (bFull[1] - a[1]) * reach, a[2] + (bFull[2] - a[2]) * reach];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]), dir = norm([b[0] - a[0], b[1] - a[1], b[2] - a[2]], [0, 0, -1]);
+    const mid = new THREE.Vector3((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2);
+    const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(...dir));
+    for (const [m, spec] of [[this.core, L.core], [this.sheath, L.sheath]]) {
+      if (!m) continue;
+      const r = evalKeys(spec.radius, k, 0.5);
+      m.visible = len > 1e-3 && r > 1e-3;
+      m.position.copy(mid); m.quaternion.copy(q); m.scale.set(r, len, r);
+      const u = m.material.uniforms, c = typeof spec.color === 'string' ? hex(spec.color) : evalCol(spec.color || '#ffffff', k);
+      u.color.value.setRGB(c[0], c[1], c[2]); u.alpha.value = Math.max(0, 1 - evalKeys(spec.transparency, k, 0));
+    }
+    for (const set of this.sets) {
+      const pl = set.pl, n = pl.count || 3, w = evalKeys(pl.width, k, 1), w0 = Array.isArray(w) ? w[0] : w, w1 = Array.isArray(w) ? w[1] : w;
+      const base = norm(cross(dir, Math.abs(dir[1]) < 0.95 ? [0, 1, 0] : [1, 0, 0]), [1, 0, 0]), b2 = cross(dir, base);
+      const tw = ((pl.twist || 0) * age + (pl.angle || 0)) * DEG, tl = pl.textureLength || 8, scroll = (pl.textureSpeed || 0) * age, u1 = len / tl;
+      for (let i = 0; i < n; i++) {
+        const sd = rot2(base, b2, tw + (i / n) * Math.PI, 0), o = i * 12;
+        set.pos.set([a[0] - sd[0] * w0 / 2, a[1] - sd[1] * w0 / 2, a[2] - sd[2] * w0 / 2, b[0] - sd[0] * w1 / 2, b[1] - sd[1] * w1 / 2, b[2] - sd[2] * w1 / 2,
+          b[0] + sd[0] * w1 / 2, b[1] + sd[1] * w1 / 2, b[2] + sd[2] * w1 / 2, a[0] + sd[0] * w0 / 2, a[1] + sd[1] * w0 / 2, a[2] + sd[2] * w0 / 2], o);
+        set.uv.set([-scroll, 0, u1 - scroll, 0, u1 - scroll, 1, -scroll, 1], i * 8);
+      }
+      const g = set.mesh.geometry; g.attributes.position.needsUpdate = g.attributes.uv.needsUpdate = true;
+      const c = typeof pl.color === 'string' ? hex(pl.color) : evalCol(pl.color || '#ffffff', k);
+      set.mat.uniforms.color.value.setRGB(c[0], c[1], c[2]);
+      set.mat.uniforms.alpha.value = Math.max(0, 1 - evalKeys(pl.transparency, k, 0));
+      set.mat.uniforms.map.value = texture(swapName(pl, age), true);
+      set.mesh.visible = len > 1e-3;
+    }
+  }
+}
+
 // ---------------------------------------------------------------- neon bolt (zig-zag parts)
 class Bolt {
   constructor(L, scene) {
@@ -577,7 +740,7 @@ class Player {
     this.scene = null;
   }
   async load(fx) {
-    this.fx = fx;
+    this.fx = fx; this.stops = (fx.hitstop || []).slice().sort((x, y) => x.t - y.t);
     const scene = this.scene = new THREE.Scene();
     this.groundColor = makeArena(scene);
     this.caster = fx.caster !== false ? makeAvatar(scene, [0, 0, 0], 0) : null;
@@ -600,6 +763,8 @@ class Player {
       else if (L.type === 'shell') this.items.push(new Shell(L, scene, await loadMesh(L.mesh)));
       else if (L.type === 'beam') this.items.push(new Beam(L, scene));
       else if (L.type === 'bolt') this.items.push(new Bolt(L, scene));
+      else if (L.type === 'trail') this.items.push(new Trail(L, scene, this));
+      else if (L.type === 'vbeam') this.items.push(new VBeam(L, scene));
     }
     for (const D of fx.debris || []) this.items.push(new Debris(D, scene, this.groundColor));
     for (const N of fx.numbers || []) this.items.push(new DamageNumber(N, scene));
@@ -629,6 +794,7 @@ class Player {
     }
     return te;
   }
+  realOf(te) { return te + this.stops.filter((h) => h.t < te - 1e-6).reduce((a, h) => a + h.dur, 0); }
   // advance to time t (monotonic) and render
   frame(real) {
     const t = this.effectTime(real);
@@ -652,7 +818,7 @@ class Player {
     cam.fov = evalKeys(C.fov, Math.min(1, t / fx.duration), 60); cam.updateProjectionMatrix();
     cam.lookAt(look[0] + sh[0] * 0.5, look[1] + sh[1] * 0.5, look[2]);
     cam.updateMatrixWorld();
-    for (const it of this.items) it.draw(cam, t);
+    for (const it of this.items) it.draw(cam, t, real);
     if (this.caster) poseAvatar(this.caster, fx.pose, t);
     this.dummies.forEach((d, j) => poseAvatar(d, this.dummyPose[j], t));
     for (const { Lt, p } of this.lights) { const P = attachPos(Lt, t); p.position.set(...P); const bk = Lt.brightness; p.intensity = t < bk[0][0] ? 0 : Math.max(0, evalKeys(bk, t, 0)) * 0.12; }

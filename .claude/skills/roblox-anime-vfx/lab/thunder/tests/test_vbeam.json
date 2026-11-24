@@ -1,0 +1,323 @@
+{
+ "name": "test_vbeam",
+ "title": "Volumetric beam test",
+ "element": "Thunder",
+ "archetype": "test",
+ "duration": 1.5,
+ "layers": [
+  {
+   "type": "vbeam",
+   "from": [
+    1.5,
+    4,
+    -1
+   ],
+   "to": [
+    0,
+    4,
+    -26
+   ],
+   "t0": 0.2,
+   "life": 1.0,
+   "reach": [
+    [
+     0,
+     0
+    ],
+    [
+     0.06,
+     1,
+     "outExpo"
+    ]
+   ],
+   "core": {
+    "radius": [
+     [
+      0,
+      0.06
+     ],
+     [
+      0.06,
+      0.14,
+      "out"
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      0
+     ]
+    ],
+    "color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.4,
+      "#bff3ff"
+     ],
+     [
+      1,
+      "#6fe0ff"
+     ]
+    ],
+    "material": "Neon",
+    "transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.2
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "sheath": {
+    "radius": [
+     [
+      0,
+      0.4
+     ],
+     [
+      0.08,
+      0.9,
+      "out"
+     ],
+     [
+      1,
+      0.7
+     ]
+    ],
+    "color": "#3a5cff",
+    "material": "ForceField",
+    "brightness": 0.3,
+    "transparency": [
+     [
+      0,
+      0.3
+     ],
+     [
+      0.6,
+      0.6
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "planes": [
+    {
+     "count": 2,
+     "width": [
+      [
+       0,
+       [
+        2,
+        2
+       ]
+      ],
+      [
+       0.1,
+       [
+        4.4,
+        3.6
+       ],
+       "out"
+      ],
+      [
+       1,
+       [
+        2.6,
+        2
+       ]
+      ]
+     ],
+     "texture": "thunder_strip_3_glow",
+     "color": "#2a3350",
+     "angle": 45,
+     "textureLength": 12,
+     "textureSpeed": -0.6,
+     "transparency": [
+      [
+       0,
+       0.3
+      ],
+      [
+       0.6,
+       0.5
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "lightEmission": 0,
+     "brightness": 1
+    },
+    {
+     "count": 3,
+     "width": [
+      [
+       0,
+       [
+        1.5,
+        1.5
+       ]
+      ],
+      [
+       0.08,
+       [
+        3.4,
+        2.6
+       ],
+       "out"
+      ],
+      [
+       1,
+       [
+        0.6,
+        0.4
+       ]
+      ]
+     ],
+     "textures": [
+      "thunder_strip_1_mid",
+      "thunder_strip_2_mid",
+      "thunder_strip_3_mid",
+      "thunder_strip_4_mid"
+     ],
+     "swap": 0.05,
+     "color": [
+      [
+       0,
+       "#6fe0ff"
+      ],
+      [
+       0.6,
+       "#3a5cff"
+      ],
+      [
+       1,
+       "#2a1a9a"
+      ]
+     ],
+     "textureLength": 9,
+     "textureSpeed": 2.5,
+     "twist": 90,
+     "transparency": [
+      [
+       0,
+       0
+      ],
+      [
+       0.7,
+       0.2
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "lightEmission": 0.8,
+     "brightness": 1.4
+    },
+    {
+     "count": 2,
+     "width": [
+      [
+       0,
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       0.08,
+       [
+        1.8,
+        1.4
+       ],
+       "out"
+      ],
+      [
+       1,
+       [
+        0.3,
+        0.2
+       ]
+      ]
+     ],
+     "textures": [
+      "thunder_strip_1_core",
+      "thunder_strip_2_core",
+      "thunder_strip_3_core",
+      "thunder_strip_4_core"
+     ],
+     "swap": 0.05,
+     "color": [
+      [
+       0,
+       "#ffffff"
+      ],
+      [
+       0.5,
+       "#bff3ff"
+      ],
+      [
+       1,
+       "#6fe0ff"
+      ]
+     ],
+     "textureLength": 7,
+     "textureSpeed": 4,
+     "twist": -140,
+     "transparency": [
+      [
+       0,
+       0
+      ],
+      [
+       0.6,
+       0.2
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "lightEmission": 1,
+     "brightness": 1.6
+    }
+   ]
+  }
+ ],
+ "camera": {
+  "pos": [
+   12,
+   7,
+   -2
+  ],
+  "look": [
+   0,
+   4,
+   -13
+  ]
+ },
+ "poster": 0.45,
+ "dummies": [
+  [
+   0,
+   0,
+   -27
+  ]
+ ]
+}
