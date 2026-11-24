@@ -14,10 +14,14 @@ local TEXTURES = {
 	fire_burst_rim = "rbxassetid://0", -- textures/fire_burst_rim.png
 	fire_burst_mid = "rbxassetid://0", -- textures/fire_burst_mid.png
 	fire_burst_core = "rbxassetid://0", -- textures/fire_burst_core.png
-	flare = "rbxassetid://0", -- textures/flare.png
-	line = "rbxassetid://0", -- textures/line.png
+	light_column = "rbxassetid://0", -- textures/light_column.png
+	wind_sheet_glow = "rbxassetid://0", -- textures/wind_sheet_glow.png
+	wind_sheet_rim = "rbxassetid://0", -- textures/wind_sheet_rim.png
+	wind_sheet_mid = "rbxassetid://0", -- textures/wind_sheet_mid.png
+	wind_sheet_core = "rbxassetid://0", -- textures/wind_sheet_core.png
+	mist = "rbxassetid://0", -- textures/mist.png
 	spark = "rbxassetid://0", -- textures/spark.png
-	dust = "rbxassetid://0", -- textures/dust.png
+	bokeh = "rbxassetid://0", -- textures/bokeh.png
 }
 
 local function NS(k) local t = {} for i, p in k do t[i] = NumberSequenceKeypoint.new(p[1], p[2], p[3] or 0) end return NumberSequence.new(t) end
@@ -34,8 +38,8 @@ local LAYERS = {
 		props = {
 			LightEmission = 1,
 			LightInfluence = 0,
-			Brightness = 1.2,
-			Transparency = NumberSequence.new(0.35),
+			Brightness = 1,
+			Transparency = NumberSequence.new(0.45),
 			ZOffset = 1,
 			Texture = TEXTURES.fire_burst_glow,
 			FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
@@ -43,10 +47,10 @@ local LAYERS = {
 			Orientation = Enum.ParticleOrientation.FacingCamera,
 			EmissionDirection = Enum.NormalId.Top,
 			Speed = NumberRange.new(0.01, 0.01),
-			Lifetime = NumberRange.new(0.55, 0.55),
+			Lifetime = NumberRange.new(0.5, 0.5),
 			Rotation = NumberRange.new(0, 0),
 			RotSpeed = NumberRange.new(0, 0),
-			Size = NumberSequence.new(13),
+			Size = NumberSequence.new(20),
 			Color = ColorSequence.new(Color3.fromHex("#ff5a10")),
 		},
 	},
@@ -69,11 +73,11 @@ local LAYERS = {
 			Orientation = Enum.ParticleOrientation.FacingCamera,
 			EmissionDirection = Enum.NormalId.Top,
 			Speed = NumberRange.new(0.01, 0.01),
-			Lifetime = NumberRange.new(0.55, 0.55),
+			Lifetime = NumberRange.new(0.5, 0.5),
 			Rotation = NumberRange.new(0, 0),
 			RotSpeed = NumberRange.new(0, 0),
-			Size = NumberSequence.new(13),
-			Color = ColorSequence.new(Color3.fromHex("#c82a08")),
+			Size = NumberSequence.new(20),
+			Color = ColorSequence.new(Color3.fromHex("#d03008")),
 		},
 	},
 	{
@@ -84,9 +88,9 @@ local LAYERS = {
 		emits = { {0, 1} },
 		rate = {  },
 		props = {
-			LightEmission = 0.7,
+			LightEmission = 0.6,
 			LightInfluence = 0,
-			Brightness = 1.1,
+			Brightness = 1,
 			Transparency = NumberSequence.new(0),
 			ZOffset = 1.1,
 			Texture = TEXTURES.fire_burst_mid,
@@ -95,11 +99,11 @@ local LAYERS = {
 			Orientation = Enum.ParticleOrientation.FacingCamera,
 			EmissionDirection = Enum.NormalId.Top,
 			Speed = NumberRange.new(0.01, 0.01),
-			Lifetime = NumberRange.new(0.55, 0.55),
+			Lifetime = NumberRange.new(0.5, 0.5),
 			Rotation = NumberRange.new(0, 0),
 			RotSpeed = NumberRange.new(0, 0),
-			Size = NumberSequence.new(13),
-			Color = ColorSequence.new(Color3.fromHex("#ff8a20")),
+			Size = NumberSequence.new(20),
+			Color = ColorSequence.new(Color3.fromHex("#ff8a24")),
 		},
 	},
 	{
@@ -112,7 +116,7 @@ local LAYERS = {
 		props = {
 			LightEmission = 1,
 			LightInfluence = 0,
-			Brightness = 2,
+			Brightness = 1.6,
 			Transparency = NumberSequence.new(0),
 			ZOffset = 1.15,
 			Texture = TEXTURES.fire_burst_core,
@@ -121,109 +125,215 @@ local LAYERS = {
 			Orientation = Enum.ParticleOrientation.FacingCamera,
 			EmissionDirection = Enum.NormalId.Top,
 			Speed = NumberRange.new(0.01, 0.01),
-			Lifetime = NumberRange.new(0.55, 0.55),
+			Lifetime = NumberRange.new(0.5, 0.5),
 			Rotation = NumberRange.new(0, 0),
 			RotSpeed = NumberRange.new(0, 0),
-			Size = NumberSequence.new(13),
-			Color = ColorSequence.new(Color3.fromHex("#fff2d0")),
+			Size = NumberSequence.new(20),
+			Color = ColorSequence.new(Color3.fromHex("#fff2d8")),
 		},
 	},
 	{
-		name = "FireFlash.Flare", -- FireFlash: Orange lens flare
-		offset = Vector3.new(0, 0.4, 0),
+		name = "FireFlash.Column", -- FireFlash: Tall light column
+		offset = Vector3.new(0.6, 9, -0.5),
 		rotation = Vector3.new(0, 0, 0), -- degrees, CFrame.Angles order
 		partSize = nil,
 		emits = { {0, 1} },
 		rate = {  },
 		props = {
-			Texture = TEXTURES.flare,
+			Texture = TEXTURES.light_column,
+			Orientation = Enum.ParticleOrientation.FacingCameraWorldUp,
 			Speed = NumberRange.new(0, 0),
-			Lifetime = NumberRange.new(0.3, 0.3),
+			Lifetime = NumberRange.new(0.32, 0.32),
 			Rotation = NumberRange.new(0, 0),
-			Size = NS({ {0, 8}, {0.2, 16}, {1, 10} }),
-			Color = ColorSequence.new(Color3.fromHex("#ffa850")),
+			Size = NS({ {0, 18}, {0.2, 26}, {1, 24} }),
+			Color = ColorSequence.new(Color3.fromHex("#ffa860")),
 			LightEmission = 1,
-			Brightness = 1.6,
-			Transparency = NS({ {0, 0}, {1, 1} }),
-			ZOffset = 3,
+			Brightness = 1.5,
+			Transparency = NS({ {0, 0}, {0.5, 0.2}, {1, 1} }),
+			ZOffset = 1,
 		},
 	},
 	{
-		name = "FireFlash.Beam", -- FireFlash: Thin red-orange beam shooting up
-		offset = Vector3.new(0.4, -0.2, -0.4),
-		rotation = Vector3.new(0, 0, 0), -- degrees, CFrame.Angles order
+		name = "FireFlash.Ribbon_glow", -- FireFlash: Pale flat swoosh ribbon
+		offset = Vector3.new(-4.5, -1.2, 1.2),
+		rotation = Vector3.new(-10, 55, 0), -- degrees, CFrame.Angles order
 		partSize = nil,
-		emits = { {0.05, 1} },
+		emits = { {0.01, 1} },
 		rate = {  },
 		props = {
-			Texture = TEXTURES.line,
-			EmissionDirection = Enum.NormalId.Top,
-			Orientation = Enum.ParticleOrientation.VelocityParallel,
-			Speed = NumberRange.new(0.01, 0.01),
-			Lifetime = NumberRange.new(0.36, 0.36),
-			Size = NS({ {0, 8}, {0.2, 30}, {1, 26} }),
-			Color = ColorSequence.new(Color3.fromHex("#ff4a10")),
 			LightEmission = 1,
-			Brightness = 1.4,
-			Transparency = NS({ {0, 0}, {0.6, 0.2}, {1, 1} }),
-			ZOffset = 2,
+			LightInfluence = 0,
+			Brightness = 1,
+			Transparency = NumberSequence.new(0.9),
+			ZOffset = 0,
+			Texture = TEXTURES.wind_sheet_glow,
+			FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
+			FlipbookMode = Enum.ParticleFlipbookMode.OneShot,
+			Orientation = Enum.ParticleOrientation.VelocityPerpendicular,
+			EmissionDirection = Enum.NormalId.Back,
+			Speed = NumberRange.new(0.01, 0.01),
+			Lifetime = NumberRange.new(0.35, 0.35),
+			Rotation = NumberRange.new(160, 160),
+			RotSpeed = NumberRange.new(0, 0),
+			Size = NumberSequence.new(8),
+			Color = ColorSequence.new(Color3.fromHex("#ffffff")),
 		},
 	},
 	{
-		name = "FireFlash.Embers", -- FireFlash: Embers and orange sparks
+		name = "FireFlash.Ribbon_rim", -- FireFlash: Pale flat swoosh ribbon
+		offset = Vector3.new(-4.5, -1.2, 1.2),
+		rotation = Vector3.new(-10, 55, 0), -- degrees, CFrame.Angles order
+		partSize = nil,
+		emits = { {0.01, 1} },
+		rate = {  },
+		props = {
+			LightEmission = 0,
+			LightInfluence = 0,
+			Brightness = 1,
+			Transparency = NumberSequence.new(0.4),
+			ZOffset = 0.05,
+			Texture = TEXTURES.wind_sheet_rim,
+			FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
+			FlipbookMode = Enum.ParticleFlipbookMode.OneShot,
+			Orientation = Enum.ParticleOrientation.VelocityPerpendicular,
+			EmissionDirection = Enum.NormalId.Back,
+			Speed = NumberRange.new(0.01, 0.01),
+			Lifetime = NumberRange.new(0.35, 0.35),
+			Rotation = NumberRange.new(160, 160),
+			RotSpeed = NumberRange.new(0, 0),
+			Size = NumberSequence.new(8),
+			Color = ColorSequence.new(Color3.fromHex("#8a8e94")),
+		},
+	},
+	{
+		name = "FireFlash.Ribbon_mid", -- FireFlash: Pale flat swoosh ribbon
+		offset = Vector3.new(-4.5, -1.2, 1.2),
+		rotation = Vector3.new(-10, 55, 0), -- degrees, CFrame.Angles order
+		partSize = nil,
+		emits = { {0.01, 1} },
+		rate = {  },
+		props = {
+			LightEmission = 0.3,
+			LightInfluence = 0,
+			Brightness = 1,
+			Transparency = NumberSequence.new(0.15),
+			ZOffset = 0.1,
+			Texture = TEXTURES.wind_sheet_mid,
+			FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
+			FlipbookMode = Enum.ParticleFlipbookMode.OneShot,
+			Orientation = Enum.ParticleOrientation.VelocityPerpendicular,
+			EmissionDirection = Enum.NormalId.Back,
+			Speed = NumberRange.new(0.01, 0.01),
+			Lifetime = NumberRange.new(0.35, 0.35),
+			Rotation = NumberRange.new(160, 160),
+			RotSpeed = NumberRange.new(0, 0),
+			Size = NumberSequence.new(8),
+			Color = ColorSequence.new(Color3.fromHex("#e8eaee")),
+		},
+	},
+	{
+		name = "FireFlash.Ribbon_core", -- FireFlash: Pale flat swoosh ribbon
+		offset = Vector3.new(-4.5, -1.2, 1.2),
+		rotation = Vector3.new(-10, 55, 0), -- degrees, CFrame.Angles order
+		partSize = nil,
+		emits = { {0.01, 1} },
+		rate = {  },
+		props = {
+			LightEmission = 0.8,
+			LightInfluence = 0,
+			Brightness = 1.6,
+			Transparency = NumberSequence.new(0),
+			ZOffset = 0.15,
+			Texture = TEXTURES.wind_sheet_core,
+			FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
+			FlipbookMode = Enum.ParticleFlipbookMode.OneShot,
+			Orientation = Enum.ParticleOrientation.VelocityPerpendicular,
+			EmissionDirection = Enum.NormalId.Back,
+			Speed = NumberRange.new(0.01, 0.01),
+			Lifetime = NumberRange.new(0.35, 0.35),
+			Rotation = NumberRange.new(160, 160),
+			RotSpeed = NumberRange.new(0, 0),
+			Size = NumberSequence.new(8),
+			Color = ColorSequence.new(Color3.fromHex("#ffffff")),
+		},
+	},
+	{
+		name = "FireFlash.Haze", -- FireFlash: Orange haze hanging over the right side
+		offset = Vector3.new(0.5, 0, 0),
+		rotation = Vector3.new(0, 0, 0), -- degrees, CFrame.Angles order
+		partSize = Vector3.new(6, 5, 3),
+		emits = { {0.02, 6} },
+		rate = { {0.05, 0.5, 10} },
+		props = {
+			Texture = TEXTURES.mist,
+			FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
+			FlipbookMode = Enum.ParticleFlipbookMode.OneShot,
+			Shape = Enum.ParticleEmitterShape.Box,
+			Speed = NumberRange.new(1, 4),
+			Lifetime = NumberRange.new(0.7, 1),
+			Rotation = NumberRange.new(0, 360),
+			Size = NS({ {0, 8}, {1, 14, 2} }),
+			Color = CS({ {0, "#ff9a50"}, {1, "#c8603a"} }),
+			LightEmission = 0.6,
+			Transparency = NS({ {0, 0.55}, {1, 1} }),
+			ZOffset = -1,
+		},
+	},
+	{
+		name = "FireFlash.Embers", -- FireFlash: Glowing ember dots and sparks
 		offset = Vector3.new(0, 0, 0),
 		rotation = Vector3.new(0, 0, 0), -- degrees, CFrame.Angles order
-		partSize = Vector3.new(3, 3, 3),
-		emits = { {0, 40} },
-		rate = { {0.05, 0.5, 18} },
+		partSize = Vector3.new(4, 4, 4),
+		emits = { {0, 30} },
+		rate = { {0.05, 0.6, 16} },
 		props = {
 			Texture = TEXTURES.spark,
 			Shape = Enum.ParticleEmitterShape.Sphere,
-			Speed = NumberRange.new(14, 46),
+			Speed = NumberRange.new(10, 34),
 			Drag = 3,
-			Acceleration = Vector3.new(0, -12, 0),
-			Lifetime = NumberRange.new(0.3, 0.5),
+			Acceleration = Vector3.new(0, -10, 0),
+			Lifetime = NumberRange.new(0.3, 0.45),
 			Orientation = Enum.ParticleOrientation.VelocityParallel,
-			Size = NS({ {0, 1.4, 0.5}, {1, 0.3} }),
+			Size = NS({ {0, 1.2, 0.4}, {1, 0.3} }),
 			Color = CS({ {0, "#fff2c0"}, {0.4, "#ffa030"}, {1, "#ff3a10"} }),
 			LightEmission = 1,
 			Brightness = 3,
 		},
 	},
 	{
-		name = "FireFlash.Smoke", -- FireFlash: Brown smoke rolling off
-		offset = Vector3.new(0, -0.7, 0),
+		name = "FireFlash.EmberDots", -- FireFlash: Hot ember dots
+		offset = Vector3.new(0, 0, 0),
 		rotation = Vector3.new(0, 0, 0), -- degrees, CFrame.Angles order
-		partSize = Vector3.new(4, 2, 4),
-		emits = { {0.07, 8} },
-		rate = {  },
+		partSize = Vector3.new(6, 5, 4),
+		emits = {  },
+		rate = { {0.05, 0.55, 14} },
 		props = {
-			Texture = TEXTURES.dust,
-			FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
-			FlipbookMode = Enum.ParticleFlipbookMode.OneShot,
+			Texture = TEXTURES.bokeh,
 			Shape = Enum.ParticleEmitterShape.Box,
-			EmissionDirection = Enum.NormalId.Top,
-			SpreadAngle = Vector2.new(60, 60),
-			Speed = NumberRange.new(3, 8),
-			Lifetime = NumberRange.new(0.7, 0.9),
-			Rotation = NumberRange.new(0, 360),
-			Size = NS({ {0, 5}, {1, 11, 2} }),
-			Color = ColorSequence.new(Color3.fromHex("#6a4a38")),
-			LightEmission = 0,
-			Transparency = NS({ {0, 0.3}, {1, 1} }),
-			ZOffset = -1,
+			Speed = NumberRange.new(1, 4),
+			Lifetime = NumberRange.new(0.3, 0.45),
+			Size = NS({ {0, 0.5, 0.2}, {0.3, 0.9, 0.3}, {1, 0.2} }),
+			Color = ColorSequence.new(Color3.fromHex("#ff7a30")),
+			LightEmission = 1,
+			Brightness = 2.5,
 		},
 	},
 }
 
 local LIGHTS = {
-	{ offset = Vector3.new(0, 0, 0), color = Color3.fromHex("#ff8a30"), range = 30, keys = { {0, 0}, {0.01, 5}, {0.15, 4}, {0.55, 1}, {1, 0} } },
+	{ offset = Vector3.new(0, 0, 0), color = Color3.fromHex("#ff8a30"), range = 34, keys = { {0, 0}, {0.01, 6}, {0.15, 4.5}, {0.6, 1.5}, {1, 0} } },
 }
 
 -- Impact frames: ColorCorrection + Highlight on nearby characters + optional black void sphere
 local FRAMES = {
-	{ t = 0, dur = 0.034, brightness = 0.3, contrast = 0.3, saturation = 0.2, tint = Color3.fromHex("#fff0e0"), void = nil, highlight = nil },
+	{ t = 0, dur = 0.034, brightness = 0.35, contrast = 0.2, saturation = 0.2, tint = Color3.fromHex("#fff0e0"), void = nil, highlight = nil },
 }
+-- Meshes: upload every OBJ in out/meshes/ (Asset Manager > Meshes) and paste the ids below.
+local MESHIDS = {
+}
+local MESHES = {
+}
+local GRADE = {  }
 local SHAKES = { { t = 0.01, dur = 0.4, amp = 0.8, freq = 24 } }
 
 local function track(keys, t)
@@ -233,6 +343,47 @@ local function track(keys, t)
 		if t <= b[1] then return a[2] + (b[2] - a[2]) * (t - a[1]) / math.max(b[1] - a[1], 1e-6) end
 	end
 	return keys[#keys][2]
+end
+
+local function keyAt(keys, k)
+	if k <= keys[1][1] then return keys[1][2] end
+	for i = 2, #keys do
+		local a, b = keys[i - 1], keys[i]
+		if k <= b[1] then return a[2] + (b[2] - a[2]) * ((k - a[1]) / math.max(b[1] - a[1], 1e-6)) end
+	end
+	return keys[#keys][2]
+end
+
+local function playMesh(m, origin, folder)
+	for _, s0 in m.spawns do
+		task.delay(s0, function()
+			local p = Instance.new("Part")
+			p.Name = m.name
+			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch, p.CastShadow = true, false, false, false, false
+			p.Size = Vector3.new(0.05, 0.05, 0.05)
+			p.Color = m.color
+			p.Material = m.material == "Ink" and Enum.Material.SmoothPlastic or (m.material == "Neon" and Enum.Material.Neon or Enum.Material.ForceField)
+			local sm = Instance.new("SpecialMesh")
+			sm.MeshType = Enum.MeshType.FileMesh
+			sm.MeshId = MESHIDS[m.mesh]
+			sm.TextureId = m.texture
+			sm.VertexColor = Vector3.new(m.color.R, m.color.G, m.color.B)
+			sm.Parent = p
+			local r = m.rotation * math.pi / 180
+			local rot = CFrame.Angles(r.X, r.Y, r.Z)
+			p.Parent = folder
+			local t0 = os.clock()
+			local conn
+			conn = RunService.Heartbeat:Connect(function()
+				local age = os.clock() - t0
+				local k = age / m.life
+				if k >= 1 or not p.Parent then conn:Disconnect(); p:Destroy(); return end
+				sm.Scale = keyAt(m.size, k)
+				p.Transparency = keyAt(m.transparency, k)
+				p.CFrame = origin * CFrame.new(m.offset + m.velocity * age) * rot * CFrame.fromAxisAngle(m.spinAxis.Unit, math.rad(m.spin * age))
+			end)
+		end)
+	end
 end
 
 local M = {}
@@ -268,6 +419,8 @@ function M.Play(origin: CFrame, parent: Instance?)
 			task.delay(w[2], function() e.Enabled = false end)
 		end
 	end
+
+	for _, m in MESHES do playMesh(m, origin, folder) end
 
 	local lights = {}
 	for i, li in LIGHTS do
@@ -320,6 +473,15 @@ function M.Play(origin: CFrame, parent: Instance?)
 		if isClient then
 			local active
 			for _, f in FRAMES do if t >= f.t and t < f.t + f.dur then active = f end end
+			local g
+			for i = 2, #GRADE do
+				if t <= GRADE[i].t and t >= GRADE[i - 1].t then
+					local a, b = GRADE[i - 1], GRADE[i]
+					local e = (t - a.t) / math.max(b.t - a.t, 1e-6)
+					g = { b = a.b + (b.b - a.b) * e, c = a.c + (b.c - a.c) * e, s = a.s + (b.s - a.s) * e, tint = a.tint:Lerp(b.tint, e) }
+				end
+			end
+			if not active and g then active = { brightness = g.b, contrast = g.c, saturation = g.s, tint = g.tint } end
 			cc.Enabled = active ~= nil
 			void.Transparency = (active and active.void) and 0 or 1
 			if active then

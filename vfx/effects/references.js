@@ -39,7 +39,7 @@
     layers: [
       ...planeStack('GroundVortex', 'Vortex swirling flat on the ground', {
         tex: 'swirl_disk', pos: [0, 0.35, 0], rot: [0, 0, 0], emits: [[0, 1]], life: 1.2, size: 18, rs: 120,
-        colors: { glow: { Color: '#2a44ff', Transparency: 0.55 }, rim: { Color: '#1a2296', LightEmission: 0.3, Transparency: 0.4 }, mid: { Color: '#6a86ff', LightEmission: 0.6 }, core: { Color: '#ffffff', LightEmission: 1, Brightness: 1.6 } },
+        colors: { glow: { Color: '#2a44ff', Transparency: 0.8 }, rim: { Color: '#1a2296', LightEmission: 0.3, Transparency: 0.7 }, mid: { Color: '#6a86ff', LightEmission: 0.5, Transparency: 0.5 }, core: { Color: '#ffffff', LightEmission: 1, Brightness: 1.2, Transparency: 0.4 } },
       }),
       { name: 'Mist', ref: 'Blue mist pooling at the feet', position: [0, 0.8, 0], part: { Size: [9, 0.2, 9] }, rate: [[0, 1.2, 30]],
         props: { Texture: 'mist', FlipbookLayout: 'Grid4x4', FlipbookMode: 'OneShot', Shape: 'Disc', EmissionDirection: 'Top', SpreadAngle: [75, 75], Speed: [3, 8], Drag: 1.5, Lifetime: [0.9, 1.3], Rotation: [0, 360], RotSpeed: [-30, 30], Size: [[0, 4], [1, 10, 2]], Color: [[0, '#5a74e8'], [1, '#22308a']], LightEmission: 0.3, Transparency: [[0, 0.45], [0.6, 0.65], [1, 1]], ZOffset: -2 } },
@@ -72,7 +72,7 @@
   });
   part({
     name: 'RiftTear', duration: 0.5, stage: STAGE1, note: 'Jagged navy tear ripping horizontally across the attack',
-    layers: [...planeStack('Rift', 'Jagged rift with lit edges', { tex: 'rift', pos: C, facing: 'FacingCamera', emits: [[0, 1]], life: 0.45, size: 22, z: 1.5, colors: NAVY })],
+    layers: [...planeStack('Rift', 'Jagged rift with lit edges', { tex: 'rift', pos: C, facing: 'FacingCamera', emits: [[0, 1]], life: 0.16, size: 22, z: 1.5, colors: NAVY })],
   });
   part({
     name: 'ShardNova', duration: 0.6, stage: STAGE1, note: 'Navy blade shards radiate out, black ink crescents slash across',
@@ -127,19 +127,95 @@
     ],
   });
 
-  G.VFX_EFFECTS.CosmicStrike = compose({ name: 'CosmicStrike', version: 1, stage: STAGE1, duration: 3.0,
-    note: 'Video 1: a cosmic combo built from 9 stacked parts' }, [
-    { part: 'CosmicAura', t: 0, label: 'Aura charges' },
-    { part: 'EnergySphere', t: 0.12, scale: 0.65, tag: 'ChargeSphere', label: 'Small sphere spins up' },
-    { part: 'StarFlash', t: 0.32, label: 'Star flash' },
-    { part: 'OrbitRing', t: 0.4, label: 'Orbit ring' },
-    { part: 'RiftTear', t: 0.48, label: 'Rift tears across' },
-    { part: 'ShardNova', t: 0.6, label: 'Shard nova + ink' },
-    { part: 'EnergySphere', t: 0.68, label: 'Energy sphere' },
-    { part: 'ShardEruption', t: 1.45, label: 'Shard eruption' },
-    { part: 'ArcDome', t: 1.6, label: 'Arc dome' },
-    { part: 'BubbleBurst', t: 1.78, label: 'Bubble burst' },
-    { part: 'CosmicAura', t: 1.9, scale: 0.8, tag: 'Afterglow', label: 'Afterglow' },
+  // ---- video 1 on MESHES: ForceField spheres/bands wrap in 3D, the world is graded blue ----
+  const { faceRot } = G.VFXSpec;
+  const mesh = (name, ref, o) => Object.assign({ name, ref }, o, { props: { Texture: o.texture } });
+  const STAGE1B = Object.assign({}, STAGE1, { env: 'cosmic', bloom: [0.45, 1.0], camera: [9, 9.5, 12], target: [0, 3.4, 0], dummy: { pos: [0, 0, 0], face: [0, 0, 10], color: '#151a36' } });
+  const BLUEGRADE = [[0, 0, 0, 0, '#ffffff'], [0.08, -0.04, 0.22, 0.12, '#d6deff'], [2.1, -0.04, 0.22, 0.12, '#d6deff'], [2.5, 0, 0, 0, '#ffffff']];
+  const BANDS = [[20, 0, 10], [70, 30, -20], [-50, 60, 30], [100, -20, 40], [35, 120, -60], [-80, 10, 70]];
+  const slashBand = (name, o) => mesh(name, 'ForceField slash band whipping around', Object.assign({
+    mesh: 'band', meshArgs: { arc: 220, inner: 0.62, cone: 0.12 }, texture: 'm_slash', material: 'ForceField', color: '#b8c8ff', brightness: 2.2, fresnel: 0.3,
+    life: 0.32, size: [[0, 11], [0.3, 15, 'out'], [1, 16]], transparency: [[0, 0], [0.6, 0.1], [1, 1]],
+  }, o));
+  const inkBand = (name, o) => mesh(name, 'Black calligraphic band (Ink mesh)', Object.assign({
+    mesh: 'band', meshArgs: { arc: 150, inner: 0.8, cone: 0.05 }, texture: 'm_ink', material: 'Ink', color: '#020308',
+    life: 0.28, size: [[0, 14], [1, 17]], transparency: [[0, 0], [0.7, 0], [1, 1]],
+  }, o));
+  part({
+    name: 'FlatSlash', duration: 0.5, stage: STAGE1B, grade: BLUEGRADE, note: 'Horizontal energy disc at waist height with black ink riding on it',
+    layers: [
+      slashBand('Disc', { position: [0, 2.6, 0], rotation: [0, 0, 0], spin: 900, spawns: [0, 0.05], life: 0.36, meshArgs: { arc: 260, inner: 0.55, cone: 0.06 }, size: [[0, 10], [0.3, 15, 'out'], [1, 16]] }),
+      inkBand('InkDisc', { position: [0, 2.7, 0], rotation: [0, 0, 0], spin: 800, spawns: [0.03], life: 0.3, size: [[0, 12], [1, 15]] }),
+    ],
+  });
+  part({
+    name: 'InkHooks', duration: 0.4, stage: STAGE1B, note: 'Tall black calligraphic hooks rising out of the orb',
+    layers: [{ name: 'Hooks', ref: 'Black hooks', position: [0, 6.5, 0], emits: [[0, 2]],
+      props: { Texture: 'ink_arc', FlipbookLayout: 'Grid4x4', FlipbookMode: 'OneShot', Speed: [0, 0], Lifetime: [0.32, 0.36], Rotation: [-120, -60], Size: [[0, 7, 1], [1, 8, 1]], Color: '#030408', LightEmission: 0, ZOffset: 2 } }],
+  });
+  part({
+    name: 'SmallOrb', duration: 0.45, stage: STAGE1B, grade: BLUEGRADE, note: 'Spinning ForceField orb forming around the character',
+    layers: [
+      mesh('Orb', 'ForceField swirl sphere', { mesh: 'sphere', texture: 'm_swirl', material: 'ForceField', color: '#7a8cff', brightness: 1.4, position: [0, 3.6, 0], rotation: [25, 0, 15], spin: 420, spawns: [0], life: 0.42, size: [[0, 2], [0.4, 7, 'out'], [1, 8]], transparency: [[0, 0.1], [0.7, 0.2], [1, 1]], scroll: [0.5, 0] }),
+      slashBand('Wrap', { position: [0, 3.6, 0], rotation: [60, 20, 0], spin: 1100, spawns: [0.05, 0.2], life: 0.2, size: [[0, 6], [1, 9]] }),
+    ],
+  });
+  part({
+    name: 'PillarFlash', duration: 0.12, stage: STAGE1B, note: 'Two-frame navy cylinder mesh with a glowing base ring (impact cut)',
+    layers: [
+      mesh('Column', 'Opaque navy cylinder', { mesh: 'cylinder', texture: 'm_solid', material: 'Ink', color: '#0b1a8c', position: [4.6, 9, 6.2], spawns: [0], life: 0.05, size: [7, 20, 7] }),
+      mesh('BaseRing', 'Glowing gold-white base ring', { mesh: 'torus', meshArgs: { tube: 0.06 }, texture: 'm_solid', material: 'ForceField', color: '#fff0a0', brightness: 2.5, position: [4.6, -0.6, 6.2], spawns: [0], life: 0.05, size: [7.4, 4, 7.4] }),
+    ],
+  });
+  part({
+    name: 'SpikeCrown', duration: 0.35, stage: STAGE1B, note: 'Huge dark navy spike crown erupting from the character',
+    shakes: [{ t: 0, dur: 0.25, amp: 0.6, freq: 28 }],
+    layers: planeStack('Crown', 'Spike crown', { tex: 'shard_fan', pos: [0, 11.3, 0], facing: 'FacingCameraWorldUp', emits: [[0, 1]], life: 0.14, size: 25, z: 1,
+      colors: { glow: { Color: '#3050ff', Transparency: 0.7 }, rim: { Color: '#c8d8ff', LightEmission: 0.4 }, mid: { Color: '#101c78', LightEmission: 0 }, core: { Color: '#e8fcff', LightEmission: 1, Brightness: 1.8 } } }),
+  });
+  part({
+    name: 'CosmicSphere', duration: 1.0, stage: STAGE1B, grade: BLUEGRADE, note: 'The hero: spinning ForceField spheres wrapped by slash bands and ink bands in 3D, blades, hairlines, bokeh',
+    lights: [{ name: 'Sphere', position: [0, 4, 0], Color: '#5a78ff', Range: 34, Brightness: [[0, 2], [0.04, 6], [0.2, 4], [0.35, 5], [0.6, 3.5], [1.0, 0]] }],
+    layers: [
+      mesh('Orb', 'Outer ForceField swirl sphere', { mesh: 'sphere', texture: 'm_swirl', material: 'ForceField', color: '#4a5cf0', brightness: 0.8, position: [0, 4, 0], rotation: [25, 0, 15], spin: 260, spawns: [0], life: 0.95, size: [[0, 6], [0.12, 11.5, 'out'], [0.8, 12.5], [1, 13]], transparency: [[0, 0.1], [0.75, 0.2], [1, 1]], scroll: [0.35, 0] }),
+      mesh('Body', 'Dark navy body behind the glass (Ink mesh)', { mesh: 'sphere', texture: 'm_swirl', material: 'Ink', color: '#0c1450', position: [0, 4, 0], rotation: [10, 0, 30], spin: -200, spawns: [0], life: 0.9, size: [[0, 5], [0.15, 10.5, 'out'], [1, 11]], transparency: [[0, 0.5], [0.8, 0.55], [1, 1]] }),
+      mesh('InnerOrb', 'Inner counter-spinning sphere', { mesh: 'sphere', texture: 'm_swirl', material: 'ForceField', color: '#9cb0ff', brightness: 0.6, position: [0, 4, 0], rotation: [-30, 0, 40], spin: -340, spawns: [0], life: 0.9, size: [[0, 4], [0.15, 8.5, 'out'], [1, 9]], transparency: [[0, 0.35], [0.8, 0.45], [1, 1]], scroll: [-0.5, 0.1] }),
+      ...BANDS.map((r, k) => slashBand(`Slash${k + 1}`, { position: [0, 4, 0], rotation: r, spin: (k % 2 ? -1 : 1) * (720 + k * 70), color: k % 2 ? '#c8d4ff' : '#8ea6ff', spawns: [0.02 + k * 0.06, 0.45 + k * 0.06] })),
+      ...[0, 1, 2].map((k) => inkBand(`Ink${k + 1}`, { position: [0, 4, 0], rotation: BANDS[k * 2].map((v) => v + 25), spin: -650, spawns: [0.08 + k * 0.12, 0.55 + k * 0.1] })),
+      ...[0, 1].flatMap((k) => planeStack(`Blade${k + 1}`, 'Navy serrated blade slicing through', {
+        tex: 'saw_fan', dir: 'Back', pos: [0, 4, 0], rot: FACE(k + 21), emits: [[0.15 + k * 0.25, 1]], life: 0.4, size: 14, spin: 40 + k * 140, z: 0.6, colors: NAVY })),
+      { name: 'InkLines', ref: 'Long black hairlines crossing the sphere', position: [0, 4, 0], part: { Size: [0.2, 0.2, 0.2] }, emits: [[0.1, 2], [0.45, 2]],
+        props: { Texture: 'line', Shape: 'Sphere', ShapeStyle: 'Surface', Orientation: 'VelocityParallel', Speed: [0.01, 0.01], Lifetime: [0.25, 0.35], Size: [[0, 20], [0.15, 30, 3], [1, 28, 3]], Color: '#04050a', LightEmission: 0, ZOffset: 1.5 } },
+      { name: 'LightLines', ref: 'White hairlines', position: [0, 4, 0], part: { Size: [0.2, 0.2, 0.2] }, emits: [[0.12, 2], [0.5, 2]],
+        props: { Texture: 'line', Shape: 'Sphere', ShapeStyle: 'Surface', Orientation: 'VelocityParallel', Speed: [0.01, 0.01], Lifetime: [0.2, 0.3], Size: [[0, 18], [0.15, 28, 3], [1, 26, 3]], Color: '#e8f0ff', LightEmission: 1, Brightness: 2, ZOffset: 1.6 } },
+      { name: 'Bokeh', ref: 'Bokeh orbs around the sphere', position: [0, 4, 0], part: { Size: [13, 10, 13] }, rate: [[0, 0.9, 14]],
+        props: { Texture: 'bokeh', Shape: 'Box', Speed: [0.5, 2], Lifetime: [0.4, 0.8], Size: [[0, 0.3, 0.2], [0.4, 1.3, 0.5], [1, 0.2]], Color: '#b4c4ff', LightEmission: 1, Brightness: 2, ZOffset: 2 } },
+      { name: 'Flecks', ref: 'White and yellow-green flecks', position: [0, 4, 0], part: { Size: [6, 6, 6] }, emits: [[0, 18]], rate: [[0.05, 0.7, 16]],
+        props: { Texture: 'spark', Shape: 'Sphere', Speed: [14, 34], Drag: 4, Lifetime: [0.25, 0.5], Orientation: 'VelocityParallel', Size: [[0, 1.3, 0.5], [1, 0.3]], Color: [[0, '#ffffff'], [0.3, '#e6ff70'], [1, '#7aa0ff']], LightEmission: 1, Brightness: 2.4, ZOffset: 2 } },
+    ],
+  });
+  part({
+    name: 'Dissolve', duration: 1.0, stage: STAGE1B, grade: BLUEGRADE, note: 'Sphere unravels into slow fading bands and mist',
+    layers: [
+      ...[0, 1, 2].map((k) => slashBand(`Unravel${k + 1}`, { position: [0, 3.4, 0], rotation: BANDS[k + 2], spin: 260, spawns: [k * 0.08], life: 0.65, color: '#7c90f0', brightness: 1.2, size: [[0, 14], [1, 19]], transparency: [[0, 0.3], [1, 1]] })),
+      mesh('Haze', 'Fading sphere haze', { mesh: 'sphere', texture: 'm_swirl', material: 'ForceField', color: '#4a5cd8', brightness: 0.9, position: [0, 3.2, 0], spin: 120, spawns: [0], life: 0.8, size: [[0, 12], [1, 16]], transparency: [[0, 0.4], [1, 1]], scroll: [0.2, 0] }),
+      { name: 'Mist', ref: 'Blue mist spreading low', position: [0, 2, 0], part: { Size: [8, 2, 8] }, emits: [[0, 14]],
+        props: { Texture: 'mist', FlipbookLayout: 'Grid4x4', FlipbookMode: 'OneShot', Shape: 'Box', EmissionDirection: 'Top', SpreadAngle: [80, 80], Speed: [4, 9], Drag: 1.5, Lifetime: [0.8, 1.0], Rotation: [0, 360], Size: [[0, 6], [1, 13, 2]], Color: [[0, '#5a74e8'], [1, '#22308a']], LightEmission: 0.25, Transparency: [[0, 0.4], [1, 1]], ZOffset: -2 } },
+    ],
+  });
+
+  G.VFX_EFFECTS.CosmicStrike = compose({ name: 'CosmicStrike', version: 3, stage: STAGE1B, duration: 2.5, grade: BLUEGRADE,
+    note: 'Video 1: cosmic combo on ForceField meshes, one dominant element per beat' }, [
+    { part: 'CosmicAura', t: 0, scale: 0.8, label: '0.00 aura' },
+    { part: 'FlatSlash', t: 0.1, label: '0.10 flat disc + ink' },
+    { part: 'SmallOrb', t: 0.2, label: '0.20 swirl orb' },
+    { part: 'InkHooks', t: 0.22, label: '0.22 ink hooks' },
+    { part: 'PillarFlash', t: 0.32, label: '0.32 cylinder flash' },
+    { part: 'SpikeCrown', t: 0.38, label: '0.38 spike crown' },
+    { part: 'RiftTear', t: 0.45, label: '0.45 rift' },
+    { part: 'CosmicSphere', t: 0.52, label: '0.52 hero sphere' },
+    { part: 'StarFlash', t: 0.98, scale: 0.6, label: '0.98 star' },
+    { part: 'Dissolve', t: 1.4, label: '1.40 dissolve' },
   ]);
 
   // =============================================================================== video 2 parts
@@ -214,68 +290,79 @@
   ]);
 
   // =============================================================================== video 3 parts
-  const STAGE3 = { env: 'sky', bloom: [0.9, 0.8], camera: [9, 5.5, -13], target: [0.8, 3.4, -1.5], dummy: { pos: [0, 0, 0], face: [0, 0, -10], sword: 'katana' },
-    swing: [[0, 110], [0.05, 110], [0.1, -40], [0.28, -40], [0.32, 140], [0.5, 140], [0.55, 20], [0.85, 110], [0.9, -40], [1.4, -40]] };
-  const WIND = { glow: { Color: '#a8b8c8', Transparency: 0.85 }, rim: { Color: '#2c323e', LightEmission: 0, Transparency: 0.55 }, mid: { Color: '#a6b0bc', LightEmission: 0, Transparency: 0.45 }, core: { Color: '#ffffff', LightEmission: 0.8, Brightness: 1.2, Transparency: 0.3 } };
+  // Camera close behind-right, swordsman facing screen-left; one dominant element per beat.
+  const STAGE3 = { env: 'stone', bloom: [0.75, 0.85], camera: [6, 7.5, 10.5], target: [-1.2, 2.4, 0], dummy: { pos: [0, 0, 0], face: [-10, 0, -3], sword: 'katana' },
+    swing: [[0, -40], [0.06, 140], [0.13, 140], [0.18, -40], [0.38, -40], [0.42, 150], [0.62, 150], [0.67, 30], [1.3, 30], [1.4, 120], [1.9, 120]] };
+  const SHEET = { glow: { Color: '#d8e0e8', Transparency: 0.95 }, rim: { Color: '#6a727c', LightEmission: 0, Transparency: 0.7 }, mid: { Color: '#a4acb4', LightEmission: 0, Transparency: 0.4 }, core: { Color: '#e8ecf0', LightEmission: 0.3, Transparency: 0.7 } };
+  const TOCAM = [-22, 34, 0];   // plane facing this stage's camera
   part({
-    name: 'BladeGlint', previewAt: [1.5, 5, -1], duration: 0.25, stage: STAGE3, note: 'Lens glint on the blade tip',
-    layers: [{ name: 'Glint', ref: 'Blade-tip glint', position: [0, 0, 0], emits: [[0, 1]],
-      props: { Texture: 'glint', FlipbookLayout: 'Grid2x2', FlipbookMode: 'OneShot', Speed: [0, 0], Lifetime: [0.2, 0.2], Rotation: [0, 0], Size: [[0, 3], [0.3, 8], [1, 5]], Color: '#ffffff', LightEmission: 1, Brightness: 3, ZOffset: 3 } }],
-  });
-  const windSlash = (name, rot, spin, at) => part({
-    name, previewAt: at, duration: 0.5, stage: STAGE3, note: 'Translucent grey wind trail of a katana cut',
-    shakes: [{ t: 0.02, dur: 0.15, amp: 0.25, freq: 28 }],
-    layers: planeStack('Trail', 'Wind slash trail', { tex: 'trail_arc', rot, emits: [[0, 1]], life: 0.45, size: 14, spin, colors: WIND }),
-  });
-  windSlash('WindSlashA', [-55, 0, -30], 180, [0.8, 3.2, -2.2]);
-  windSlash('WindSlashB', [-60, 0, 28], 20, [0.4, 3.0, -2.0]);
-  part({
-    name: 'InkSpikeBurst', previewAt: [0, 3.4, 0.6], duration: 0.3, stage: STAGE3, note: 'Black jagged spike burst behind the character',
-    layers: [{ name: 'Spikes', ref: 'Ink spike burst', position: [0, 0, 0], emits: [[0, 1]],
-      props: { Texture: 'ink_spikes', FlipbookLayout: 'Grid2x2', FlipbookMode: 'OneShot', Speed: [0, 0], Lifetime: [0.24, 0.24], Rotation: [0, 0], Size: [[0, 9], [1, 13]], Color: '#06060a', LightEmission: 0, Transparency: [[0, 0.05], [1, 0.4]], ZOffset: -2 } }],
+    name: 'BladeGlint', previewAt: [-2, 4, 0], duration: 0.25, stage: STAGE3, note: 'Lens glint on the blade',
+    layers: [{ name: 'Glint', ref: 'Blade glint', position: [0, 0, 0], emits: [[0, 1]],
+      props: { Texture: 'glint', FlipbookLayout: 'Grid2x2', FlipbookMode: 'OneShot', Speed: [0, 0], Lifetime: [0.2, 0.2], Rotation: [0, 0], Size: [[0, 2], [0.3, 4.5], [1, 2.5]], Color: '#ffffff', LightEmission: 1, Brightness: 1.8, ZOffset: 3 } }],
   });
   part({
-    name: 'DustKick', previewAt: [0, 0.8, 0], duration: 1.3, stage: STAGE3, note: 'Dust kicked up at the feet',
-    layers: [{ name: 'Dust', ref: 'Dust', position: [0, 0, 0], part: { Size: [3, 0.3, 3] }, emits: [[0, 8]],
-      props: { Texture: 'dust', FlipbookLayout: 'Grid4x4', FlipbookMode: 'OneShot', Shape: 'Disc', EmissionDirection: 'Top', SpreadAngle: [70, 70], Speed: [5, 11], Drag: 2.5, Lifetime: [0.8, 1.2], Rotation: [0, 360], Size: [[0, 3], [1, 8, 1.5]], Color: '#8c7c6a', LightEmission: 0, LightInfluence: 0.6, Transparency: [[0, 0.2], [1, 1]], ZOffset: -1 } }],
+    name: 'InkSpray', previewAt: [-2.4, 3, 1], duration: 0.3, stage: STAGE3, note: 'Black smudgy spike spray behind the cut',
+    layers: [{ name: 'Spray', ref: 'Black smudge spikes', position: [0, 0, 0], emits: [[0, 1]],
+      props: { Texture: 'ink_smudge', FlipbookLayout: 'Grid2x2', FlipbookMode: 'OneShot', Speed: [0, 0], Lifetime: [0.26, 0.26], Rotation: [0, 0], Size: [[0, 10], [1, 13]], Color: '#05050a', LightEmission: 0, Transparency: [[0, 0.05], [1, 0.3]], ZOffset: 0.5 } }],
   });
   part({
-    name: 'RingSlash', previewAt: [0.4, 3.4, -1.6], duration: 0.7, stage: STAGE3, note: 'Dark vortex ring slash with white highlight strands + glint',
+    name: 'WindSheet', previewAt: [-0.6, 3.2, 0], duration: 0.45, stage: STAGE3, note: 'Broad translucent grey afterimage sheet of the cut',
+    shakes: [{ t: 0.02, dur: 0.15, amp: 0.2, freq: 28 }],
+    layers: [mesh('Sheet', 'Translucent grey afterimage sheet (Ink mesh band sweeping with the blade)', { mesh: 'band', meshArgs: { arc: 160, inner: 0.12, cone: 0.1 }, texture: 'm_wind', material: 'Ink', color: '#9aa2ac', position: [0, 0, 0], rotation: [-10, 0, 62], spin: [[0, -70], [0.25, 25, 'out'], [1, 40]], spawns: [0], life: 0.42, size: [[0, 9], [0.25, 11.5, 'out'], [1, 12]], transparency: [[0, 0.1], [0.5, 0.3], [1, 1]] })],
+  });
+  part({
+    name: 'DustKick', previewAt: [0, 0.8, 0], duration: 1.3, stage: STAGE3, note: 'Brown dust kicked up at the feet',
+    layers: [{ name: 'Dust', ref: 'Dust', position: [0, 0, 0], part: { Size: [3, 0.3, 3] }, emits: [[0, 10]],
+      props: { Texture: 'dust', FlipbookLayout: 'Grid4x4', FlipbookMode: 'OneShot', Shape: 'Disc', EmissionDirection: 'Top', SpreadAngle: [70, 70], Speed: [4, 9], Drag: 2.5, Lifetime: [0.8, 1.2], Rotation: [0, 360], Size: [[0, 3.5], [1, 8.5, 1.5]], Color: '#8c7c6a', LightEmission: 0, LightInfluence: 0.6, Transparency: [[0, 0.2], [1, 1]], ZOffset: -1 } }],
+  });
+  part({
+    name: 'HeavyRing', previewAt: [-1.6, 3.3, 0], duration: 0.6, stage: STAGE3, note: 'Big dark motion-blurred ring slash with white highlight streaks and a glint',
+    shakes: [{ t: 0.02, dur: 0.2, amp: 0.3, freq: 28 }],
     layers: [
-      ...planeStack('Ring', 'Dark vortex ring', { tex: 'ring_slash', rot: [-80, 0, 0], emits: [[0, 1]], life: 0.65, size: 12, rs: -220,
-        colors: { glow: { Color: '#8c9cb0', Transparency: 0.9 }, rim: { Color: '#06070a', LightEmission: 0, Transparency: 0.15 }, mid: { Color: '#3a404c', LightEmission: 0, Transparency: 0.3 }, core: { Color: '#ffffff', LightEmission: 0.9, Brightness: 1.3, Transparency: 0.2 } } }),
-      { name: 'EdgeGlint', ref: 'Glint on the ring edge', position: [-4, -1, -0.8], emits: [[0.02, 1]],
-        props: { Texture: 'glint', FlipbookLayout: 'Grid2x2', FlipbookMode: 'OneShot', Speed: [0, 0], Lifetime: [0.18, 0.18], Rotation: [0, 0], Size: [[0, 3], [0.3, 7], [1, 4]], Color: '#ffffff', LightEmission: 1, Brightness: 3, ZOffset: 3 } },
+      mesh('RingDark', 'Motion-blurred dark ring (Ink mesh, spinning)', { mesh: 'band', meshArgs: { arc: 360, inner: 0.38 }, texture: 'm_ringblur', material: 'Ink', color: '#0c0d10', position: [0, 0, 0], rotation: G.VFXSpec.faceRot([7.2, 5.1, 10.5]), spin: -1100, spawns: [0], life: 0.42, size: [[0, 9], [0.2, 12.5, 'out'], [1, 13.5]], transparency: [[0, 0], [0.6, 0.2], [1, 1]] }),
+      mesh('RingLight', 'White highlight streaks on the ring (ForceField)', { mesh: 'band', meshArgs: { arc: 360, inner: 0.38 }, texture: 'm_ringhi', material: 'ForceField', color: '#ffffff', brightness: 1.6, fresnel: 0, position: [0, 0, 0], rotation: G.VFXSpec.faceRot([7.2, 5.1, 10.5]), spin: -1300, spawns: [0], life: 0.4, size: [[0, 9], [0.2, 12.4, 'out'], [1, 13.4]], transparency: [[0, 0], [0.6, 0.3], [1, 1]] }),
+      { name: 'RingGlint', ref: 'Glint at the bottom of the ring', position: [-0.8, -4.4, 2.6], emits: [[0.06, 1]],
+        props: { Texture: 'glint', FlipbookLayout: 'Grid2x2', FlipbookMode: 'OneShot', Speed: [0, 0], Lifetime: [0.2, 0.2], Rotation: [0, 0], Size: [[0, 3], [0.3, 6], [1, 3.5]], Color: '#ffffff', LightEmission: 1, Brightness: 3, ZOffset: 3 } },
     ],
   });
   part({
-    name: 'FireFlash', previewAt: [3.6, 5.2, -1.6], duration: 1.0, stage: STAGE3, note: 'Orange fire flash: radial burst, flare, beam, embers, smoke',
-    lights: [{ name: 'Fire', position: [0, 0, 0], Color: '#ff8a30', Range: 30, Brightness: [[0, 0], [0.01, 5], [0.15, 4], [0.55, 1], [1.0, 0]] }],
-    impactFrames: [{ t: 0, dur: 0.034, Brightness: 0.3, Contrast: 0.3, Saturation: 0.2, TintColor: '#fff0e0' }],
+    name: 'FireFlash', previewAt: [3.2, 3.6, -1.5], duration: 1.0, stage: STAGE3, note: 'Huge orange-white flash on the right, light column, pale ribbon, orange haze, embers',
+    lights: [{ name: 'Fire', position: [0, 0, 0], Color: '#ff8a30', Range: 34, Brightness: [[0, 0], [0.01, 6], [0.15, 4.5], [0.6, 1.5], [1.0, 0]] }],
+    impactFrames: [{ t: 0, dur: 0.034, Brightness: 0.35, Contrast: 0.2, Saturation: 0.2, TintColor: '#fff0e0' }],
     shakes: [{ t: 0.01, dur: 0.4, amp: 0.8, freq: 24 }],
     layers: [
-      ...planeStack('Burst', 'Radial fire burst', { tex: 'fire_burst', facing: 'FacingCamera', emits: [[0, 1]], life: 0.55, size: 13, z: 1,
-        colors: { glow: { Color: '#ff5a10', Transparency: 0.35, Brightness: 1.2 }, rim: { Color: '#c82a08', LightEmission: 0.5 }, mid: { Color: '#ff8a20', LightEmission: 0.7, Brightness: 1.1 }, core: { Color: '#fff2d0', LightEmission: 1, Brightness: 2 } } }),
-      { name: 'Flare', ref: 'Orange lens flare', position: [0, 0.4, 0], emits: [[0, 1]],
-        props: { Texture: 'flare', Speed: [0, 0], Lifetime: [0.3, 0.3], Rotation: [0, 0], Size: [[0, 8], [0.2, 16], [1, 10]], Color: '#ffa850', LightEmission: 1, Brightness: 1.6, Transparency: [[0, 0], [1, 1]], ZOffset: 3 } },
-      { name: 'Beam', ref: 'Thin red-orange beam shooting up', position: [0.4, -0.2, -0.4], emits: [[0.05, 1]],
-        props: { Texture: 'line', EmissionDirection: 'Top', Orientation: 'VelocityParallel', Speed: [0.01, 0.01], Lifetime: [0.36, 0.36], Size: [[0, 8], [0.2, 30], [1, 26]], Color: '#ff4a10', LightEmission: 1, Brightness: 1.4, Transparency: [[0, 0], [0.6, 0.2], [1, 1]], ZOffset: 2 } },
-      { name: 'Embers', ref: 'Embers and orange sparks', position: [0, 0, 0], part: { Size: [3, 3, 3] }, emits: [[0, 40]], rate: [[0.05, 0.5, 18]],
-        props: { Texture: 'spark', Shape: 'Sphere', Speed: [14, 46], Drag: 3, Acceleration: [0, -12, 0], Lifetime: [0.3, 0.5], Orientation: 'VelocityParallel', Size: [[0, 1.4, 0.5], [1, 0.3]], Color: [[0, '#fff2c0'], [0.4, '#ffa030'], [1, '#ff3a10']], LightEmission: 1, Brightness: 3 } },
-      { name: 'Smoke', ref: 'Brown smoke rolling off', position: [0, -0.7, 0], part: { Size: [4, 2, 4] }, emits: [[0.07, 8]],
-        props: { Texture: 'dust', FlipbookLayout: 'Grid4x4', FlipbookMode: 'OneShot', Shape: 'Box', EmissionDirection: 'Top', SpreadAngle: [60, 60], Speed: [3, 8], Lifetime: [0.7, 0.9], Rotation: [0, 360], Size: [[0, 5], [1, 11, 2]], Color: '#6a4a38', LightEmission: 0, Transparency: [[0, 0.3], [1, 1]], ZOffset: -1 } },
+      ...planeStack('Burst', 'Radial fire burst', { tex: 'fire_burst', facing: 'FacingCamera', emits: [[0, 1]], life: 0.5, size: 20, z: 1,
+        colors: { glow: { Color: '#ff5a10', Transparency: 0.45 }, rim: { Color: '#d03008', LightEmission: 0.5 }, mid: { Color: '#ff8a24', LightEmission: 0.6 }, core: { Color: '#fff2d8', LightEmission: 1, Brightness: 1.6 } } }),
+      { name: 'Column', ref: 'Tall light column', position: [0.6, 9, -0.5], emits: [[0, 1]],
+        props: { Texture: 'light_column', Orientation: 'FacingCameraWorldUp', Speed: [0, 0], Lifetime: [0.32, 0.32], Rotation: [0, 0], Size: [[0, 18], [0.2, 26], [1, 24]], Color: '#ffa860', LightEmission: 1, Brightness: 1.5, Transparency: [[0, 0], [0.5, 0.2], [1, 1]], ZOffset: 1 } },
+      ...planeStack('Ribbon', 'Pale flat swoosh ribbon', { tex: 'wind_sheet', dir: 'Back', pos: [-4.5, -1.2, 1.2], rot: [-10, 55, 0], emits: [[0.01, 1]], life: 0.35, size: 8, spin: 160,
+        colors: { glow: { Color: '#ffffff', Transparency: 0.9 }, rim: { Color: '#8a8e94', LightEmission: 0, Transparency: 0.4 }, mid: { Color: '#e8eaee', LightEmission: 0.3, Transparency: 0.15 }, core: { Color: '#ffffff', LightEmission: 0.8 } } }),
+      { name: 'Haze', ref: 'Orange haze hanging over the right side', position: [0.5, 0, 0], part: { Size: [6, 5, 3] }, emits: [[0.02, 6]], rate: [[0.05, 0.5, 10]],
+        props: { Texture: 'mist', FlipbookLayout: 'Grid4x4', FlipbookMode: 'OneShot', Shape: 'Box', Speed: [1, 4], Lifetime: [0.7, 1.0], Rotation: [0, 360], Size: [[0, 8], [1, 14, 2]], Color: [[0, '#ff9a50'], [1, '#c8603a']], LightEmission: 0.6, Transparency: [[0, 0.55], [1, 1]], ZOffset: -1 } },
+      { name: 'Embers', ref: 'Glowing ember dots and sparks', position: [0, 0, 0], part: { Size: [4, 4, 4] }, emits: [[0, 30]], rate: [[0.05, 0.6, 16]],
+        props: { Texture: 'spark', Shape: 'Sphere', Speed: [10, 34], Drag: 3, Acceleration: [0, -10, 0], Lifetime: [0.3, 0.45], Orientation: 'VelocityParallel', Size: [[0, 1.2, 0.4], [1, 0.3]], Color: [[0, '#fff2c0'], [0.4, '#ffa030'], [1, '#ff3a10']], LightEmission: 1, Brightness: 3 } },
+      { name: 'EmberDots', ref: 'Hot ember dots', position: [0, 0, 0], part: { Size: [6, 5, 4] }, rate: [[0.05, 0.55, 14]],
+        props: { Texture: 'bokeh', Shape: 'Box', Speed: [1, 4], Lifetime: [0.3, 0.45], Size: [[0, 0.5, 0.2], [0.3, 0.9, 0.3], [1, 0.2]], Color: '#ff7a30', LightEmission: 1, Brightness: 2.5 } },
     ],
   });
-  G.VFX_EFFECTS.KatanaFlurry = compose({ name: 'KatanaFlurry', version: 2, stage: STAGE3, note: 'Video 3: katana combo stacked from 7 parts' }, [
-    { part: 'BladeGlint', t: 0, at: [2.4, 7.2, -1.2], label: 'Blade glint' },
-    { part: 'WindSlashA', t: 0.06, at: [0.8, 3.2, -2.2], label: 'Cut 1' },
-    { part: 'InkSpikeBurst', t: 0.08, at: [0, 3.4, 0.6], label: 'Ink spikes' },
-    { part: 'DustKick', t: 0.06, at: [0, 0.8, 0], label: 'Dust' },
-    { part: 'RingSlash', t: 0.28, at: [0.4, 3.4, -1.6], label: 'Ring slash' },
-    { part: 'FireFlash', t: 0.55, at: [3.6, 5.2, -1.6], label: 'Fire flash' },
-    { part: 'BladeGlint', t: 0.86, at: [2.4, 7.2, -1.2], tag: 'BladeGlint2', label: 'Glint' },
-    { part: 'WindSlashB', t: 0.9, at: [0.4, 3.0, -2.0], label: 'Cut 2' },
-    { part: 'InkSpikeBurst', t: 0.9, at: [0, 3.4, 0.6], tag: 'InkSpikeBurst2', label: 'Ink spikes' },
-    { part: 'DustKick', t: 0.88, at: [0, 0.8, 0], tag: 'DustKick2', label: 'Dust' },
+  part({
+    name: 'RedPillar', previewAt: [0, 11, 0], duration: 0.5, stage: STAGE3, note: 'Wide red-orange light pillar dropping on the swordsman',
+    lights: [{ name: 'Pillar', position: [0, -7, 0], Color: '#ff6040', Range: 24, Brightness: [[0, 0], [0.02, 4], [0.4, 0]] }],
+    layers: [
+      mesh('Pillar', 'Red ForceField cylinder pillar', { mesh: 'cylinder', texture: 'm_beam', material: 'ForceField', color: '#ff2a2a', brightness: 0.9, fresnel: 1.8, position: [0, 0, 0], spin: 300, spawns: [0], life: 0.45, size: [[0, [1, 24, 1]], [0.15, [4, 24, 4], 'out'], [1, [3, 24, 3]]], transparency: [[0, 0], [0.6, 0.2], [1, 1]], scroll: [0, -2.5] }),
+      mesh('Core', 'Hot core', { mesh: 'cylinder', texture: 'm_solid', material: 'Neon', color: '#ff8070', brightness: 0.9, position: [0, 0, 0], spawns: [0], life: 0.4, size: [[0, [0.4, 24, 0.4]], [0.15, [1.6, 24, 1.6]], [1, [0.6, 24, 0.6]]], transparency: [[0, 0], [1, 1]] }),
+    ],
+  });
+  G.VFX_EFFECTS.KatanaFlurry = compose({ name: 'KatanaFlurry', version: 3, stage: STAGE3, duration: 2.0, note: 'Video 3: katana combo, one dominant element per beat' }, [
+    { part: 'BladeGlint', t: 0, at: [-2.6, 1.1, 0.8], label: '0.00 tip glint' },
+    { part: 'DustKick', t: 0, at: [0, 0.6, 0], label: 'dust' },
+    { part: 'BladeGlint', t: 0.07, at: [-0.4, 7.2, 0.3], scale: 1.2, tag: 'TopGlint', label: '0.07 glint (raised)' },
+    { part: 'InkSpray', t: 0.13, at: [-2.6, 2.6, 2.2], label: '0.13 black spray' },
+    { part: 'WindSheet', t: 0.13, at: [-0.6, 2.4, 0.8], label: '0.13 wind sheet' },
+    { part: 'DustKick', t: 0.13, at: [-1, 0.6, 0.5], tag: 'Dust2', label: 'dust' },
+    { part: 'BladeGlint', t: 0.2, at: [-4.8, 3.6, 1.6], scale: 1.5, tag: 'BigGlint', label: '0.20 big glint' },
+    { part: 'HeavyRing', t: 0.4, at: [-2.4, 4.2, 2.0], label: '0.40 ring slash' },
+    { part: 'FireFlash', t: 0.67, at: [3.4, 2.6, -1.2], label: '0.67 fire flash' },
+    { part: 'RedPillar', t: 1.4, at: [0, 11, 0], label: '1.40 red pillar' },
   ]);
 })(typeof window !== 'undefined' ? window : globalThis);

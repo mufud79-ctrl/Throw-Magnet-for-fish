@@ -2,3 +2,4 @@ node_modules/
 out/*/sheet.png
 out/*/page.png
 out/textures/_preview_*.png
+out/*/f_*.png

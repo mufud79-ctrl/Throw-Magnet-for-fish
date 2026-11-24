@@ -6,7 +6,7 @@ import sys
 import numpy as np
 from scipy import ndimage as ndi
 sys.path.insert(0, os.path.dirname(__file__))
-from craft import SS, ss, noise, levels, blur, mblur, polar, split, sheet, save_white, preview  # noqa: E402
+from craft import SS, ss, noise, tnoise, levels, blur, mblur, polar, split, sheet, save_white, preview  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(__file__), '..', 'out', 'textures')
 D = np.pi / 180
@@ -115,7 +115,7 @@ def spikes_profile(W, n, seed, lmin, lmax, sharp=6.0, jitter=0.4):
     return out
 
 
-def swirl_paint(i, seed, cell, r_in, r_out, density, streak_w, spin, grow, fade, band=None, along=0.12, spiral=0.0, clouds=0.0, gain=1.0):
+def swirl_paint(i, seed, cell, r_in, r_out, density, streak_w, spin, grow, fade, band=None, along=0.12, spiral=0.0, clouds=0.0, gain=1.0, soft=0.0):
     S = cell * SS
     H, W = 360, 1600
     v, u = np.mgrid[0:H, 0:W].astype(np.float32)
@@ -136,6 +136,8 @@ def swirl_paint(i, seed, cell, r_in, r_out, density, streak_w, spin, grow, fade,
         for r in range(H):
             I[r] = np.roll(I[r], int(spiral * W * (r / (H - 1)) ** 1.3))
     I = ndi.gaussian_filter1d(I, 7, axis=1, mode='wrap')
+    if soft:
+        I = ndi.gaussian_filter(I, (soft, soft * 4), mode='wrap')
     return polar(np.clip(I * gain, 0, 1.2), S, r_out, r_in, 0.0, 2 * np.pi)
 
 
@@ -384,6 +386,205 @@ def bokeh(i, cell=128):
     r = np.hypot(x, y)
     return np.clip(np.maximum(ss(0.3 - r, 0, 0.18), np.clip(1 - r / 0.92, 0, 1) ** 2.4 * 0.7), 0, 1)
 
+
+# ================================================================ readability heroes (frame-by-frame pass)
+def glass_orb(i, cell=256, seed=17):
+    """Glassy energy sphere: fresnel rim, swirling streaks inside, top-left highlight. Grows, holds, breaks."""
+    S = cell * SS
+    x, y = grid_xy(S)
+    k = seqv([0.45, 0.75, 0.92, 1, 1.02, 1.03, 1.03, 1.02, 1.0, 0.98, 0.96, 0.94, 0.92, 0.9, 0.88, 0.86], i)
+    fade = seqv([1, 1, 1, 1, 1, 1, 1, 0.95, 0.9, 0.82, 0.72, 0.6, 0.46, 0.32, 0.18, 0.06], i)
+    R = 0.86 * k
+    r = np.hypot(x, y) / R
+    a = np.arctan2(y, x)
+    sw = noise(S, S, S * 0.05, S * 0.3, seed + i // 2, 4)
+    # swirl streaks: sample noise along a twisted angle
+    tw = (a + r * 2.4 + i * 0.25) % (2 * np.pi)
+    streak = levels(noise(1, 2048, 1, 90, seed, 4)[0][(tw / (2 * np.pi) * 2047).astype(int)], 0.4, 0.95) * ss(1 - r, 0, 0.3)
+    inside = ss(1 - r, 0, 0.02)
+    rim = np.exp(-np.abs(1 - r) / 0.045) * (r < 1.04)
+    hi = np.exp(-np.hypot(x / R + 0.36, y / R - 0.42) / 0.12)
+    I = inside * (0.22 + 0.4 * streak * (0.6 + 0.6 * sw)) + rim * 0.85 + hi * 0.7
+    I *= ss(sw + fade * 1.3 - 0.6, 0, 0.25) if fade < 1 else 1
+    return np.clip(I * fade ** 0.3, 0, 1.2)
+
+
+def pillar(i, cell=512):
+    """Screen-filling cylinder flash (sprite stand-in for a cylinder mesh): navy column + glowing base ring."""
+    S = cell * SS
+    x, y = grid_xy(S)
+    w = 0.42
+    col = ss(w - np.abs(x), 0, 0.01) * ss(0.98 - y, 0, 0.02)
+    ey = -0.78 + np.sqrt(np.clip(1 - (x / w) ** 2, 0, 1)) * -0.1         # bottom ellipse edge
+    body = col * ss(y - ey, 0, 0.01)
+    shade = 0.3 + 0.08 * np.cos((x / w) * 1.4 + 0.6)
+    ring = np.exp(-np.abs(y - ey - 0.04) / 0.025) * col
+    cap = ss(ey - y + 0.0, 0, 0.01) * ss(y - (ey - 0.1), 0, 0.01) * col
+    I = body * shade + np.maximum(ring, cap) * 0.95
+    return np.clip(I, 0, 1)
+
+
+def wind_sheet(i, cell=256, seed=19):
+    """Broad smooth translucent sheet (katana afterimage): smooth body, bright cutting edge, faint streaks."""
+    S = cell * SS
+    H, W = 300, 1400
+    head = seqv([0.55, 0.9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], i)
+    tail = seqv([0, 0, 0, 0.05, 0.12, 0.21, 0.31, 0.42, 0.53, 0.63, 0.72, 0.8, 0.87, 0.93, 0.97, 1], i)
+    amp = seqv([0.7, 0.95, 1, 1, 0.95, 0.9, 0.82, 0.74, 0.65, 0.56, 0.47, 0.38, 0.3, 0.22, 0.14, 0.07], i)
+    v, u = np.mgrid[0:H, 0:W].astype(np.float32)
+    v /= H - 1
+    u /= W - 1
+    s = np.clip((u - tail) / max(0.05, head - tail), 0, 1)
+    win = ss((u - tail) / max(0.05, head - tail), 0, 0.06) * ss((head - u) / max(0.05, head - tail), 0, 0.02)
+    T = 0.95 * amp * np.maximum(np.sin(np.pi * s ** 0.8), 0) ** 0.5 + 1e-3
+    vv = v / T
+    st = noise(H, W, H * 0.06, W * 0.3, seed, 4)
+    body = ss(1 - vv, 0, 0.5) * (0.42 + 0.18 * st)
+    edge = np.exp(-vv / 0.06) * 0.55
+    I = (body + edge * ss(vv, -0.01, 0.0)) * win
+    return polar(mblur(np.clip(I, 0, 1), 3), S, 0.9, 0.9 - 0.7, 205 * D, 220 * D)
+
+
+def ink_smudge(i, cell=512, seed=73):
+    """Black smudgy spike spray to one side (behind the swordsman), motion-blurred outward."""
+    S = cell * SS
+    H, W = 400, 1400
+    g = [0.6, 1, 1, 0.85][i]
+    th = [1, 1, 0.7, 0.4][i]
+    L = spikes_profile(W, 46, seed, 0.35, 0.97, 3.5, 0.7) * g
+    vr = np.linspace(0, 1, H, dtype=np.float32)[:, None]
+    rr = 0.95 * (1 - vr)
+    m = ss(L[None, :] * th ** 0.4 - rr, 0, 0.05) * ss(rr - 0.05, 0, 0.05)
+    m += levels(noise(H, W, H * 0.3, W * 0.05, seed, 3), 0.5, 0.9) * ss(0.45 - rr, 0, 0.2) * 0.5 * th
+    m = ndi.gaussian_filter1d(m, 5, axis=0)                              # radial smear (soft, not crisp)
+    return polar(np.clip(m * 1.4, 0, 1), S, 0.95, 0.0, 215 * D, 190 * D)
+
+
+def light_column(i, cell=512):
+    S = cell * SS
+    x, y = grid_xy(S)
+    w = 0.13
+    I = np.exp(-(x / w) ** 2 * 2) * 0.7 + np.exp(-(x / (w * 0.3)) ** 2) * 0.5
+    I *= ss(0.97 - np.abs(y), 0, 0.25)
+    return np.clip(I, 0, 1)
+
+
+def heavy_ring(i, cell=256):
+    """Katana ring slash: heavy dark band, motion-blurred around, with white highlight streaks."""
+    return swirl_paint(i, 37, cell, 0.4, 0.92, 0.8, 0.14, -90, along=0.5, spiral=0.06, gain=1.5, band=0.22, clouds=0.85, soft=3.0,
+                       grow=[0.4, 0.8, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.7, 0.55, 0.4, 0.25, 0.12, 0.04],
+                       fade=[0.85, 1, 1, 1, 1, 0.95, 0.9, 0.84, 0.76, 0.66, 0.56, 0.46, 0.36, 0.26, 0.16, 0.08])
+
+
+# ================================================================ MESH textures (UV space, for ForceField / Ink MeshParts)
+# Image rows = v (row 0 = top = outer edge of a band / top of a cylinder), columns = u (along the arc / around).
+def _uv(S):
+    v, u = np.mgrid[0:S, 0:S].astype(np.float32)
+    return u / (S - 1), v / (S - 1)
+
+
+def m_slash(i, cell=1024, seed=201):
+    """Slash band: white-hot cutting edge on the outer rim, hair streaks fading inward, long thin tail, sharp head."""
+    S = cell * SS
+    u, v = _uv(S)
+    tail = ss(u, 0.0, 0.55) ** 1.3                       # thin long tail -> full body
+    head = ss(1 - u, 0.0, 0.06)                          # crisp head
+    depth = 0.12 + 0.88 * tail                           # how far inward the body reaches
+    vv = v / depth
+    st = tnoise(S, S, S * 0.012, S * 0.5, seed, 5)
+    st2 = tnoise(S, S, S * 0.04, S * 0.25, seed + 1, 4)
+    body = np.clip(1 - vv, 0, 1) ** 1.4 * (0.35 + 0.9 * levels(st, 0.3, 0.85))
+    edge = np.exp(-v / (0.035 * (0.4 + tail))) * 1.0
+    wisps = levels(st2, 0.6, 0.95, 1.5) * ss(1.3 - vv, 0, 0.6) * (vv > 0.3) * 0.6
+    I = (body + edge + wisps) * head * ss(u, 0, 0.02)
+    return np.clip(mblur(I, 4), 0, 1)
+
+
+def m_ink(i, cell=1024, seed=211):
+    """Black brush band: thick at the outer edge, needle ends, dry-brush split near the tail."""
+    S = cell * SS
+    u, v = _uv(S)
+    prof = np.maximum(np.sin(np.pi * np.clip(u, 0, 1) ** 1.3), 0) ** 1.1
+    T = 0.55 * prof + 1e-3
+    wob = (tnoise(1, S, 1, S * 0.2, seed, 3)[0] - 0.5) * 0.15
+    vv = (v - wob[None, :] * T) / T
+    m = ss(1 - vv, 0, 0.02) * ss(vv + 0.02, 0, 0.02)
+    hair = tnoise(S, S, S * 0.01, S * 0.4, seed + 2, 4)
+    m *= np.maximum(ss(u, 0.0, 0.35), ss(hair, 0.45, 0.52))
+    return np.clip(levels(mblur(m, 1.5), 0.3, 0.7), 0, 1)
+
+
+def m_swirl(i, cell=1024, seed=221):
+    """Sphere swirl: diagonal streaks + soft clouds, tileable in u (scroll along u to spin)."""
+    S = cell * SS
+    u, v = _uv(S)
+    st = tnoise(S, S, S * 0.03, S * 0.35, seed, 5)
+    cl = tnoise(S, S, S * 0.25, S * 0.25, seed + 1, 4)
+    shear = np.roll  # diagonal: shift each row
+    st = np.stack([np.roll(st[r], int(r * 0.9)) for r in range(S)])
+    I = levels(st, 0.48, 0.9, 1.3) * 0.9 + levels(cl, 0.45, 0.85) * 0.35
+    I *= ss(v, 0.02, 0.15) * ss(1 - v, 0.02, 0.15)      # fade at the poles
+    return np.clip(I, 0, 1)
+
+
+def m_wind(i, cell=1024, seed=231):
+    """Katana afterimage sheet: smooth translucent body, brighter cutting edge, faint long streaks."""
+    S = cell * SS
+    u, v = _uv(S)
+    tail = ss(u, 0.0, 0.7)
+    depth = 0.25 + 0.75 * tail
+    vv = v / depth
+    st = tnoise(S, S, S * 0.05, S * 0.5, seed, 4)
+    body = ss(1 - vv, 0, 0.6) * (0.55 + 0.25 * st)
+    edge = np.exp(-v / 0.05) * 0.45
+    I = (body + edge) * ss(1 - u, 0, 0.08) * ss(u, 0, 0.05)
+    return np.clip(I, 0, 1)
+
+
+def m_ringblur(i, cell=1024, seed=241):
+    """Torus/band ring slash, tileable in u: motion-blurred dark band (alpha)."""
+    S = cell * SS
+    u, v = _uv(S)
+    st = tnoise(S, S, S * 0.02, S * 0.6, seed, 5)
+    band = ss(v, 0.05, 0.3) * ss(1 - v, 0.05, 0.3)
+    I = band * (0.35 + 0.75 * levels(st, 0.35, 0.85))
+    return np.clip(I, 0, 1)
+
+
+def m_ringhi(i, cell=1024, seed=251):
+    """White highlight streaks for the ring slash (tileable in u)."""
+    S = cell * SS
+    u, v = _uv(S)
+    st = tnoise(S, S, S * 0.008, S * 0.5, seed, 4)
+    I = levels(st, 0.66, 0.95, 1.6) * ss(v, 0.1, 0.35) * ss(1 - v, 0.1, 0.35)
+    I += np.exp(-np.abs(v - 0.3) / 0.012) * 0.8 * levels(tnoise(1, S, 1, S * 0.15, seed + 1, 3)[0], 0.4, 0.7)[None, :]
+    return np.clip(I, 0, 1)
+
+
+def m_beam(i, cell=1024, seed=261):
+    """Beam surface: streaks running along the beam (v), tileable in u and v (scroll v to make it flow)."""
+    S = cell * SS
+    st = tnoise(S, S, S * 0.35, S * 0.02, seed, 5)       # long along rows-direction = along v
+    cl = tnoise(S, S, S * 0.2, S * 0.08, seed + 1, 4)
+    I = levels(st, 0.42, 0.9, 1.2) * 0.85 + levels(cl, 0.5, 0.9) * 0.4
+    return np.clip(I, 0, 1)
+
+
+def m_spiral(i, cell=1024, seed=271):
+    """Spiral ribbon: bright centre line with a soft streaky falloff (tileable in u)."""
+    S = cell * SS
+    u, v = _uv(S)
+    st = tnoise(S, S, S * 0.03, S * 0.4, seed, 4)
+    d = np.abs(v - 0.5)
+    I = np.exp(-d / 0.05) * 0.9 + ss(0.5 - d, 0, 0.35) * 0.45 * levels(st, 0.3, 0.9)
+    return np.clip(I, 0, 1)
+
+
+def m_solid(i, cell=512, seed=281):
+    """Near-solid with a slight noise (beam core, neon)."""
+    S = cell * SS
+    return np.clip(0.85 + (tnoise(S, S, S * 0.2, S * 0.05, seed, 3) - 0.5) * 0.4, 0, 1)
+
 # ================================================================ registry
 PAL = {
     'blue': {'glow': '#2f5bff', 'rim': '#14208a', 'mid': '#6f8cff', 'core': '#ffffff', 'bg': (0.05, 0.08, 0.19)},
@@ -407,6 +608,21 @@ RECIPES = {
     'blobs': dict(kind='layered', grid=4, fn=blobs, glow=8, th=(0.02, 0.1, 0.2, 0.3, 0.55, 0.85), pal='navy'),
     'fire_burst': dict(kind='layered', grid=4, fn=fire_burst, glow=14, th=(0.02, 0.12, 0.15, 0.4, 0.6, 0.95), pal='fire'),
     'star4': dict(kind='layered', grid=2, fn=star4, glow=12, th=B, pal='navy'),
+    'glass_orb': dict(kind='layered', grid=4, fn=glass_orb, glow=12, th=(0.03, 0.12, 0.16, 0.45, 0.62, 0.95), pal='blue'),
+    'pillar': dict(kind='layered', grid=1, fn=pillar, cell=512, glow=10, th=(0.02, 0.1, 0.2, 0.28, 0.6, 0.9), pal='navy'),
+    'wind_sheet': dict(kind='layered', grid=4, fn=wind_sheet, glow=6, th=(0.02, 0.12, 0.1, 0.4, 0.5, 0.85), pal='wind'),
+    'heavy_ring': dict(kind='layered', grid=4, fn=heavy_ring, glow=8, th=(0.03, 0.2, 0.25, 0.6, 0.7, 0.98), pal='dark'),
+    'ink_smudge': dict(kind='single', grid=2, fn=ink_smudge),
+    'light_column': dict(kind='single', grid=1, fn=light_column, cell=512),
+    'm_slash': dict(kind='single', grid=1, fn=m_slash, cell=1024),
+    'm_ink': dict(kind='single', grid=1, fn=m_ink, cell=1024),
+    'm_swirl': dict(kind='single', grid=1, fn=m_swirl, cell=1024),
+    'm_wind': dict(kind='single', grid=1, fn=m_wind, cell=1024),
+    'm_ringblur': dict(kind='single', grid=1, fn=m_ringblur, cell=1024),
+    'm_ringhi': dict(kind='single', grid=1, fn=m_ringhi, cell=1024),
+    'm_beam': dict(kind='single', grid=1, fn=m_beam, cell=1024),
+    'm_spiral': dict(kind='single', grid=1, fn=m_spiral, cell=1024),
+    'm_solid': dict(kind='single', grid=1, fn=m_solid, cell=512),
     'ink_arc': dict(kind='single', grid=4, fn=ink_arc),
     'ink_spikes': dict(kind='single', grid=2, fn=ink_spikes),
     'glint': dict(kind='single', grid=2, fn=glint, cell=256),
@@ -436,7 +652,7 @@ def build(name):
         pal = PAL[R.get('pal', 'blue')]
         preview(layers, pal, pal['bg'], os.path.join(OUT, f'_preview_{name}.png'))
     else:
-        a = sheet(frames, g, cell)
+        a = sheet(frames, g, cell, fade=not name.startswith('m_'))
         val = sheet(values, g, cell) if values is not None else None
         save_white(a, os.path.join(OUT, f'{name}.png'), val)
         bg = np.ones(a.shape + (3,), np.float32) * np.array([0.55, 0.62, 0.8], np.float32)

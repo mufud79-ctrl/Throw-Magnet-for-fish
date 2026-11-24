@@ -65,6 +65,8 @@
   const checkers = {};
   const ENVS = {
     sky: { label: 'Anime sky', sky: ['#3d8ae0', '#c8f0ff'], fog: '#7fb8ff', ground: '#ffffff', checker: ['#1b2440', '#141a30'], hemi: [0xbfd8ff, 0x202638, 0.85], sun: [0xffffff, 0.55], level: 0.8, fogNear: 90 },
+    cosmic: { label: 'Cosmic arena', sky: ['#1a5cc8', '#9ff4ff'], fog: '#3a8ad8', ground: '#ffffff', checker: ['#141a38', '#2a2032'], hemi: [0x8fa4ff, 0x101428, 0.55], sun: [0xffffff, 0.3], level: 0.6, fogNear: 70 },
+    stone: { label: 'Stone arena', sky: ['#3f9ae8', '#d6f6ff'], fog: '#9cc8e8', ground: '#ffffff', checker: ['#3e4146', '#36393e'], hemi: [0xd0e0ff, 0x2a2c30, 0.9], sun: [0xffffff, 0.6], level: 0.85, fogNear: 60 },
     night: { label: 'Night arena', sky: ['#0c1424', '#2a3446'], fog: '#202a3a', ground: '#ffffff', checker: ['#2c3038', '#24272e'], hemi: [0x8090b0, 0x1a1c22, 0.7], sun: [0xa0b0ff, 0.3], level: 0.5, fogNear: 70 },
     dusk: { label: 'Dusk arena', sky: ['#0f0c1c', '#3a2840'], fog: '#2c2034', ground: '#55515e', hemi: [0x8a80c0, 0x2a2430, 0.75], sun: [0xb0a0ff, 0.35], level: 0.55 },
     day: { label: 'Day baseplate', sky: ['#4f9cf0', '#cfe5ff'], fog: '#cfe5ff', ground: '#a3a2a5', hemi: [0xffffff, 0x7a7a80, 0.85], sun: [0xffffff, 0.6], level: 1 },
@@ -92,7 +94,7 @@
   const box = (w, h, d, x, y, z, col, parent, basic) => {
     const mat = col ? (basic ? new THREE.MeshBasicMaterial({ color: col }) : new THREE.MeshLambertMaterial({ color: col })) : dMat;
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-    m.position.set(x, y, z); m.userData.mat = m.material; (parent || dummy).add(m); parts.push(m); return m;
+    m.position.set(x, y, z); m.userData.mat = m.material; m.userData.base = m.material.color.getHex(); (parent || dummy).add(m); parts.push(m); return m;
   };
   box(1.2, 1.2, 1.2, 0, 4.6, 0);
   box(2, 1.9, 1, 0, 3.05, 0, 0x8a8890);
@@ -112,6 +114,7 @@
     dummy.position.fromArray(d.pos);
     dummy.lookAt(new THREE.Vector3().fromArray(d.face || [0, 0, 0]));
     dummy.rotateY(Math.PI); // R15 faces -Z (LookVector); three's lookAt points +Z at the target
+    parts.forEach((m) => { if (m !== blade && m.userData.mat.color) m.userData.mat.color.setHex(d.color ? new THREE.Color(d.color).getHex() : m.userData.base); });
     sword.visible = !!d.sword;
     blade.material.color.set(d.sword === 'fire' ? 0xffa040 : 0xdfe8f0);
     blade.scale.set(d.sword === 'katana' ? 0.6 : 1, d.sword === 'katana' ? 0.6 : 1, d.sword === 'katana' ? 1.3 : 1);
@@ -260,6 +263,7 @@
   const list = $('#layers'), ticks = $('#ticks'), beatList = $('#beats'), texGrid = $('#textures');
   let code = '';
   function describe(L) {
+    if (L.mesh) return `MeshPart ${L.mesh} · ${L.material || 'ForceField'} · spawn ${(L.spawns || [0]).map((x) => x.toFixed(2) + 's').join(', ')} · life ${L.life}s`;
     const p = L.props, bits = [];
     if (L.emits) bits.push(L.emits.map((e) => `Emit(${e[1]}) @${e[0].toFixed(2)}s`).join(', '));
     if (L.rate) bits.push(L.rate.map((r) => `Rate ${r[2]}/s ${r[0].toFixed(2)}–${r[1].toFixed(2)}s`).join(', '));
@@ -293,7 +297,7 @@
     });
     // layers: stacked heroes collapse into one row with 4 layer toggles
     const roles = [...new Set(FX.layers.map((l) => l.role))];
-    const soloAll = (pred) => sim.emitters.forEach((x, j) => { x.hidden = !pred(j); });
+    const soloAll = (pred) => sim.items.forEach((x, j) => { x.hidden = !pred(j); });
     roles.forEach((role) => {
       const h = document.createElement('h3'); h.textContent = role; list.appendChild(h);
       const seen = new Set();
@@ -310,8 +314,8 @@
         row.innerHTML = `<input type="checkbox" id="ly-${kid}" checked><label for="ly-${kid}"><span class="ln">${key}${L.stack ? ' <em>4 layers</em>' : ''}</span><span class="lm">${describe(L)}</span><span class="lr">${L.ref || ''}</span>${toggles}</label><button type="button" class="solo" aria-pressed="false">Solo</button>`;
         row.prepend(thumbWrap);
         const main = row.querySelector('#ly-' + kid);
-        main.onchange = () => { idx.forEach((j) => { sim.emitters[j].hidden = !main.checked; }); row.querySelectorAll('[data-j]').forEach((c) => (c.checked = main.checked)); };
-        row.querySelectorAll('[data-j]').forEach((c) => (c.onchange = () => { sim.emitters[+c.dataset.j].hidden = !c.checked; }));
+        main.onchange = () => { idx.forEach((j) => { sim.items[j].hidden = !main.checked; }); row.querySelectorAll('[data-j]').forEach((c) => (c.checked = main.checked)); };
+        row.querySelectorAll('[data-j]').forEach((c) => (c.onchange = () => { sim.items[+c.dataset.j].hidden = !c.checked; }));
         row.querySelector('.solo').onclick = (e) => {
           const on = e.target.getAttribute('aria-pressed') !== 'true';
           list.querySelectorAll('.solo').forEach((x) => x.setAttribute('aria-pressed', 'false'));

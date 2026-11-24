@@ -19,6 +19,7 @@ export function lint(fx, textureNames) {
     if (!isColor) for (const k of v) if ((k[2] || 0) < 0) errs.push(`${where}: negative envelope`);
   };
   for (const L of fx.layers) {
+    if (L.mesh) { if (!L.texture) errs.push(`${L.name}: mesh without texture`); if (!(L.life > 0)) errs.push(`${L.name}: mesh needs life`); continue; }
     const p = L.props, w = `${L.name}`;
     for (const k of Object.keys(p)) if (!PROPS.has(k)) errs.push(`${w}: unknown ParticleEmitter property ${k}`);
     for (const [k, vals] of Object.entries(ENUM)) if (p[k] !== undefined && !vals.includes(p[k])) errs.push(`${w}: ${k}=${p[k]} is not a valid enum`);

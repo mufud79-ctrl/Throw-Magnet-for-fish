@@ -25,7 +25,7 @@
   }
 
   function toLuau(fx) {
-    const tex = [...new Set(fx.layers.map((l) => l.props.Texture).filter(Boolean))];
+    const tex = [...new Set(fx.layers.map((l) => (l.mesh ? l.texture : l.props.Texture)).filter(Boolean))];
     const L = [];
     L.push(`-- ${fx.name} v${fx.version}: anime-style VFX`);
     L.push(`-- Hero elements are 4 stacked emitters (_glow/_rim/_mid/_core) on the same part with identical motion;`);
@@ -47,6 +47,7 @@
     L.push('');
     L.push('local LAYERS = {');
     for (const ly of fx.layers) {
+      if (ly.mesh) continue;
       L.push('\t{');
       L.push(`\t\tname = "${ly.name}", -- ${ly.role}: ${ly.ref || ''}`);
       L.push(`\t\toffset = ${v3(ly.position || [0, 0, 0])},`);
@@ -72,6 +73,23 @@
       L.push(`\t{ t = ${n(f.t)}, dur = ${n(f.dur)}, brightness = ${n(f.Brightness || 0)}, contrast = ${n(f.Contrast || 0)}, saturation = ${n(f.Saturation || 0)}, tint = Color3.fromHex("${f.TintColor || '#ffffff'}"), void = ${f.Void ? `Color3.fromHex("${f.Void}")` : 'nil'}, highlight = ${hl} },`);
     }
     L.push('}');
+    const meshes = fx.layers.filter((l) => l.mesh);
+    const mkeys = [...new Set(meshes.map((m) => G.VFXMeshes.key(m.mesh, m.meshArgs)))];
+    const kv = (keys, fn) => (Array.isArray(keys) && Array.isArray(keys[0]) ? `{ ${keys.map((k) => `{${n(k[0])}, ${fn(k[1])}}`).join(', ')} }` : `{ {0, ${fn(keys === undefined ? 0 : keys)}}, {1, ${fn(keys === undefined ? 0 : keys)}} }`);
+    const v3s = (v) => (Array.isArray(v) ? v3(v) : v3([v, v, v]));
+    L.push('-- Meshes: upload every OBJ in out/meshes/ (Asset Manager > Meshes) and paste the ids below.');
+    L.push('local MESHIDS = {');
+    for (const k of mkeys) L.push(`\t["${k}"] = "rbxassetid://0", -- out/meshes/${k}.obj`);
+    L.push('}');
+    L.push('local MESHES = {');
+    for (const m of meshes) {
+      const col = typeof m.color === 'string' || m.color === undefined ? m.color || '#ffffff' : m.color[0][1];
+      L.push(`\t{ name = "${m.name}", mesh = "${G.VFXMeshes.key(m.mesh, m.meshArgs)}", texture = TEXTURES.${m.texture}, material = "${m.material || 'ForceField'}", color = Color3.fromHex("${col}"),`);
+      L.push(`\t\toffset = ${v3(m.position || [0, 0, 0])}, rotation = ${v3(m.rotation || [0, 0, 0])}, spinAxis = ${v3(m.spinAxis || [0, 1, 0])}, spin = ${typeof m.spin === 'number' ? n(m.spin) : 0}, velocity = ${v3(m.velocity || [0, 0, 0])},`);
+      L.push(`\t\tspawns = { ${(m.spawns || [0]).map(n).join(', ')} }, life = ${n(m.life)}, size = ${kv(m.size, v3s)}, transparency = ${kv(m.transparency, n)} },`);
+    }
+    L.push('}');
+    L.push(`local GRADE = { ${(fx.grade || []).map((g) => `{ t = ${n(g[0])}, b = ${n(g[1])}, c = ${n(g[2])}, s = ${n(g[3])}, tint = Color3.fromHex("${g[4] || '#ffffff'}") }`).join(', ')} }`);
     L.push(`local SHAKES = { ${(fx.shakes || []).map((s) => `{ t = ${n(s.t)}, dur = ${n(s.dur)}, amp = ${n(s.amp)}, freq = ${n(s.freq)} }`).join(', ')} }`);
     L.push('');
     L.push(RUNTIME.replace('__DURATION__', n(fx.duration)).replace(/__NAME__/g, fx.name));
@@ -85,6 +103,47 @@
 		if t <= b[1] then return a[2] + (b[2] - a[2]) * (t - a[1]) / math.max(b[1] - a[1], 1e-6) end
 	end
 	return keys[#keys][2]
+end
+
+local function keyAt(keys, k)
+	if k <= keys[1][1] then return keys[1][2] end
+	for i = 2, #keys do
+		local a, b = keys[i - 1], keys[i]
+		if k <= b[1] then return a[2] + (b[2] - a[2]) * ((k - a[1]) / math.max(b[1] - a[1], 1e-6)) end
+	end
+	return keys[#keys][2]
+end
+
+local function playMesh(m, origin, folder)
+	for _, s0 in m.spawns do
+		task.delay(s0, function()
+			local p = Instance.new("Part")
+			p.Name = m.name
+			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch, p.CastShadow = true, false, false, false, false
+			p.Size = Vector3.new(0.05, 0.05, 0.05)
+			p.Color = m.color
+			p.Material = m.material == "Ink" and Enum.Material.SmoothPlastic or (m.material == "Neon" and Enum.Material.Neon or Enum.Material.ForceField)
+			local sm = Instance.new("SpecialMesh")
+			sm.MeshType = Enum.MeshType.FileMesh
+			sm.MeshId = MESHIDS[m.mesh]
+			sm.TextureId = m.texture
+			sm.VertexColor = Vector3.new(m.color.R, m.color.G, m.color.B)
+			sm.Parent = p
+			local r = m.rotation * math.pi / 180
+			local rot = CFrame.Angles(r.X, r.Y, r.Z)
+			p.Parent = folder
+			local t0 = os.clock()
+			local conn
+			conn = RunService.Heartbeat:Connect(function()
+				local age = os.clock() - t0
+				local k = age / m.life
+				if k >= 1 or not p.Parent then conn:Disconnect(); p:Destroy(); return end
+				sm.Scale = keyAt(m.size, k)
+				p.Transparency = keyAt(m.transparency, k)
+				p.CFrame = origin * CFrame.new(m.offset + m.velocity * age) * rot * CFrame.fromAxisAngle(m.spinAxis.Unit, math.rad(m.spin * age))
+			end)
+		end)
+	end
 end
 
 local M = {}
@@ -120,6 +179,8 @@ function M.Play(origin: CFrame, parent: Instance?)
 			task.delay(w[2], function() e.Enabled = false end)
 		end
 	end
+
+	for _, m in MESHES do playMesh(m, origin, folder) end
 
 	local lights = {}
 	for i, li in LIGHTS do
@@ -172,6 +233,15 @@ function M.Play(origin: CFrame, parent: Instance?)
 		if isClient then
 			local active
 			for _, f in FRAMES do if t >= f.t and t < f.t + f.dur then active = f end end
+			local g
+			for i = 2, #GRADE do
+				if t <= GRADE[i].t and t >= GRADE[i - 1].t then
+					local a, b = GRADE[i - 1], GRADE[i]
+					local e = (t - a.t) / math.max(b.t - a.t, 1e-6)
+					g = { b = a.b + (b.b - a.b) * e, c = a.c + (b.c - a.c) * e, s = a.s + (b.s - a.s) * e, tint = a.tint:Lerp(b.tint, e) }
+				end
+			end
+			if not active and g then active = { brightness = g.b, contrast = g.c, saturation = g.s, tint = g.tint } end
 			cc.Enabled = active ~= nil
 			void.Transparency = (active and active.void) and 0 or 1
 			if active then

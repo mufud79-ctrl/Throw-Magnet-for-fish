@@ -11,6 +11,7 @@ const here = path.dirname(new URL(import.meta.url).pathname);
 const read = (f) => fs.readFileSync(path.join(here, f), 'utf8');
 const effectFiles = fs.readdirSync(path.join(here, 'effects')).filter((f) => f.endsWith('.js')).sort();
 const ctx = {}; ctx.globalThis = ctx;
+vm.runInNewContext(read('engine/meshes.js'), ctx);
 vm.runInNewContext(read('engine/spec.js'), ctx);
 vm.runInNewContext(read('engine/luau.js'), ctx);
 for (const f of effectFiles) vm.runInNewContext(read('effects/' + f), ctx);
@@ -25,7 +26,8 @@ for (const [name, fx, outName] of all) {
   warn.forEach((w) => console.warn(`warn ${name}: ${w}`));
   errs.forEach((e) => console.error(`ERROR ${name}: ${e}`));
   if (errs.length) { failed = true; continue; }
-  const tex = [...new Set(fx.layers.map((l) => l.props.Texture))];
+  const tex = [...new Set(fx.layers.map((l) => (l.mesh ? l.texture : l.props.Texture)))];
+  for (const m of fx.layers.filter((l) => l.mesh)) { const k = ctx.VFXMeshes.key(m.mesh, m.meshArgs); fs.mkdirSync(path.join(here, 'out', 'meshes'), { recursive: true }); fs.writeFileSync(path.join(here, 'out', 'meshes', k + '.obj'), ctx.VFXMeshes.toOBJ(ctx.VFXMeshes.build(m.mesh, m.meshArgs), k)); }
   tex.forEach((t) => used.add(t));
   const dir = path.join(here, 'out', outName.includes('parts') ? 'parts' : name);
   fs.mkdirSync(dir, { recursive: true });
@@ -38,7 +40,7 @@ const texdata = {};
 for (const t of [...used].sort()) texdata[t] = 'data:image/png;base64,' + fs.readFileSync(path.join(texDir, t + '.png')).toString('base64');
 const scripts = [
   `window.VFX_TEXDATA = ${JSON.stringify(texdata)};`,
-  read('engine/spec.js'), read('engine/sim.js'), read('engine/luau.js'),
+  read('engine/meshes.js'), read('engine/spec.js'), read('engine/sim.js'), read('engine/luau.js'),
   ...effectFiles.map((f) => read('effects/' + f)),
   read('viewer/app.js'),
 ].map((s) => `<script>\n${s}\n</script>`).join('\n');

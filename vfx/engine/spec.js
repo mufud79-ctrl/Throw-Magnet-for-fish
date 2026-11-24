@@ -62,6 +62,16 @@
       if (!P) throw new Error('Unknown part ' + e.part);
       const t = e.t || 0, at = e.at || [0, 0, 0], k = e.scale || 1, tag = e.tag || e.part;
       for (const L of P.layers) {
+        if (L.mesh) {
+          const n = clone(L);
+          n.name = `${tag}.${L.name}`; n.role = tag; n.from = e.part;
+          n.position = add(at, mul(L.position || [0, 0, 0], k));
+          n.spawns = (L.spawns || [0]).map((s0) => Math.round((s0 + t) * 1e4) / 1e4);
+          if (k !== 1 && n.size !== undefined) n.size = typeof n.size === 'number' ? n.size * k : Array.isArray(n.size[0]) ? n.size.map((kp) => [kp[0], Array.isArray(kp[1]) ? kp[1].map((v) => v * k) : kp[1] * k].concat(kp.slice(2))) : n.size.map((v) => v * k);
+          n.props = { Texture: L.texture };
+          fx.layers.push(n);
+          continue;
+        }
         const n = clone(L);
         n.name = `${tag}.${L.name}`; n.role = tag; n.from = e.part;
         if (L.stack) n.stack = `${tag}.${L.stack}`;
@@ -79,6 +89,7 @@
       for (const li of P.lights || []) fx.lights.push(Object.assign(clone(li), { name: `${tag}.${li.name}`, position: add(at, mul(li.position, k)), Brightness: li.Brightness.map(([a, v]) => [a + t, v]).concat(t > 0 ? [] : []), Range: li.Range * k }));
       for (const f of P.impactFrames || []) fx.impactFrames.push(Object.assign(clone(f), { t: f.t + t }));
       for (const sh of P.shakes || []) fx.shakes.push(Object.assign(clone(sh), { t: sh.t + t }));
+      if (!base.grade && P.grade && !fx.grade) fx.grade = P.grade.map((g) => [g[0] + t].concat(g.slice(1)));
       fx.beats.push([t, e.label || tag]);
       fx.parts.push({ part: e.part, tag, t, at, scale: k });
       end = Math.max(end, t + P.duration);
@@ -88,5 +99,23 @@
     return fx;
   }
 
-  G.VFXSpec = { stack, steps, flicker, LAYERS, part, compose, PARTS };
+  // Euler XYZ degrees (= CFrame.Angles order) that rotate local +Y onto direction d (to aim a band/ring's face)
+  function faceRot(d) {
+    const l = Math.hypot(d[0], d[1], d[2]); const x = d[0] / l, y = d[1] / l, z = d[2] / l;
+    let ax = z, az = -x; const al = Math.hypot(ax, az);
+    const ang = Math.acos(Math.max(-1, Math.min(1, y)));
+    if (al < 1e-6) { ax = 1; az = 0; } else { ax /= al; az /= al; }
+    const c = Math.cos(ang), s = Math.sin(ang), t = 1 - c;
+    const m11 = t * ax * ax + c, m12 = -s * az, m13 = t * ax * az, m22 = c, m23 = -s * ax * -1 * -1, m33 = t * az * az + c;
+    // rotation matrix for axis (ax, 0, az): R = [[t ax^2 + c, -s az, t ax az], [s az, c, -s ax], [t ax az, s ax, t az^2 + c]]
+    const r23 = -s * ax;
+    const Y = Math.asin(Math.max(-1, Math.min(1, m13)));
+    const X = Math.abs(m13) < 0.9999 ? Math.atan2(-r23, m33) : 0;
+    const Z = Math.abs(m13) < 0.9999 ? Math.atan2(-m12, m11) : 0;
+    void m22; void m23;
+    const deg = 180 / Math.PI;
+    return [X * deg, Y * deg, Z * deg].map((v) => Math.round(v * 100) / 100);
+  }
+
+  G.VFXSpec = { stack, steps, flicker, LAYERS, part, compose, PARTS, faceRot };
 })(typeof window !== 'undefined' ? window : globalThis);

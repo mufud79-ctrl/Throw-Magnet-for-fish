@@ -95,14 +95,14 @@ def edge_fade(cell):
     return ss(0.97 - e, 0, 0.05)
 
 
-def sheet(frames, grid, cell_out):
+def sheet(frames, grid, cell_out, fade=True):
     """frames: list of 2D float arrays (supersampled cells) -> 2D sheet at output resolution."""
     S = cell_out * grid
     out = np.zeros((S, S), np.float32)
     for i, f in enumerate(frames):
         img = Image.fromarray(np.clip(f * 255, 0, 255).astype(np.uint8), 'L')
         img = img.resize((cell_out, cell_out), Image.LANCZOS)
-        a = np.asarray(img, np.float32) / 255 * edge_fade(cell_out)
+        a = np.asarray(img, np.float32) / 255 * (edge_fade(cell_out) if fade else 1)
         r, c = divmod(i, grid)
         out[r * cell_out:(r + 1) * cell_out, c * cell_out:(c + 1) * cell_out] = a
     return out
@@ -126,3 +126,24 @@ def preview(layers, pal, bg, path):
         out = out * (1 - a) + hexc(pal[k]) * a
     out += layers['core'][..., None] * hexc(pal['core'])
     Image.fromarray(np.clip(out * 255, 0, 255).astype(np.uint8)).save(path)
+
+
+def tnoise(h, w, sy, sx, seed, octaves=4, persist=0.55):
+    """Seamlessly TILEABLE noise (periodic in both axes) via FFT-filtered white noise.
+    sy, sx = feature size in pixels along rows / cols (anisotropic streaks: sy small, sx large)."""
+    rng = np.random.default_rng(seed)
+    fy = np.fft.fftfreq(h)[:, None]
+    fx = np.fft.fftfreq(w)[None, :]
+    out = np.zeros((h, w), np.float32)
+    amp, tot = 1.0, 0.0
+    for o in range(octaves):
+        wn = rng.standard_normal((h, w))
+        ay, ax = sy / 2 ** o / 3.0, sx / 2 ** o / 3.0
+        g = np.exp(-2 * np.pi ** 2 * ((fy * ay) ** 2 + (fx * ax) ** 2))
+        n = np.real(np.fft.ifft2(np.fft.fft2(wn) * g)).astype(np.float32)
+        n = (n - n.mean()) / (n.std() + 1e-6)
+        out += n * amp
+        tot += amp
+        amp *= persist
+    out /= tot
+    return np.clip(out * 0.22 + 0.5, 0, 1)

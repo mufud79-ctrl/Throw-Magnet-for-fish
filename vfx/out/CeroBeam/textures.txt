@@ -1,0 +1,14 @@
+out/textures/m_swirl.png
+out/textures/m_solid.png
+out/textures/m_slash.png
+out/textures/line.png
+out/textures/sparkle.png
+out/textures/m_beam.png
+out/textures/m_spiral.png
+out/textures/fire_burst_glow.png
+out/textures/fire_burst_rim.png
+out/textures/fire_burst_mid.png
+out/textures/fire_burst_core.png
+out/textures/spark.png
+out/textures/dust.png
+out/textures/glint.png

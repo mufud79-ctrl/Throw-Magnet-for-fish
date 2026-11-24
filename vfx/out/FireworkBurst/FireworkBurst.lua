@@ -949,6 +949,12 @@ local LIGHTS = {
 local FRAMES = {
 	{ t = 0.06, dur = 0.034, brightness = 0.25, contrast = 0.2, saturation = 0.1, tint = Color3.fromHex("#ffe8fa"), void = nil, highlight = nil },
 }
+-- Meshes: upload every OBJ in out/meshes/ (Asset Manager > Meshes) and paste the ids below.
+local MESHIDS = {
+}
+local MESHES = {
+}
+local GRADE = {  }
 local SHAKES = { { t = 0.07, dur = 0.4, amp = 0.6, freq = 26 } }
 
 local function track(keys, t)
@@ -958,6 +964,47 @@ local function track(keys, t)
 		if t <= b[1] then return a[2] + (b[2] - a[2]) * (t - a[1]) / math.max(b[1] - a[1], 1e-6) end
 	end
 	return keys[#keys][2]
+end
+
+local function keyAt(keys, k)
+	if k <= keys[1][1] then return keys[1][2] end
+	for i = 2, #keys do
+		local a, b = keys[i - 1], keys[i]
+		if k <= b[1] then return a[2] + (b[2] - a[2]) * ((k - a[1]) / math.max(b[1] - a[1], 1e-6)) end
+	end
+	return keys[#keys][2]
+end
+
+local function playMesh(m, origin, folder)
+	for _, s0 in m.spawns do
+		task.delay(s0, function()
+			local p = Instance.new("Part")
+			p.Name = m.name
+			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch, p.CastShadow = true, false, false, false, false
+			p.Size = Vector3.new(0.05, 0.05, 0.05)
+			p.Color = m.color
+			p.Material = m.material == "Ink" and Enum.Material.SmoothPlastic or (m.material == "Neon" and Enum.Material.Neon or Enum.Material.ForceField)
+			local sm = Instance.new("SpecialMesh")
+			sm.MeshType = Enum.MeshType.FileMesh
+			sm.MeshId = MESHIDS[m.mesh]
+			sm.TextureId = m.texture
+			sm.VertexColor = Vector3.new(m.color.R, m.color.G, m.color.B)
+			sm.Parent = p
+			local r = m.rotation * math.pi / 180
+			local rot = CFrame.Angles(r.X, r.Y, r.Z)
+			p.Parent = folder
+			local t0 = os.clock()
+			local conn
+			conn = RunService.Heartbeat:Connect(function()
+				local age = os.clock() - t0
+				local k = age / m.life
+				if k >= 1 or not p.Parent then conn:Disconnect(); p:Destroy(); return end
+				sm.Scale = keyAt(m.size, k)
+				p.Transparency = keyAt(m.transparency, k)
+				p.CFrame = origin * CFrame.new(m.offset + m.velocity * age) * rot * CFrame.fromAxisAngle(m.spinAxis.Unit, math.rad(m.spin * age))
+			end)
+		end)
+	end
 end
 
 local M = {}
@@ -993,6 +1040,8 @@ function M.Play(origin: CFrame, parent: Instance?)
 			task.delay(w[2], function() e.Enabled = false end)
 		end
 	end
+
+	for _, m in MESHES do playMesh(m, origin, folder) end
 
 	local lights = {}
 	for i, li in LIGHTS do
@@ -1045,6 +1094,15 @@ function M.Play(origin: CFrame, parent: Instance?)
 		if isClient then
 			local active
 			for _, f in FRAMES do if t >= f.t and t < f.t + f.dur then active = f end end
+			local g
+			for i = 2, #GRADE do
+				if t <= GRADE[i].t and t >= GRADE[i - 1].t then
+					local a, b = GRADE[i - 1], GRADE[i]
+					local e = (t - a.t) / math.max(b.t - a.t, 1e-6)
+					g = { b = a.b + (b.b - a.b) * e, c = a.c + (b.c - a.c) * e, s = a.s + (b.s - a.s) * e, tint = a.tint:Lerp(b.tint, e) }
+				end
+			end
+			if not active and g then active = { brightness = g.b, contrast = g.c, saturation = g.s, tint = g.tint } end
 			cc.Enabled = active ~= nil
 			void.Transparency = (active and active.void) and 0 or 1
 			if active then

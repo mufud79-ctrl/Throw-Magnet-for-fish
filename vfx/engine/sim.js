@@ -289,20 +289,108 @@
     return [v.x, v.y, v.z];
   }
 
+
+  // ---------------- MeshPart emulation (ForceField / Ink / Neon) ----------------
+  const MVERT = `
+    varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+    void main(){ vUv = uv; vec4 wp = modelMatrix * vec4(position,1.0);
+      vN = normalize(mat3(modelMatrix) * normal); vV = normalize(cameraPosition - wp.xyz);
+      gl_Position = projectionMatrix * viewMatrix * wp; }`;
+  // mode 0 = ForceField (additive, fresnel-boosted, texture drifts), 1 = Ink (alpha blend), 2 = Neon (solid additive)
+  const MFRAG = `
+    uniform sampler2D map; uniform vec3 color; uniform float alpha, bright, fres, mode; uniform vec2 offset, tile;
+    varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+    void main(){
+      vec4 t = texture2D(map, vUv * tile + offset);
+      float f = 1.0 - abs(dot(normalize(vN), normalize(vV)));
+      if (mode < 0.5) {
+        vec3 c = t.rgb * color * bright * alpha * (0.55 + fres * f * f + 0.45);
+        gl_FragColor = vec4(c, 0.0);
+      } else if (mode < 1.5) {
+        float a = t.a * alpha;
+        gl_FragColor = vec4(color * a, a);
+      } else {
+        gl_FragColor = vec4(color * bright * alpha * t.a, 0.0);
+      }
+    }`;
+  const MODES = { ForceField: 0, Ink: 1, Neon: 2 };
+  function evalKeys(keys, k, dflt) { // [[k, number|[x,y,z]], ...]
+    if (keys === undefined) return dflt;
+    if (!Array.isArray(keys) || !Array.isArray(keys[0])) return keys;
+    if (k <= keys[0][0]) return keys[0][1];
+    for (let i = 1; i < keys.length; i++) if (k <= keys[i][0]) {
+      const a = keys[i - 1], b = keys[i], t = (k - a[0]) / (b[0] - a[0] || 1), e = b[2] === 'in' ? t * t : b[2] === 'out' ? 1 - (1 - t) * (1 - t) : t;
+      return Array.isArray(a[1]) ? a[1].map((v, j) => v + (b[1][j] - v) * e) : a[1] + (b[1] - a[1]) * e;
+    }
+    return keys[keys.length - 1][1];
+  }
+  class MeshFX {
+    constructor(layer, sim) {
+      this.layer = layer; this.sim = sim;
+      const g = G.VFXMeshes.build(layer.mesh, layer.meshArgs);
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(g.P.flat(), 3));
+      geo.setAttribute('normal', new THREE.Float32BufferAttribute(g.N.flat(), 3));
+      geo.setAttribute('uv', new THREE.Float32BufferAttribute(g.UV.flat(), 2));
+      geo.setIndex(g.I);
+      this.geo = geo;
+      const mode = MODES[layer.material || 'ForceField'];
+      this.mode = mode;
+      this.inst = (layer.spawns || [0]).map(() => {
+        const mat = new THREE.ShaderMaterial({
+          uniforms: { map: { value: sim.texture(layer.texture, true) }, color: { value: new THREE.Color(1, 1, 1) }, alpha: { value: 1 }, bright: { value: layer.brightness || 1 }, fres: { value: layer.fresnel === undefined ? 1.2 : layer.fresnel }, mode: { value: mode }, offset: { value: new THREE.Vector2() }, tile: { value: new THREE.Vector2(...(layer.tile || [1, 1])) } },
+          vertexShader: MVERT, fragmentShader: MFRAG, transparent: true, depthWrite: false, side: THREE.DoubleSide,
+          blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
+        });
+        const m = new THREE.Mesh(geo, mat);
+        m.frustumCulled = false; m.visible = false; m.renderOrder = 5 + (layer.order || 0) * 0.01 + (layer.z || 0);
+        sim.scene.add(m);
+        return m;
+      });
+      const R = layer.rotation || [0, 0, 0];
+      this.base = new THREE.Quaternion().setFromEuler(new THREE.Euler(R[0] * DEG, R[1] * DEG, R[2] * DEG, 'XYZ'));
+      this.axis = new THREE.Vector3(...(layer.spinAxis || [0, 1, 0])).normalize();
+      this.hidden = false;
+    }
+    draw(t) {
+      const L = this.layer, life = L.life || 0.5;
+      (L.spawns || [0]).forEach((s0, i) => {
+        const m = this.inst[i], age = t - s0;
+        if (age < 0 || age >= life || this.hidden) { m.visible = false; return; }
+        const k = age / life, u = m.material.uniforms;
+        const sz = evalKeys(L.size, k, 1), sc = Array.isArray(sz) ? sz : [sz, sz, sz];
+        m.scale.set(sc[0], sc[1], sc[2]);
+        const P0 = L.position || [0, 0, 0], V = L.velocity || [0, 0, 0];
+        m.position.set(P0[0] + V[0] * age, P0[1] + V[1] * age, P0[2] + V[2] * age);
+        const spin = typeof L.spin === 'number' ? L.spin * age : evalKeys(L.spin, k, 0);
+        m.quaternion.copy(this.base).multiply(new THREE.Quaternion().setFromAxisAngle(this.axis, spin * DEG));
+        u.alpha.value = Math.max(0, 1 - evalKeys(L.transparency, k, 0));
+        const c = typeof L.color === 'string' || L.color === undefined ? hex(L.color || '#ffffff') : evalCol(L.color, k);
+        u.color.value.setRGB(c[0], c[1], c[2]);
+        const sc2 = L.scroll || [0, 0];
+        u.offset.value.set(sc2[0] * age, sc2[1] * age);
+        m.visible = true;
+      });
+    }
+    dispose() { for (const m of this.inst) { this.sim.scene.remove(m); m.material.dispose(); } this.geo.dispose(); }
+  }
+
   class Sim {
     constructor(effect, scene) {
       this.fx = effect; this.scene = scene; this.texCache = {}; this.pending = [];
-      this.emitters = effect.layers.map((L, i) => {
+      this.emitters = []; this.meshes = []; this.items = [];
+      effect.layers.forEach((L, i) => {
+        if (L.mesh) { const m = new MeshFX(Object.assign({ order: i }, L), this); this.meshes.push(m); this.items.push(m); return; }
         const e = new Emitter(Object.assign({ order: i }, L), this, 1000 + i * 7919);
-        scene.add(e.mesh);
-        return e;
+        scene.add(e.mesh); this.emitters.push(e); this.items.push(e);
       });
       this.reset();
     }
-    texture(name) {
+    texture(name, repeat) {
       if (!name) return null;
-      if (this.texCache[name]) return this.texCache[name];
+      if (this.texCache[name]) { if (repeat) { const c = this.texCache[name]; c.wrapS = c.wrapT = THREE.RepeatWrapping; c.needsUpdate = true; } return this.texCache[name]; }
       const t = new THREE.Texture();
+      if (repeat) t.wrapS = t.wrapT = THREE.RepeatWrapping;
       t.premultiplyAlpha = true; t.anisotropy = 4;
       t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
       const src = G.VFX_TEXDATA && G.VFX_TEXDATA[name];
@@ -315,7 +403,7 @@
       }
       return (this.texCache[name] = t);
     }
-    dispose() { for (const e of this.emitters) { this.scene.remove(e.mesh); e.mesh.geometry.dispose(); e.mat.dispose(); } }
+    dispose() { for (const e of this.emitters) { this.scene.remove(e.mesh); e.mesh.geometry.dispose(); e.mat.dispose(); } for (const m of this.meshes) m.dispose(); }
     reset() { this.t = 0; this.prev = -1e-6; for (const e of this.emitters) e.reset(); }
     step(dt) {
       const t1 = this.t + dt;
@@ -330,14 +418,22 @@
       // t = 0 emits happen on the first step
       while (this.t < t - 1e-9) this.step(Math.min(dt, t - this.t));
     }
-    draw(cam, lightLevel) { for (const e of this.emitters) e.draw(cam, lightLevel); }
-    count() { return this.emitters.reduce((s, e) => s + e.parts.length, 0); }
+    draw(cam, lightLevel) { for (const e of this.emitters) e.draw(cam, lightLevel); for (const m of this.meshes) m.draw(this.t); }
+    count() { return this.emitters.reduce((s, e) => s + e.parts.length, 0) + this.meshes.reduce((s, m) => s + m.inst.filter((x) => x.visible).length, 0); }
 
     // ---- non-particle tracks: light, color correction, impact frames, shake ----
     post(t) {
       const fx = this.fx, out = { lights: [], cc: { b: 0, c: 0, s: 0, tint: [1, 1, 1] }, highlight: null, shake: [0, 0, 0], sky: null };
       for (const L of fx.lights || []) out.lights.push({ L, brightness: Math.max(0, track(L.Brightness, t)) });
       if (fx.stage && fx.stage.swing) out.swing = track(fx.stage.swing, t);
+      if (fx.grade && fx.grade.length) {
+        const g = fx.grade, at = (j) => g[j];
+        let a = g[0], b = g[0], k = 0;
+        for (let j = 1; j < g.length; j++) if (t <= g[j][0]) { a = g[j - 1]; b = g[j]; k = (t - a[0]) / (b[0] - a[0] || 1); break; } else { a = b = g[j]; }
+        const ta = hex(a[4] || '#ffffff'), tb = hex(b[4] || '#ffffff'), L = (x, y) => x + (y - x) * k;
+        out.cc = { b: L(a[1], b[1]), c: L(a[2], b[2]), s: L(a[3], b[3]), tint: [L(ta[0], tb[0]), L(ta[1], tb[1]), L(ta[2], tb[2])] };
+        void at;
+      }
       for (const f of fx.impactFrames || []) {
         if (t >= f.t && t < f.t + f.dur) {
           out.cc = { b: f.Brightness || 0, c: f.Contrast || 0, s: f.Saturation || 0, tint: hex(f.TintColor || '#ffffff') };

@@ -28,7 +28,11 @@ await page.evaluate(async (n) => { await VFX.ready; await VFX.load(n); }, name);
 if (errors.length) console.error('PAGE ERRORS:\n' + errors.join('\n'));
 const dur = await page.evaluate(() => VFX.sim.fx.duration);
 const ts = times ? times.split(',').map(Number) : Array.from({ length: 12 }, (_, i) => +((0.05 + (i / 11) * (dur - 0.15)).toFixed(2)));
-if (mode === 'shot') {
+if (mode === 'frames') {
+  const shots = await page.evaluate(({ ts, env }) => { if (env) VFX.setEnv(env); const src = document.querySelector('#vp'); return ts.map((t) => { VFX.frame(t); return src.toDataURL('image/png'); }); }, { ts, env });
+  shots.forEach((u, k) => fs.writeFileSync(path.join(dir, `f_${ts[k].toFixed(2)}.png`), Buffer.from(u.split(',')[1], 'base64')));
+  console.log('frames', shots.length);
+} else if (mode === 'shot') {
   await page.evaluate((t) => VFX.frame(t), ts[0]);
   await page.screenshot({ path: path.join(dir, 'page.png') });
   console.log(path.join(dir, 'page.png'));

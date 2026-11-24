@@ -57,6 +57,34 @@ pip install scipy       # photo-craft needs numpy + scipy + Pillow
    if the path changed). Ask for feedback by effect, layer name or beat time.
 8. **Commit** the specs, `paint.js`, `out/textures/*.png`, `out/lab.html` and `out/*/*.lua`. Sheets are gitignored.
 
+## Why sprite-only effects never matched the references (read this first)
+
+Frame-by-frame comparison against the user's clips found three structural gaps:
+1. **Top Roblox VFX are built on MeshParts.** Spinning spheres, slash bands wrapping around the
+   character in perspective, afterimage sheets, ring slashes, cylinders and beams are meshes,
+   usually **ForceField material** (additive, fresnel-bright edges, animated texture) or dark
+   alpha meshes for ink. Particles are the secondary layer (sparks, glints, dust, flecks).
+   Use mesh layers (`mesh: 'sphere'|'band'|'torus'|'cylinder'|'cone'|'spiral'`,
+   `material: 'ForceField'|'Ink'|'Neon'`, `size`/`transparency`/`spin` keys, `scroll`,
+   `velocity`, `spawns`, `life`), with textures painted in UV space (`m_*` in craft/textures.py,
+   tileable via `tnoise`). `faceRot(dir)` aims a band at the camera. The build writes
+   `out/meshes/*.obj`; the Luau spawns them as Part + SpecialMesh (FileMesh) at runtime.
+2. **The world is colour-graded during the move** (`grade: [[t, brightness, contrast, saturation, '#tint'], ...]`
+   becomes a ColorCorrection in Luau). Keep the sky readable and the floor dark and contrasty.
+   Don't tint everything flat.
+3. **One dominant element per beat, held 1–2 frames for cuts** (cylinder flash, spike crown,
+   rift). Long holds turn graphic accents into clutter.
+
+Value rules learned the hard way:
+- Additive meshes stack fast. Hero body ForceField brightness ~0.7–1.0, inner layers ~0.35–0.6.
+  Neon cores stay thin. Point lights ≤ ~4, or they flood the floor.
+- Every heavy element needs a dark partner (an Ink mesh or ink particles) for readability.
+
+**Mandatory review loop:** extract reference frames at the beats (`ffmpeg -ss t -frames:v 1`),
+render yours at matched times (`node headless.mjs <Name> frames t1,t2,...`), build a side-by-side
+grid (`vfx/compare.py`: REF left, MINE right), list every difference, and fix the cause,
+not the symptom.
+
 ## Target style: Roblox battlegrounds VFX (user's reference clips)
 
 The user rejected flat cel cartoon shapes with thick outlines ("generic slop"). The approved
