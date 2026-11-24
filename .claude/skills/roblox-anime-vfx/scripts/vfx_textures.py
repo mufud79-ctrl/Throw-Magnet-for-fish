@@ -707,6 +707,412 @@ def palm_strike():
     return art("palm_strike")
 
 
+
+# ================================================================ ELEMENT TEXTURES (each element gets its own painted matter)
+def _ballistic(o, ang, speed, g, s):
+    return (o[0] + math.cos(ang) * speed * s, o[1] + math.sin(ang) * speed * s - 0.5 * g * s * s)
+
+
+def _jets(x, y, o, tend, reach, t, g, tear_after, thin_k, steps=16):
+    cs = []
+    for ang, sp, r0 in tend:
+        for k in range(steps + 1):
+            sk = k / steps * reach
+            px, py = _ballistic(o, ang, sp, g, sk)
+            rad = r0 * (1 - 0.7 * sk) ** 0.8 * (1 - thin_k * t)
+            if t > tear_after and k > steps * 0.62:
+                if k % 3:
+                    continue
+                rad *= 1.3
+            cs.append((px, py, rad))
+    return cs
+
+
+def magma_splash(n=16, seed=201):
+    """Molten crown: thick globby jets flung up out of a bulging pool, tips tearing into globs, a cracked
+    crust creeping over the mass as it cools and sags. Layered (hot inside, cooling crust outside)."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    o = (0.0, -0.8)
+    tend = [(math.radians(rng.uniform(62, 118)), rng.uniform(1.7, 2.2), rng.uniform(0.11, 0.17)) for _ in range(7)]
+    crust = noise(S, S, 22, 22, seed + 1, 4)
+    edge = noise(S, S, 46, 46, seed + 2, 3)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        reach = ease_out(t / 0.42, 2)
+        pool = [(o[0], o[1] + 0.05, 0.42 * (1 - 0.3 * t)), (o[0] - 0.3, o[1], 0.26), (o[0] + 0.3, o[1], 0.26)]
+        cs = pool + _jets(x, y, o, tend, reach, t, 2.6, 0.35, 0.4)
+        xw, yw = x + (edge - 0.5) * 0.06, y + (edge - 0.5) * 0.06
+        F = lobes(xw, yw, cs, 1.25)
+        H = F - 0.25
+        edgeA = ss(H, 0.0, 0.04)
+        dist = ndi.distance_transform_edt(H > 0)
+        depth = 1 - np.exp(-dist / (S * 0.04))
+        vol = shade(blur(F, 4), light=(-0.4, 0.8, 0.5), strength=60)
+        cracks = ss(np.abs(crust - 0.5), 0.03, 0.0) * ss(t, 0.2, 0.65)
+        I = edgeA * (0.22 + 0.78 * depth) * (0.65 + 0.45 * vol) * (1.05 - 0.5 * t) * (1 - 0.65 * cracks)
+        frames.append(np.clip(I, 0, 1))
+    return frames
+
+
+def lava_drops(n=16, seed=211):
+    """16 molten globs (FlipbookStartRandom): smooth blobs glowing from the centre, laced with dark cooling
+    veins. Shaded."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    alphas, vals = [], []
+    for i in range(n):
+        el = rng.uniform(1.0, 1.7)
+        rot = rng.uniform(0, TAU)
+        xr, yr = x * math.cos(rot) - y * math.sin(rot), x * math.sin(rot) + y * math.cos(rot)
+        nz = noise(S, S, 90, 90, seed * 7 + i, 2)
+        d = np.hypot(xr / (0.42 * el), yr / 0.42) + (nz - 0.5) * 0.22
+        m = ss(d, 1.0, 0.95)
+        depth = levels(1 - d, 0.0, 0.75)
+        vein = ss(np.abs(noise(S, S, 34, 34, seed * 11 + i, 3) - 0.5), 0.045, 0.0) * ss(depth, 0.7, 0.1)
+        alphas.append(np.clip(np.maximum(m, blur(m, S * 0.03) * 0.3), 0, 1))
+        vals.append(np.clip(np.where(m > 0.5, (0.55 + 0.45 * depth) * (1 - 0.5 * vein), 0.55), 0, 1))
+    return alphas, vals
+
+
+def light_burst(n=16, seed=221):
+    """Radiant light explosion: hot core, a dense fan of sharp rays of mixed length, a thin expanding
+    ring and a few glints riding the rays. Layered."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    rays = [(rng.uniform(0, TAU), rng.uniform(0.35, 1.0), rng.uniform(0.006, 0.03)) for _ in range(44)]
+    glints = [(rng.uniform(0, TAU), rng.uniform(0.3, 0.7), rng.uniform(0.04, 0.08)) for _ in range(9)]
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        g = ease_out((i + 1) / 3, 2)
+        thin = (1 - t) ** 1.4
+        F = np.zeros_like(x)
+        for ang, L, w in rays:
+            da = np.abs(np.angle(np.exp(1j * (a - ang))))
+            Lk = L * g
+            wd = w * thin * (1 - np.clip(r / Lk, 0, 1)) ** 0.9 + 0.001
+            F = np.maximum(F, ss(da * (r + 0.05), wd, wd * 0.2) * (r < Lk) * (0.6 + 0.4 * (L > 0.7)))
+        core = ss(r, 0.1 + 0.12 * g * thin, 0.02) * (0.4 + 0.6 * thin)
+        rr = 0.15 + 0.8 * ease_out(t / 0.6, 2)
+        ring = ss(np.abs(r - rr), 0.02 + 0.02 * t, 0.003) * (1 - t) * 0.8
+        gl = np.zeros_like(x)
+        if 0.15 < t < 0.8:
+            for ang, rad, sz in glints:
+                gx, gy = math.cos(ang) * rad, math.sin(ang) * rad
+                gr, ga = polar_of(x - gx, y - gy)
+                arm = np.minimum(np.abs(np.sin(ga)), np.abs(np.cos(ga)))
+                gl = np.maximum(gl, ss(arm * gr, 0.012 * (1 - np.clip(gr / sz, 0, 1)) + 0.002, 0.0) * (gr < sz))
+        frames.append(np.clip(np.maximum.reduce([F, core, ring, gl * (1 - abs(t - 0.45) * 2)]), 0, 1))
+    return frames
+
+
+def shock_ripple(n=16, seed=231):
+    """Quake air ripples: three thin, broken concentric rings launched one after another, each with a crisp
+    leading edge and a streaky trailing fade. Layered."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    H, W = 64, 1024
+    gaps = [tnoise(H, W, 40, 120, seed + k, 3)[H // 2] for k in range(3)]
+    st = tnoise(H, W, 6, 60, seed + 9, 3)[H // 2]
+    ai = ((a + math.pi) / TAU * (W - 1)).astype(int)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        F = np.zeros_like(x)
+        for k in range(3):
+            tk = (t - k * 0.12) / 0.7
+            if tk <= 0 or tk >= 1:
+                continue
+            rk = 0.1 + 0.85 * ease_out(tk, 2)
+            seg = levels(gaps[k][ai], 0.32, 0.6)
+            lead = ss(r, rk + 0.012, rk - 0.004) * ss(r, rk - 0.09, rk - 0.004)
+            trail = levels(1 - (rk - r) / 0.09, 0, 1) * (r < rk) * (r > rk - 0.09)
+            F = np.maximum(F, (lead * 0.95 + trail * 0.45 * (0.5 + 0.5 * st[ai])) * seg * (1 - tk) ** 0.8)
+        frames.append(np.clip(F, 0, 1))
+    return frames
+
+
+def _shard_poly(c, ang, L, w, base=0.05):
+    ca, sa = math.cos(ang), math.sin(ang)
+    px, py = -sa, ca
+    b0 = (c[0] + ca * base, c[1] + sa * base)
+    mid = (c[0] + ca * (base + L * 0.35), c[1] + sa * (base + L * 0.35))
+    tip = (c[0] + ca * (base + L), c[1] + sa * (base + L))
+    left = (mid[0] + px * w, mid[1] + py * w)
+    right = (mid[0] - px * w, mid[1] - py * w)
+    return [b0, left, tip], [b0, tip, right]
+
+
+def _to_px(pts, size):
+    return [((p[0] + 1) / 2 * size, (1 - (p[1] + 1) / 2) * size) for p in pts]
+
+
+def ice_burst(n=16, seed=241):
+    """Faceted ice shards bursting from a frost core: shards shoot out (lit / shadow halves = painted
+    facets, bright edges), then crack into fragments that drift and fade. Layered."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    r, _ = polar_of(x, y)
+    shards = [(rng.uniform(0, TAU), rng.uniform(0.45, 0.85), rng.uniform(0.05, 0.1)) for _ in range(13)]
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        g = ease_out((i + 1) / 3, 2)
+        crack = max(0.0, (t - 0.35) / 0.65)
+        lit = np.zeros_like(x)
+        dark = np.zeros_like(x)
+        for ang, L, w in shards:
+            Lk, wk = L * g * (1 - 0.2 * crack), w * (1 - 0.3 * crack)
+            pieces = 1 if crack <= 0 else 3
+            for p in range(pieces):
+                off = crack * 0.22 * (p + 1) / pieces
+                seg_l = Lk / pieces
+                c = (math.cos(ang) * (off + p * seg_l), math.sin(ang) * (off + p * seg_l))
+                A, B = _shard_poly(c, ang + rng.uniform(-0.05, 0.05) * crack, seg_l * (0.92 if pieces > 1 else 1), wk, base=0.04 if p == 0 else 0.0)
+                lit = np.maximum(lit, _poly_mask(_to_px(A, S), S))
+                dark = np.maximum(dark, _poly_mask(_to_px(B, S), S))
+        m = np.maximum(lit, dark)
+        edge = np.clip(m - ndi.grey_erosion(m, size=(5, 5)), 0, 1)
+        core = ss(r, 0.18 * (1 - 0.6 * t) + 0.02, 0.0) * (1 - t)
+        mist = blur(ss(r, 0.35, 0.05), S * 0.02) * (1 - t) * 0.45
+        I = np.maximum.reduce([lit * 0.82, dark * 0.55, edge * 0.95, core, mist]) * (1 - 0.65 * crack ** 1.5)
+        frames.append(np.clip(blur(I, 1.0), 0, 1))
+    return frames
+
+
+def frost_mist(n=16, seed=251):
+    """Curling cold mist: soft wisps swirled by a domain warp that winds tighter toward the centre, expanding
+    and thinning out. Shaded (soft alpha, cool highlights)."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    base = noise(S, S, 70, 70, seed, 4)
+    fine = noise(S, S, 24, 24, seed + 1, 3)
+    alphas, vals = [], []
+    for i in range(n):
+        t = i / (n - 1)
+        g = 0.45 + 0.55 * ease_out(t / 0.6)
+        tw = (1.6 - r) * (0.8 + 1.2 * t)
+        xs = x * np.cos(tw) - y * np.sin(tw)
+        ys = x * np.sin(tw) + y * np.cos(tw)
+        f = pc.sample(base, np.clip(xs / g, -1, 1), np.clip(ys / g, -1, 1))
+        wisps = levels(f + (fine - 0.5) * 0.3, 0.42 + 0.25 * t, 0.75)
+        A = wisps * ss(r, 0.95 * g, 0.4 * g) * (1 - 0.6 * t)
+        alphas.append(np.clip(A * 0.85, 0, 1))
+        vals.append(np.clip(0.78 + 0.22 * levels(f, 0.5, 0.9), 0, 1))
+    return alphas, vals
+
+
+def ice_chips(n=16, seed=261):
+    """16 crystal chips (FlipbookStartRandom): faceted shards with a lit and a shadow face and a bright edge. Shaded."""
+    rng = np.random.default_rng(seed)
+    alphas, vals = [], []
+    for i in range(n):
+        ang = rng.uniform(0, TAU)
+        A, B = _shard_poly((-math.cos(ang) * 0.4, -math.sin(ang) * 0.4), ang, rng.uniform(0.7, 0.95), rng.uniform(0.12, 0.25), base=0.0)
+        la, lb = _poly_mask(_to_px(A, S), S), _poly_mask(_to_px(B, S), S)
+        m = blur(np.maximum(la, lb), 1.2)
+        edge = np.clip(m - ndi.grey_erosion(m, size=(7, 7)), 0, 1)
+        alphas.append(np.clip(np.maximum(m, blur(m, S * 0.03) * 0.35), 0, 1))
+        vals.append(np.clip(np.where(m > 0.4, np.maximum(la * 1.0 + lb * 0.68, edge), 0.7), 0, 1))
+    return alphas, vals
+
+
+def void_smoke(n=16, seed=271):
+    """Inky void tendrils: spiral arms of ragged smoke unwinding outward from a dense centre, then shredding
+    into wisps. Layered (paint the core dark and the fringe glowing with the kit colours)."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    nz = noise(S, S, 40, 40, seed, 4)
+    nz2 = noise(S, S, 90, 90, seed + 1, 3)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        g = 0.3 + 0.7 * ease_out(t / 0.55)
+        arms = np.cos(5 * (a + 2.4 * r - 1.6 * t) + (nz2 - 0.5) * 3)
+        body = levels(arms, 0.1 - 0.4 * (1 - r / g), 0.8) * ss(r, g, g * 0.55)
+        center = ss(r, 0.35 * g, 0.0)
+        F = np.maximum(body, center) + (nz - 0.5) * 0.35
+        diss = max(0.0, (t - 0.4) / 0.6)
+        F = F - diss * 0.7
+        I = levels(F, 0.18, 0.95, 0.9)
+        frames.append(np.clip(I, 0, 1))
+    return frames
+
+
+def void_orb(n=16, seed=281):
+    """Black-hole accretion (loop): spiral arms draining into a bright event-horizon ring, hollow centre
+    (pair with a black Neon sphere). Angle-periodic, seamless loop. Layered."""
+    H, W = 256, 1024
+    sw = tnoise(H, W, 30, 220, seed, 4)
+    v = np.linspace(0, 1, H)[:, None]          # 0 = outer (r=0.98), 1 = centre
+    rr = 0.98 * (1 - v)
+    frames = []
+    for i in range(n):
+        o = int(W * i / n)
+        u = np.linspace(0, 1, W)[None, :]
+        spiral = np.cos((u * 3 + rr * 4.0) * TAU - i / n * TAU * 3)
+        arms = levels(spiral + (np.roll(sw, -o, axis=1) - 0.5) * 1.2, 0.2, 1.0) * ss(rr, 0.9, 0.5) * ss(rr, 0.25, 0.34)
+        horizon = ss(np.abs(rr - 0.3), 0.05, 0.008)
+        I = np.clip(np.maximum(arms * 0.75, horizon) * (rr > 0.22), 0, 1)
+        frames.append(pc.polar_strip(I, S, 0.98, 0.0, 0.0, TAU))
+    return frames
+
+
+def electric_burst(n=16, seed=291):
+    """Electric discharge: short jagged arcs fire out of a flash in all directions, re-strike along similar
+    paths every two frames, then flicker out. Layered."""
+    rng = np.random.default_rng(seed)
+    dirs = [rng.uniform(0, TAU) for _ in range(11)]
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        fr = np.random.default_rng(seed * 50 + i // 2)
+        g = ease_out((i + 1) / 2.5, 2)
+        polys, widths = [], []
+        for d in dirs:
+            pts, a2 = _walk(fr, (S / 2, S / 2), d + fr.uniform(-0.25, 0.25), S * 0.045 * g, 8, 0.9)
+            polys.append(pts)
+            widths.append(S * 0.009)
+            if fr.random() < 0.6:
+                j = int(fr.integers(2, 6))
+                bp, _ = _walk(fr, pts[j], a2 + fr.uniform(-1.2, 1.2), S * 0.025, 4, 1.0)
+                polys.append(bp)
+                widths.append(S * 0.005)
+        line = _lines_to_field(polys, S, widths)
+        x, y = coords(S)
+        core = ss(np.hypot(x, y), 0.16 * (1 - t), 0.0)
+        flick = [1, 1, 0.8, 1, 0.7, 0.95, 0.6, 0.9, 0.55, 0.8, 0.45, 0.6, 0.3, 0.35, 0.15, 0.08][i]
+        frames.append(np.clip(np.maximum(_glow_lines(line, S), core) * flick, 0, 1))
+    return frames
+
+
+def haki_burst(n=16, seed=301):
+    """Conqueror-style ink burst: thick ragged spikes splash out in two frames, then thin, retract and
+    break into droplets, with thin crackles around. Layered (kit paints core black, middle red)."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    spikes = [(rng.uniform(0, TAU), rng.uniform(0.5, 0.95), rng.uniform(0.07, 0.15)) for _ in range(15)]
+    rag = noise(S, S, 18, 18, seed + 1, 4)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        g = ease_out((i + 1) / 2.2, 2)
+        thin = (1 - t) ** 1.2
+        F = np.zeros_like(x)
+        for ang, L, w in spikes:
+            da = np.abs(np.angle(np.exp(1j * (a - ang))))
+            Lk = L * g * (1 - 0.3 * t)
+            wd = w * thin * (1 - np.clip(r / Lk, 0, 1)) ** 1.4 + 0.004
+            F = np.maximum(F, levels((wd - da * (r + 0.08)) / wd + (rag - 0.5) * 0.9, 0.0, 0.6) * (r < Lk))
+        hub = ss(r, 0.22 * thin + 0.05, 0.08 * thin) + (rag - 0.5) * 0.3
+        F = np.maximum(F, levels(hub, 0.2, 0.8))
+        if t > 0.3:
+            drops = ss(noise(S, S, 10, 10, seed + i, 2), 0.82, 0.86) * ss(r, 0.95, 0.5) * (1 - t)
+            F = np.maximum(F, drops)
+        frames.append(np.clip(F * (1 - 0.3 * t), 0, 1))
+    return frames
+
+
+def blade_cuts(n=16, seed=311):
+    """Crossing sword cuts: 4 razor lines slash across the centre one after another (each drawn end to end
+    in a frame), then split into two parallel halves that drift apart and fade. Layered."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    cuts = [(rng.uniform(0, math.pi), rng.uniform(-0.15, 0.15), k * 0.06) for k in range(4)]
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        F = np.zeros_like(x)
+        for ang, off, t0 in cuts:
+            tk = (t - t0) / (1 - t0)
+            if tk <= 0:
+                continue
+            ca, sa = math.cos(ang), math.sin(ang)
+            u = x * ca + y * sa
+            v = -x * sa + y * ca - off
+            draw = ease_out(tk / 0.12, 2)
+            split = max(0.0, (tk - 0.2) / 0.8) * 0.07
+            prof = 1 - np.clip(np.abs(u) / 0.95, 0, 1) ** 1.5
+            w = 0.022 * prof * (1 - 0.6 * max(0.0, tk - 0.2))
+            reveal = u < (-0.95 + 1.9 * draw)
+            for sgn in ((0,) if split == 0 else (-1, 1)):
+                F = np.maximum(F, ss(np.abs(v - sgn * split), w + 0.003, w * 0.2) * reveal * (1 - max(0.0, tk - 0.35) / 0.65))
+        frames.append(np.clip(F, 0, 1))
+    return frames
+
+
+def water_splash(n=16, seed=321):
+    """Water splash: a fan of slim jets bursts up out of a churned base, tips breaking into strings of
+    droplets that arc and fall; bright streaks run along the water. Layered."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    o = (0.0, -0.82)
+    tend = [(math.radians(rng.uniform(55, 125)), rng.uniform(1.8, 2.5), rng.uniform(0.045, 0.08)) for _ in range(13)]
+    streak = noise(S, S, 60, 8, seed + 1, 3)
+    edge = noise(S, S, 30, 30, seed + 2, 3)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        reach = ease_out(t / 0.4, 2) * (1 + 0.35 * max(0.0, t - 0.4))
+        base = [(o[0] + dx, o[1] + 0.04, 0.2 * (1 - 0.5 * t)) for dx in (-0.3, -0.12, 0.0, 0.14, 0.3)]
+        cs = base + _jets(x, y, o, tend, reach, t, 3.4, 0.25, 0.5, steps=18)
+        F = lobes(x + (edge - 0.5) * 0.04, y + (edge - 0.5) * 0.04, cs, 1.4)
+        H = F - 0.3
+        edgeA = ss(H, 0.0, 0.05)
+        dist = ndi.distance_transform_edt(H > 0)
+        depth = 1 - np.exp(-dist / (S * 0.02))
+        I = edgeA * (0.35 + 0.45 * depth) * (0.7 + 0.5 * streak) * (1 - 0.55 * max(0.0, t - 0.45))
+        frames.append(np.clip(I, 0, 1))
+    return frames
+
+
+def spray_puff(n=16, seed=331):
+    """Water spray: a soft round mist burst threaded with fine droplets, expanding and fading out from
+    the middle. Shaded (bright mist, subtle cool shading)."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    base = noise(S, S, 50, 50, seed, 4)
+    drops = [(rng.uniform(0, TAU), rng.uniform(0.1, 0.9), rng.uniform(0.008, 0.02)) for _ in range(60)]
+    alphas, vals = [], []
+    for i in range(n):
+        t = i / (n - 1)
+        g = 0.4 + 0.6 * ease_out(t / 0.5)
+        mist = levels(base + 0.55 - r / g, 0.35 + 0.35 * t, 0.85) * ss(r, g, g * 0.5)
+        D = np.zeros_like(x)
+        for ang, rad, sz in drops:
+            rr = rad * g * 1.05
+            D = np.maximum(D, ss(np.hypot(x - math.cos(ang) * rr, y - math.sin(ang) * rr), sz * (1 - 0.5 * t), sz * 0.3))
+        A = np.maximum(mist * (0.85 - 0.5 * t), D * (1 - t * 0.7))
+        alphas.append(np.clip(A, 0, 1))
+        vals.append(np.clip(0.8 + 0.2 * levels(base, 0.5, 0.9) * (1 - D) + 0.2 * D, 0, 1))
+    return alphas, vals
+
+
+def water_drops(n=16, seed=341):
+    """16 water droplets (FlipbookStartRandom): round and teardrop shapes, darker refraction rim and a sharp
+    highlight. Shaded."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    alphas, vals = [], []
+    for i in range(n):
+        el = rng.uniform(1.0, 2.2)
+        rot = rng.uniform(0, TAU)
+        xr, yr = x * math.cos(rot) - y * math.sin(rot), x * math.sin(rot) + y * math.cos(rot)
+        tear = 1 + 0.6 * ss(yr, 0.0, 0.6) * (el > 1.4)
+        d = np.hypot(xr * tear / 0.36, yr / (0.36 * el))
+        m = ss(d, 1.0, 0.92)
+        rim = ss(d, 0.7, 0.95) * m
+        hl = ss(np.hypot(xr + 0.12, yr - 0.14 * el), 0.09, 0.03)
+        alphas.append(np.clip(m * (0.75 + 0.25 * rim), 0, 1))
+        vals.append(np.clip(np.where(m > 0.3, 0.8 - 0.25 * rim + hl * 0.4, 0.8), 0, 1))
+    return alphas, vals
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -738,6 +1144,21 @@ LIB = {
     "giant_fist":    (giant_fist,    "layered", 1, 5, "fire"),
     "water_shark":   (water_shark,   "layered", 1, 4, "slash"),
     "palm_strike":   (palm_strike,   "layered", 1, 5, "light"),
+    "magma_splash":  (magma_splash,  "layered", 4, 6, "magma"),
+    "lava_drops":    (lava_drops,    "shaded",  4, 0, "ember"),
+    "light_burst":   (light_burst,   "layered", 4, 5, "light"),
+    "shock_ripple":  (shock_ripple,  "layered", 4, 4, "quake"),
+    "ice_burst":     (ice_burst,     "layered", 4, 5, "ice"),
+    "frost_mist":    (frost_mist,    "shaded",  4, 0, "mist"),
+    "ice_chips":     (ice_chips,     "shaded",  4, 0, "icechip"),
+    "void_smoke":    (void_smoke,    "layered", 4, 6, "dark"),
+    "void_orb":      (void_orb,      "layered", 4, 5, "dark"),
+    "electric_burst": (electric_burst, "layered", 4, 5, "thunder"),
+    "haki_burst":    (haki_burst,    "layered", 4, 5, "haki"),
+    "blade_cuts":    (blade_cuts,    "layered", 4, 4, "slash"),
+    "water_splash":  (water_splash,  "layered", 4, 4, "water"),
+    "spray_puff":    (spray_puff,    "shaded",  4, 0, "spray"),
+    "water_drops":   (water_drops,   "shaded",  4, 0, "spray"),
 }
 
 PALETTES = {
@@ -752,6 +1173,13 @@ PALETTES = {
     "dust":  {"mid": "#e8d6b0"},
     "ember": {"mid": "#ff8a2a", "additive": True},
     "spark": {"mid": "#ffe27a", "additive": True},
+    "magma": {"glow": "#ff3a0a", "rim": "#3a0a04", "mid": "#ff6a1a", "core": "#ffd27a"},
+    "dark": {"glow": "#7a2cff", "rim": "#c9a0ff", "mid": "#3a1068", "core": "#0a0012"},
+    "thunder": {"glow": "#4aa8ff", "rim": "#1e4cff", "mid": "#bfe4ff", "core": "#ffffff"},
+    "water": {"glow": "#3ab0ff", "rim": "#0a5cc0", "mid": "#8fd4ff", "core": "#ffffff"},
+    "mist": {"mid": "#e6f6ff"},
+    "icechip": {"mid": "#bfe8ff", "additive": True},
+    "spray": {"mid": "#e8f6ff"},
 }
 
 

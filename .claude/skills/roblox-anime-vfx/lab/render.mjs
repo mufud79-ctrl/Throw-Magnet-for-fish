@@ -47,7 +47,8 @@ for (const f of files) {
   ff(['-framerate', String(fps), '-i', path.join(tmp, 'f_%04d.jpg'), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '24', '-movflags', '+faststart', path.join(out, name + '.mp4')]);
   const step = Math.max(1, Math.floor(n / 8));
   ff(['-i', path.join(tmp, 'f_%04d.jpg'), '-vf', `select='not(mod(n\\,${step}))',scale=320:-1,tile=4x2`, '-frames:v', '1', path.join(out, name + '_sheet.jpg')]);
-  const peak = fx.poster !== undefined ? Math.min(n - 1, Math.round(fx.poster * fps)) : Math.floor(n * 0.3);
+  const posterReal = fx.poster !== undefined ? await page.evaluate((te) => window.LAB.realTime(te), fx.poster) : dur * 0.3;
+  const peak = Math.min(n - 1, Math.round(posterReal * fps));
   fs.copyFileSync(path.join(tmp, `f_${String(peak).padStart(4, '0')}.jpg`), path.join(out, name + '_poster.jpg'));
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`${name}: ${n} frames in ${((Date.now() - t0) / 1000).toFixed(1)}s${errors.length ? '  ERR ' + errors.splice(0).join(' | ') : ''}`);

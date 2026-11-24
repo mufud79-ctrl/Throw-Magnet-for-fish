@@ -275,9 +275,9 @@ const SFRAG = `uniform sampler2D map; uniform float hasMap; uniform vec3 color; 
     if (mode < 0.5) { float a = alpha * t.a; gl_FragColor = vec4(color * bright * (0.85 + 0.35 * f) * a, a); }
     else if (mode < 1.5) { vec3 c = color * bright * t.rgb * alpha * (0.25 + 1.4 * f * f); gl_FragColor = vec4(c * t.a, 0.0); }
     else if (mode < 2.5) { float a = t.a * alpha; gl_FragColor = vec4(t.rgb * color * bright * a, a * 0.85); }
-    else if (mode < 3.5) { float a = alpha * (0.25 + 0.6 * f); gl_FragColor = vec4(mix(color, vec3(1.0), f * 0.6) * a, a); }
+    else if (mode < 3.5) { float a = alpha * (0.12 + 0.5 * f); gl_FragColor = vec4(mix(color, vec3(1.0), f * 0.35) * a, a); }
     else { vec3 l = normalize(vec3(-0.4, 0.8, 0.45)); float d = abs(dot(normalize(vN), l));
-      vec3 c = color * (0.55 + 0.6 * d) + vec3(1.0) * pow(f, 3.0) * 0.8; float a = alpha * (0.75 + 0.25 * f); gl_FragColor = vec4(c * a, a); }
+      vec3 c = color * (0.38 + 0.5 * d) + vec3(0.9, 0.97, 1.0) * pow(f, 3.0) * 0.45; float a = alpha * (0.7 + 0.25 * f); gl_FragColor = vec4(c * a, a); }
   }`;
 const SMODES = { Neon: 0, ForceField: 1, Textured: 2, Glass: 3, Ice: 4 };
 class Shell {
@@ -487,14 +487,84 @@ function makeArena(scene) {
   return '#dcc79d';
 }
 
+// Blocky R15-ish rig: root (feet) > upper body (pivot at the hips) > arms (pivot at the shoulders).
+// Pose keys animate it so anticipation / follow-through read on the caster, and hit reactions on dummies.
 function makeAvatar(scene, at, yaw, shirt = '#22283a') {
-  const grp = new THREE.Group();
-  const part = (w, h, d, x, y, z, c) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshLambertMaterial({ color: c })); m.position.set(x, y, z); m.castShadow = true; grp.add(m); return m; };
-  part(2, 2, 1, 0, 3, 0, shirt); part(1, 2, 1, -1.5, 3, 0, shirt); part(1, 2, 1, 1.5, 3, 0, shirt);
-  part(1, 2, 1, -0.5, 1, 0, '#2f3446'); part(1, 2, 1, 0.5, 1, 0, '#2f3446');
-  part(1.15, 1.15, 1.15, 0, 4.6, 0, '#e8c39e'); part(1.25, 0.35, 1.25, 0, 5.2, 0, '#1b1b22');
-  grp.position.set(...at); grp.rotation.y = yaw; scene.add(grp);
-  return grp;
+  const root = new THREE.Group(), upper = new THREE.Group(), armR = new THREE.Group(), armL = new THREE.Group();
+  const box = (grp, w, h, d, x, y, z, c) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshLambertMaterial({ color: c })); m.position.set(x, y, z); m.castShadow = true; grp.add(m); return m; };
+  box(root, 1, 2, 1, -0.5, 1, 0, '#2f3446'); box(root, 1, 2, 1, 0.5, 1, 0, '#2f3446');
+  upper.position.set(0, 2, 0); root.add(upper);
+  box(upper, 2, 2, 1, 0, 1, 0, shirt);
+  box(upper, 1.15, 1.15, 1.15, 0, 2.6, 0, '#e8c39e'); box(upper, 1.25, 0.35, 1.25, 0, 3.2, 0, '#1b1b22');
+  armR.position.set(1.5, 1.9, 0); upper.add(armR); box(armR, 1, 2, 1, 0, -0.9, 0, shirt);
+  armL.position.set(-1.5, 1.9, 0); upper.add(armL); box(armL, 1, 2, 1, 0, -0.9, 0, shirt);
+  root.position.set(...at); root.rotation.y = yaw; scene.add(root);
+  return { root, upper, armR, armL, at: at.slice(), yaw };
+}
+function poseAvatar(rig, P, t) {
+  if (!P) return;
+  const D = DEG;
+  rig.upper.rotation.set(evalKeys(P.lean, t, 0) * D, evalKeys(P.twist, t, 0) * D, 0);
+  rig.armR.rotation.set(evalKeys(P.armR, t, 0) * D, 0, evalKeys(P.armRz, t, 0) * D);
+  rig.armL.rotation.set(evalKeys(P.armL, t, 0) * D, 0, evalKeys(P.armLz, t, 0) * D);
+  const off = evalKeys(P.offset, t, [0, 0, 0]);
+  rig.root.position.set(rig.at[0] + off[0], rig.at[1] + off[1], rig.at[2] + off[2]);
+  const sq = evalKeys(P.scale, t, [1, 1, 1]);
+  rig.root.scale.set(sq[0], sq[1], sq[2]);
+}
+// Hit reaction (squash & stretch + knockback): squash flat on contact, stretch up, settle; slide back with a tilt.
+function hitPose(h) {
+  const t = h.t, k = h.power || 1, dir = h.dir || [0, 0, -1], d = 3.5 * k;
+  return {
+    scale: [[t - 0.001, [1, 1, 1]], [t + 0.05, [1 + 0.3 * k, 1 - 0.32 * k, 1 + 0.3 * k], 'out'], [t + 0.16, [1 - 0.12 * k, 1 + 0.18 * k, 1 - 0.12 * k]], [t + 0.32, [1, 1, 1]]],
+    offset: [[t - 0.001, [0, 0, 0]], [t + 0.3, [dir[0] * d, 0, dir[2] * d], 'out'], [t + 0.7, [dir[0] * d * 1.1, 0, dir[2] * d * 1.1], 'out']],
+    lean: [[t - 0.001, 0], [t + 0.08, -28 * k, 'out'], [t + 0.5, -8 * k], [t + 0.9, 0]],
+  };
+}
+
+// Afterimage: a flat-colour clone of the caster left behind on a dash, fading and drifting back.
+class Ghost {
+  constructor(G, scene) {
+    this.G = G;
+    this.rig = makeAvatar(scene, G.at, 0);
+    this.mats = [];
+    this.rig.root.traverse((o) => { if (o.isMesh) { o.castShadow = false; o.material = new THREE.MeshBasicMaterial({ color: new THREE.Color(...hex(G.color || '#ffffff')).multiplyScalar(1.4), transparent: true, depthWrite: false }); o.renderOrder = 15; this.mats.push(o.material); } });
+    this.rig.upper.rotation.x = (G.lean || -30) * DEG;
+  }
+  draw(cam, t) {
+    const G = this.G, age = t - G.t, life = G.life || 0.35;
+    this.rig.root.visible = age >= 0 && age < life;
+    if (!this.rig.root.visible) return;
+    const k = age / life;
+    for (const m of this.mats) m.opacity = 0.55 * (1 - k);
+    this.rig.root.position.set(G.at[0], G.at[1], G.at[2] + k * 0.8);
+    this.rig.root.scale.set(1 + 0.1 * k, 1 + 0.1 * k, 1 + 0.1 * k);
+  }
+}
+
+// Damage number: pops (squash -> stretch -> settle), arcs up and away, falls, fades. A canvas sprite.
+class DamageNumber {
+  constructor(N, scene) {
+    this.N = N;
+    const c = document.createElement('canvas'); c.width = 256; c.height = 128;
+    const g = c.getContext('2d'); g.font = 'bold 84px Impact, "Arial Black", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.lineWidth = 14; g.strokeStyle = '#140a06'; g.strokeText(N.text, 128, 66);
+    const gr = g.createLinearGradient(0, 30, 0, 100); gr.addColorStop(0, '#ffffff'); gr.addColorStop(1, N.color || '#ffd23a');
+    g.fillStyle = gr; g.fillText(N.text, 128, 66);
+    this.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthTest: false }));
+    this.sprite.renderOrder = 99; this.sprite.visible = false; scene.add(this.sprite);
+  }
+  draw(cam, t) {
+    const N = this.N, age = t - N.t, life = N.life || 1.25;
+    if (age < 0 || age > life) { this.sprite.visible = false; return; }
+    const v = N.vel || [2.5, 17, 0], g = 30;
+    this.sprite.position.set(N.at[0] + v[0] * age, N.at[1] + v[1] * age - 0.5 * g * age * age, N.at[2] + v[2] * age);
+    const pop = evalKeys([[0, [0.2, 0.2]], [0.06, [1.5, 0.7], 'out'], [0.14, [0.85, 1.25]], [0.24, [1, 1]], [1, [1, 1]]], age, [1, 1]);
+    const s = N.size || 2.6;
+    this.sprite.scale.set(s * 2 * pop[0], s * pop[1], 1);
+    this.sprite.material.opacity = age > life - 0.25 ? (life - age) / 0.25 : 1;
+    this.sprite.visible = true;
+  }
 }
 
 // ---------------------------------------------------------------- effect player
@@ -510,8 +580,18 @@ class Player {
     this.fx = fx;
     const scene = this.scene = new THREE.Scene();
     this.groundColor = makeArena(scene);
-    if (fx.caster !== false) makeAvatar(scene, [0, 0, 0], 0);
-    for (const d of fx.dummies || []) makeAvatar(scene, d, Math.PI, '#5a2626');
+    this.caster = fx.caster !== false ? makeAvatar(scene, [0, 0, 0], 0) : null;
+    this.dummies = (fx.dummies || []).map((d) => makeAvatar(scene, d, Math.PI, '#5a2626'));
+    this.dummyPose = this.dummies.map((_, j) => {           // merge every hit on this dummy into one pose track
+      const hs = (fx.hits || []).filter((h) => (h.dummy || 0) === j);
+      if (!hs.length) return null;
+      const P = { scale: [], offset: [], lean: [] }; let acc = [0, 0, 0];
+      for (const h of hs) { const hp = hitPose(h); for (const k of ['scale', 'lean']) P[k] = P[k].concat(hp[k]);
+        P.offset = P.offset.concat(hp.offset.map((kf) => [kf[0], [kf[1][0] + acc[0], 0, kf[1][2] + acc[2]]].concat(kf.slice(2))));
+        const last = hp.offset[hp.offset.length - 1][1]; acc = [acc[0] + last[0], 0, acc[2] + last[2]]; }
+      for (const k of Object.keys(P)) P[k].sort((x, y) => x[0] - y[0]);
+      return P;
+    });
     this.items = [];
     let i = 0;
     for (const L of fx.layers) {
@@ -522,18 +602,36 @@ class Player {
       else if (L.type === 'bolt') this.items.push(new Bolt(L, scene));
     }
     for (const D of fx.debris || []) this.items.push(new Debris(D, scene, this.groundColor));
-    this.lights = (fx.lights || []).map((Lt) => { const p = new THREE.PointLight(new THREE.Color(...hex(Lt.color || '#ffffff')), 0, Lt.range || 16, 1.4); scene.add(p); return { Lt, p }; });
+    for (const N of fx.numbers || []) this.items.push(new DamageNumber(N, scene));
+    for (const G of fx.ghosts || []) this.items.push(new Ghost(G, scene));
+    this.lights = (fx.lights || []).map((Lt) => { const p = new THREE.PointLight(new THREE.Color(...hex(Lt.color || '#ffffff')), 0, Lt.range || 16, 2); scene.add(p); return { Lt, p }; });
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(new RenderPass(scene, this.camera));
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(W, H), fx.bloom ?? 0.75, 0.55, 0.78);
+    this.bloom = new UnrealBloomPass(new THREE.Vector2(W, H), fx.bloom ?? 0.5, 0.45, 0.88);
     this.composer.addPass(this.bloom);
     this.grade = new ShaderPass(GradeShader); this.composer.addPass(this.grade);
     await texturesReady();
     this.t = 0;
-    return fx.duration;
+    this.stops = (fx.hitstop || []).slice().sort((x, y) => x.t - y.t);
+    return fx.duration + this.stops.reduce((a, h) => a + h.dur, 0);
+  }
+  // Hit-stop: map real time to effect time. While a stop holds, effect time is frozen (particles, shells,
+  // poses, flipbooks); camera shake keeps running on real time, like a game freezing its simulation.
+  effectTime(real) {
+    let te = real, shift = 0;
+    for (const h of this.stops) {
+      const start = h.t + shift;
+      if (real <= start) break;
+      te = real - shift - Math.min(real - start, h.dur);
+      if (real < start + h.dur) return h.t;
+      shift += h.dur;
+      te = real - shift;
+    }
+    return te;
   }
   // advance to time t (monotonic) and render
-  frame(t) {
+  frame(real) {
+    const t = this.effectTime(real);
     const dt = 1 / 60;
     while (this.t < t - 1e-9) {
       const t0 = this.t, t1 = Math.min(t, t0 + dt);
@@ -543,8 +641,11 @@ class Player {
     const fx = this.fx, cam = this.camera, C = fx.camera || {};
     const cpos = evalKeys(C.pos, Math.min(1, t / fx.duration), [14, 9, 16]), look = evalKeys(C.look, Math.min(1, t / fx.duration), [0, 3, -6]);
     let sh = [0, 0, 0];
-    for (const s of fx.shakes || []) if (t >= s.t && t < s.t + s.dur) {
-      const k = (t - s.t) / s.dur, amp = s.amp * Math.pow(1 - k, 2), w = (t - s.t) * (s.freq || 20);
+    // shakes run on real time so they keep going through a hit-stop
+    const shiftAt = (te) => this.stops.filter((h) => h.t < te).reduce((a, h) => a + h.dur, 0);
+    for (const s of fx.shakes || []) { const st = s.t + shiftAt(s.t + 1e-6) - (this.stops.some((h) => Math.abs(h.t - s.t) < 1e-3) ? this.stops.find((h) => Math.abs(h.t - s.t) < 1e-3).dur : 0);
+      if (!(real >= st && real < st + s.dur)) continue;
+      const k = (real - st) / s.dur, amp = s.amp * Math.pow(1 - k, 2), w = (real - st) * (s.freq || 20);
       sh = [sh[0] + amp * Math.sin(w * 6.1 + 1.3), sh[1] + amp * Math.sin(w * 7.3 + 4.1) * 0.8, sh[2] + amp * Math.sin(w * 5.2 + 2.2) * 0.5];
     }
     cam.position.set(cpos[0] + sh[0], cpos[1] + sh[1], cpos[2] + sh[2]);
@@ -552,7 +653,9 @@ class Player {
     cam.lookAt(look[0] + sh[0] * 0.5, look[1] + sh[1] * 0.5, look[2]);
     cam.updateMatrixWorld();
     for (const it of this.items) it.draw(cam, t);
-    for (const { Lt, p } of this.lights) { const P = attachPos(Lt, t); p.position.set(...P); p.intensity = Math.max(0, evalKeys(Lt.brightness, t, 0)) * 1.6; }
+    if (this.caster) poseAvatar(this.caster, fx.pose, t);
+    this.dummies.forEach((d, j) => poseAvatar(d, this.dummyPose[j], t));
+    for (const { Lt, p } of this.lights) { const P = attachPos(Lt, t); p.position.set(...P); const bk = Lt.brightness; p.intensity = t < bk[0][0] ? 0 : Math.max(0, evalKeys(bk, t, 0)) * 0.12; }
     // colour grade + impact frames
     const u = this.grade.uniforms;
     let b = 0, c = 0, s = 0, tint = [1, 1, 1];
@@ -563,7 +666,9 @@ class Player {
       b = Lr(a[1], bb[1]); c = Lr(a[2], bb[2]); s = Lr(a[3], bb[3]); tint = [Lr(ta[0], tb[0]), Lr(ta[1], tb[1]), Lr(ta[2], tb[2])];
     }
     u.invert.value = 0; u.mono.value = 0;
-    for (const f of fx.impact || []) if (t >= f.t && t < f.t + f.dur) {
+    // impact frames run on real time: they flash for a couple of frames at the start of a hit-stop
+    const realStart = (te) => te + this.stops.filter((h) => h.t < te - 1e-6).reduce((a, h) => a + h.dur, 0);
+    for (const f of fx.impact || []) if (real >= realStart(f.t) && real < realStart(f.t) + f.dur) {
       if (f.mode === 'invert') u.invert.value = 1;
       else if (f.mode === 'mono') u.mono.value = 1;
       else if (f.mode === 'white') { b = 0.35; c = 0.2; s = -0.6; }
@@ -578,6 +683,7 @@ class Player {
 
 window.LAB = {
   player: null,
+  realTime(te) { const P = this.player; return te + (P.stops || []).filter((h) => h.t < te - 1e-6).reduce((a, h) => a + h.dur, 0); },
   async load(fx, base) { if (base) ASSET_BASE = base; this.player = this.player || new Player(); return this.player.load(fx); },
   frame(t) { this.player.frame(t); return document.getElementById('vp').toDataURL('image/jpeg', 0.9); },
 };

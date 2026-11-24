@@ -14,6 +14,8 @@ GROUPS = [("Fire", ["fire_burst", "flame_lick", "aura_wisp", "embers"]), ("Smoke
           ("Energy", ["slash", "shock_ring", "wind_arcs", "beam_strip", "speedlines"]),
           ("Quake & lightning", ["crack_glow", "glass_shatter", "lightning"]),
           ("Mesh strips", ["slash_strip", "energy_strip", "edge_strip", "wind_strip"]),
+          ("Element matter (new)", ["magma_splash", "lava_drops", "light_burst", "shock_ripple", "ice_burst", "frost_mist", "ice_chips",
+                                    "void_smoke", "void_orb", "electric_burst", "haki_burst", "blade_cuts", "water_splash", "spray_puff", "water_drops"]),
           ("Hero silhouettes (Figma image gen)", ["dragon_head", "phoenix_wing", "giant_fist", "water_shark", "palm_strike"])]
 KIND = {"layered": "4 stacked layers", "shaded": "1 shaded texture", "white": "1 white texture", "strip": "1 shaded mesh strip"}
 GRID = {0: "strip / full-screen", 1: "single image", 2: "2×2 sheet", 4: "4×4 flipbook, 16 frames"}

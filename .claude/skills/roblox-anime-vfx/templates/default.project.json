@@ -1,0 +1,14 @@
+{
+  "name": "AnimeVFX",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": { "AnimeVFX": { "$path": "ReplicatedStorage/AnimeVFX" } },
+    "ServerScriptService": { "AnimeVFXServer": { "$path": "ServerScriptService/AnimeVFXServer.server.lua" } },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "AnimeVFXClient": { "$path": "StarterPlayerScripts/AnimeVFXClient.client.lua" },
+        "AnimeVFXDemo": { "$path": "StarterPlayerScripts/AnimeVFXDemo.client.lua" }
+      }
+    }
+  }
+}

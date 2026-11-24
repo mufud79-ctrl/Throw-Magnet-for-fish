@@ -1,0 +1,740 @@
+{
+ "textures": [
+  "assets/textures/aura_wisp_core.png",
+  "assets/textures/aura_wisp_glow.png",
+  "assets/textures/aura_wisp_mid.png",
+  "assets/textures/aura_wisp_rim.png",
+  "assets/textures/beam_strip_core.png",
+  "assets/textures/beam_strip_glow.png",
+  "assets/textures/beam_strip_mid.png",
+  "assets/textures/blade_cuts_core.png",
+  "assets/textures/blade_cuts_glow.png",
+  "assets/textures/blade_cuts_mid.png",
+  "assets/textures/blade_cuts_rim.png",
+  "assets/textures/crack_glow_core.png",
+  "assets/textures/crack_glow_mid.png",
+  "assets/textures/dragon_head_core.png",
+  "assets/textures/dragon_head_glow.png",
+  "assets/textures/dragon_head_mid.png",
+  "assets/textures/dragon_head_rim.png",
+  "assets/textures/dust_burst.png",
+  "assets/textures/electric_burst_core.png",
+  "assets/textures/electric_burst_glow.png",
+  "assets/textures/electric_burst_mid.png",
+  "assets/textures/electric_burst_rim.png",
+  "assets/textures/embers.png",
+  "assets/textures/energy_strip.png",
+  "assets/textures/fire_burst_core.png",
+  "assets/textures/fire_burst_glow.png",
+  "assets/textures/fire_burst_mid.png",
+  "assets/textures/fire_burst_rim.png",
+  "assets/textures/flame_lick_core.png",
+  "assets/textures/flame_lick_glow.png",
+  "assets/textures/flame_lick_mid.png",
+  "assets/textures/flame_lick_rim.png",
+  "assets/textures/flecks.png",
+  "assets/textures/frost_mist.png",
+  "assets/textures/giant_fist_core.png",
+  "assets/textures/giant_fist_glow.png",
+  "assets/textures/giant_fist_mid.png",
+  "assets/textures/giant_fist_rim.png",
+  "assets/textures/glass_shatter_core.png",
+  "assets/textures/glass_shatter_glow.png",
+  "assets/textures/glass_shatter_mid.png",
+  "assets/textures/glass_shatter_rim.png",
+  "assets/textures/god_rays_core.png",
+  "assets/textures/god_rays_glow.png",
+  "assets/textures/god_rays_mid.png",
+  "assets/textures/haki_burst_core.png",
+  "assets/textures/haki_burst_glow.png",
+  "assets/textures/haki_burst_mid.png",
+  "assets/textures/haki_burst_rim.png",
+  "assets/textures/ice_burst_core.png",
+  "assets/textures/ice_burst_glow.png",
+  "assets/textures/ice_burst_mid.png",
+  "assets/textures/ice_burst_rim.png",
+  "assets/textures/ice_chips.png",
+  "assets/textures/lava_drops.png",
+  "assets/textures/light_burst_core.png",
+  "assets/textures/light_burst_glow.png",
+  "assets/textures/light_burst_mid.png",
+  "assets/textures/light_burst_rim.png",
+  "assets/textures/lightning_core.png",
+  "assets/textures/lightning_glow.png",
+  "assets/textures/lightning_mid.png",
+  "assets/textures/lightning_rim.png",
+  "assets/textures/magma_splash_core.png",
+  "assets/textures/magma_splash_glow.png",
+  "assets/textures/magma_splash_mid.png",
+  "assets/textures/magma_splash_rim.png",
+  "assets/textures/orb_glow_core.png",
+  "assets/textures/orb_glow_glow.png",
+  "assets/textures/orb_glow_mid.png",
+  "assets/textures/orb_glow_rim.png",
+  "assets/textures/palm_strike_core.png",
+  "assets/textures/palm_strike_glow.png",
+  "assets/textures/palm_strike_mid.png",
+  "assets/textures/palm_strike_rim.png",
+  "assets/textures/phoenix_wing_core.png",
+  "assets/textures/phoenix_wing_glow.png",
+  "assets/textures/phoenix_wing_mid.png",
+  "assets/textures/phoenix_wing_rim.png",
+  "assets/textures/shock_ring_core.png",
+  "assets/textures/shock_ring_glow.png",
+  "assets/textures/shock_ring_mid.png",
+  "assets/textures/shock_ripple_core.png",
+  "assets/textures/shock_ripple_glow.png",
+  "assets/textures/shock_ripple_mid.png",
+  "assets/textures/shock_ripple_rim.png",
+  "assets/textures/slash_core.png",
+  "assets/textures/slash_glow.png",
+  "assets/textures/slash_mid.png",
+  "assets/textures/slash_rim.png",
+  "assets/textures/slash_strip.png",
+  "assets/textures/smoke_puff.png",
+  "assets/textures/spray_puff.png",
+  "assets/textures/star_flash_core.png",
+  "assets/textures/star_flash_glow.png",
+  "assets/textures/star_flash_mid.png",
+  "assets/textures/star_flash_rim.png",
+  "assets/textures/void_orb_core.png",
+  "assets/textures/void_orb_glow.png",
+  "assets/textures/void_orb_mid.png",
+  "assets/textures/void_orb_rim.png",
+  "assets/textures/void_smoke_core.png",
+  "assets/textures/void_smoke_glow.png",
+  "assets/textures/void_smoke_mid.png",
+  "assets/textures/void_smoke_rim.png",
+  "assets/textures/water_drops.png",
+  "assets/textures/water_shark_core.png",
+  "assets/textures/water_shark_glow.png",
+  "assets/textures/water_shark_mid.png",
+  "assets/textures/water_shark_rim.png",
+  "assets/textures/water_splash_core.png",
+  "assets/textures/water_splash_glow.png",
+  "assets/textures/water_splash_mid.png",
+  "assets/textures/water_splash_rim.png",
+  "assets/textures/wind_arcs.png",
+  "assets/textures/wind_strip.png"
+ ],
+ "meshes": [
+  "assets/meshes/claw_cluster.fbx",
+  "assets/meshes/cone_tube.fbx",
+  "assets/meshes/crescent_thin.fbx",
+  "assets/meshes/crescent_wide.fbx",
+  "assets/meshes/dome.fbx",
+  "assets/meshes/dragon_head.fbx",
+  "assets/meshes/giant_fist.fbx",
+  "assets/meshes/phoenix_bird.fbx",
+  "assets/meshes/sphere.fbx",
+  "assets/meshes/spike.fbx",
+  "assets/meshes/spike_bent.fbx",
+  "assets/meshes/spike_cluster.fbx",
+  "assets/meshes/swirl.fbx",
+  "assets/meshes/swirl_tight.fbx",
+  "assets/meshes/tube.fbx",
+  "assets/meshes/wave_curl.fbx"
+ ],
+ "effects": [
+  {
+   "name": "000_FireFist",
+   "title": "Fire Fist",
+   "element": "Flame",
+   "archetype": "projectile"
+  },
+  {
+   "name": "001_FlameLance",
+   "title": "Flame Lance",
+   "element": "Flame",
+   "archetype": "beam"
+  },
+  {
+   "name": "002_BlazingSlam",
+   "title": "Blazing Slam",
+   "element": "Flame",
+   "archetype": "slam"
+  },
+  {
+   "name": "003_PyreEruption",
+   "title": "Pyre Eruption",
+   "element": "Flame",
+   "archetype": "eruption"
+  },
+  {
+   "name": "004_EmberCrescent",
+   "title": "Ember Crescent",
+   "element": "Flame",
+   "archetype": "slash"
+  },
+  {
+   "name": "005_BlazeStep",
+   "title": "Blaze Step",
+   "element": "Flame",
+   "archetype": "dash"
+  },
+  {
+   "name": "006_EmberBarrage",
+   "title": "Ember Barrage",
+   "element": "Flame",
+   "archetype": "barrage"
+  },
+  {
+   "name": "007_InfernoAura",
+   "title": "Inferno Aura",
+   "element": "Flame",
+   "archetype": "aura"
+  },
+  {
+   "name": "008_FireCyclone",
+   "title": "Fire Cyclone",
+   "element": "Flame",
+   "archetype": "vortex"
+  },
+  {
+   "name": "009_DragonsRoar",
+   "title": "Dragon's Roar",
+   "element": "Flame",
+   "archetype": "finisher"
+  },
+  {
+   "name": "010_MagmaFist",
+   "title": "Magma Fist",
+   "element": "Magma",
+   "archetype": "projectile"
+  },
+  {
+   "name": "011_LavaStream",
+   "title": "Lava Stream",
+   "element": "Magma",
+   "archetype": "beam"
+  },
+  {
+   "name": "012_VolcanicSlam",
+   "title": "Volcanic Slam",
+   "element": "Magma",
+   "archetype": "slam"
+  },
+  {
+   "name": "013_MeteorGeyser",
+   "title": "Meteor Geyser",
+   "element": "Magma",
+   "archetype": "eruption"
+  },
+  {
+   "name": "014_MoltenCrescent",
+   "title": "Molten Crescent",
+   "element": "Magma",
+   "archetype": "slash"
+  },
+  {
+   "name": "015_LavaRush",
+   "title": "Lava Rush",
+   "element": "Magma",
+   "archetype": "dash"
+  },
+  {
+   "name": "016_MeteorShower",
+   "title": "Meteor Shower",
+   "element": "Magma",
+   "archetype": "barrage"
+  },
+  {
+   "name": "017_MagmaMantle",
+   "title": "Magma Mantle",
+   "element": "Magma",
+   "archetype": "aura"
+  },
+  {
+   "name": "018_LavaMaelstrom",
+   "title": "Lava Maelstrom",
+   "element": "Magma",
+   "archetype": "vortex"
+  },
+  {
+   "name": "019_GreatEruption",
+   "title": "Great Eruption",
+   "element": "Magma",
+   "archetype": "finisher"
+  },
+  {
+   "name": "020_LightSpear",
+   "title": "Light Spear",
+   "element": "Light",
+   "archetype": "projectile"
+  },
+  {
+   "name": "021_RadiantRay",
+   "title": "Radiant Ray",
+   "element": "Light",
+   "archetype": "beam"
+  },
+  {
+   "name": "022_SolarSlam",
+   "title": "Solar Slam",
+   "element": "Light",
+   "archetype": "slam"
+  },
+  {
+   "name": "023_PillarOfDawn",
+   "title": "Pillar of Dawn",
+   "element": "Light",
+   "archetype": "eruption"
+  },
+  {
+   "name": "024_PrismCrescent",
+   "title": "Prism Crescent",
+   "element": "Light",
+   "archetype": "slash"
+  },
+  {
+   "name": "025_LightSpeed",
+   "title": "Light Speed",
+   "element": "Light",
+   "archetype": "dash"
+  },
+  {
+   "name": "026_StarfallBarrage",
+   "title": "Starfall Barrage",
+   "element": "Light",
+   "archetype": "barrage"
+  },
+  {
+   "name": "027_DivineAura",
+   "title": "Divine Aura",
+   "element": "Light",
+   "archetype": "aura"
+  },
+  {
+   "name": "028_HaloVortex",
+   "title": "Halo Vortex",
+   "element": "Light",
+   "archetype": "vortex"
+  },
+  {
+   "name": "029_HeavensPalm",
+   "title": "Heaven's Palm",
+   "element": "Light",
+   "archetype": "finisher"
+  },
+  {
+   "name": "030_TremorShot",
+   "title": "Tremor Shot",
+   "element": "Quake",
+   "archetype": "projectile"
+  },
+  {
+   "name": "031_SeismicRay",
+   "title": "Seismic Ray",
+   "element": "Quake",
+   "archetype": "beam"
+  },
+  {
+   "name": "032_TectonicSlam",
+   "title": "Tectonic Slam",
+   "element": "Quake",
+   "archetype": "slam"
+  },
+  {
+   "name": "033_FaultEruption",
+   "title": "Fault Eruption",
+   "element": "Quake",
+   "archetype": "eruption"
+  },
+  {
+   "name": "034_ShatterCrescent",
+   "title": "Shatter Crescent",
+   "element": "Quake",
+   "archetype": "slash"
+  },
+  {
+   "name": "035_QuakeStep",
+   "title": "Quake Step",
+   "element": "Quake",
+   "archetype": "dash"
+  },
+  {
+   "name": "036_AftershockBarrage",
+   "title": "Aftershock Barrage",
+   "element": "Quake",
+   "archetype": "barrage"
+  },
+  {
+   "name": "037_TremorAura",
+   "title": "Tremor Aura",
+   "element": "Quake",
+   "archetype": "aura"
+  },
+  {
+   "name": "038_ShockwaveMaelstrom",
+   "title": "Shockwave Maelstrom",
+   "element": "Quake",
+   "archetype": "vortex"
+  },
+  {
+   "name": "039_WorldShatter",
+   "title": "World Shatter",
+   "element": "Quake",
+   "archetype": "finisher"
+  },
+  {
+   "name": "040_FrostShard",
+   "title": "Frost Shard",
+   "element": "Ice",
+   "archetype": "projectile"
+  },
+  {
+   "name": "041_GlacialRay",
+   "title": "Glacial Ray",
+   "element": "Ice",
+   "archetype": "beam"
+  },
+  {
+   "name": "042_PermafrostSlam",
+   "title": "Permafrost Slam",
+   "element": "Ice",
+   "archetype": "slam"
+  },
+  {
+   "name": "043_GlacierEruption",
+   "title": "Glacier Eruption",
+   "element": "Ice",
+   "archetype": "eruption"
+  },
+  {
+   "name": "044_FrostCrescent",
+   "title": "Frost Crescent",
+   "element": "Ice",
+   "archetype": "slash"
+  },
+  {
+   "name": "045_IceGlide",
+   "title": "Ice Glide",
+   "element": "Ice",
+   "archetype": "dash"
+  },
+  {
+   "name": "046_Hailstorm",
+   "title": "Hailstorm",
+   "element": "Ice",
+   "archetype": "barrage"
+  },
+  {
+   "name": "047_FrozenAura",
+   "title": "Frozen Aura",
+   "element": "Ice",
+   "archetype": "aura"
+  },
+  {
+   "name": "048_BlizzardVortex",
+   "title": "Blizzard Vortex",
+   "element": "Ice",
+   "archetype": "vortex"
+  },
+  {
+   "name": "049_AbsoluteZero",
+   "title": "Absolute Zero",
+   "element": "Ice",
+   "archetype": "finisher"
+  },
+  {
+   "name": "050_VoidOrb",
+   "title": "Void Orb",
+   "element": "Dark",
+   "archetype": "projectile"
+  },
+  {
+   "name": "051_AbyssRay",
+   "title": "Abyss Ray",
+   "element": "Dark",
+   "archetype": "beam"
+  },
+  {
+   "name": "052_BlackHoleSlam",
+   "title": "Black Hole Slam",
+   "element": "Dark",
+   "archetype": "slam"
+  },
+  {
+   "name": "053_ShadowGeyser",
+   "title": "Shadow Geyser",
+   "element": "Dark",
+   "archetype": "eruption"
+  },
+  {
+   "name": "054_VoidCrescent",
+   "title": "Void Crescent",
+   "element": "Dark",
+   "archetype": "slash"
+  },
+  {
+   "name": "055_ShadowStep",
+   "title": "Shadow Step",
+   "element": "Dark",
+   "archetype": "dash"
+  },
+  {
+   "name": "056_UmbralBarrage",
+   "title": "Umbral Barrage",
+   "element": "Dark",
+   "archetype": "barrage"
+  },
+  {
+   "name": "057_AbyssalAura",
+   "title": "Abyssal Aura",
+   "element": "Dark",
+   "archetype": "aura"
+  },
+  {
+   "name": "058_BlackVortex",
+   "title": "Black Vortex",
+   "element": "Dark",
+   "archetype": "vortex"
+  },
+  {
+   "name": "059_Eclipse",
+   "title": "Eclipse",
+   "element": "Dark",
+   "archetype": "finisher"
+  },
+  {
+   "name": "060_ThunderBolt",
+   "title": "Thunder Bolt",
+   "element": "Thunder",
+   "archetype": "projectile"
+  },
+  {
+   "name": "061_StormRay",
+   "title": "Storm Ray",
+   "element": "Thunder",
+   "archetype": "beam"
+  },
+  {
+   "name": "062_ThunderclapSlam",
+   "title": "Thunderclap Slam",
+   "element": "Thunder",
+   "archetype": "slam"
+  },
+  {
+   "name": "063_LightningPillar",
+   "title": "Lightning Pillar",
+   "element": "Thunder",
+   "archetype": "eruption"
+  },
+  {
+   "name": "064_VoltCrescent",
+   "title": "Volt Crescent",
+   "element": "Thunder",
+   "archetype": "slash"
+  },
+  {
+   "name": "065_FlashStep",
+   "title": "Flash Step",
+   "element": "Thunder",
+   "archetype": "dash"
+  },
+  {
+   "name": "066_ThunderBarrage",
+   "title": "Thunder Barrage",
+   "element": "Thunder",
+   "archetype": "barrage"
+  },
+  {
+   "name": "067_StormAura",
+   "title": "Storm Aura",
+   "element": "Thunder",
+   "archetype": "aura"
+  },
+  {
+   "name": "068_TempestVortex",
+   "title": "Tempest Vortex",
+   "element": "Thunder",
+   "archetype": "vortex"
+  },
+  {
+   "name": "069_ThunderDragon",
+   "title": "Thunder Dragon",
+   "element": "Thunder",
+   "archetype": "finisher"
+  },
+  {
+   "name": "070_ArmamentShot",
+   "title": "Armament Shot",
+   "element": "Haki",
+   "archetype": "projectile"
+  },
+  {
+   "name": "071_ConquerorRay",
+   "title": "Conqueror Ray",
+   "element": "Haki",
+   "archetype": "beam"
+  },
+  {
+   "name": "072_HakiSlam",
+   "title": "Haki Slam",
+   "element": "Haki",
+   "archetype": "slam"
+  },
+  {
+   "name": "073_CrimsonEruption",
+   "title": "Crimson Eruption",
+   "element": "Haki",
+   "archetype": "eruption"
+  },
+  {
+   "name": "074_CrimsonCrescent",
+   "title": "Crimson Crescent",
+   "element": "Haki",
+   "archetype": "slash"
+  },
+  {
+   "name": "075_HakiRush",
+   "title": "Haki Rush",
+   "element": "Haki",
+   "archetype": "dash"
+  },
+  {
+   "name": "076_HakiBarrage",
+   "title": "Haki Barrage",
+   "element": "Haki",
+   "archetype": "barrage"
+  },
+  {
+   "name": "077_ConquerorsAura",
+   "title": "Conqueror's Aura",
+   "element": "Haki",
+   "archetype": "aura"
+  },
+  {
+   "name": "078_CrimsonVortex",
+   "title": "Crimson Vortex",
+   "element": "Haki",
+   "archetype": "vortex"
+  },
+  {
+   "name": "079_SupremeFist",
+   "title": "Supreme Fist",
+   "element": "Haki",
+   "archetype": "finisher"
+  },
+  {
+   "name": "080_AirSlash",
+   "title": "Air Slash",
+   "element": "Blade",
+   "archetype": "projectile"
+  },
+  {
+   "name": "081_SkyCutter",
+   "title": "Sky Cutter",
+   "element": "Blade",
+   "archetype": "beam"
+  },
+  {
+   "name": "082_CrescentSlam",
+   "title": "Crescent Slam",
+   "element": "Blade",
+   "archetype": "slam"
+  },
+  {
+   "name": "083_BladeStormPillar",
+   "title": "Blade Storm Pillar",
+   "element": "Blade",
+   "archetype": "eruption"
+  },
+  {
+   "name": "084_TripleCrescent",
+   "title": "Triple Crescent",
+   "element": "Blade",
+   "archetype": "slash"
+  },
+  {
+   "name": "085_IaiDash",
+   "title": "Iai Dash",
+   "element": "Blade",
+   "archetype": "dash"
+  },
+  {
+   "name": "086_ThousandCuts",
+   "title": "Thousand Cuts",
+   "element": "Blade",
+   "archetype": "barrage"
+  },
+  {
+   "name": "087_BladeAura",
+   "title": "Blade Aura",
+   "element": "Blade",
+   "archetype": "aura"
+  },
+  {
+   "name": "088_CycloneBlades",
+   "title": "Cyclone Blades",
+   "element": "Blade",
+   "archetype": "vortex"
+  },
+  {
+   "name": "089_PhoenixSlash",
+   "title": "Phoenix Slash",
+   "element": "Blade",
+   "archetype": "finisher"
+  },
+  {
+   "name": "090_WaterBullet",
+   "title": "Water Bullet",
+   "element": "Water",
+   "archetype": "projectile"
+  },
+  {
+   "name": "091_TorrentRay",
+   "title": "Torrent Ray",
+   "element": "Water",
+   "archetype": "beam"
+  },
+  {
+   "name": "092_TidalSlam",
+   "title": "Tidal Slam",
+   "element": "Water",
+   "archetype": "slam"
+  },
+  {
+   "name": "093_Geyser",
+   "title": "Geyser",
+   "element": "Water",
+   "archetype": "eruption"
+  },
+  {
+   "name": "094_WaveCrescent",
+   "title": "Wave Crescent",
+   "element": "Water",
+   "archetype": "slash"
+  },
+  {
+   "name": "095_RiptideDash",
+   "title": "Riptide Dash",
+   "element": "Water",
+   "archetype": "dash"
+  },
+  {
+   "name": "096_RainBarrage",
+   "title": "Rain Barrage",
+   "element": "Water",
+   "archetype": "barrage"
+  },
+  {
+   "name": "097_TideAura",
+   "title": "Tide Aura",
+   "element": "Water",
+   "archetype": "aura"
+  },
+  {
+   "name": "098_Whirlpool",
+   "title": "Whirlpool",
+   "element": "Water",
+   "archetype": "vortex"
+  },
+  {
+   "name": "099_SharkTsunami",
+   "title": "Shark Tsunami",
+   "element": "Water",
+   "archetype": "finisher"
+  }
+ ]
+}
