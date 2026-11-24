@@ -49,12 +49,12 @@ def trail_stack(base, widths, *, strips=STRIPS, colors=COOL, transparency=None, 
 
 
 def plane_stack(widths, *, count=3, strips=STRIPS, colors=COOL, transparency=None, twist=None, speed=None, tlen=None,
-                swap=0.05, layers=LAYERS, angle=None):
+                swap=0.05, layers=LAYERS, angle=None, bright=None):
     """vbeam plane sets, one per texture layer."""
     out = []
     for i, L in enumerate(layers):
         out.append({"count": count, "width": widths[L], "textures": [f"{s}_{L}" for s in strips], "swap": swap,
-                    "color": colors[L], "lightEmission": LE[L], "brightness": BR[L],
+                    "color": colors[L], "lightEmission": LE[L], "brightness": (bright or {}).get(L, BR[L]),
                     "transparency": (transparency[L] if isinstance(transparency, dict) else transparency) or 0,
                     "twist": (twist or {}).get(L, 0), "textureSpeed": (speed or {}).get(L, 0),
                     "textureLength": (tlen or {}).get(L, 8), "angle": (angle or {}).get(L, 0)})

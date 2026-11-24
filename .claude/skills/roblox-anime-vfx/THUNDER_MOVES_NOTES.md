@@ -39,3 +39,16 @@ and the beam was a white slab. Every render shown, tests included, must meet the
 - Burn scar calling card `scar()`: lichtenberg stack flat on the ground cooling through the colour script over
   a soot scorch that fades last.
 - Frame cameras so the whole action is in shot with the caster visible; elevate it when the path zig-zags on the ground.
+
+## Polish pass 3 ("more polish")
+- Renders at 1280x720: `node lab/render.mjs ... --hd` (show the user HD; 640x360 looks soft).
+- No camera-facing thunder_burst rings (perfect thin circles = vector look). Use `crackle()` (thunder_arc played
+  once) for air flashes and `ground_ring()` (thunder_burst laid flat) so the ring becomes a shockwave on the ground.
+- RELL impact weight: `dust()` (dust_burst, warm grey #d9d3c6 at brightness 1: white blooms into a glow blob),
+  `smoke_burst()` (navy smoke_puff), fling debris.
+- Instant strike = neon `bolt` layers hugging the beam (jitter <= 0.6, 14 segments, thin) for 2 frames + one re-strike.
+- Neon core cylinder radius <= 0.15 (a fat core reads as a white slab near the camera); glow plane brightness 0.6.
+- Caster life: ghost afterimage on dissolve, arcs + static dripping off the body after re-forming.
+- Camera: frame the whole action with the caster in shot; small push + FOV punch (about 5 deg) on the hit.
+- Grade: storm dim = slight darkening + contrast, keep saturation (desaturating reads drab against RELL).
+- Trim dead frames at the end.

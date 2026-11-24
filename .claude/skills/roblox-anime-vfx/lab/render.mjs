@@ -1,5 +1,5 @@
 // Headless renderer: plays effect JSON in page/vfx.js (three.js emulator) and writes video + contact sheet.
-//   node render.mjs <effect.json | dir> [...] [--out DIR] [--fps 30]
+//   node render.mjs <effect.json | dir> [...] [--out DIR] [--fps 30] [--hd (1280x720)]
 // Per effect: OUT/<name>.mp4 (H.264, 640x360), OUT/<name>_sheet.jpg (8 frames), OUT/<name>_poster.jpg
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,13 +10,15 @@ const here = path.dirname(new URL(import.meta.url).pathname);
 const assets = path.join(here, '..', 'assets');
 const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf(k); if (i < 0) return d; const v = args[i + 1]; args.splice(i, 2); return v; };
+const hd = args.includes('--hd'); if (hd) args.splice(args.indexOf('--hd'), 1);
 const out = opt('--out', path.join(here, 'out')), fps = +opt('--fps', 30);
+const [VW, VH] = hd ? [1280, 720] : [640, 360];
 fs.mkdirSync(out, { recursive: true });
 let files = [];
 for (const a of args) files = files.concat(fs.statSync(a).isDirectory() ? fs.readdirSync(a).filter((f) => f.endsWith('.json')).sort().map((f) => path.join(a, f)) : [a]);
 const types = { '.js': 'application/javascript', '.html': 'text/html', '.png': 'image/png', '.json': 'application/json' };
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
-const page = await browser.newPage({ viewport: { width: 640, height: 360 } });
+const page = await browser.newPage({ viewport: { width: VW, height: VH } });
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
@@ -31,6 +33,7 @@ await page.route('http://lab.local/**', (r) => {
 });
 await page.goto('http://lab.local/page/index.html');
 await page.waitForFunction(() => window.LAB_READY, null, { timeout: 60000 });
+if (hd) await page.evaluate(() => { window.LAB_SIZE = [1280, 720]; });
 if (process.env.NOPOST) await page.evaluate((v) => { window.LAB_NOPOST = v; }, +process.env.NOPOST);
 for (const f of files) {
   const fx = JSON.parse(fs.readFileSync(f, 'utf8'));
@@ -46,7 +49,7 @@ for (const f of files) {
   const ff = (a) => execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...a]);
   ff(['-framerate', String(fps), '-i', path.join(tmp, 'f_%04d.jpg'), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '24', '-movflags', '+faststart', path.join(out, name + '.mp4')]);
   const step = Math.max(1, Math.floor(n / 8));
-  ff(['-i', path.join(tmp, 'f_%04d.jpg'), '-vf', `select='not(mod(n\\,${step}))',scale=320:-1,tile=4x2`, '-frames:v', '1', path.join(out, name + '_sheet.jpg')]);
+  ff(['-i', path.join(tmp, 'f_%04d.jpg'), '-vf', `select='not(mod(n\\,${step}))',scale=480:-1,tile=4x2`, '-frames:v', '1', path.join(out, name + '_sheet.jpg')]);
   const posterReal = fx.poster !== undefined ? await page.evaluate((te) => window.LAB.realTime(te), fx.poster) : dur * 0.3;
   const peak = Math.min(n - 1, Math.round(posterReal * fps));
   fs.copyFileSync(path.join(tmp, `f_${String(peak).padStart(4, '0')}.jpg`), path.join(out, name + '_poster.jpg'));

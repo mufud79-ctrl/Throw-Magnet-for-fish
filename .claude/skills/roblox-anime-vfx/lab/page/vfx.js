@@ -14,7 +14,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 
 const DEG = Math.PI / 180;
-const W = 640, H = 360;
+let W = 640, H = 360; // render.mjs --hd sets window.LAB_SIZE = [1280, 720] before the first load
 
 // ---------------------------------------------------------------- utils
 function rng(seed) {
@@ -733,6 +733,7 @@ class DamageNumber {
 // ---------------------------------------------------------------- effect player
 class Player {
   constructor() {
+    if (window.LAB_SIZE) [W, H] = window.LAB_SIZE;
     this.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, canvas: document.getElementById('vp') });
     this.renderer.setSize(W, H, false); this.renderer.shadowMap.enabled = true;
     this.camera = new THREE.PerspectiveCamera(60, W / H, 0.3, 1000);
