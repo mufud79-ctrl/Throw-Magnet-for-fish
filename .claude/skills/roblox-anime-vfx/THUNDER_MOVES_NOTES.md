@@ -52,3 +52,17 @@ and the beam was a white slab. Every render shown, tests included, must meet the
 - Camera: frame the whole action with the caster in shot; small push + FOV punch (about 5 deg) on the hit.
 - Grade: storm dim = slight darkening + contrast, keep saturation (desaturating reads drab against RELL).
 - Trim dead frames at the end.
+
+## Texture v2: cel lightning from an Enel (anime Goro Goro) reference study
+User: "textures need more polish, cutoff edges and poor clarity ... look up Enel". Reference frames came from YouTube's
+published thumbnails (i.ytimg.com maxres/hq frames; the fandom wiki refuses automated fetches). Style reference only:
+no Enel names or likeness in the moves.
+What the reference shows: thin white core in a FLAT saturated cyan body with a hard edge and a tight halo (cel, not soft
+bloom); jagged straight runs with fine micro-jags and short hooked barbs that taper to points; bolts bunch into a
+crackling bush; charge = white pinpoint star with speed rays; big hits flash the whole frame pale cyan line-art;
+ground hits = tall thin white-violet streaks shattering slabs.
+Done: new `cel` texture kind in vfx_textures.py (explicit layers, tapered polygon strokes with mitred joins, pointed
+tips, draw-in follows the trunk) -> thunder_bolt_v2, thunder_burst_v2, thunder_arc_v2, thunder_strip_v2_1..4.
+Kit + showcases switched to v2. Comparison sheets: assets/previews/v2_compare/. Waiting on user approval of v2.
+Ideas from the reference still to use in moves: cyan-mono impact frame for the biggest hits (Judgment Pillar),
+pinpoint charge star with rays (Plasma Bomb hold), tall white-violet streak + slabs for ground strikes.

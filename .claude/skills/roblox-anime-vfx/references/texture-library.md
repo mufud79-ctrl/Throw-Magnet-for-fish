@@ -49,3 +49,7 @@ FlipbookFramerate ~0.01.
 | `water_splash` | layered | Grid4x4 | Water splash: a fan of slim jets bursts up out of a churned base, tips breaking into strings of droplets that arc and fall; bright streaks run along the water. Layered. |
 | `spray_puff` | shaded | Grid4x4 | Water spray: a soft round mist burst threaded with fine droplets, expanding and fading out from the middle. Shaded (bright mist, subtle cool shading). |
 | `water_drops` | shaded | Grid4x4 | 16 water droplets (FlipbookStartRandom): round and teardrop shapes, darker refraction rim and a sharp highlight. Shaded. |
+| `thunder_bolt_v2` | cel | Grid4x4 | Anime cel lightning (Enel reference): sky-to-ground jagged trunk, 30-60 deg kinks with micro-jags, tapered pointed barbs and two forks; draws in along the trunk over 2 frames, re-strikes, cools (core thins first, outline lingers). Explicit hard-edged layers: core white line, mid flat body, rim filled outline (tint indigo, alpha), glow tight halo. |
+| `thunder_burst_v2` | cel | Grid4x4 | Cel impact: uneven anime star flash + 8 jagged barbed bolts out in 2 frames, re-strike, cool from the tips. No shock ring. Lay it flat (VelocityPerpendicular) for a ground starburst. |
+| `thunder_arc_v2` | cel | Grid4x4 | Cel crackle bush (loop): 4 short barbed arcs around the centre, new paths every 2 frames. |
+| `thunder_strip_v2_1..4` | cel | strip | Tileable cel ribbons (u wraps, no width seam): jagged barbed trunk + short fishbone forks, all inside v 0.1..0.9 (nothing chopped at the ribbon edge). Swap every 0.05 s. |

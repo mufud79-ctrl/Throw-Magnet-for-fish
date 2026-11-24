@@ -14,7 +14,7 @@ WHITE, ICE, CYAN, BLUE, INDIGO, NAVY, SOOT = "#ffffff", "#bff3ff", "#6fe0ff", "#
 LAYERS = ("glow", "rim", "mid", "core")
 LE = {"glow": 1, "rim": 0, "mid": 0.1, "core": 0.35}
 BR = {"glow": 1.0, "rim": 1.0, "mid": 1.15, "core": 1.4}
-STRIPS = [f"thunder_strip_{i}" for i in range(1, 5)]
+STRIPS = [f"thunder_strip_v2_{i}" for i in range(1, 5)]  # v2 cel strips (anime reference)
 
 # colour script per layer as it cools (k = 0 strike -> 1 gone): white-hot -> cyan -> blue -> indigo afterglow
 COOL = {

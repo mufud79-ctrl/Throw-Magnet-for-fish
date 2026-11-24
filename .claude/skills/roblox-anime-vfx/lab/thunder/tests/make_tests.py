@@ -30,13 +30,13 @@ def haze(at, t0, t1, rate, size=(4, 8), rise=2.5, seed=11, part=None, color=NAVY
 
 def crackle(at, t, size=4.0, life=0.16, seed=50):
     """Instant arc flash (thunder_arc played once): the angular replacement for camera-facing ring bursts."""
-    return emit_stack("thunder_arc", at, t, size=[[0, size * 0.8], [0.2, size], [1, size * 1.1]], life=life, seed=seed,
+    return emit_stack("thunder_arc_v2", at, t, size=[[0, size * 0.8], [0.2, size], [1, size * 1.1]], life=life, seed=seed,
                       colors=COOL, transparency=[[0, 0], [0.5, 0.2], [1, 1]])
 
 
 def ground_ring(at, t, size=12.0, life=0.45, seed=55):
     """thunder_burst laid flat on the ground: its shock ring becomes a shockwave in perspective, its bolts rake the sand."""
-    return emit_stack("thunder_burst", [at[0], 0.25, at[2]], t, size=[[0, size * 0.7], [0.15, size], [1, size * 1.08]], life=life,
+    return emit_stack("thunder_burst_v2", [at[0], 0.25, at[2]], t, size=[[0, size * 0.7], [0.15, size], [1, size * 1.08]], life=life,
                       seed=seed, orient="VelocityPerpendicular", colors=COOL, z=-0.2)
 
 
@@ -70,14 +70,14 @@ def trail_showcase():
     kinks = [p for _, p in P[1:-1]]
     L = []
     # anticipation: arcs crackle over the crouched body, ion haze pools at the feet (dark anchor)
-    L += emit_stack("thunder_arc", [0, 3, 0], 0, size=[[0, 5], [1, 6]], life=0.2, mode="Loop", rate=[[0.02, 0.24, 14]], layers=("glow", "rim", "mid", "core"))
+    L += emit_stack("thunder_arc_v2", [0, 3, 0], 0, size=[[0, 5], [1, 6]], life=0.2, mode="Loop", rate=[[0.02, 0.24, 14]], layers=("glow", "rim", "mid", "core"))
     L.append(haze([0, 0.6, 0], 0.0, 0.3, 18, size=(3, 6), rise=1.5, part=[4, 0.5, 4]))
     L.append(sparks([0, 3, 0], 0.12, 10, speed=(4, 9), life=(0.15, 0.3), seed=3))
     # the ribbon: dark smear first, then the four layers, pinned to the world (Static) so the bolt stays on its line
     base = {"path": P, "t0": 0.24, "t1": 0.40, "lifetime": 0.7, "faceCamera": True, "textureMode": "Static", "textureLength": 16,
             "widthScale": [[0, 1.35], [0.12, 1.0], [0.6, 0.7], [1, 0.35]]}
     for (ta, pa), (tb, pb) in zip(P[:-1], P[1:]):
-        L.append(dict(base, type="trail", path=[[ta, pa], [tb, pb]], t0=ta, t1=tb, lifetime=1.1, width=5, texture="thunder_strip_2_glow",
+        L.append(dict(base, type="trail", path=[[ta, pa], [tb, pb]], t0=ta, t1=tb, lifetime=1.1, width=5, texture="thunder_strip_v2_2_glow",
                       color=NAVY, lightEmission=0, brightness=1, transparency=[[0, 0.2], [0.5, 0.45], [1, 1]], widthScale=[[0, 0.8], [1, 1.5]]))
     fl = flicker(0.12, ((0.17, 0.8), (0.22, 0.05), (0.33, 0.7), (0.38, 0.15)), tail=0.55)
     L += leg_trails(base, P, {"glow": 6.5, "rim": 3.8, "mid": 3.4, "core": 2.0},
@@ -97,7 +97,7 @@ def trail_showcase():
     L.append(sparks([0, 2.5, -25], 0.40, 24, speed=(12, 28), seed=31))
     L.append(haze([0, 0.8, -25], 0.42, 0.9, 22, size=(4, 9), rise=3, part=[5, 0.5, 5], seed=12))
     # residual charge: arcs keep crawling over the re-formed body and static drips off it
-    L += emit_stack("thunder_arc", [0, 3, -25], 0.42, size=[[0, 4.5], [1, 5]], life=0.16, mode="Loop", rate=[[0.42, 1.15, 9]], seed=91,
+    L += emit_stack("thunder_arc_v2", [0, 3, -25], 0.42, size=[[0, 4.5], [1, 5]], life=0.16, mode="Loop", rate=[[0.42, 1.15, 9]], seed=91,
                     colors=COOL, transparency=[[0, 0], [0.6, 0.3], [1, 1]])
     L.append({"type": "emitter", "at": [0, 3, -25], "part": [2, 4, 1], "rate": [[0.45, 1.3, 14]], "seed": 33, "props": {
         "Texture": "static_sparks", "Color": [[0, ICE], [1, BLUE]], "LightEmission": 1, "Brightness": 1.5, "Size": [[0, 0.9], [1, 0.3]],
@@ -132,7 +132,7 @@ def vbeam_showcase():
     T = 0.32
     L = []
     # anticipation: arcs gather at the cocked hand, sparks pulled inward, haze darkens around the caster
-    L += emit_stack("thunder_arc", hand, 0, size=[[0, 2.5], [1, 4]], life=0.16, mode="Loop", rate=[[0.03, T, 16]])
+    L += emit_stack("thunder_arc_v2", hand, 0, size=[[0, 2.5], [1, 4]], life=0.16, mode="Loop", rate=[[0.03, T, 16]])
     L.append({"type": "emitter", "at": hand, "part": [7, 7, 7], "rate": [[0.04, T - 0.03, 60]], "seed": 5, "props": {
         "Texture": "static_sparks", "Color": [[0, BLUE], [1, WHITE]], "LightEmission": 1, "Brightness": 1.5, "Shape": "Sphere",
         "ShapeInOut": "Inward", "ShapeStyle": "Surface", "Size": [[0, 0.6], [1, 1.2]], "Lifetime": [0.12, 0.16], "Speed": [22, 28],
@@ -145,7 +145,7 @@ def vbeam_showcase():
            for L_, (a, b) in {"glow": (4.6, 3.8), "rim": (3.4, 2.8), "mid": (3.2, 2.6), "core": (1.7, 1.4)}.items()}
     L.append({"type": "vbeam", "from": hand, "to": hit, "t0": T, "life": 1.0, "reach": 1,
               "core": {"radius": [[0, 0.14], [0.06, 0.1], [0.25, 0.05], [0.34, 0]], "color": [[0, WHITE], [0.3, ICE]], "material": "Neon"},
-              "planes": [{"count": 2, "width": [[0, [4, 3]], [1, [6, 5]]], "texture": "thunder_strip_3_glow", "color": NAVY, "lightEmission": 0,
+              "planes": [{"count": 2, "width": [[0, [4, 3]], [1, [6, 5]]], "texture": "thunder_strip_v2_3_glow", "color": NAVY, "lightEmission": 0,
                           "brightness": 1, "transparency": [[0, 0.35], [0.5, 0.5], [1, 1]], "angle": 45, "textureLength": 14, "textureSpeed": -0.5}]
                         + plane_stack(wid, count=3, twist={"mid": 120, "core": -160, "glow": 40, "rim": 120}, speed={"mid": 2, "core": 3.5},
                                       tlen={"glow": 10, "rim": 9, "mid": 9, "core": 7}, bright={"glow": 0.6},
@@ -161,7 +161,7 @@ def vbeam_showcase():
     L.append(dust([0, 0, -24], T, n=8, size=(4.5, 10), seed=66))
     L.append(smoke_burst([0, 2.5, -24], T + 0.01, seed=67))
     L.append(sparks(hit, T, 26, speed=(14, 30), seed=41))
-    L += emit_stack("thunder_arc", [0, 3, -24.5], T, size=[[0, 4.5], [1, 5.5]], life=0.18, mode="Loop", rate=[[T + 0.02, T + 0.9, 12]], seed=90)
+    L += emit_stack("thunder_arc_v2", [0, 3, -24.5], T, size=[[0, 4.5], [1, 5.5]], life=0.18, mode="Loop", rate=[[T + 0.02, T + 0.9, 12]], seed=90)
     L.append(haze([0, 1, -24], T + 0.05, T + 0.9, 24, size=(4, 10), rise=3.5, part=[4, 1, 4], seed=13))
     L += scar([0, 0, -24], T, size=11, rot=10)
     return {

@@ -1436,6 +1436,224 @@ def storm_flash(n=16, seed=441):
     return out
 
 
+# ================================================================ THUNDER CEL (v2: anime cel lightning, Enel reference)
+# Reference study (anime Goro Goro lightning): a thin white core inside a FLAT saturated body with a hard edge and
+# only a tight halo; jagged angular runs with short hooked branches all along every bolt; bolts bunch into a
+# crackling bush. So each layer is painted explicitly with hard anti-aliased edges instead of being thresholded
+# out of one soft glow field: core = thin hot line, mid = flat body band, rim = filled silhouette a little wider
+# (the dark outline when tinted indigo, alpha-blended), glow = tight halo.
+def _jag_path(rng, a, b, seg=(0.07, 0.16), dev=(16, 31), run_p=0.25):
+    """Angular lightning: straight runs whose heading alternates side of the target line by 16-31 deg, so
+    consecutive kinks land at ~30-60 deg (the approved shape rule); now and then a longer straighter run."""
+    a, b = np.array(a, float), np.array(b, float)
+    L = np.linalg.norm(b - a) + 1e-9
+    pts, p, side = [a], a.copy(), rng.choice([-1, 1])
+    for _ in range(80):
+        to = b - p
+        dist = np.linalg.norm(to)
+        if dist < L * seg[1] * 0.9:
+            pts.append(b)
+            break
+        base = math.atan2(to[1], to[0])
+        dv = math.radians(rng.uniform(*dev))
+        ln = L * rng.uniform(*seg)
+        if rng.random() < run_p:
+            ln *= 1.7
+            dv *= 0.35
+        ang = base + side * dv
+        side = -side if rng.random() < 0.85 else side
+        p = p + np.array([math.cos(ang), math.sin(ang)]) * min(ln, dist)
+        pts.append(p.copy())
+    return pts
+
+
+def _micro(rng, pts, k=0.045, sub=(2, 4)):
+    """Fine jagged detail inside each straight run: split it into 2-4 pieces with small perpendicular kicks, so a
+    run still reads straight from afar but crackles up close (the anime bolt texture)."""
+    out = [np.array(pts[0], float)]
+    for p, q in zip(pts[:-1], pts[1:]):
+        p, q = np.array(p, float), np.array(q, float)
+        d = q - p
+        ln = np.linalg.norm(d) + 1e-9
+        nrm = np.array([-d[1], d[0]]) / ln
+        n = int(rng.integers(sub[0], sub[1] + 1))
+        for i in range(1, n):
+            out.append(p + d * (i / n + rng.uniform(-0.08, 0.08) / n) + nrm * ln * rng.uniform(-k, k))
+        out.append(q)
+    return out
+
+
+def _cel_tree(rng, a, b, w0, forks=2, hooks=0.55, depth=1, seg=(0.07, 0.16), t0=0.0, tip=0.25):
+    """Main jagged bolt (with micro-jags) + forks (recursive, thinner) + short hooked barbs that taper to points.
+    Returns [(pts, widths, t0)]: per-vertex widths (thick-thin pulse, tapering to the tip) and t0 = where along the
+    parent the bolt starts (0..1) so the draw-in follows the trunk."""
+    main = _micro(rng, _jag_path(rng, a, b, seg))
+    n = len(main)
+    pulse = np.convolve(rng.uniform(0.7, 1.25, n + 4), np.ones(3) / 3, "same")[2:n + 2]
+    widths = w0 * pulse * np.linspace(1.0, tip, n)
+    out = [(main, widths, t0)]
+    L = np.linalg.norm(np.array(b, float) - np.array(a, float))
+    for j in range(2, n - 1):                                      # hooks: short pointed barbs
+        if rng.random() < hooks * 0.5:
+            d = main[j] - main[j - 1]
+            h = math.atan2(d[1], d[0]) + rng.choice([-1, 1]) * math.radians(rng.uniform(35, 75))
+            ln = L * rng.uniform(0.02, 0.05)
+            q = main[j] + np.array([math.cos(h), math.sin(h)]) * ln
+            pts = [main[j], q]
+            if rng.random() < 0.6:
+                h2 = h + rng.choice([-1, 1]) * math.radians(rng.uniform(30, 60))
+                pts.append(q + np.array([math.cos(h2), math.sin(h2)]) * ln * rng.uniform(0.5, 0.9))
+            wj = widths[j] * 0.6
+            out.append((pts, np.linspace(wj, 0.0, len(pts)), t0 + (1 - t0) * j / n))
+    if depth > 0:
+        for _ in range(forks):                                     # forks: real branches, pointed tips
+            j = min(int(rng.uniform(0.15, 0.7) * (n - 1)) + 1, n - 2)
+            d = main[j + 1] - main[j]
+            h = math.atan2(d[1], d[0]) + rng.choice([-1, 1]) * math.radians(rng.uniform(25, 50))
+            ln = L * rng.uniform(0.2, 0.4) * (1 - j / n) ** 0.5
+            end = main[j] + np.array([math.cos(h), math.sin(h)]) * ln
+            out += _cel_tree(rng, main[j], end, widths[j] * 0.55, forks=1, hooks=hooks * 0.7, depth=depth - 1, seg=seg,
+                             t0=t0 + (1 - t0) * j / n, tip=0.0)
+    return out
+
+
+def _cel_draw(bolts, W, H, k=1.0, keep=1.0, jitter=0.0, rng=None, wrap=False):
+    """Fill each bolt as one tapered polygon (mitred joins, pointed tips): width scaled by k. keep = how far the
+    strike has drawn along the trunk (child bolts start when the trunk reaches them). wrap tiles in x."""
+    img = Image.new("L", (W, H), 0)
+    d = ImageDraw.Draw(img)
+    offs = (-W, 0, W) if wrap else (0,)
+    for pts, ws, t0 in bolts:
+        vis = 1.0 if keep >= 1 else max(0.0, min(1.0, (keep - t0) / max(1e-6, 1 - t0)))
+        if vis <= 0:
+            continue
+        P = [np.array(q, float) for q in pts]
+        Wd = np.array(ws, float) * k
+        if vis < 1:
+            f = (len(P) - 1) * vis
+            m = int(f)
+            P, Wd = P[:m + 2], Wd[:m + 2].copy()
+            if m + 1 < len(pts):
+                P[-1] = pts[m] + (np.array(pts[m + 1]) - pts[m]) * (f - m)
+            Wd[-1] = 0.0                                     # the drawing head is pointed too
+        if len(P) < 2:
+            continue
+        if jitter and rng is not None:
+            P = [q + rng.normal(0, jitter, 2) if 0 < j < len(P) - 1 else q for j, q in enumerate(P)]
+        left, right = [], []
+        for j in range(len(P)):
+            a_ = P[max(0, j - 1)]; b_ = P[min(len(P) - 1, j + 1)]
+            t = b_ - a_
+            t = t / (np.linalg.norm(t) + 1e-9)
+            nrm = np.array([-t[1], t[0]])
+            miter = 1.0
+            if 0 < j < len(P) - 1:
+                t1 = P[j] - P[j - 1]; t1 /= (np.linalg.norm(t1) + 1e-9)
+                miter = min(2.0, 1.0 / max(0.35, abs(np.dot(np.array([-t1[1], t1[0]]), nrm))))
+            h = max(0.0, Wd[j]) / 2 * miter
+            left.append(P[j] + nrm * h); right.append(P[j] - nrm * h)
+        poly = left + right[::-1]
+        for ox in offs:
+            d.polygon([(q[0] + ox, q[1]) for q in poly], fill=255)
+    return np.asarray(img, np.float32) / 255
+
+
+CEL_K = {"core": 1.0, "mid": 2.5, "rim": 3.7}
+
+
+def _cel_layers(bolts, W, H, br=1.0, keep=1.0, jitter=0.0, rng=None, cool=0.0, wrap=False, extra=None):
+    """Explicit cel layers. cool (0..1): the hot core thins away first, the body narrows, the outline lingers."""
+    out = {}
+    for L, k in CEL_K.items():
+        kk = k * ((1 - cool) if L == "core" else (1 - 0.45 * cool) if L == "mid" else (1 - 0.25 * cool))
+        f = _cel_draw(bolts, W, H, kk, keep, jitter, np.random.default_rng(rng) if rng is not None else None, wrap) if kk > 0.05 else np.zeros((H, W), np.float32)
+        out[L] = f
+    if extra:
+        for L, f in extra.items():
+            out[L] = np.maximum(out[L], f)
+    sig = H * 0.012 if wrap else W * 0.012
+    out["glow"] = np.clip(ndi.gaussian_filter(out["rim"], sig, mode="wrap" if wrap else "constant") * 1.3, 0, 1) * 0.75
+    a = br
+    return {L: np.clip(f * a, 0, 1) for L, f in out.items()}
+
+
+# per frame: (keep, brightness, jitter step, cool) - draw-in over 2 frames, hold with re-strike flicker, cool
+CEL_STRIKE = [(0.5, 0.9, 0, 0), (1, 1, 0, 0), (1, 1, 1, 0), (1, 0.55, 1, 0.05), (1, 1, 2, 0.05), (1, 0.85, 2, 0.12),
+              (1, 0.5, 3, 0.2), (1, 0.9, 3, 0.25), (1, 0.75, 3, 0.35), (1, 0.65, 3, 0.45), (1, 0.55, 3, 0.55),
+              (1, 0.45, 3, 0.65), (1, 0.35, 3, 0.75), (1, 0.25, 3, 0.85), (1, 0.15, 3, 0.92), (1, 0.06, 3, 1.0)]
+
+
+def thunder_bolt_v2():
+    """Sky-to-ground strike, cel: jagged trunk with hooked barbs and two forks; draws in over 2 frames, re-strikes,
+    then cools (core thins out first, outline lingers)."""
+    rng = np.random.default_rng(1406)
+    m = S * 0.07
+    bolts = _cel_tree(rng, (S * 0.5, m), (S * 0.5 + rng.normal(0, S * 0.04), S - m), S * 0.012, forks=2, hooks=0.6)
+    frames = []
+    for i, (keep, br, jit, cool) in enumerate(CEL_STRIKE):
+        frames.append(_cel_layers(bolts, S, S, br, keep, S * 0.0025 * jit, 7 + jit, cool))
+    return frames
+
+
+def thunder_burst_v2():
+    """Electric impact, cel: an anime star flash (sharp uneven spikes, white hot) with 8 jagged hooked bolts
+    striking out in 2 frames, re-striking, then cooling from the tips. No ring (rings read as vector circles)."""
+    rng = np.random.default_rng(1411)
+    c = np.array([S / 2, S / 2])
+    bolts = []
+    for k in range(8):
+        a = k / 8 * TAU + rng.uniform(-0.25, 0.25)
+        L = S * rng.uniform(0.3, 0.43)
+        bolts += _cel_tree(rng, c, c + np.array([math.cos(a), math.sin(a)]) * L, S * 0.009, forks=1, hooks=0.5, depth=1)
+    x, y = coords(S)
+    r, ang = polar_of(x, y)
+    spikes = np.abs(np.cos(ang * 3.5 + 0.4)) ** 6 * 0.6 + np.abs(np.cos(ang * 2.5 + 1.3)) ** 10 * 0.4   # uneven star
+    frames = []
+    for i, (keep, br, jit, cool) in enumerate(CEL_STRIKE):
+        keep = min(1.0, (i + 1) / 2.0)
+        star_r = (0.06 + 0.22 * spikes) * max(0.0, 1 - i / 5) ** 1.2
+        star = ss(r, star_r + 0.004, star_r - 0.004) if i < 5 else np.zeros_like(r)
+        extra = {"core": ss(r, star_r * 0.55 + 0.003, star_r * 0.55 - 0.003) if i < 5 else np.zeros_like(r), "mid": star,
+                 "rim": ss(r, star_r * 1.25 + 0.006, star_r * 1.25 - 0.006) if i < 5 else np.zeros_like(r)}
+        frames.append(_cel_layers(bolts, S, S, br, keep, S * 0.0025 * jit, 11 + jit, cool, extra=extra))
+    return frames
+
+
+def thunder_arc_v2():
+    """Crackling arcs (loop), cel: 4 short jagged hooked arcs bunched around the centre like a crackling bush,
+    re-striking on new paths every 2 frames."""
+    frames = []
+    for i in range(16):
+        fr = np.random.default_rng(1421 * 100 + i // 2)
+        bolts = []
+        for _ in range(4):
+            a = fr.uniform(0, TAU)
+            r0, r1 = S * fr.uniform(0.04, 0.14), S * fr.uniform(0.3, 0.44)
+            a1 = a + fr.uniform(-0.6, 0.6)
+            bolts += _cel_tree(fr, (S / 2 + math.cos(a) * r0, S / 2 + math.sin(a) * r0), (S / 2 + math.cos(a1) * r1, S / 2 + math.sin(a1) * r1),
+                               S * 0.0075, forks=1, hooks=0.6, depth=1, seg=(0.12, 0.26))
+        frames.append(_cel_layers(bolts, S, S, 0.85 + 0.15 * (i % 2)))
+    return frames
+
+
+def _thunder_strip_v2(seed):
+    """Tileable cel lightning ribbon (u along, wraps in u): a jagged trunk across the strip (same height at both
+    ends) with hooked barbs and short forks, all kept inside v 0.1..0.9 so nothing is chopped at the ribbon edge.
+    1024x256. Swap the 4 variants every ~0.05 s."""
+    def fn():
+        rng = np.random.default_rng(seed)
+        W, H = 1024 * SS, 256 * SS
+        lo, hi = H * 0.1, H * 0.9
+        for _ in range(200):                                  # retry until the whole bolt stays inside the band
+            bolts = _cel_tree(rng, (0, H / 2), (W, H / 2), H * 0.028, forks=3, hooks=0.6, depth=1, seg=(0.025, 0.06), tip=1.0)
+            bolts[0][1][-1] = bolts[0][1][0]                  # same trunk width at both ends: no seam where it wraps
+            ys = [q[1] for pts, _, _ in bolts for q in pts]
+            if min(ys) > lo + H * 0.04 and max(ys) < hi - H * 0.04:
+                break
+        return _cel_layers(bolts, W, H, wrap=True)
+    return fn
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -1496,6 +1714,14 @@ LIB = {
     "thunder_strip_2": (_thunder_strip(482), "layered", 0, 5, "thunder"),
     "thunder_strip_3": (_thunder_strip(483), "layered", 0, 5, "thunder"),
     "thunder_strip_4": (_thunder_strip(484), "layered", 0, 5, "thunder"),
+    # v2 cel set (anime reference): explicit hard-edged layers
+    "thunder_bolt_v2":  (thunder_bolt_v2,  "cel", 4, 0, "thunder"),
+    "thunder_burst_v2": (thunder_burst_v2, "cel", 4, 0, "thunder"),
+    "thunder_arc_v2":   (thunder_arc_v2,   "cel", 4, 0, "thunder"),
+    "thunder_strip_v2_1": (_thunder_strip_v2(2481), "cel", 0, 0, "thunder"),
+    "thunder_strip_v2_2": (_thunder_strip_v2(2482), "cel", 0, 0, "thunder"),
+    "thunder_strip_v2_3": (_thunder_strip_v2(2483), "cel", 0, 0, "thunder"),
+    "thunder_strip_v2_4": (_thunder_strip_v2(2484), "cel", 0, 0, "thunder"),
 }
 
 PALETTES = {
@@ -1528,12 +1754,12 @@ def build(name, out):
     fn, kind, grid, gsig, _ = LIB[name]
     res = fn()
     paths = []
-    if kind == "layered":
+    if kind in ("layered", "cel"):
         frames = res if isinstance(res, list) else [res]
-        per = [pc.split(f, glow_sigma=gsig * SS) for f in frames]
+        per = frames if kind == "cel" else [pc.split(f, glow_sigma=gsig * SS) for f in frames]
         for L in ("glow", "rim", "mid", "core"):
             if grid == 0:                                   # rectangular strip
-                h, w = frames[0].shape
+                h, w = per[0][L].shape
                 a = pc.down_rect(per[0][L], w // SS, h // SS)
             elif grid == 1:
                 a = pc.down(per[0][L], CELL * 2) * pc.edge_fade(CELL * 2)

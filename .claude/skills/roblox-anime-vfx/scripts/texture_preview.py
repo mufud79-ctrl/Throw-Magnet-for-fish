@@ -18,7 +18,7 @@ def load(path):
 
 def layers_for(name, tex):
     fn, kind, grid, _, pal = LIB[name]
-    if kind == "layered":
+    if kind in ("layered", "cel"):
         L = {k: load(os.path.join(tex, f"{name}_{k}.png"))[0] for k in ("glow", "rim", "mid", "core")}
         return L, None, grid, pal, kind
     a, v = load(os.path.join(tex, f"{name}.png"))

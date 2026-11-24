@@ -13,7 +13,7 @@
     -2.2
    ],
    "props": {
-    "Texture": "thunder_arc_glow",
+    "Texture": "thunder_arc_v2_glow",
     "Color": "#3a5cff",
     "LightEmission": 1,
     "Brightness": 1.0,
@@ -62,7 +62,7 @@
     -2.2
    ],
    "props": {
-    "Texture": "thunder_arc_rim",
+    "Texture": "thunder_arc_v2_rim",
     "Color": "#2a1a9a",
     "LightEmission": 0,
     "Brightness": 1.0,
@@ -111,7 +111,7 @@
     -2.2
    ],
    "props": {
-    "Texture": "thunder_arc_mid",
+    "Texture": "thunder_arc_v2_mid",
     "Color": "#6fe0ff",
     "LightEmission": 0.1,
     "Brightness": 1.15,
@@ -160,7 +160,7 @@
     -2.2
    ],
    "props": {
-    "Texture": "thunder_arc_core",
+    "Texture": "thunder_arc_v2_core",
     "Color": "#ffffff",
     "LightEmission": 0.35,
     "Brightness": 1.4,
@@ -407,7 +407,7 @@
        ]
       ]
      ],
-     "texture": "thunder_strip_3_glow",
+     "texture": "thunder_strip_v2_3_glow",
      "color": "#2a3350",
      "lightEmission": 0,
      "brightness": 1,
@@ -463,10 +463,10 @@
       ]
      ],
      "textures": [
-      "thunder_strip_1_glow",
-      "thunder_strip_2_glow",
-      "thunder_strip_3_glow",
-      "thunder_strip_4_glow"
+      "thunder_strip_v2_1_glow",
+      "thunder_strip_v2_2_glow",
+      "thunder_strip_v2_3_glow",
+      "thunder_strip_v2_4_glow"
      ],
      "swap": 0.05,
      "color": [
@@ -538,10 +538,10 @@
       ]
      ],
      "textures": [
-      "thunder_strip_1_rim",
-      "thunder_strip_2_rim",
-      "thunder_strip_3_rim",
-      "thunder_strip_4_rim"
+      "thunder_strip_v2_1_rim",
+      "thunder_strip_v2_2_rim",
+      "thunder_strip_v2_3_rim",
+      "thunder_strip_v2_4_rim"
      ],
      "swap": 0.05,
      "color": [
@@ -613,10 +613,10 @@
       ]
      ],
      "textures": [
-      "thunder_strip_1_mid",
-      "thunder_strip_2_mid",
-      "thunder_strip_3_mid",
-      "thunder_strip_4_mid"
+      "thunder_strip_v2_1_mid",
+      "thunder_strip_v2_2_mid",
+      "thunder_strip_v2_3_mid",
+      "thunder_strip_v2_4_mid"
      ],
      "swap": 0.05,
      "color": [
@@ -712,10 +712,10 @@
       ]
      ],
      "textures": [
-      "thunder_strip_1_core",
-      "thunder_strip_2_core",
-      "thunder_strip_3_core",
-      "thunder_strip_4_core"
+      "thunder_strip_v2_1_core",
+      "thunder_strip_v2_2_core",
+      "thunder_strip_v2_3_core",
+      "thunder_strip_v2_4_core"
      ],
      "swap": 0.05,
      "color": [
@@ -833,7 +833,7 @@
     -2.2
    ],
    "props": {
-    "Texture": "thunder_arc_glow",
+    "Texture": "thunder_arc_v2_glow",
     "Color": [
      [
       0,
@@ -911,7 +911,7 @@
     -2.2
    ],
    "props": {
-    "Texture": "thunder_arc_rim",
+    "Texture": "thunder_arc_v2_rim",
     "Color": [
      [
       0,
@@ -989,7 +989,7 @@
     -2.2
    ],
    "props": {
-    "Texture": "thunder_arc_mid",
+    "Texture": "thunder_arc_v2_mid",
     "Color": [
      [
       0,
@@ -1071,7 +1071,7 @@
     -2.2
    ],
    "props": {
-    "Texture": "thunder_arc_core",
+    "Texture": "thunder_arc_v2_core",
     "Color": [
      [
       0,
@@ -1153,7 +1153,7 @@
     -24
    ],
    "props": {
-    "Texture": "thunder_arc_glow",
+    "Texture": "thunder_arc_v2_glow",
     "Color": [
      [
       0,
@@ -1231,7 +1231,7 @@
     -24
    ],
    "props": {
-    "Texture": "thunder_arc_rim",
+    "Texture": "thunder_arc_v2_rim",
     "Color": [
      [
       0,
@@ -1309,7 +1309,7 @@
     -24
    ],
    "props": {
-    "Texture": "thunder_arc_mid",
+    "Texture": "thunder_arc_v2_mid",
     "Color": [
      [
       0,
@@ -1391,7 +1391,7 @@
     -24
    ],
    "props": {
-    "Texture": "thunder_arc_core",
+    "Texture": "thunder_arc_v2_core",
     "Color": [
      [
       0,
@@ -1473,7 +1473,7 @@
     -24
    ],
    "props": {
-    "Texture": "thunder_burst_glow",
+    "Texture": "thunder_burst_v2_glow",
     "Color": [
      [
       0,
@@ -1538,7 +1538,7 @@
     -24
    ],
    "props": {
-    "Texture": "thunder_burst_rim",
+    "Texture": "thunder_burst_v2_rim",
     "Color": [
      [
       0,
@@ -1603,7 +1603,7 @@
     -24
    ],
    "props": {
-    "Texture": "thunder_burst_mid",
+    "Texture": "thunder_burst_v2_mid",
     "Color": [
      [
       0,
@@ -1672,7 +1672,7 @@
     -24
    ],
    "props": {
-    "Texture": "thunder_burst_core",
+    "Texture": "thunder_burst_v2_core",
     "Color": [
      [
       0,
@@ -1977,7 +1977,7 @@
     -24.5
    ],
    "props": {
-    "Texture": "thunder_arc_glow",
+    "Texture": "thunder_arc_v2_glow",
     "Color": "#3a5cff",
     "LightEmission": 1,
     "Brightness": 1.0,
@@ -2026,7 +2026,7 @@
     -24.5
    ],
    "props": {
-    "Texture": "thunder_arc_rim",
+    "Texture": "thunder_arc_v2_rim",
     "Color": "#2a1a9a",
     "LightEmission": 0,
     "Brightness": 1.0,
@@ -2075,7 +2075,7 @@
     -24.5
    ],
    "props": {
-    "Texture": "thunder_arc_mid",
+    "Texture": "thunder_arc_v2_mid",
     "Color": "#6fe0ff",
     "LightEmission": 0.1,
     "Brightness": 1.15,
@@ -2124,7 +2124,7 @@
     -24.5
    ],
    "props": {
-    "Texture": "thunder_arc_core",
+    "Texture": "thunder_arc_v2_core",
     "Color": "#ffffff",
     "LightEmission": 0.35,
     "Brightness": 1.4,

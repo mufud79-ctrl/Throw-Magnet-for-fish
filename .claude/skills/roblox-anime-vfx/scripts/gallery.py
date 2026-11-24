@@ -17,7 +17,7 @@ GROUPS = [("Fire", ["fire_burst", "flame_lick", "aura_wisp", "embers"]), ("Smoke
           ("Element matter (new)", ["magma_splash", "lava_drops", "light_burst", "shock_ripple", "ice_burst", "frost_mist", "ice_chips",
                                     "void_smoke", "void_orb", "electric_burst", "haki_burst", "blade_cuts", "water_splash", "spray_puff", "water_drops"]),
           ("Hero silhouettes (Figma image gen)", ["dragon_head", "phoenix_wing", "giant_fist", "water_shark", "palm_strike"])]
-KIND = {"layered": "4 stacked layers", "shaded": "1 shaded texture", "white": "1 white texture", "strip": "1 shaded mesh strip"}
+KIND = {"layered": "4 stacked layers", "cel": "4 stacked cel layers (hard edges)", "shaded": "1 shaded texture", "white": "1 white texture", "strip": "1 shaded mesh strip"}
 GRID = {0: "strip / full-screen", 1: "single image", 2: "2×2 sheet", 4: "4×4 flipbook, 16 frames"}
 CSS = """
 /* Layout: a dark VFX-lab light table; cards in a responsive grid so effects glow like they do in game */
@@ -64,7 +64,7 @@ def build(out, lede, updated=()):
             if grid == 4:
                 g = f"previews/{nm}.gif"; files[g] = os.path.join(A, g)
                 anim = f'<figure class="anim"><img src="{g}" alt="{nm} flipbook playing" loading="lazy"><figcaption>Playing</figcaption></figure>'
-            raws = [f"{nm}_{L}.png" for L in ("glow", "rim", "mid", "core")] if kind == "layered" else [f"{nm}.png"]
+            raws = [f"{nm}_{L}.png" for L in ("glow", "rim", "mid", "core")] if kind in ("layered", "cel") else [f"{nm}.png"]
             rawhtml = ""
             for r in raws:
                 files["textures/" + r] = os.path.join(A, "textures", r)
