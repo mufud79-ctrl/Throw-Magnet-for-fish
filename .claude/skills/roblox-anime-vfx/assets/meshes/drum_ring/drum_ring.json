@@ -1,0 +1,90 @@
+{
+ "parts": {
+  "Frame": {
+   "polys": 8653,
+   "tris": 15824
+  },
+  "Drum_1": {
+   "polys": 2136,
+   "tris": 3512
+  },
+  "Tassel_1": {
+   "polys": 170,
+   "tris": 284
+  },
+  "Drum_2": {
+   "polys": 2136,
+   "tris": 3512
+  },
+  "Tassel_2": {
+   "polys": 170,
+   "tris": 284
+  },
+  "Drum_3": {
+   "polys": 2136,
+   "tris": 3512
+  },
+  "Tassel_3": {
+   "polys": 170,
+   "tris": 284
+  },
+  "Drum_4": {
+   "polys": 2136,
+   "tris": 3512
+  },
+  "Tassel_4": {
+   "polys": 170,
+   "tris": 284
+  },
+  "Drum_5": {
+   "polys": 2136,
+   "tris": 3512
+  },
+  "Tassel_5": {
+   "polys": 170,
+   "tris": 284
+  },
+  "Drum_6": {
+   "polys": 2136,
+   "tris": 3512
+  },
+  "Tassel_6": {
+   "polys": 170,
+   "tris": 284
+  },
+  "Drum_7": {
+   "polys": 2136,
+   "tris": 3512
+  },
+  "Tassel_7": {
+   "polys": 170,
+   "tris": 284
+  },
+  "Drum_8": {
+   "polys": 2136,
+   "tris": 3512
+  },
+  "Tassel_8": {
+   "polys": 170,
+   "tris": 284
+  }
+ },
+ "total_tris": 46192,
+ "drum_angles_deg": [
+  -125,
+  -90,
+  -55,
+  -20,
+  20,
+  55,
+  90,
+  125
+ ],
+ "arch_centre": [
+  0.0,
+  0.0,
+  0.5
+ ],
+ "arch_radius": 0.8,
+ "units": "god model units (god is 1.9 tall); Blender Z-up, front -Y"
+}
