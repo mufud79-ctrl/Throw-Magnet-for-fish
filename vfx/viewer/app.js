@@ -2,8 +2,15 @@
 (function (G) {
   'use strict';
   const THREE = G.THREE;
-  const NAMES = Object.keys(G.VFX_EFFECTS);
-  let FX = G.VFX_EFFECTS[NAMES[0]];
+  const COMBOS = Object.keys(G.VFX_EFFECTS), PARTS = Object.keys(G.VFX_PARTS || {});
+  const NAMES = COMBOS.concat(PARTS);
+  const partCache = {};
+  // a part previews on its own: wrapped as a one-entry combo at its preview position
+  const resolve = (n) => G.VFX_EFFECTS[n] || partCache[n] || (partCache[n] = G.VFXSpec.compose(
+    { name: n, version: 1, stage: G.VFX_PARTS[n].stage, isPart: true, note: G.VFX_PARTS[n].note },
+    [{ part: n, t: 0.05, at: G.VFX_PARTS[n].previewAt || [0, 0, 0], tag: n }]));
+  let FX = resolve(NAMES[0]);
+  let comboName = COMBOS[0];
   const DT = 1 / 60, PAUSE = 0.7;
   const $ = (s) => document.querySelector(s);
 
@@ -292,7 +299,7 @@
       const seen = new Set();
       FX.layers.forEach((L, i) => {
         if (L.role !== role) return;
-        const key = L.stack || L.name;
+        const key = L.stack || L.name, kid = key.replace(/[^\w-]/g, '_');
         if (seen.has(key)) return; seen.add(key);
         const idx = FX.layers.map((l, j) => ((l.stack || l.name) === key ? j : -1)).filter((j) => j >= 0);
         const row = document.createElement('div'); row.className = 'layer';
@@ -300,9 +307,9 @@
         const tex = L.stack ? L.props.Texture.replace(/_(glow|rim|mid|core)$/, '_mid') : L.props.Texture;
         thumbWrap.appendChild(thumbOf(tex, 40));
         const toggles = L.stack ? `<span class="lt">${idx.map((j) => `<label><input type="checkbox" data-j="${j}" checked>${FX.layers[j].layer}</label>`).join('')}</span>` : '';
-        row.innerHTML = `<input type="checkbox" id="ly-${key}" checked><label for="ly-${key}"><span class="ln">${key}${L.stack ? ' <em>4 layers</em>' : ''}</span><span class="lm">${describe(L)}</span><span class="lr">${L.ref || ''}</span>${toggles}</label><button type="button" class="solo" aria-pressed="false">Solo</button>`;
+        row.innerHTML = `<input type="checkbox" id="ly-${kid}" checked><label for="ly-${kid}"><span class="ln">${key}${L.stack ? ' <em>4 layers</em>' : ''}</span><span class="lm">${describe(L)}</span><span class="lr">${L.ref || ''}</span>${toggles}</label><button type="button" class="solo" aria-pressed="false">Solo</button>`;
         row.prepend(thumbWrap);
-        const main = row.querySelector('#ly-' + key);
+        const main = row.querySelector('#ly-' + kid);
         main.onchange = () => { idx.forEach((j) => { sim.emitters[j].hidden = !main.checked; }); row.querySelectorAll('[data-j]').forEach((c) => (c.checked = main.checked)); };
         row.querySelectorAll('[data-j]').forEach((c) => (c.onchange = () => { sim.emitters[+c.dataset.j].hidden = !c.checked; }));
         row.querySelector('.solo').onclick = (e) => {
@@ -336,7 +343,7 @@
     $('#stat-tex').textContent = texNames.length;
     $('#fxname').textContent = FX.name;
     $('#fxver').textContent = FX.version;
-    document.querySelectorAll('[data-fx]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.fx === FX.name));
+    document.querySelectorAll('[data-fx]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.fx === FX.name || (b.parentNode.id === 'fxbar' && b.dataset.fx === comboName && FX.isPart)));
   }
   $('#copy').onclick = async () => {
     const btn = $('#copy');
@@ -348,14 +355,26 @@
     document.querySelectorAll('[role=tab]').forEach((t) => t.setAttribute('aria-selected', t === tab));
     document.querySelectorAll('[role=tabpanel]').forEach((p) => { p.hidden = p.id !== tab.getAttribute('aria-controls'); });
   }));
-  const fxBar = $('#fxbar');
-  NAMES.forEach((n) => {
+  const fxBar = $('#fxbar'), partBar = $('#partbar');
+  COMBOS.forEach((n) => {
     const b = document.createElement('button'); b.type = 'button'; b.dataset.fx = n; b.textContent = n;
     b.onclick = () => load(n);
     fxBar.appendChild(b);
   });
+  function buildPartBar() {
+    const combo = G.VFX_EFFECTS[comboName];
+    const used = [...new Set((combo.parts || []).map((p) => p.part))];
+    partBar.innerHTML = '<span class="pl">Stacked parts</span>';
+    used.forEach((n) => {
+      const b = document.createElement('button'); b.type = 'button'; b.dataset.fx = n; b.textContent = n; b.title = G.VFX_PARTS[n].note || '';
+      b.onclick = () => load(n);
+      partBar.appendChild(b);
+    });
+  }
   function load(name) {
-    FX = G.VFX_EFFECTS[name];
+    FX = resolve(name);
+    if (G.VFX_EFFECTS[name]) comboName = name;
+    buildPartBar();
     try { location.hash = name; } catch (e) { /* hash optional */ }
     return setupEffect().then(() => { buildUI(); sim.reset(); state.wait = 0; if (!G.VFX_HEADLESS) setPlaying(true); });
   }
@@ -395,7 +414,7 @@
     ready, load, setEnv, camera, controls,
     get sim() { return sim; },
     frame(t) { setPlaying(false); seek(t); controls.update(); render(); tRead.textContent = t.toFixed(2) + 's'; },
-    luau: (name) => G.VFXLuau.toLuau(G.VFX_EFFECTS[name]),
+    luau: (name) => G.VFXLuau.toLuau(resolve(name)),
     names: NAMES,
   };
 })(window);

@@ -1,38 +1,42 @@
-# Drawing recipes (vfx/engine/paint.js, brush engine)
+# Texture recipes (vfx/craft, headless photo-craft)
 
-Textures are painted headless with Canvas2D brush marks, like layering in Photoshop. The
-preview and the uploaded PNG are identical, and layered drawings split into 4 white sheets.
+Pro Roblox VFX sprites are painted in an image editor, not drawn as vectors. `craft.py` recreates
+that workflow in numpy/scipy, so the textures are smooth and painterly with no stamps or polygons.
 
-## Marks (cell space x,y in [-1,1], y up)
+## Core moves
 
-| Mark | Use |
-|---|---|
-| `ribbon(pts, widths, opts)` | tapered stroke along a polyline: strands, ink crescents, rays, lines, needles |
-| `poly(pts, opts)` | filled shape: blades, teeth, stars |
-| `dot(x, y, r, opts)` | bubbles, glint cores, screentone dots |
-| `arcPts`, `linePts`, `taper(n, w, peak, sharpness)` | centrelines and width profiles |
-| `halftone(x0, y0, x1, y1, step, rf)` | manga screentone dots, radius from `rf` |
+| Move | Function | Use |
+|---|---|---|
+| Paint a straight strip (u along, v across) | numpy grids | every slash, swoosh, trail, blade, ink stroke |
+| Pressure taper | thickness profile `T(u)` (sin-based, peak toward the head) | needle tips at both ends |
+| Streak texture | `noise(h, w, sy, sx)` with sy tiny and sx long + `levels` | hair streaks inside energy |
+| Smudge | `mblur(I, sigma, axis)` along the stroke | silky motion |
+| Organic edges | domain-warp the strip with low-frequency noise | no ruler-straight edges |
+| Bend it | `polar(strip, size, r_out, r_in, a0, sweep, vtop, spiral)` | crescent / swoosh / blade |
+| Twirl | per-row wrap-around roll of a 360° strip + wrap blur | vortex, ground swirl, ring slash (seamless) |
+| Radial | 360° polar with v = radius, `spikes_profile` along angle | shard nova, eruption, ink spikes, radially smeared fire |
+| Analytic glows | exp falloffs (core + rays) | glint, flare, line, spark, bokeh, orbit ring |
+| Supersample | paint at 2x, Lanczos down | clean edges |
+| Layer split | `split(I, glowSigma, thresholds)` | white glow/rim/mid/core with soft transitions |
 
-Flags: `hot` (also drawn into core at `coreW`), `coreOnly`, `glowOnly` (halo source only),
-`noRim`, `a` (alpha).
-
-Kinds: `layered` (marks → glow/rim/mid/core), `single` (white mask, optional `halo` blur),
-`pixels` (soft media fn → [value, alpha]), `pixelLayers` (scalar field → 4 layers by thresholds;
-used for the fire flash).
+Threshold sets: `E` for painted energy (soft gradient white → hue → deep edge); `B` for graphic
+shapes painted with a flat body at 0.36 (rim = thin fringe, mid = flat body, core = teeth, tone, ridges).
 
 ## Recipes that match the references
 
-| Element | Recipe |
+| Texture | Recipe |
 |---|---|
-| Energy crescent (`strandArc`) | white body band at the cutting edge (hot) + 46–60 strands whose radial depth `q` is dense near the edge, spirals inward (`spin`), random spans, widths 0.004–0.02; flecks peel off; tail recedes over the frames |
-| Black ink crescent (`inkArc`) | one ribbon whose width peaks at 0.075 toward the head, needle tips, reverse hook at the head, 3–4 inward barbs |
-| Serrated blade (`sawFan`) | crescent polygon with an alternating outer radius (teeth); white tooth polys (`coreOnly`) + screentone band |
-| Vortex (`swirl`) | 14–30 spiral arcs at random radii with tapered widths, rotated per frame; the same function draws the ground swirl and the ring slash |
-| Glint / flare | crisp tapered rays + small core dot, with a small `glowOnly` dot and `halo` blur (keep it small or it becomes a white ball) |
-| Fire flash | fbm-spiked radial field via `pixelLayers`; keep the glow threshold above −0.3 so it never reaches the cell edge (a square silhouette means it did) |
-| Mist / dust | fbm density in `pixels`, filling ~85% of the cell, value-shaded for dust |
+| `wisp_arc` (energy swoosh) | 6 feathery tongues per arc, each a tapered band whose tip flicks outward (v < 0); white-hot outer edge, streak noise, domain-warped edges, tail breaks into streaks |
+| `trail_arc` (wind) | the same with 4 tongues, thinner and less white |
+| `ink_arc` | one black crescent, belly toward the head, needle tips, dry-brush hair split on the tail, 2 inward spurs, spiral 0.12 |
+| `saw_fan` | curved blade with a sawtooth outer edge (26 long teeth), flat navy body, white teeth, screentone dots |
+| `rift` | horizontal tear: spiky top and bottom profiles around a wobbling centre line, lit top edge |
+| `energy_swirl` | 360° strip of streaks + soft clouds, twirled, wrap-blurred: a cosmic vortex |
+| `shard_nova` / `shard_fan` | spike length profile in polar space; lit side where the profile rises |
+| `fire_burst` | spiky radial heat field + noise, smeared radially |
+| `star4` | concave astroid `|x|^0.42 + |y|^0.42 < 1` with ridge highlights and a hot centre |
 
 ## Review
 
-`node paint.mjs [defs]` writes the PNGs plus `_preview_<def>.png`. Compose several previews into
-one board with PIL and compare against frames from the reference video.
+Always crop the reference frame and put it next to `_preview_<name>.png` (PIL). Judge silhouette,
+edge quality, gradient and streak texture, not just the shape.

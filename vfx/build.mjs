@@ -2,7 +2,7 @@
 //   out/lab.html                  (artifact page: all effects, PNG textures embedded)
 //   out/<Name>/<Name>.lua         (ModuleScript per effect)
 //   out/<Name>/textures.txt       (which PNGs from out/textures/ that effect needs)
-// Run `node paint.mjs` first whenever engine/paint.js changes.
+// Run `python3 craft/textures.py` first whenever a texture recipe changes.
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -18,17 +18,19 @@ const texDir = path.join(here, 'out', 'textures');
 const have = new Set(fs.readdirSync(texDir).filter((f) => f.endsWith('.png') && !f.startsWith('_')).map((f) => f.slice(0, -4)));
 let failed = false;
 const used = new Set();
-for (const [name, fx] of Object.entries(ctx.VFX_EFFECTS)) {
+const all = Object.entries(ctx.VFX_EFFECTS).map(([n, fx]) => [n, fx, n]);
+for (const [n, P] of Object.entries(ctx.VFX_PARTS || {})) all.push([n, ctx.VFXSpec.compose({ name: n, version: 1 }, [{ part: n, t: 0, at: [0, 0, 0], tag: n }]), path.join('parts', n)]);
+for (const [name, fx, outName] of all) {
   const { errs, warn } = lint(fx, [...have]);
   warn.forEach((w) => console.warn(`warn ${name}: ${w}`));
   errs.forEach((e) => console.error(`ERROR ${name}: ${e}`));
   if (errs.length) { failed = true; continue; }
   const tex = [...new Set(fx.layers.map((l) => l.props.Texture))];
   tex.forEach((t) => used.add(t));
-  const dir = path.join(here, 'out', name);
+  const dir = path.join(here, 'out', outName.includes('parts') ? 'parts' : name);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, name + '.lua'), ctx.VFXLuau.toLuau(fx));
-  fs.writeFileSync(path.join(dir, 'textures.txt'), tex.map((t) => `out/textures/${t}.png`).join('\n') + '\n');
+  if (!outName.includes('parts')) fs.writeFileSync(path.join(dir, 'textures.txt'), tex.map((t) => `out/textures/${t}.png`).join('\n') + '\n');
   console.log(`${name} v${fx.version}: ${fx.layers.length} emitters, ${tex.length} textures`);
 }
 if (failed) process.exit(1);

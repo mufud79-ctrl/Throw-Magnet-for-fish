@@ -45,5 +45,48 @@
     return out;
   }
 
-  G.VFXSpec = { stack, steps, flicker, LAYERS };
+  // ---------- parts + combos ----------
+  // A PART is one standalone VFX (its own layers, lights, impact frames, shakes, duration).
+  // A COMBO stacks parts: each entry places a part at a time offset, world offset and scale.
+  const PARTS = (G.VFX_PARTS = G.VFX_PARTS || {});
+  function part(def) { PARTS[def.name] = def; def.isPart = true; return def; }
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+  const mul = (a, k) => a.map((v) => v * k);
+  const scaleSeq = (v, k) => (typeof v === 'number' ? v * k : v.map((kp) => [kp[0], kp[1] * k, (kp[2] || 0) * k]));
+  function compose(base, entries) {
+    const fx = Object.assign({ layers: [], lights: [], impactFrames: [], shakes: [], beats: [], parts: [] }, base);
+    let end = 0;
+    for (const e of entries) {
+      const P = PARTS[e.part];
+      if (!P) throw new Error('Unknown part ' + e.part);
+      const t = e.t || 0, at = e.at || [0, 0, 0], k = e.scale || 1, tag = e.tag || e.part;
+      for (const L of P.layers) {
+        const n = clone(L);
+        n.name = `${tag}.${L.name}`; n.role = tag; n.from = e.part;
+        if (L.stack) n.stack = `${tag}.${L.stack}`;
+        n.position = add(at, mul(L.position || [0, 0, 0], k));
+        if (L.part) n.part = { Size: mul(L.part.Size, k) };
+        if (L.emits) n.emits = L.emits.map(([a, c]) => [Math.round((a + t) * 1e4) / 1e4, c]);
+        if (L.rate) n.rate = L.rate.map(([a, b, r]) => [Math.round((a + t) * 1e4) / 1e4, Math.round((b + t) * 1e4) / 1e4, r]);
+        if (k !== 1) {
+          if (n.props.Size !== undefined) n.props.Size = scaleSeq(n.props.Size, k);
+          if (Array.isArray(n.props.Speed)) n.props.Speed = n.props.Speed.map((v) => v * k);
+          if (Array.isArray(n.props.Acceleration)) n.props.Acceleration = mul(n.props.Acceleration, k);
+        }
+        fx.layers.push(n);
+      }
+      for (const li of P.lights || []) fx.lights.push(Object.assign(clone(li), { name: `${tag}.${li.name}`, position: add(at, mul(li.position, k)), Brightness: li.Brightness.map(([a, v]) => [a + t, v]).concat(t > 0 ? [] : []), Range: li.Range * k }));
+      for (const f of P.impactFrames || []) fx.impactFrames.push(Object.assign(clone(f), { t: f.t + t }));
+      for (const sh of P.shakes || []) fx.shakes.push(Object.assign(clone(sh), { t: sh.t + t }));
+      fx.beats.push([t, e.label || tag]);
+      fx.parts.push({ part: e.part, tag, t, at, scale: k });
+      end = Math.max(end, t + P.duration);
+    }
+    for (const li of fx.lights) if (li.Brightness[0][0] > 0) li.Brightness.unshift([0, 0]);
+    fx.duration = Math.round(Math.max(end, base.duration || 0) * 100) / 100;
+    return fx;
+  }
+
+  G.VFXSpec = { stack, steps, flicker, LAYERS, part, compose, PARTS };
 })(typeof window !== 'undefined' ? window : globalThis);

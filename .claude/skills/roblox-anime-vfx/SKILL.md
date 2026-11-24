@@ -9,27 +9,29 @@ Goal: effects that look like a frame from a JJK / One Piece fight and build in R
 ParticleEmitters. There is no Studio here, so everything renders headless:
 
 ```
-engine/paint.js --paint.mjs--> out/textures/*.png  (white glow/rim/mid/core flipbooks + white sprites)
-effects/*.js    --build.mjs--> lint -> out/lab.html (all effects, PNGs embedded) + out/<Name>/<Name>.lua
-                 headless.mjs -> out/<Name>/sheet.png contact sheets for self-review
-out/lab.html    --Artifact--> 3D viewport the user scrubs and comments on
+craft/textures.py (python, numpy/scipy) --> out/textures/*.png   white glow/rim/mid/core sheets + white sprites
+effects/*.js  parts + combos  --build.mjs--> lint -> out/lab.html (all combos + parts, PNGs embedded)
+                                            out/<Combo>/<Combo>.lua, out/parts/<Part>.lua
+headless.mjs -> out/<Name>/sheet.png contact sheets;  out/lab.html --Artifact--> 3D viewport
 ```
 
 | File | Role |
 |---|---|
-| `vfx/engine/paint.js` | Headless brush painter: tapered ribbons, polys, dots, screentone, blur glows, pixel media; layered drawings split into 4 white sheets |
-| `vfx/engine/spec.js` | `stack()` (4 aligned emitters per hero), `steps()` + `flicker()` (stepped NumberSequences) |
+| `vfx/craft/craft.py` | Headless photo-craft: anisotropic streak noise, smudge/motion blur, levels, POLAR warp (paint a strip, bend it into a crescent), twirl, supersampling, white-layer split |
+| `vfx/craft/textures.py` | Every texture recipe (`python3 craft/textures.py [names]`), with tinted `_preview_<name>.png` boards |
+| `vfx/engine/spec.js` | `stack()` (4 aligned emitters per hero), `steps()`/`flicker()`, `part()` + `compose()` (combos stack parts by time/offset/scale) |
 | `vfx/engine/sim.js` | Roblox ParticleEmitter emulator (sequences, shapes, rotated parts, orientation, flipbooks, LightEmission) |
 | `vfx/engine/luau.js` | Spec -> self-contained Luau ModuleScript |
 | `vfx/engine/lint.mjs` | Roblox rule checks + stack alignment checks |
 | `vfx/viewer/` | Lab page: effect switcher, transport, layer solo, per-layer toggles, textures + Luau tabs |
-| `vfx/effects/references.js` | AzureTempest, FireworkBurst, KatanaFlurry: recreations of the user's reference clips; copy `planeStack` / `firework` helpers |
+| `vfx/effects/references.js` | 24 standalone parts + 3 combos (CosmicStrike, FireworkBurst, KatanaFlurry) recreating the user's clips |
 | `reference/anime-research.md` | Research guide: shape language, timing, life, color, slash + explosion anatomy |
 
 ## Setup (once per container)
 
 ```bash
 cd vfx && npm install   # three@0.147.0 for headless rendering (CDNs are blocked here)
+pip install scipy       # photo-craft needs numpy + scipy + Pillow
 ```
 
 ## Workflow
@@ -37,13 +39,17 @@ cd vfx && npm install   # three@0.147.0 for headless rendering (CDNs are blocked
 1. **Break the effect into beats** (see the 5-beat table) and decide the **hero drawing(s)**:
    the one or two shapes the eye reads (blast, slash, smoke). Everything else is secondary
    sprites (sparks, glints, licks, puffs) and "life".
-2. **Draw the hero** in `engine/paint.js` as `frame(i) -> [marks]` (ribbon / poly / dot, flags
-   `hot`, `coreOnly`, `glowOnly`, `noRim`). Register it with `kind: 'layered'`. Read `reference/texture-recipes.md` first.
-3. **Paint + review the drawing**: `node paint.mjs <def>`, then read
-   `out/textures/_preview_<def>.png`, which tints the 4 layers with the reference palette (see `PAL` in paint.mjs). Check it
+2. **Paint the texture** in `craft/textures.py`: a function `fn(i, cell) -> intensity image` (or
+   `(alpha, value)`), registered in `RECIPES` as `layered` (split into 4 white layers by soft
+   thresholds) or `single`. Read `reference/texture-recipes.md` first. **Never draw vector
+   polygons/ribbons for hero art**: the user rejected that as "a 2 year old vs a pro".
+3. **Paint + review**: `python3 craft/textures.py <name>`, then read `out/textures/_preview_<name>.png`
+   and compare it **side by side** with a crop of the reference frame. Check it
    against the drawing checklist below before touching the effect spec.
-4. **Write the spec** in `effects/<file>.js`. Each hero is `...stack(base, { glow, rim, mid, core })`
-   with per-layer Color / LightEmission / Transparency.
+4. **Write PARTS, then COMBOS** in `effects/<file>.js`. A reference clip is many VFX stacked on top of
+   each other: make each element a standalone `part({...})` (previewable alone), then
+   `compose(base, [{ part, t, at, scale, tag }])` stacks them into the clip. Heroes use
+   `...stack(...)` / `planeStack(...)` with per-layer Color / LightEmission / Transparency.
 5. **Build + lint**: `node build.mjs` (lints all effects, writes `out/lab.html` and the `.lua` files).
 6. **Review headless**: `node headless.mjs <Name> sheet [t1,t2,...] [env]` and read
    `out/<Name>/sheet.png`. Use `shot <t>` for the full page. Do at most 2–3 tuning passes.

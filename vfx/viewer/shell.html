@@ -37,6 +37,11 @@ input[type=checkbox] { accent-color: var(--flame); }
 .fxbar button { font: 400 14px var(--display); letter-spacing: 0.02em; background: none; color: var(--mute); border: 1px solid var(--line); border-radius: 6px; padding: 7px 14px; cursor: pointer; }
 .fxbar button:hover { color: var(--fg); border-color: var(--mute); }
 .fxbar button[aria-pressed=true] { background: var(--flame); border-color: var(--flame); color: var(--ink); }
+.partbar { grid-column: 1 / -1; display: flex; gap: 5px; flex-wrap: wrap; align-items: center; margin-top: -4px; }
+.partbar .pl { font: 500 10.5px var(--mono); text-transform: uppercase; letter-spacing: 0.12em; color: var(--mute); margin-right: 4px; }
+.partbar button { font: 500 12px var(--mono); background: none; color: var(--mute); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.partbar button:hover { color: var(--fg); border-color: var(--mute); }
+.partbar button[aria-pressed=true] { background: var(--fg); color: var(--ink); border-color: var(--fg); }
 .ln em { font: 500 10px var(--mono); font-style: normal; color: var(--ink); background: var(--mute); border-radius: 3px; padding: 1px 4px; margin-left: 4px; vertical-align: 1px; }
 .lt { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 3px; font: 11px var(--mono); color: var(--mute); }
 .lt label { display: inline-flex; gap: 3px; align-items: center; cursor: pointer; }
@@ -111,13 +116,14 @@ figcaption b { font: 500 12px var(--mono); color: var(--fg); }
     <h1>Anime VFX Lab · <em id="fxname">{{NAME}}</em></h1>
     <div class="meta"><span>v<b id="fxver">{{VERSION}}</b></span><span><b id="stat-layers">0</b> emitters</span><span><b id="stat-tex">0</b> textures</span><span>emulated Roblox ParticleEmitter</span></div>
     <div class="opts">
-      <select id="env" aria-label="Environment"><option value="sky">Anime sky</option><option value="night">Night arena</option><option value="dusk">Dusk arena</option><option value="day">Day baseplate</option><option value="void">Black void</option></select>
+      <select id="env" aria-label="Environment"><option value="sky">Anime sky</option><option value="night">Night arena</option><option value="dusk">Dusk arena</option><option value="day">Day baseplate</option><option value="void">Black void</option><option value="day">Day baseplate</option><option value="void">Black void</option></select>
       <label class="chk"><input type="checkbox" id="dummy" checked> R15 dummy</label>
       <label class="chk"><input type="checkbox" id="loop" checked> Loop</label>
     </div>
   </header>
 
-  <nav class="fxbar" id="fxbar" aria-label="Effect"></nav>
+  <nav class="fxbar" id="fxbar" aria-label="Combo"></nav>
+  <nav class="partbar" id="partbar" aria-label="Stacked parts"></nav>
 
   <div class="stage">
     <div class="vp">
@@ -144,7 +150,7 @@ figcaption b { font: 500 12px var(--mono); color: var(--fg); }
       </div>
     </div>
     <ul class="beats" id="beats"></ul>
-    <p class="note">Every layer is a real ParticleEmitter with real property values; the Luau tab builds the same thing in Studio. Hero elements are four stacked white flipbooks (glow, rim, mid, core) coloured by each emitter's Color, so you can recolour without new textures. Lighting, Bloom and ColorCorrection are approximations of Roblox's renderer. Tell me what to change by layer name or beat time.</p>
+    <p class="note">Every layer is a real ParticleEmitter with real property values; the Luau tab builds the same thing in Studio. Each combo is several standalone VFX parts stacked by time and position; click a part to preview it alone. Hero sprites are four stacked white flipbooks (glow, rim, mid, core) painted headless and coloured by each emitter's Color. Lighting, Bloom and ColorCorrection are approximations of Roblox's renderer. Tell me what to change by layer name or beat time.</p>
   </div>
 
   <aside>

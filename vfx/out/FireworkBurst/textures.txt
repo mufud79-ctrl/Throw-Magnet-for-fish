@@ -3,9 +3,9 @@ out/textures/wisp_arc_glow.png
 out/textures/wisp_arc_rim.png
 out/textures/wisp_arc_mid.png
 out/textures/wisp_arc_core.png
-out/textures/line.png
 out/textures/spark.png
 out/textures/glint.png
+out/textures/line.png
 out/textures/trail_arc_glow.png
 out/textures/trail_arc_rim.png
 out/textures/trail_arc_mid.png
