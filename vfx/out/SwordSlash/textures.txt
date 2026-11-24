@@ -1,6 +1,0 @@
-out/textures/glint.png
-out/textures/fx_slash_glow.png
-out/textures/fx_slash_rim.png
-out/textures/fx_slash_mid.png
-out/textures/fx_slash_core.png
-out/textures/spark.png

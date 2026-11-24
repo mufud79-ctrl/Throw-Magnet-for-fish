@@ -1,12 +1,11 @@
-// Headless "paint" kit: draws anime VFX drawings as signed-distance shapes and splits each
-// drawing into FOUR WHITE flipbook layers that stack in Roblox:
-//   glow  (behind, stepped halo, LightEmission 1)
-//   rim   (full silhouette; shows as the outline + interior cut lines)
-//   mid   (silhouette inset by the rim width, minus cut lines)
-//   core  (hottest region)
-// All layers are white + alpha so Color/ColorSequence on each ParticleEmitter recolors them.
-// Shapes are built from tapered tongues, lobes and arcs (designed shape language), with noise
-// used only for boil (domain warp between drawings) and breakup, never as the shape itself.
+// Headless brush painter for Roblox battlegrounds-style VFX sprite sheets.
+// Drawings are built from brush MARKS (tapered ribbons, polygons, dots) painted with Canvas2D,
+// plus pixel fills for soft media (mist, dust, fire). Layered drawings export four WHITE sheets:
+//   glow = blurred body (soft halo, LightEmission 1)
+//   rim  = marks drawn wider by `rim` (outline / dark ink edge)
+//   mid  = the marks themselves (body)
+//   core = marks flagged `hot` (drawn at core width) + `coreOnly` marks (bright strands, teeth, tone)
+// Colour comes from each ParticleEmitter's Color, so one sheet can be blue energy, pink, or black ink.
 (function (G) {
   'use strict';
 
@@ -30,394 +29,401 @@
       return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
     };
   }
-  const fbm = (n, x, y, o) => { let s = 0, a = 0.5, f = 1, t = 0; for (let i = 0; i < (o || 3); i++) { s += a * n(x * f, y * f); t += a; a *= 0.5; f *= 2.03; } return s / t; };
+  const fbm = (n, x, y, o) => { let s = 0, a = 0.5, f = 1, t = 0; for (let i = 0; i < (o || 4); i++) { s += a * n(x * f, y * f); t += a; a *= 0.5; f *= 2.03; } return s / t; };
   const clamp = (x, a, b) => (x < a ? a : x > b ? b : x);
-  const aa = (x, w) => clamp(x / w + 0.5, 0, 1);
-  const len = Math.hypot;
   const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
-  const lerp = (a, b, t) => a + (b - a) * t;
   const seq = (arr, i) => arr[Math.min(arr.length - 1, Math.max(0, i))];
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const TAU = Math.PI * 2;
+  const NA = Noise(3), NB = Noise(17), NC = Noise(29);
 
-  // ---------- SDF primitives (cell space: x,y in [-1,1], y up) ----------
-  const circle = (x, y, cx, cy, r) => len(x - cx, y - cy) - r;
-  function capsule(px, py, r1, r2, h) { // tapered capsule along +y, r2 = 0 -> sharp tip
-    px = Math.abs(px);
-    const b = (r1 - r2) / h, a = Math.sqrt(Math.max(0, 1 - b * b)), k = -b * px + a * py;
-    if (k < 0) return len(px, py) - r1;
-    if (k > a * h) return len(px, py - h) - r2;
-    return a * px + b * py - r1;
+  // ---------- marks ----------
+  const ribbon = (pts, w, o) => Object.assign({ t: 'ribbon', pts, w }, o || {});
+  const poly = (pts, o) => Object.assign({ t: 'poly', pts }, o || {});
+  const dot = (x, y, r, o) => Object.assign({ t: 'dot', x, y, r }, o || {});
+  function arcPts(cx, cy, r, a0, a1, n, rf) {
+    const P = [];
+    for (let k = 0; k <= n; k++) { const u = k / n, a = lerp(a0, a1, u), rr = rf ? rf(u) : r; P.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr]); }
+    return P;
   }
-  // flame tongue: base (bx,by), angle from +y (clockwise +), length h, base/tip radius, bend = S/C curve
-  function tongue(x, y, bx, by, ang, h, r1, r2, bend, wave) {
-    const dx = x - bx, dy = y - by, c = Math.cos(ang), s = Math.sin(ang);
-    const ly = dx * s + dy * c;
-    let lx = dx * c - dy * s;
-    const u = clamp(ly / h, 0, 1);
-    lx -= bend * h * u * u + (wave || 0) * h * Math.sin(u * 5.5) * u;
-    return capsule(lx, ly, r1, r2, h);
+  // width profile: 0 at both ends, peak `w` at `peak` (0..1), tip sharpness `p`
+  const taper = (n, w, peak, p) => Array.from({ length: n + 1 }, (_, k) => {
+    const u = k / n, s = u < peak ? u / peak : (1 - u) / (1 - peak);
+    return w * Math.pow(clamp(s, 0, 1), p || 0.7);
+  });
+  const linePts = (x0, y0, x1, y1, n) => Array.from({ length: n + 1 }, (_, k) => [lerp(x0, x1, k / n), lerp(y0, y1, k / n)]);
+
+  // ---------- rendering ----------
+  function canvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h || w; return c; }
+  function drawMark(ctx, m, X, Y, S, extra, wscale) {
+    ctx.globalAlpha = m.a === undefined ? 1 : m.a;
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#fff';
+    const ws = wscale || 1;
+    if (m.t === 'dot') {
+      const r = m.r * ws + extra;
+      if (r <= 0) return;
+      ctx.beginPath(); ctx.arc(X(m.x), Y(m.y), r * S, 0, TAU); ctx.fill();
+    } else if (m.t === 'poly') {
+      ctx.beginPath(); m.pts.forEach(([x, y], k) => (k ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)))); ctx.closePath(); ctx.fill();
+      if (extra > 0) { ctx.lineWidth = extra * 2 * S; ctx.lineJoin = 'miter'; ctx.miterLimit = 8; ctx.stroke(); }
+    } else {
+      const P = m.pts, n = P.length; if (n < 2) return;
+      const W = (k) => { const w = Array.isArray(m.w) ? m.w[k] : m.w; return Math.max(0, w * ws + extra * Math.min(1, w / 0.006 + 0.25)); };
+      const L = [], R = [];
+      for (let k = 0; k < n; k++) {
+        const a = P[Math.max(0, k - 1)], b = P[Math.min(n - 1, k + 1)];
+        let dx = b[0] - a[0], dy = b[1] - a[1]; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
+        const w = W(k);
+        L.push([P[k][0] - dy * w, P[k][1] + dx * w]); R.push([P[k][0] + dy * w, P[k][1] - dx * w]);
+      }
+      ctx.beginPath();
+      L.forEach(([x, y], k) => (k ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y))));
+      for (let k = n - 1; k >= 0; k--) ctx.lineTo(X(R[k][0]), Y(R[k][1]));
+      ctx.closePath(); ctx.fill();
+    }
   }
-  function smin(a, b, k) { const h = Math.max(k - Math.abs(a - b), 0) / k; return Math.min(a, b) - h * h * k * 0.25; }
+  function paintCell(ctx, marks, ox, oy, cell, extra, filter, wsFor) {
+    const S = cell / 2, X = (x) => ox + (x + 1) * S, Y = (y) => oy + (1 - y) * S, pad = cell * 0.03;
+    ctx.save(); ctx.beginPath(); ctx.rect(ox + pad, oy + pad, cell - 2 * pad, cell - 2 * pad); ctx.clip();
+    for (const m of marks) if (!filter || filter(m)) drawMark(ctx, m, X, Y, S, extra, wsFor ? wsFor(m) : 1);
+    ctx.restore();
+  }
+  // blur one cell into `dst` (cells blurred separately so frames never bleed)
+  function blurCell(dst, src, ox, oy, cell, px, gain) {
+    const tmp = canvas(cell), t = tmp.getContext('2d');
+    t.filter = `blur(${px}px)`;
+    t.drawImage(src, ox, oy, cell, cell, 0, 0, cell, cell);
+    const pad = cell * 0.03, g = dst.getContext('2d');
+    g.save(); g.globalAlpha = 1; g.beginPath(); g.rect(ox + pad, oy + pad, cell - 2 * pad, cell - 2 * pad); g.clip();
+    for (let k = 0; k < (gain || 1); k++) g.drawImage(tmp, ox, oy);
+    g.restore();
+  }
 
-  // ---------- canvases ----------
-  function canvas(size) { const c = document.createElement('canvas'); c.width = c.height = size; return c; }
-
-  // Layered sheet: def.frame(i, n) -> sampler(x, y, s) that fills s.d (silhouette sdf), s.c (core sdf), s.k (cut sdf)
   function layered(def) {
     const size = def.size || 1024, g = def.grid || 4, n = def.frames || g * g, cell = size / g;
-    const names = ['glow', 'rim', 'mid', 'core'];
-    const out = {}, bufs = {};
-    for (const k of names) { out[k] = canvas(size); bufs[k] = out[k].getContext('2d').createImageData(size, size); }
-    const aw = (2 / cell) * 1.15, rimW = def.rim || 0.045, coreIn = def.coreInset || 0.05, gr = def.glow || 0.2;
-    const s = { d: 1, c: 9, k: 9 };
+    const out = { glow: canvas(size), rim: canvas(size), mid: canvas(size), core: canvas(size) };
+    const cx = { rim: out.rim.getContext('2d'), mid: out.mid.getContext('2d'), core: out.core.getContext('2d') };
+    const src = canvas(size), sx = src.getContext('2d');
     for (let i = 0; i < n; i++) {
-      const samp = def.frame(i, n), gf = def.glowFade ? seq(def.glowFade, i) : 1;
       const ox = (i % g) * cell, oy = Math.floor(i / g) * cell;
-      for (let py = 0; py < cell; py++) {
-        const y = 1 - ((py + 0.5) / cell) * 2;
-        for (let px = 0; px < cell; px++) {
-          const x = ((px + 0.5) / cell) * 2 - 1;
-          s.d = 1; s.c = 9; s.k = 9;
-          samp(x, y, s);
-          const edge = Math.max(Math.abs(x), Math.abs(y));
-          const d = Math.max(s.d, edge - 0.93);
-          const idx = ((oy + py) * size + ox + px) * 4;
-          const rim = aa(-d, aw);
-          const mid = aa(-(d + rimW), aw) * (1 - aa(-s.k, aw));
-          const core = aa(-Math.max(s.c, d + coreIn), aw);
-          let glow = 1;
-          if (d > 0) {
-            const t = 1 - d / gr, w = aw / gr;
-            glow = 0.42 * aa(t - 0.62, w) + 0.3 * aa(t - 0.3, w) + 0.28 * Math.pow(clamp(t, 0, 1), 2);
-          }
-          glow *= aa(0.97 - edge, aw) * gf;
-          const A = [glow, rim, mid, core];
-          for (let L = 0; L < 4; L++) {
-            const b = bufs[names[L]].data;
-            b[idx] = b[idx + 1] = b[idx + 2] = 255; b[idx + 3] = A[L] * 255;
-          }
-        }
-      }
+      const marks = def.frame(i, n);
+      const body = (m) => !m.coreOnly && !m.glowOnly;
+      paintCell(cx.mid, marks, ox, oy, cell, 0, body);
+      paintCell(cx.rim, marks, ox, oy, cell, def.rim || 0.02, (m) => body(m) && !m.noRim);
+      paintCell(cx.core, marks, ox, oy, cell, 0, (m) => m.hot || m.coreOnly, (m) => (m.coreOnly ? 1 : m.coreW !== undefined ? m.coreW : def.coreW || 0.45));
+      sx.clearRect(ox, oy, cell, cell);
+      paintCell(sx, marks, ox, oy, cell, 0, (m) => body(m) || m.glowOnly);
+      blurCell(out.glow, src, ox, oy, cell, (def.glow || 0.08) * cell / 2, def.glowGain || 2);
     }
-    for (const k of names) out[k].getContext('2d').putImageData(bufs[k], 0, 0);
     return out;
   }
-
-  // Single white mask sheet: sampler fills s.d and optional s.v (value 0-1, for shaded props)
-  function mask(def) {
+  function single(def) {
     const size = def.size || 512, g = def.grid || 1, n = def.frames || g * g, cell = size / g;
-    const c = canvas(size), ctx = c.getContext('2d'), img = ctx.createImageData(size, size), b = img.data;
-    const aw = (2 / cell) * 1.15, s = { d: 1, v: 1 };
+    const c = canvas(size), ctx = c.getContext('2d'), src = canvas(size), sx = src.getContext('2d');
     for (let i = 0; i < n; i++) {
-      const samp = def.frame(i, n), ox = (i % g) * cell, oy = Math.floor(i / g) * cell;
-      for (let py = 0; py < cell; py++) {
-        const y = 1 - ((py + 0.5) / cell) * 2;
-        for (let px = 0; px < cell; px++) {
-          const x = ((px + 0.5) / cell) * 2 - 1;
-          s.d = 1; s.v = 1; samp(x, y, s);
-          s.d = Math.max(s.d, Math.max(Math.abs(x), Math.abs(y)) - 0.95);
-          const idx = ((oy + py) * size + ox + px) * 4, v = s.v * 255;
-          b[idx] = b[idx + 1] = b[idx + 2] = v; b[idx + 3] = aa(-s.d, aw) * 255;
-        }
+      const ox = (i % g) * cell, oy = Math.floor(i / g) * cell;
+      const marks = def.frame(i, n);
+      if (def.halo) { sx.clearRect(ox, oy, cell, cell); paintCell(sx, marks, ox, oy, cell, 0, null); blurCell(c, src, ox, oy, cell, def.halo * cell / 2, 1); }
+      paintCell(ctx, marks, ox, oy, cell, 0, (m) => !m.glowOnly);
+    }
+    return c;
+  }
+  // pixel painter for soft media: frame(i, f) -> (x, y) => [value 0-1, alpha 0-1]
+  function pixels(def) {
+    const size = def.size || 1024, g = def.grid || 4, n = g * g, cell = size / g;
+    const c = canvas(size), ctx = c.getContext('2d'), img = ctx.createImageData(size, size), d = img.data;
+    for (let i = 0; i < n; i++) {
+      const ox = (i % g) * cell, oy = Math.floor(i / g) * cell, f = n > 1 ? i / (n - 1) : 0, fn = def.frame(i, f);
+      for (let py = 0; py < cell; py++) for (let px = 0; px < cell; px++) {
+        const x = ((px + 0.5) / cell) * 2 - 1, y = 1 - ((py + 0.5) / cell) * 2;
+        const edge = clamp((0.97 - Math.max(Math.abs(x), Math.abs(y))) / 0.06, 0, 1);
+        const [v, a] = fn(x, y);
+        const k = ((oy + py) * size + ox + px) * 4;
+        d[k] = d[k + 1] = d[k + 2] = clamp(v, 0, 1) * 255; d[k + 3] = clamp(a, 0, 1) * edge * 255;
       }
     }
     ctx.putImageData(img, 0, 0);
     return c;
   }
-
-  // ======================================================================
-  // DRAWINGS
-  // ======================================================================
-  const NA = Noise(3), NB = Noise(17), NC = Noise(29), ND = Noise(53);
-
-  // ---- ground fire blast: 16 drawings on 2s (12 fps) ----
-  // lumpy multi-lobe dome + tongues leaning up/out; core = the same silhouette at ~55% scale, sunk toward the base
-  const BLAST = (() => {
-    const r = rng(8), T = [], Lb = [];
-    const phis = [-1.32, -0.95, -0.6, -0.25, 0.08, 0.42, 0.78, 1.12, 1.4];
-    phis.forEach((phi) => T.push({ phi: phi + (r() - 0.5) * 0.14, h: 0.24 + r() * 0.3 - Math.abs(phi) * 0.05, r1: 0.1 + r() * 0.06, bend: (r() - 0.5) * 1.0, ph: r() * 6.28, pinch: r() < 0.38 }));
-    for (let k = 0; k < 7; k++) { const a = -1.35 + (k / 6) * 2.7 + (r() - 0.5) * 0.2; Lb.push({ a, d: 0.55 + r() * 0.2, r: 0.42 + r() * 0.2, ph: r() * 6.28 }); }
-    return { T, Lb };
-  })();
-  function blastShape(i, x, y, P) {
-    let d = 9;
-    for (const l of P.lobes) d = smin(d, circle(x, y, l[0], l[1], l[2]), 0.03);
-    for (const t of P.T) {
-      if (t.h > 0.02) d = smin(d, tongue(x, y, t.bx, t.by, t.ang, t.h, t.r1, 0, t.bend, 0.08), 0.07);
-      if (t.tipH > 0.01) d = Math.min(d, tongue(x, y, t.tx, t.ty, t.ang * 0.5, t.tipH, t.tipR, 0, t.bend * 0.5, 0));
+  // scalar field h (>0 inside) -> four layers via thresholds (soft media with a hard-ish core)
+  function pixelLayers(def) {
+    const size = def.size || 1024, g = def.grid || 4, n = g * g, cell = size / g;
+    const names = ['glow', 'rim', 'mid', 'core'], out = {}, buf = {};
+    for (const k of names) { out[k] = canvas(size); buf[k] = out[k].getContext('2d').createImageData(size, size); }
+    const T = def.th;
+    for (let i = 0; i < n; i++) {
+      const ox = (i % g) * cell, oy = Math.floor(i / g) * cell, f = i / (n - 1), fn = def.frame(i, f);
+      for (let py = 0; py < cell; py++) for (let px = 0; px < cell; px++) {
+        const x = ((px + 0.5) / cell) * 2 - 1, y = 1 - ((py + 0.5) / cell) * 2;
+        const edge = clamp((0.95 - Math.max(Math.abs(x), Math.abs(y))) / 0.08, 0, 1);
+        const h = fn(x, y), k = ((oy + py) * size + ox + px) * 4, s = T.soft;
+        const A = [Math.pow(clamp((h - T.glow) / (T.mid - T.glow), 0, 1), 1.6), smooth(T.rim - s, T.rim + s, h), smooth(T.mid - s, T.mid + s, h), smooth(T.core - s, T.core + s, h)];
+        for (let L = 0; L < 4; L++) { const b = buf[names[L]].data; b[k] = b[k + 1] = b[k + 2] = 255; b[k + 3] = A[L] * edge * 255; }
+      }
     }
-    return Math.max(d, -0.9 - y);
+    for (const k of names) out[k].getContext('2d').putImageData(buf[k], 0, 0);
+    return out;
   }
-  function blast(i) {
-    const grow = seq([0.22, 0.46, 0.58, 0.63, 0.65, 0.65, 0.64, 0.62, 0.59, 0.55, 0.5, 0.45, 0.4, 0.34, 0.28, 0.22], i);
-    const lenK = seq([0.55, 0.9, 1.1, 1.18, 1.15, 1.08, 0.98, 0.86, 0.75, 0.64, 0.54, 0.45, 0.36, 0.28, 0.2, 0.12], i);
-    const cy = -0.9 + grow * 0.62 + Math.max(0, i - 5) * 0.028, R = grow;
-    const det = Math.max(0, i - 4);
-    const lobes = BLAST.Lb.map((l) => {
-      const pul = 1 + 0.06 * Math.sin(i * 2.3 + l.ph);
-      return [Math.sin(l.a) * R * l.d, cy + Math.cos(l.a) * R * l.d * 0.85, R * l.r * pul];
+  // manga screentone dots, radius from rf(x, y) in 0..1
+  function halftone(x0, y0, x1, y1, step, rf, o) {
+    const M = [];
+    let row = 0;
+    for (let y = y0; y <= y1; y += step, row++) for (let x = x0 + (row % 2) * step / 2; x <= x1; x += step) {
+      const r = rf(x, y); if (r > 0.05) M.push(dot(x, y, r * step * 0.5, o));
+    }
+    return M;
+  }
+
+  // ======================================================================
+  // DRAWINGS (cell space x,y in [-1,1], y up; keep inside ~0.92)
+  // ======================================================================
+
+  // ---- energy crescent made of strands (video 1 blue arcs, video 3 wind trails) ----
+  function strandArc(opt) {
+    const r = rng(opt.seed), R = opt.R || 0.78, A0 = opt.a0, SW = opt.sweep, NS = opt.strands || 46;
+    const head = opt.head || [0.5, 0.9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    const tail = opt.tail || [0, 0, 0, 0.03, 0.09, 0.17, 0.26, 0.36, 0.46, 0.56, 0.65, 0.74, 0.82, 0.89, 0.94, 0.98];
+    const Tm = opt.thick || [0.3, 0.4, 0.42, 0.41, 0.38, 0.34, 0.3, 0.26, 0.22, 0.18, 0.15, 0.12, 0.09, 0.065, 0.045, 0.025];
+    const bodyA = opt.bodyA === undefined ? 0.9 : opt.bodyA;
+    const S = Array.from({ length: NS }, () => {
+      const q = Math.pow(r(), 1.5); // 0 = cutting edge; dense near the edge, sparse wisps inside
+      return { q, s0: r() * 0.45 * (0.3 + q), s1: 1 - r() * 0.25 * q, w: (0.004 + r() * 0.016) * (1.2 - q * 0.7), ph: r() * TAU,
+        spin: (0.15 + r() * 0.5) * q, hot: q < 0.22 && r() < 0.7, a: 0.55 + r() * 0.45 };
     });
-    lobes.push([0, cy - R * 0.1, R * 0.82]);
-    const T = BLAST.T.map((t) => {
-      const ang = t.phi * 0.8, bx = Math.sin(t.phi) * R * 0.8, by = cy + Math.cos(t.phi) * R * 0.72;
-      const h = t.h * lenK * (t.pinch && det > 0 ? Math.max(0.35, 1 - det / 6) : 1);
-      const bend = t.bend + 0.4 * Math.sin(i * 1.9 + t.ph);
-      const tipD = t.h * 1.05 + det * 0.05, tl = t.pinch && det > 0 ? 1 - det / 9 : 0;
-      return { ang, bx, by, h, bend, r1: t.r1 * (0.55 + 0.45 * lenK),
-        tx: bx + Math.sin(ang) * tipD, ty: Math.min(0.58, by + Math.cos(ang) * tipD + det * 0.03), tipH: 0.24 * tl, tipR: tl > 0 ? 0.1 : 0 };
-    });
-    const P = { lobes, T }, CK = 0.56, base = -0.9;
-    const coreOn = seq([1, 1, 1, 0.95, 0.85, 0.72, 0.58, 0.45, 0.32, 0.2, 0.1, 0], i);
-    const erode = i < 7 ? -1 : (i - 7) / 8;
-    return (x0, y0, s) => {
-      const wx = (NA(x0 * 2.1 + i * 3.7, y0 * 2.1 - i * 0.6) - 0.5) * 0.12, wy = (NB(x0 * 2.1 - i * 2.3, y0 * 2.1 - i * 0.6) - 0.5) * 0.09;
-      const x = x0 + wx, y = y0 + wy;
-      let d = blastShape(i, x, y, P);
-      const k = CK * coreOn;
-      let c = k > 0.02 ? blastShape(i, x / k, (y - base) / k + base - 0.05, P) * k : 9;
-      for (const t of P.T) if (t.tipH > 0.01) c = Math.min(c, tongue(x, y, t.tx, t.ty - 0.03, t.ang * 0.5, t.tipH * 0.6, t.tipR * 0.45, 0, t.bend * 0.5, 0));
-      if (erode > 0) d = Math.max(d, (erode * 0.8 - fbm(NC, x0 * 2.6, y0 * 2.6 - i * 0.12)) * 0.6 + 0.1 * erode);
-      s.d = d; s.c = c;
-      if (i >= 2 && i <= 12) {
-        const kk = Math.abs(fbm(ND, x * 2.3 + i * 0.05, y * 2.3 - i * 0.25) - 0.5) - 0.013;
-        s.k = Math.max(kk, d + 0.1, -c + 0.03);
-      }
-    };
-  }
-
-  // ---- cel smoke cloud: lobes with crease lines, dissolves with round holes (on 3s) ----
-  const SMOKE_L = (() => {
-    const r = rng(41), L = [[0, -0.15, 0.36]];
-    for (let k = 0; k < 9; k++) { const a = r() * 6.28, d = 0.22 + r() * 0.28; L.push([Math.cos(a) * d, Math.sin(a) * d * 0.75 - 0.05, 0.17 + r() * 0.15, 8 + r() * 7]); }
-    L[0].push(11.5);
-    return L;
-  })();
-  const SMOKE_H = (() => { const r = rng(43), H = []; for (let k = 0; k < 14; k++) H.push([(r() - 0.5) * 1.3, (r() - 0.5) * 1.0, 3 + r() * 9]); return H; })();
-  function smoke(i) {
-    const sc = 0.72 + 0.28 * smooth(0, 6, i), rise = i * 0.022;
-    const lobes = SMOKE_L.map(([x, y, r, die]) => [x * sc, y * sc + rise, r * sc * Math.pow(clamp((die - i) / 5, 0, 1), 0.6)]).filter((l) => l[2] > 0.005);
-    const holes = SMOKE_H.map(([x, y, st]) => [x * sc, y * sc + rise, Math.max(0, i - st) * 0.045]);
-    const L = [-0.55, 0.62];
-    return (x, y, s) => {
-      let d1 = 9, d2 = 9, dl = 9;
-      for (const [cx, cy, r] of lobes) {
-        const dd = circle(x, y, cx, cy, r);
-        if (dd < d1) { d2 = d1; d1 = dd; } else if (dd < d2) d2 = dd;
-        dl = Math.min(dl, circle(x, y, cx + L[0] * r * 0.34, cy + L[1] * r * 0.34, r * 0.72));
-      }
-      let d = smin(d1, d2, 0.035);
-      for (const [hx, hy, hr] of holes) if (hr > 0) d = Math.max(d, -circle(x, y, hx, hy, hr));
-      s.d = d; s.c = Math.max(dl, d + 0.03);
-      if (d2 < 0) s.k = Math.abs(d2 - d1) - 0.011;
-    };
-  }
-
-  // ---- impact flash star (2x2) ----
-  const RAYS = (() => { const r = rng(12), R = []; for (let k = 0; k < 13; k++) R.push([(k + (r() - 0.5) * 0.6) / 13 * 6.283, 0.5 + r() * 0.45, 0.05 + r() * 0.035]); return R; })();
-  function flash(i) {
-    const lk = [0.62, 1, 0.95, 0.7][i], th = [1.1, 0.85, 0.45, 0.25][i], disc = [0.26, 0.2, 0.08, -1][i], start = [0, 0, 0.3, 0.55][i];
-    return (x, y, s) => {
-      let d = circle(x, y, 0, 0, disc), c = circle(x, y, 0, 0, disc * 0.55);
-      for (const [a, L, w] of RAYS) {
-        const b0 = start * L;
-        d = Math.min(d, tongue(x, y, Math.sin(a) * b0, Math.cos(a) * b0, a, Math.max(0.01, L * lk - b0), w * th, 0, 0, 0));
-        if (i < 2) c = Math.min(c, tongue(x, y, 0, 0, a, L * lk * 0.5, w * th * 0.35, 0, 0, 0));
-      }
-      s.d = d; s.c = c;
-    };
-  }
-
-  // ---- crescent slash. kind: 'steel' (clean, streaked) or 'fire' (flame tongues trail off the edge) ----
-  function slashDrawing(kind) {
-    const fire = kind === 'fire';
-    const R = fire ? 0.64 : 0.8, A0 = (215 * Math.PI) / 180, SW = (250 * Math.PI) / 180;
-    const head = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-    const tail = [0, 0, 0, 0.03, 0.1, 0.2, 0.33, 0.44, 0.54, 0.63, 0.71, 0.78, 0.85, 0.9, 0.95, 0.99];
-    const tmax = (fire ? [0.05, 0.22, 0.24, 0.23, 0.2, 0.17, 0.14, 0.11, 0.09, 0.07, 0.055, 0.04, 0.03, 0.02, 0.012, 0.006]
-      : [0.045, 0.2, 0.22, 0.2, 0.17, 0.13, 0.1, 0.075, 0.055, 0.042, 0.032, 0.024, 0.017, 0.011, 0.007, 0.004]);
-    const r = rng(fire ? 61 : 67);
-    const STREAKS = [0.3, 0.48, 0.62, 0.78].map((q) => [q, 0.15 + r() * 0.25, 0.55 + r() * 0.4]);
-    const SHARDS = Array.from({ length: 7 }, () => [r() * 0.9, 0.04 + r() * 0.015, 3 + Math.floor(r() * 5), 0.6 + r() * 0.8]);
-    const FT = Array.from({ length: 11 }, (_, k) => ({ s: 0.08 + (k / 10) * 0.88 + (r() - 0.5) * 0.04, h: 0.16 + r() * 0.2, bend: -0.3 - r() * 0.5, ph: r() * 6.28, r1: 0.05 + r() * 0.03 }));
+    const FLECK = Array.from({ length: 16 }, () => ({ s: r(), d: -0.05 + r() * 0.15, l: 0.04 + r() * 0.12, b: 2 + Math.floor(r() * 9) }));
     return (i) => {
-      const H = head[i], Ts = tail[i], Tm = tmax[i], span = Math.max(1e-3, H - Ts);
-      const thick = (u) => Tm * Math.pow(clamp(u, 0, 1), 1.25) * Math.pow(1 - smooth(0.68, 1, u), 0.7) * (fire ? 2.4 : 2.8);
-      const angAt = (sv) => A0 - sv * SW;
-      const dash = i >= 9 ? (i - 8) / 7 : 0;
-      // flame tongues: rooted on the outer edge, trail back against the swing
-      const tongues = fire ? FT.filter((t) => t.s > Ts + 0.02 && t.s < H - 0.03).map((t) => {
-        const u = (t.s - Ts) / span, a = angAt(t.s), T0 = thick(u);
-        const boil = 0.75 + 0.25 * Math.sin(i * 2.1 + t.ph), life = 1 - smooth(5, 13, i);
-        const rr = R - T0 * 0.25;
-        return { bx: Math.cos(a) * rr, by: Math.sin(a) * rr, ang: Math.PI / 2 - a + 0.75, h: t.h * (0.4 + 0.9 * u) * boil * life, r1: t.r1 * (0.5 + u * 0.7), bend: t.bend + 0.3 * Math.sin(i * 1.7 + t.ph) };
-      }) : [];
-      return (x0, y0, s) => {
-        let x = x0, y = y0;
-        if (fire) { x += (NA(x0 * 2.5 + i * 4.1, y0 * 2.5 + i * 1.3) - 0.5) * 0.08; y += (NB(x0 * 2.5 - i * 2.7, y0 * 2.5 + i) - 0.5) * 0.08; }
-        const rad = len(x, y);
-        let a = Math.atan2(y, x), sv = (A0 - a) / SW;
-        const full = (2 * Math.PI) / SW;
-        sv = ((sv % full) + full) % full;
-        if (sv > (1 + full) / 2) sv -= full;
-        const u = (sv - Ts) / span, T = thick(u);
-        const dOut = rad - R, dIn = R - T - rad;
-        const dAng = (sv < Ts ? (Ts - sv) : sv > H ? (sv - H) : -Math.min(sv - Ts, H - sv)) * SW * rad;
-        let d = Math.max(dOut, dIn, dAng);
-        let c = Math.max(dOut + 0.004, R - T * 0.36 - rad, dAng + 0.01, (0.18 - u) * 0.4);
-        // echo arc + smear line (first frames only)
-        if (i >= 1 && i <= 5) {
-          const e = 1 - (i - 1) / 5, Re = R * (fire ? 0.78 : 0.8), Te = 0.03 * e * Math.pow(clamp(u, 0, 1), 1.2);
-          d = Math.min(d, Math.max(rad - Re, Re - Te - rad, dAng + (u < 0.3 ? (0.3 - u) * 0.5 : 0)));
+      const h = seq(head, i), t = seq(tail, i), T = seq(Tm, i), M = [];
+      const th = (u) => T * Math.pow(Math.sin(Math.PI * clamp(u * 0.92 + 0.04, 0, 1)), 0.6) * (0.35 + 0.8 * u);
+      const ang = (sv) => A0 - sv * SW;
+      // solid swoosh body: white band hugging the cutting edge
+      if (h - t > 0.05) {
+        const P = [], W = [];
+        for (let k = 0; k <= 60; k++) {
+          const u = k / 60, sv = lerp(t, h, u), w = th(u) * 0.24;
+          P.push([Math.cos(ang(sv)) * (R - w), Math.sin(ang(sv)) * (R - w)]); W.push(w);
         }
-        if (!fire && i >= 1 && i <= 3) {
-          const Rl = R * 1.07, Tl = 0.012 * Math.pow(clamp((u - 0.45) / 0.55, 0, 1), 0.5);
-          d = Math.min(d, Math.max(rad - Rl, Rl - Tl - rad, dAng));
+        M.push(ribbon(P, W, { hot: true, coreW: 0.6, a: bodyA }));
+      }
+      for (const s of S) { // hair strands that spiral inward
+        const a = Math.max(s.s0, t), b = Math.min(s.s1, h);
+        if (b - a < 0.04) continue;
+        const N = 44, P = [], W = [];
+        for (let k = 0; k <= N; k++) {
+          const lu = k / N, sv = lerp(a, b, lu), u = (sv - t) / Math.max(0.05, h - t);
+          const rr = R - th(u) * (s.q + s.spin * (1 - lu)) + Math.sin(sv * 11 + s.ph + i * 0.9) * 0.007 * (0.5 + s.q * 3);
+          P.push([Math.cos(ang(sv)) * rr, Math.sin(ang(sv)) * rr]);
+          W.push(s.w * Math.pow(Math.sin(Math.PI * lu), 0.5) * clamp(T / 0.3, 0.3, 1.15));
         }
-        // shards peel off the receding tail
-        for (const [sk, sz, birth, sp] of SHARDS) {
-          if (i < birth || sk > Ts + 0.08) continue;
-          const age = i - birth, life = 1 - age / 8;
-          if (life <= 0) continue;
-          const sa = angAt(sk), rr = R - 0.03 + age * 0.03 * sp;
-          const sh = tongue(x, y, Math.cos(sa) * rr, Math.sin(sa) * rr, -sa + Math.PI, 0.26 * life + 0.06, sz * (0.5 + 0.5 * life), 0, 0, 0);
-          d = Math.min(d, sh); c = Math.min(c, sh);
-        }
-        for (const t of tongues) {
-          if (t.h < 0.02) continue;
-          d = smin(d, tongue(x, y, t.bx, t.by, t.ang, t.h, t.r1, 0, t.bend, 0.06), 0.05);
-          c = Math.min(c, tongue(x, y, t.bx, t.by, t.ang, t.h * 0.45, t.r1 * 0.35, 0, t.bend, 0));
-        }
-        // dissolve into dashes along the arc
-        if (dash > 0) d = Math.max(d, (dash * 0.9 - (0.5 + 0.5 * Math.sin(sv * 46 + Math.sin(sv * 13) * 2))) * 0.05);
-        if (fire && i >= 7) d = Math.max(d, ((i - 7) / 8 * 0.8 - fbm(NC, x0 * 3, y0 * 3 - i * 0.15)) * 0.4);
-        s.d = d; s.c = c;
-        let k = 9;
-        if (u > 0 && u < 1 && i <= 11) for (const [q, u0, u1] of STREAKS) if (u > u0 && u < u1) k = Math.min(k, Math.abs(rad - (R - T * q)) - 0.0055);
-        if (fire && i >= 2 && i <= 9) k = Math.min(k, Math.max(Math.abs(fbm(ND, x * 3, y * 3 - i * 0.3) - 0.5) - 0.012, d + 0.06));
-        s.k = Math.max(k, -c + 0.01);
-      };
+        M.push(ribbon(P, W, { hot: s.hot, coreW: 0.45, a: s.a * (1 - s.q * 0.4) }));
+      }
+      for (const f of FLECK) { // flecks and dashes thrown off
+        if (i < f.b || i > f.b + 5 || f.s < t || f.s > h) continue;
+        const age = (i - f.b) / 5, an = ang(f.s), rr = R + f.d + age * 0.12, ta = an - Math.PI / 2;
+        const x = Math.cos(an) * rr, y = Math.sin(an) * rr, l = f.l * (1 - age * 0.5);
+        M.push(ribbon(linePts(x, y, x + Math.cos(ta) * l, y + Math.sin(ta) * l, 6), taper(6, 0.01 * (1 - age * 0.5), 0.3, 0.8), { hot: true }));
+      }
+      return M;
     };
   }
 
-  // ---------- single-layer white sprites ----------
-  function streakMask(w, head) {
-    return (i) => (x, y, s) => { const t = y < 0 ? 1 + y * 0.1 : 1 - y * head; s.d = (Math.abs(x) / (w * t) + Math.abs(y) - 1) * w * 0.7; };
-  }
-  function glintMask(i) {
-    const L = [0.45, 0.95, 0.65, 0.3][i], W = [0.07, 0.055, 0.04, 0.03][i];
-    return (x, y, s) => {
-      let d = circle(x, y, 0, 0, W * 1.3);
-      for (let k = 0; k < 4; k++) d = Math.min(d, tongue(x, y, 0, 0, k * Math.PI / 2, L, W, 0, 0, 0));
-      for (let k = 0; k < 4; k++) d = Math.min(d, tongue(x, y, 0, 0, k * Math.PI / 2 + Math.PI / 4, L * 0.38, W * 0.6, 0, 0, 0));
-      s.d = d;
-    };
-  }
-  function lickMask(i) {
-    const r = rng(90 + i * 7), bend = (r() - 0.5) * 1.4, wave = (r() - 0.3) * 0.25;
-    return (x, y, s) => {
-      const wx = (NA(x * 2 + i * 5, y * 2) - 0.5) * 0.12;
-      let d = tongue(x + wx, y, 0, -0.85, 0, 1.6, 0.3, 0, bend, wave);
-      d = smin(d, tongue(x + wx, y, 0.12, -0.75, 0.5, 0.7, 0.14, 0, -bend, 0), 0.08);
-      s.d = d;
-    };
-  }
-  function ringMask(i) {
-    const t = [0.085, 0.055, 0.032, 0.018][i], br = [0, 0.25, 0.45, 0.62][i];
-    return (x, y, s) => {
-      const a = Math.atan2(y, x), n = fbm(NA, Math.cos(a) * 2.5 + 7, Math.sin(a) * 2.5 + 3);
-      s.d = Math.max(Math.abs(len(x, y) - (0.93 - t)) - t, (br - n) * 0.2);
-    };
-  }
-  function puffMask(i) { // small eroding cel puff for dust / secondary smoke
-    const f = smoke(Math.min(15, Math.round(i * 1.0)));
-    return (x, y, s) => { const q = { d: 1, c: 9, k: 9 }; f(x * 1.05, y * 1.05 + 0.1, q); s.d = q.d; };
-  }
-  function rockMask() {
-    const r = rng(31), P = [];
-    for (let k = 0; k < 7; k++) { const a = (k / 7) * 6.283 + r() * 0.5, rr = 0.55 + r() * 0.3; P.push([Math.cos(a) * rr, Math.sin(a) * rr]); }
-    return (x, y, s) => {
-      let d = -9;
-      for (let k = 0; k < P.length; k++) {
-        const [ax, ay] = P[k], [bx, by] = P[(k + 1) % P.length], ex = bx - ax, ey = by - ay, l = len(ex, ey);
-        d = Math.max(d, ((x - ax) * ey - (y - ay) * ex) / l * -1);
+  // ---- black calligraphic ink crescent with needle tips, hook and barbs ----
+  function inkArc(seed) {
+    const r = rng(seed), R = 0.78, A0 = (200 * Math.PI) / 180, SW = (170 * Math.PI) / 180;
+    const barbs = Array.from({ length: 4 }, () => ({ u: 0.2 + r() * 0.6, l: 0.06 + r() * 0.08 }));
+    return (i) => {
+      const head = seq([0.55, 0.9, 1], i), tail = seq([0, 0, 0, 0, 0, 0, 0.02, 0.08, 0.16, 0.26, 0.37, 0.48, 0.6, 0.72, 0.84, 0.95], i);
+      const wm = seq([0.7, 1, 1, 1, 0.97, 0.92, 0.86, 0.78, 0.68, 0.58, 0.48, 0.38, 0.28, 0.2, 0.12, 0.06], i);
+      const M = [], N = 60, P = [], W = [];
+      for (let k = 0; k <= N; k++) {
+        const u = k / N, sv = lerp(tail, head, u), ang = A0 - sv * SW;
+        const w = 0.075 * wm * Math.pow(Math.sin(Math.PI * clamp(u, 0, 1)), 1.1) * (0.6 + 0.8 * u) + 0.0015;
+        const rr = R + Math.sin(sv * 7 + i * 0.4) * 0.008 - w * 0.4;
+        P.push([Math.cos(ang) * rr, Math.sin(ang) * rr]); W.push(w);
       }
-      s.d = -(-d) ; // convex polygon sdf (approx)
-      s.d = d;
-      s.v = d > -0.09 ? 0.12 : (x * -0.6 + y * 0.8 > 0.05 ? 1 : 0.55);
-    };
-  }
-  function scorchMask() {
-    const r = rng(77), segs = [];
-    const branch = (x, y, a, L, w, dep) => {
-      let cx = x, cy = y;
-      for (let k = 0; k < 6; k++) {
-        a += (r() - 0.5) * 0.7;
-        const nx = cx + Math.cos(a) * L / 6, ny = cy + Math.sin(a) * L / 6;
-        segs.push([cx, cy, nx, ny, w]); cx = nx; cy = ny;
-        if (dep < 2 && r() < 0.22) branch(cx, cy, a + (r() < 0.5 ? -1 : 1) * (0.5 + r() * 0.5), L * 0.45, w * 0.6, dep + 1);
+      M.push(ribbon(P, W));
+      if (head > 0.8 && wm > 0.3) { // reverse hook at the head
+        const ang = A0 - head * SW, x = Math.cos(ang) * R * 0.97, y = Math.sin(ang) * R * 0.97, ba = ang + Math.PI * 0.62;
+        M.push(ribbon(linePts(x, y, x + Math.cos(ba) * 0.2 * wm, y + Math.sin(ba) * 0.2 * wm, 10), taper(10, 0.028 * wm, 0.15, 0.8)));
       }
+      for (const b of barbs) {
+        const sv = lerp(tail, head, b.u); if (sv < tail + 0.05) continue;
+        const ang = A0 - sv * SW, rr = R - 0.06 * wm, x = Math.cos(ang) * rr, y = Math.sin(ang) * rr, ba = ang + Math.PI + 0.5;
+        M.push(ribbon(linePts(x, y, x + Math.cos(ba) * b.l * wm, y + Math.sin(ba) * b.l * wm, 6), taper(6, 0.016 * wm, 0.1, 0.9)));
+      }
+      return M;
     };
-    for (let k = 0; k < 11; k++) { const a = (k / 11) * 6.283 + r() * 0.3; branch(Math.cos(a) * 0.16, Math.sin(a) * 0.16, a, 0.68 + r() * 0.22, 0.022, 0); }
-    return segs;
   }
-  function segDist(x, y, s) {
-    let d = 9;
-    for (const [ax, ay, bx, by, w] of s) {
-      const ex = bx - ax, ey = by - ay, t = clamp(((x - ax) * ex + (y - ay) * ey) / (ex * ex + ey * ey), 0, 1);
-      d = Math.min(d, len(x - ax - ex * t, y - ay - ey * t) - w);
+
+  // ---- curved serrated blade with comb teeth + screentone (video 1 navy shards) ----
+  function sawFan(i) {
+    const open = seq([0.4, 0.75, 0.95, 1, 1, 1, 1, 1, 0.97, 0.93, 0.87, 0.79, 0.69, 0.57, 0.43, 0.28], i);
+    const wm = seq([0.7, 1, 1, 1, 1, 0.97, 0.93, 0.88, 0.82, 0.74, 0.65, 0.55, 0.44, 0.33, 0.22, 0.12], i);
+    const cx = -0.25, cy = -1.05, Ro = 1.6, A0 = 2.25, SW = 1.25 * open, teeth = 18, M = [];
+    const thick = (u) => 0.95 * wm * Math.pow(Math.sin(Math.PI * clamp(u, 0, 1)), 0.7) * (0.5 + 0.7 * u);
+    const outer = [], inner = [];
+    for (let k = 0; k <= teeth * 2; k++) {
+      const u = k / (teeth * 2), a = A0 - u * SW, T = thick(u), tl = T * 0.42 * (0.7 + 0.3 * Math.sin(k * 2.3));
+      const rr = k % 2 ? Ro - tl : Ro + (k % 4 === 0 ? 0.015 : 0);
+      outer.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr]);
+      inner.push([cx + Math.cos(a) * (Ro - T), cy + Math.sin(a) * (Ro - T)]);
     }
-    return d;
+    M.push(poly([...outer, ...inner.reverse()]));
+    for (let k = 0; k < teeth; k++) { // white teeth: thin needles along the serrated edge
+      const u = (k * 2) / (teeth * 2), a = A0 - u * SW, T = thick(u); if (T < 0.02) continue;
+      const a2 = A0 - ((k * 2 + 1) / (teeth * 2)) * SW, tl = T * 0.42;
+      M.push(poly([[cx + Math.cos(a) * Ro, cy + Math.sin(a) * Ro], [cx + Math.cos(a2) * (Ro - tl), cy + Math.sin(a2) * (Ro - tl)],
+        [cx + Math.cos(a2) * (Ro - tl * 1.5), cy + Math.sin(a2) * (Ro - tl * 1.5)], [cx + Math.cos(a) * (Ro - tl * 0.4), cy + Math.sin(a) * (Ro - tl * 0.4)]], { coreOnly: true }));
+    }
+    M.push(...halftone(-0.92, -0.92, 0.92, 0.92, 0.05, (x, y) => {
+      const d = Math.hypot(x - cx, y - cy), a = Math.atan2(y - cy, x - cx), u = (A0 - a) / Math.max(0.01, SW);
+      if (u < 0.05 || u > 0.95) return 0;
+      const T = thick(u); if (d > Ro - T * 0.55 || d < Ro - T * 0.95) return 0;
+      return smooth(Ro - T * 0.95, Ro - T * 0.6, d) * 0.85;
+    }, { coreOnly: true }));
+    return M;
   }
-  const SEGS = { v: null };
-  const segs = () => SEGS.v || (SEGS.v = scorchMask());
 
-  // shrink a drawing inside its cell (keeps the ground line), so tongues never hit the cell padding
-  function fit(drawing, k, ground) {
-    return (i, n) => {
-      const f = drawing(i, n);
-      return (x, y, s) => { f(x / k, (y - ground) / k + ground, s); s.d *= k; s.c *= k; s.k *= k; };
+  // ---- 4-point star (video 1 navy star) ----
+  function star4(i) {
+    const s = [0.6, 1, 0.82, 0.5][i], rot = [0, 0.05, 0.09, 0.12][i], M = [], arms = [], inner = 0.13 * s;
+    for (let k = 0; k < 8; k++) {
+      const a = rot + (k * Math.PI) / 4 + Math.PI / 4, rr = k % 2 ? inner : 0.9 * s * (k % 4 === 0 ? 1 : 0.9);
+      arms.push([Math.cos(a) * rr, Math.sin(a) * rr]);
+    }
+    M.push(poly(arms));
+    for (let k = 0; k < 4; k++) {
+      const a = rot + (k * Math.PI) / 2 + Math.PI / 4;
+      M.push(ribbon(linePts(0, 0, Math.cos(a) * 0.88 * s, Math.sin(a) * 0.88 * s, 12), taper(12, 0.028 * s, 0.05, 0.9), { coreOnly: true }));
+    }
+    M.push(dot(0, 0, 0.07 * s, { coreOnly: true }));
+    return M;
+  }
+
+  function glint(i) {
+    const s = [0.45, 1, 0.7, 0.35][i], M = [dot(0, 0, 0.06 * s), dot(0, 0, 0.12 * s, { glowOnly: true })];
+    for (let k = 0; k < 4; k++) {
+      const a = (k * Math.PI) / 2, b = a + Math.PI / 4;
+      M.push(ribbon(linePts(0, 0, Math.cos(a) * 0.95 * s, Math.sin(a) * 0.95 * s, 14), taper(14, 0.045 * s, 0.02, 1.2)));
+      M.push(ribbon(linePts(0, 0, Math.cos(b) * 0.3 * s, Math.sin(b) * 0.3 * s, 8), taper(8, 0.022 * s, 0.02, 1.1)));
+    }
+    return M;
+  }
+  const line = () => [ribbon(linePts(0, -0.95, 0, 0.95, 30), taper(30, 0.011, 0.5, 0.3))];
+  const spark = () => [ribbon(linePts(0, -0.92, 0, 0.92, 20), taper(20, 0.055, 0.72, 0.6)), dot(0, 0.35, 0.12, { glowOnly: true })];
+
+  // ---- top-down vortex (ground swirl, ring slash) ----
+  function swirl(opt) {
+    const r = rng(opt.seed), N = opt.n || 12;
+    const A = Array.from({ length: N }, () => ({ r0: opt.rmin + r() * (opt.rmax - opt.rmin), a0: r() * TAU, len: opt.lmin + r() * (opt.lmax - opt.lmin), w: opt.w * (0.4 + r() * 0.9), hot: r() < opt.hot, dr: (r() - 0.5) * opt.spiral }));
+    return (i) => {
+      const grow = seq(opt.grow, i), fade = seq(opt.fade, i), spin = i * opt.spin, M = [];
+      for (const s of A) {
+        const len = s.len * grow, a0 = s.a0 + spin, P = arcPts(0, 0, s.r0, a0, a0 - len, 40, (u) => s.r0 + s.dr * u);
+        M.push(ribbon(P, taper(40, s.w * fade, 0.62, 0.7), { hot: s.hot, coreW: 0.35 }));
+      }
+      return M;
+    };
+  }
+
+  function inkSpikes(i) {
+    const r = rng(71), M = [], g = [0.65, 1, 1, 0.9][i], w = [1, 1, 0.65, 0.35][i], st = [0, 0, 0.12, 0.3][i];
+    for (let k = 0; k < 30; k++) {
+      const a = (k / 30) * TAU + (r() - 0.5) * 0.2, L = (0.45 + r() * 0.5) * g, r0 = 0.12 + st * L;
+      const kink = (r() - 0.5) * 0.25, mid = 0.4 + r() * 0.3, P = [], W = taper(16, (0.02 + r() * 0.035) * w, 0.12, 0.9);
+      for (let j = 0; j <= 16; j++) { const u = j / 16, rr = r0 + (L - r0) * u, aa = a + (u > mid ? kink * (u - mid) : 0); P.push([Math.cos(aa) * rr, Math.sin(aa) * rr]); }
+      M.push(ribbon(P, W));
+    }
+    for (let k = 0; k < 3; k++) M.push(ribbon(arcPts(0, 0, 0.16 + k * 0.05, k, k + 2.2 + r() * 2, 30), taper(30, 0.014 * w, 0.5, 0.6)));
+    return M;
+  }
+
+  function blobs(i) {
+    const r = rng(83), M = [];
+    for (let k = 0; k < 8; k++) {
+      const x = (r() - 0.5) * 1.0, y = (r() - 0.5) * 0.7, R0 = 0.16 + r() * 0.18, birth = r() * 3, die = 9 + r() * 6;
+      const life = smooth(birth, birth + 2.5, i) * (1 - smooth(die - 3, die, i)), R = R0 * (0.6 + 0.4 * life) * (life > 0.02 ? 1 : 0);
+      if (R <= 0.01) continue;
+      const yy = y + i * 0.01;
+      M.push(dot(x, yy, R));
+      M.push(ribbon(arcPts(x, yy, R * 0.82, 1.9, 3.9, 20), taper(20, R * 0.09, 0.5, 0.8), { coreOnly: true }));
+      M.push(dot(x + R * 0.35, yy + R * 0.4, R * 0.1, { coreOnly: true }));
+    }
+    return M;
+  }
+
+  function flare() {
+    const r = rng(91), M = [dot(0, 0, 0.1), dot(0, 0, 0.26, { glowOnly: true, a: 0.7 })];
+    for (let k = 0; k < 40; k++) { const a = r() * TAU, L = 0.35 + r() * 0.6; M.push(ribbon(linePts(0, 0, Math.cos(a) * L, Math.sin(a) * L, 10), taper(10, 0.006 + r() * 0.01, 0.05, 1), { a: 0.5 + r() * 0.5 })); }
+    M.push(ribbon(linePts(-0.95, 0, 0.95, 0, 30), taper(30, 0.02, 0.5, 1.4)));
+    return M;
+  }
+  const sparkle = (i) => { const s = [1, 0.55, 0.8, 0.35][i]; return [dot(0, 0, 0.22 * s), ...[0, 1, 2, 3].map((k) => ribbon(linePts(0, 0, Math.cos(k * Math.PI / 2) * 0.9 * s, Math.sin(k * Math.PI / 2) * 0.9 * s, 8), taper(8, 0.09 * s, 0.02, 1.1)))]; };
+
+  // ---------- soft media ----------
+  function mist(i, f) {
+    const sc = 0.85 + f * 0.25;
+    return (x, y) => {
+      const d = Math.hypot(x / sc, (y + 0.05 - f * 0.1) / (sc * 0.8));
+      const n = fbm(NA, x * 1.6 + 4 + f * 0.8, y * 1.6 - f * 1.2, 5), n2 = fbm(NB, x * 4.5 - f, y * 4.5 + f * 2, 3);
+      const dens = (1 - d) * 1.2 + (n - 0.5) * 1.6 + (n2 - 0.5) * 0.7 - f * 0.85;
+      return [0.8 + n2 * 0.2, smooth(-0.05, 0.6, dens) * 0.8];
+    };
+  }
+  function dust(i, f) {
+    const sc = 0.8 + f * 0.25;
+    return (x, y) => {
+      const d = Math.hypot(x / sc, (y + 0.1) / (sc * 0.72));
+      const n = fbm(NC, x * 2.2 + 9, y * 2.2 - f * 0.7, 5);
+      const dens = (1 - d) * 1.5 + (n - 0.5) * 1.2 - f * 1.0;
+      return [clamp(0.62 + y * 0.35 + (n - 0.5) * 0.5, 0.3, 1), smooth(0.0, 0.3, dens) * 0.9];
+    };
+  }
+  const bokeh = () => (x, y) => { const d = Math.hypot(x, y); return [1, Math.max(smooth(0.3, 0.12, d), Math.pow(clamp(1 - d / 0.92, 0, 1), 2.4) * 0.7)]; };
+  function fireBurst(i, f) {
+    const R = 0.2 + 0.5 * (1 - Math.pow(1 - Math.min(1, f * 4), 2)), er = Math.max(0, (f - 0.35) / 0.65);
+    return (x, y) => {
+      const d = Math.hypot(x, y), a = Math.atan2(y, x);
+      const spikes = fbm(NB, Math.cos(a) * 3 + 7, Math.sin(a) * 3 + i * 0.3, 4);
+      const n = fbm(NA, x * 3 + i * 0.4, y * 3 - i * 0.5, 4);
+      return 1 - d / (R * (0.75 + spikes * 0.55)) + (n - 0.5) * 0.45 - er * (0.6 + n * 0.9);
     };
   }
 
   // ---------- registry ----------
+  const D = (deg) => (deg * Math.PI) / 180;
   const DEFS = {
-    // layered heroes: each produces <name>_glow/_rim/_mid/_core
-    fx_blast: { layered: true, grid: 4, rim: 0.045, glow: 0.18, coreInset: 0.05, glowFade: [1, 1, 1, 1, 1, 1, 1, 1, 0.9, 0.75, 0.6, 0.45, 0.3, 0.15, 0.05, 0], frame: fit(blast, 0.74, -0.9), note: 'Ground fire blast, 16 drawings on 2s' },
-    fx_smoke: { layered: true, grid: 4, rim: 0.04, glow: 0.12, coreInset: 0.05, glowFade: [1, 1, 1, 1, 0.9, 0.8, 0.65, 0.5, 0.35, 0.2, 0.1, 0], frame: smoke, note: 'Cel smoke cloud: lobes, creases, round-hole dissolve' },
-    fx_flash: { layered: true, grid: 2, rim: 0.035, glow: 0.2, coreInset: 0.04, frame: flash, note: 'Impact flash star, 4 drawings' },
-    fx_slash: { layered: true, grid: 4, rim: 0.03, glow: 0.12, coreInset: 0.02, glowFade: [0.7, 1, 1, 1, 0.85, 0.7, 0.5, 0.32, 0.18, 0.08, 0], frame: slashDrawing('steel'), note: 'Steel crescent: streaks, echo arc, shards, dash-out' },
-    fx_fireslash: { layered: true, grid: 4, rim: 0.035, glow: 0.13, coreInset: 0.03, glowFade: [0.7, 1, 1, 1, 0.9, 0.75, 0.6, 0.45, 0.3, 0.15, 0.05, 0], frame: slashDrawing('fire'), note: 'Fire crescent: trailing tongues, boil, burn-out' },
-    // single white sprites
-    spark: { grid: 1, size: 256, frame: streakMask(0.15, 0.45), note: 'Spark streak (tip = velocity)' },
-    speedline: { grid: 1, size: 256, frame: streakMask(0.04, 0.4), note: 'Speed line' },
-    glint: { grid: 2, size: 512, frame: glintMask, note: 'Twinkle glint, 4 drawings' },
-    flame_lick: { grid: 2, size: 1024, frame: lickMask, note: 'Flame tongue, 4 variants for Random boil' },
-    ring: { grid: 2, size: 1024, frame: ringMask, note: 'Shockwave ring thinning and breaking' },
-    puff: { grid: 4, size: 1024, frame: puffMask, note: 'Small cel puff with hole dissolve' },
-    rock: { grid: 1, size: 256, frame: rockMask, note: 'Debris chip (value-shaded)' },
-    scorch: { grid: 1, size: 1024, frame: () => (x, y, s) => { const n = fbm(NB, x * 3, y * 3); s.d = Math.min(len(x, y) - 0.5 - (n - 0.5) * 0.25, segDist(x, y, segs()) + 0.012); }, note: 'Scorch + cracks' },
-    crack_glow: { grid: 1, size: 1024, frame: () => (x, y, s) => { s.d = Math.min(segDist(x, y, segs()) + 0.008, circle(x, y, 0, 0, 0.14 + (NB(x * 8, y * 8) - 0.5) * 0.05)); }, note: 'Molten crack lines' },
+    wisp_arc: { kind: 'layered', grid: 4, rim: 0.01, glow: 0.07, coreW: 0.45, frame: strandArc({ seed: 5, a0: D(210), sweep: D(220) }), note: 'Energy crescent of brush strands' },
+    trail_arc: { kind: 'layered', grid: 4, rim: 0.008, glow: 0.06, coreW: 0.4, frame: strandArc({ seed: 9, R: 0.84, a0: D(200), sweep: D(205), strands: 60, bodyA: 0.55, thick: [0.24, 0.3, 0.32, 0.31, 0.29, 0.26, 0.23, 0.2, 0.17, 0.14, 0.11, 0.085, 0.065, 0.045, 0.03, 0.018] }), note: 'Wind slash trail: thin, many strands' },
+    saw_fan: { kind: 'layered', grid: 4, rim: 0.016, glow: 0.05, frame: sawFan, note: 'Sawtooth fan with comb teeth + screentone' },
+    star4: { kind: 'layered', grid: 2, size: 1024, rim: 0.03, glow: 0.12, frame: star4, note: '4-point star flash' },
+    ring_slash: { kind: 'layered', grid: 4, rim: 0.016, glow: 0.06, coreW: 0.3, frame: swirl({ seed: 33, n: 30, rmin: 0.42, rmax: 0.86, lmin: 2.2, lmax: 5.6, w: 0.075, hot: 0.3, spiral: 0.12, spin: -0.5, grow: [0.25, 0.6, 0.9, 1, 1, 1, 1, 1, 0.95, 0.88, 0.78, 0.66, 0.52, 0.38, 0.24, 0.1], fade: [0.7, 1, 1, 1, 1, 0.95, 0.88, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.22, 0.14, 0.07] }), note: 'Vortex ring slash' },
+    swirl_disk: { kind: 'layered', grid: 4, rim: 0.01, glow: 0.06, coreW: 0.35, frame: swirl({ seed: 21, n: 16, rmin: 0.2, rmax: 0.88, lmin: 1.2, lmax: 3.2, w: 0.035, hot: 0.4, spiral: 0.25, spin: 0.35, grow: [0.3, 0.7, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.9, 0.8, 0.7, 0.55, 0.4, 0.25], fade: [0.8, 1, 1, 1, 1, 1, 0.95, 0.9, 0.82, 0.72, 0.6, 0.48, 0.36, 0.25, 0.15, 0.07] }), note: 'Top-down vortex swirl' },
+    blobs: { kind: 'layered', grid: 4, rim: 0.02, glow: 0.08, frame: blobs, note: 'Bubbly glass energy blobs' },
+    fire_burst: { kind: 'pixelLayers', grid: 4, th: { glow: -0.28, rim: -0.04, mid: 0.08, core: 0.55, soft: 0.05 }, frame: fireBurst, note: 'Fire flash burst' },
+    ink_arc: { kind: 'single', grid: 4, size: 1024, frame: inkArc(13), note: 'Black calligraphic crescent (Color black, LightEmission 0)' },
+    ink_spikes: { kind: 'single', grid: 2, size: 1024, frame: inkSpikes, note: 'Jagged ink spike burst' },
+    glint: { kind: 'single', grid: 2, size: 512, halo: 0.07, frame: glint, note: 'Lens glint' },
+    sparkle: { kind: 'single', grid: 2, size: 256, halo: 0.15, frame: sparkle, note: 'Twinkle sparkle (firework dots)' },
+    line: { kind: 'single', grid: 1, size: 1024, halo: 0.012, frame: line, note: 'Thin straight line (tip = +Y)' },
+    spark: { kind: 'single', grid: 1, size: 256, halo: 0.08, frame: spark, note: 'Glowing spark streak' },
+    flare: { kind: 'single', grid: 1, size: 512, halo: 0.16, frame: flare, note: 'Lens-flare sun' },
+    mist: { kind: 'pixels', grid: 4, size: 1024, frame: mist, note: 'Soft wispy mist' },
+    dust: { kind: 'pixels', grid: 4, size: 1024, frame: dust, note: 'Value-shaded dust cloud' },
+    bokeh: { kind: 'pixels', grid: 1, size: 128, frame: bokeh, note: 'Soft bokeh dot' },
   };
-
   const cache = {};
   G.VFXPaint = {
     defs: DEFS,
-    // returns { name: canvas } for every output of a def (4 for layered)
+    layered: (name) => ['layered', 'pixelLayers'].includes(DEFS[name].kind),
     build(name) {
       if (cache[name]) return cache[name];
       const d = DEFS[name];
       if (!d) throw new Error('Unknown drawing ' + name);
-      if (d.layered) {
-        const L = layered(d), o = {};
-        for (const k of Object.keys(L)) o[`${name}_${k}`] = L[k];
-        return (cache[name] = o);
-      }
-      return (cache[name] = { [name]: mask(d) });
-    },
-    // texture name -> [def name, grid]
-    resolve(tex) {
-      const m = tex.match(/^(.*)_(glow|rim|mid|core)$/);
-      const base = m && DEFS[m[1]] && DEFS[m[1]].layered ? m[1] : tex;
-      return { def: base, grid: DEFS[base].grid };
+      let o;
+      if (d.kind === 'layered') o = layered(d);
+      else if (d.kind === 'pixelLayers') o = pixelLayers(d);
+      if (o) { const res = {}; for (const k of Object.keys(o)) res[`${name}_${k}`] = o[k]; return (cache[name] = res); }
+      return (cache[name] = { [name]: d.kind === 'pixels' ? pixels(d) : single(d) });
     },
   };
 })(typeof window !== 'undefined' ? window : globalThis);

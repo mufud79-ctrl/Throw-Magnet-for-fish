@@ -6,7 +6,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 const { chromium } = createRequire(import.meta.url)('playwright');
 const here = path.dirname(new URL(import.meta.url).pathname);
-const [name = 'FireExplosion', mode = 'sheet', times, env = 'dusk', cam] = process.argv.slice(2);
+const [name = 'AzureTempest', mode = 'sheet', times, env, cam] = process.argv.slice(2);
 const dir = path.join(here, 'out', name);
 fs.mkdirSync(dir, { recursive: true });
 const html = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>'
@@ -34,7 +34,7 @@ if (mode === 'shot') {
   console.log(path.join(dir, 'page.png'));
 } else {
   const data = await page.evaluate(({ ts, env, cam }) => {
-    VFX.setEnv(env);
+    if (env) VFX.setEnv(env);
     const src = document.querySelector('#vp'), shots = [];
     for (const t of ts) {
       if (cam) { const c = cam.split(':').map(Number); VFX.camera.position.set(c[0], c[1], c[2]); }

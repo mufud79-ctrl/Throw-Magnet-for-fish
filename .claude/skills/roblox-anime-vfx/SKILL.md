@@ -17,13 +17,13 @@ out/lab.html    --Artifact--> 3D viewport the user scrubs and comments on
 
 | File | Role |
 |---|---|
-| `vfx/engine/paint.js` | Headless "paint" kit: SDF drawings (tongues, lobes, arcs) split into 4 white layers |
+| `vfx/engine/paint.js` | Headless brush painter: tapered ribbons, polys, dots, screentone, blur glows, pixel media; layered drawings split into 4 white sheets |
 | `vfx/engine/spec.js` | `stack()` (4 aligned emitters per hero), `steps()` + `flicker()` (stepped NumberSequences) |
 | `vfx/engine/sim.js` | Roblox ParticleEmitter emulator (sequences, shapes, rotated parts, orientation, flipbooks, LightEmission) |
 | `vfx/engine/luau.js` | Spec -> self-contained Luau ModuleScript |
 | `vfx/engine/lint.mjs` | Roblox rule checks + stack alignment checks |
 | `vfx/viewer/` | Lab page: effect switcher, transport, layer solo, per-layer toggles, textures + Luau tabs |
-| `vfx/effects/` | `fire_explosion.js`, `sword_slashes.js` (SwordSlash + FireSlash). Copy their structure |
+| `vfx/effects/references.js` | AzureTempest, FireworkBurst, KatanaFlurry: recreations of the user's reference clips; copy `planeStack` / `firework` helpers |
 | `reference/anime-research.md` | Research guide: shape language, timing, life, color, slash + explosion anatomy |
 
 ## Setup (once per container)
@@ -37,11 +37,10 @@ cd vfx && npm install   # three@0.147.0 for headless rendering (CDNs are blocked
 1. **Break the effect into beats** (see the 5-beat table) and decide the **hero drawing(s)**:
    the one or two shapes the eye reads (blast, slash, smoke). Everything else is secondary
    sprites (sparks, glints, licks, puffs) and "life".
-2. **Draw the hero** in `engine/paint.js` as a function `frame(i) -> sampler(x, y, s)` that
-   sets `s.d` (silhouette SDF), `s.c` (core SDF) and `s.k` (cut lines). Register it with
-   `layered: true`. Read `reference/texture-recipes.md` and `reference/anime-research.md` first.
+2. **Draw the hero** in `engine/paint.js` as `frame(i) -> [marks]` (ribbon / poly / dot, flags
+   `hot`, `coreOnly`, `glowOnly`, `noRim`). Register it with `kind: 'layered'`. Read `reference/texture-recipes.md` first.
 3. **Paint + review the drawing**: `node paint.mjs <def>`, then read
-   `out/textures/_preview_<def>.png`, which tints the 4 layers with a test palette. Check it
+   `out/textures/_preview_<def>.png`, which tints the 4 layers with the reference palette (see `PAL` in paint.mjs). Check it
    against the drawing checklist below before touching the effect spec.
 4. **Write the spec** in `effects/<file>.js`. Each hero is `...stack(base, { glow, rim, mid, core })`
    with per-layer Color / LightEmission / Transparency.
@@ -52,63 +51,60 @@ cd vfx && npm install   # three@0.147.0 for headless rendering (CDNs are blocked
    if the path changed). Ask for feedback by effect, layer name or beat time.
 8. **Commit** the specs, `paint.js`, `out/textures/*.png`, `out/lab.html` and `out/*/*.lua`. Sheets are gitignored.
 
+## Target style: Roblox battlegrounds VFX (user's reference clips)
+
+The user rejected flat cel cartoon shapes with thick outlines ("generic slop"). The approved
+target is the look of top Roblox battlegrounds games, recreated in `effects/references.js`:
+- **Light is built from strokes, not fills.** Energy crescents are a white-hot band on the
+  cutting edge plus 40–60 tapered hair strands that spiral inward. The glow is a blurred copy of
+  the strands, never a gradient blob.
+- **Contrast comes from black ink.** Jet-black calligraphic crescents with needle tips, hooks and
+  barbs, black hairlines and black spike bursts, drawn with LightEmission 0 between additive layers.
+- **Graphic accents:** navy serrated blades with white comb teeth and **manga screentone**, a
+  navy 4-point star with a white rim, lens glints with long thin rays, bokeh dots, small
+  yellow-green flecks.
+- **Soft media stays soft:** mist, dust and haze are noisy, low-opacity, slow and behind everything.
+- **3D wrap:** many arcs on different planes around the character (`planeStack` with fixed
+  rotations, clustered within ~±30° of facing the camera). Edge-on arcs read as fat white rods, so avoid them.
+- **Value control:** additive layers saturate to white fast. Keep mid LightEmission ~0.35–0.5,
+  core Brightness ≤ 2, glow Transparency ≥ 0.5, and Bloom ~0.6 at threshold 0.9. Check that
+  blue (or pink or orange) mid-tones survive in the busiest frame.
+- **Ground matters:** sprites centred low get cut flat by the floor. Keep big sprites' bottom edge above y = 0.
+- **Match the environment of the reference** (anime sky over a dark checker floor, or a night arena) via `stage.env`.
+
+When the user gives reference videos: extract frames with ffmpeg (`fps=4–10` contact sheets via
+`tile`, plus a few full-res crops), list every element and its texture traits, then recreate
+**element by element**. Review your headless sheet side by side with the reference frames.
+
 ## Four white layers (the core technique)
 
-Each hero drawing exports `<def>_glow`, `<def>_rim`, `<def>_mid` and `<def>_core`. All four are
-white plus alpha, so the ParticleEmitter `Color` does all the colouring and you can recolour
-without new textures. `stack()` makes 4 emitters on one point with identical motion, so they
-line up exactly in Roblox.
+Each layered drawing exports `<def>_glow`, `<def>_rim`, `<def>_mid` and `<def>_core`. All four
+are white plus alpha, and the emitter `Color` does the colouring. `stack()` / `planeStack()`
+emit them as aligned emitters.
 
-| Layer | What the alpha is | Typical emitter setup |
+| Layer | How the brush engine builds it | Typical emitter setup |
 |---|---|---|
-| glow | stepped halo around the silhouette (3 hard steps) | LightEmission 1, Transparency 0.4–0.6 with a stepped flicker; **fade it out before the dissolve** |
-| rim | the full silhouette; reads as the outline plus interior cut lines | darkest saturated hue (crimson/navy), LightEmission 0 |
-| mid | silhouette inset by `rim` width, minus cut lines | main hue, LightEmission 0–0.2 |
-| core | hot region (its own SDF, inset from the edge) | near-white, LightEmission 0.3–0.5, Brightness 1.6–2.5 with a stepped flicker |
+| glow | blurred copy of the body marks (per cell, no bleed) | LightEmission 1, Transparency 0.5–0.9 with stepped flicker |
+| rim | body marks drawn wider by `rim` | dark ink or deep hue (LightEmission 0–0.3), or white for a white outline on navy |
+| mid | body marks | main hue, LightEmission 0–0.5 |
+| core | `hot` marks at `coreW` width + `coreOnly` marks (teeth, tone, highlights) | white, LightEmission 1, Brightness 1.2–2 |
 
-Stack rules (lint enforces them): no envelopes on Size, fixed Lifetime / Speed / Rotation,
-SpreadAngle 0, point emitter. Only colour, transparency, LightEmission, Brightness and ZOffset
-may differ between layers.
+Stack rules (lint enforces them): no envelopes on Size, fixed Lifetime / Speed / Rotation /
+RotSpeed, SpreadAngle 0, point emitter.
 
-## Drawing checklist (preview sheet)
+## Drawing checklist (preview board)
 
-- [ ] Thick-to-thin everywhere; tips end in points. Convex lobes meet at sharp cusps (smin k ≤ 0.04).
-- [ ] One dominant mass, a few medium shapes, many small bits. No equal-sized blobs, no noise blobs.
-- [ ] The shape changes between drawings: boil (domain warp offset per drawing), tongues bend, tips pinch off.
-- [ ] The dissipation is drawn into the frames (holes, dashes, shards, pinch-off), not done with a transparency fade.
-- [ ] Nothing touches the cell edge; use `fit()` to shrink a drawing that clips.
-- [ ] The core is the silhouette's shape at ~55% scale, sunk toward the base or along the cutting edge. It is not separate dots.
-- [ ] Rim is visible as an outline at sprite size. Shapes thinner than ~2× the rim width turn into dark seeds, so make them bigger or drop them.
+- [ ] Strokes taper to needle points; widths vary a lot (hairlines next to bold bands).
+- [ ] Energy shapes are bundles of strands with gaps, not solid crescents.
+- [ ] Every effect has a black-ink element and a white-hot element. Contrast comes from value, not outlines.
+- [ ] Animation over 16 cells: quick draw-on (2–3 cells), hold, then the tail recedes, strands thin and flecks peel off.
+- [ ] Nothing reaches the cell edge (the engine clips at 3% padding; soft glows must fade before it).
 
-## Life (what separates good from generic)
+## Life
 
-Even a "still" element must move. For every hero add:
-- **Stepped flicker** on glow and core Transparency: `steps(flicker(base, amp, 8–9, seed), fadeTo)`.
-- **Glints**: 4-point `glint` flipbook (2x2 OneShot, 0.12–0.22 s) at 6–35/s around the hero while it holds.
-- **Sparks**: needle `spark` with VelocityParallel. Use a burst on the hit, then a trickle via `rate`.
-- **Boil**: the hero drawing itself plus `flame_lick` sprites in Random mode at 12 fps.
-- **Light**: a PointLight brightness track with small stepped bumps, not one smooth fade.
-
-## The anime look (rules)
-
-Full notes: `reference/anime-research.md` (research) and `reference/anime-style.md` (per-series).
-- Flat cel bands with a dark rim; LightEmission 1 only on glow, sparks, glints and lines.
-- Timing: hits on 1s, most drawings on 2s (12 fps → Lifetime = 16/12 s for a 4x4), smoke on 3s (8 fps).
-- Fast in, hold, slow out: big Speed + high Drag for secondaries; the hero drawing holds 2–4 drawings at full size.
-- Impact frames: 1–3 frames of white, B/W threshold and red tint (`impactFrames`), plus shake.
-- Slash: appears at **full length in one drawing** (thin smear first), thickest at 60–75% toward
-  the leading tip, then thins from the inside → streaks → dashes and shards.
-- Explosion: flash star → lumpy dome with tongues → hold → tips pinch off → smoke takes over from the edges.
-
-### 5-beat structure
-
-| Beat | Typical time | Layers |
-|---|---|---|
-| Anticipation | 0–0.3 s (slash: 0–0.1 s) | gather lines, charge or tip glint |
-| Impact | +0–0.13 s | impact frames, flash star, speed lines, shake |
-| Bloom | +0.03–0.3 s | hero stack, licks, rings |
-| Hold | +0.3–0.6 s | hero holds and boils, glints, sparks, embers |
-| Erode | +0.6–2 s | hero dissipation frames, smoke hero, dust, scorch |
+Stepped flicker on glow and core, glints at 20–35/s while the effect holds, bokeh, flecks and
+sparks, and light bumps. Fireworks use paired emitters: streaks (VelocityParallel, short) plus
+twinkling dots (Random flipbook, longer, slight gravity).
 
 ## Feedback -> change
 

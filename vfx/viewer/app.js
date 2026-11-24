@@ -46,7 +46,19 @@
   sun.position.set(-30, 60, 20);
   scene.add(hemi, sun);
 
+  function checkerTex(a, b) {
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d');
+    g.fillStyle = a; g.fillRect(0, 0, 128, 128); g.fillStyle = b; g.fillRect(0, 0, 64, 64); g.fillRect(64, 64, 64, 64);
+    const t = new THREE.CanvasTexture(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(25, 25); t.anisotropy = 8; t.magFilter = THREE.NearestFilter;
+    return t;
+  }
+  const gridMap = ground.material.map;
+  const checkers = {};
   const ENVS = {
+    sky: { label: 'Anime sky', sky: ['#3d8ae0', '#c8f0ff'], fog: '#7fb8ff', ground: '#ffffff', checker: ['#1b2440', '#141a30'], hemi: [0xbfd8ff, 0x202638, 0.85], sun: [0xffffff, 0.55], level: 0.8, fogNear: 90 },
+    night: { label: 'Night arena', sky: ['#0c1424', '#2a3446'], fog: '#202a3a', ground: '#ffffff', checker: ['#2c3038', '#24272e'], hemi: [0x8090b0, 0x1a1c22, 0.7], sun: [0xa0b0ff, 0.3], level: 0.5, fogNear: 70 },
     dusk: { label: 'Dusk arena', sky: ['#0f0c1c', '#3a2840'], fog: '#2c2034', ground: '#55515e', hemi: [0x8a80c0, 0x2a2430, 0.75], sun: [0xb0a0ff, 0.35], level: 0.55 },
     day: { label: 'Day baseplate', sky: ['#4f9cf0', '#cfe5ff'], fog: '#cfe5ff', ground: '#a3a2a5', hemi: [0xffffff, 0x7a7a80, 0.85], sun: [0xffffff, 0.6], level: 1 },
     void: { label: 'Black void', sky: ['#050507', '#050507'], fog: '#050507', ground: null, hemi: [0x8080a0, 0x101010, 0.5], sun: [0xffffff, 0.3], level: 0.45 },
@@ -56,7 +68,9 @@
   function setEnv(k) {
     envKey = k; env = ENVS[k];
     scene.background = skyCache[k] || (skyCache[k] = gradTex(env.sky[0], env.sky[1]));
-    scene.fog = new THREE.Fog(env.fog, 120, 380);
+    scene.fog = new THREE.Fog(env.fog, env.fogNear || 120, 380);
+    if (env.checker) { const key = env.checker.join(); ground.material.map = checkers[key] || (checkers[key] = checkerTex(...env.checker)); } else ground.material.map = gridMap;
+    ground.material.needsUpdate = true;
     ground.visible = !!env.ground;
     if (env.ground) ground.material.color.set(env.ground);
     hemi.color.setHex(env.hemi[0]); hemi.groundColor.setHex(env.hemi[1]); hemi.intensity = env.hemi[2];
@@ -93,6 +107,7 @@
     dummy.rotateY(Math.PI); // R15 faces -Z (LookVector); three's lookAt points +Z at the target
     sword.visible = !!d.sword;
     blade.material.color.set(d.sword === 'fire' ? 0xffa040 : 0xdfe8f0);
+    blade.scale.set(d.sword === 'katana' ? 0.6 : 1, d.sword === 'katana' ? 0.6 : 1, d.sword === 'katana' ? 1.3 : 1);
     blade.userData.mat = blade.material;
     shoulder.quaternion.identity();
     if (!d.sword) shoulder.rotation.set(0, 0, 0);
@@ -114,6 +129,8 @@
     });
     placeDummy(FX.stage);
     const st = FX.stage || {};
+    if (st.env && ENVS[st.env]) { setEnv(st.env); const sel = document.querySelector('#env'); if (sel) sel.value = st.env; }
+    final.uniforms.bi.value = st.bloom ? st.bloom[0] : 0.55; bright.uniforms.th.value = st.bloom ? st.bloom[1] : 1.0;
     camera.position.fromArray(st.camera || [19, 7.5, 25]);
     controls.target.fromArray(st.target || [0, 6, 0]);
     controls.update();

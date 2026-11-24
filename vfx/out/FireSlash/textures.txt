@@ -1,8 +1,0 @@
-out/textures/glint.png
-out/textures/fx_fireslash_glow.png
-out/textures/fx_fireslash_rim.png
-out/textures/fx_fireslash_mid.png
-out/textures/fx_fireslash_core.png
-out/textures/spark.png
-out/textures/flame_lick.png
-out/textures/puff.png
