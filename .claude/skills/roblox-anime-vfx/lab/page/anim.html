@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/examples/jsm/":"/three/examples/jsm/"}}</script>
+<style>html,body{margin:0;background:#1d2232}canvas{display:block}</style></head>
+<body><canvas id="vp" width="720" height="900"></canvas><script type="module">
+// Animated model previewer: plays every clip in a GLB with AnimationMixer and renders frames at exact times.
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+const cv = document.getElementById('vp');
+const r = new THREE.WebGLRenderer({ canvas: cv, antialias: true, preserveDrawingBuffer: true });
+r.outputEncoding = THREE.sRGBEncoding;
+const scene = new THREE.Scene();
+// storm-navy backdrop: vertical gradient
+const g = document.createElement('canvas'); g.width = 2; g.height = 256; const gx = g.getContext('2d');
+const grd = gx.createLinearGradient(0, 0, 0, 256); grd.addColorStop(0, '#3a4566'); grd.addColorStop(1, '#151927'); gx.fillStyle = grd; gx.fillRect(0, 0, 2, 256);
+const bg = new THREE.CanvasTexture(g); bg.encoding = THREE.sRGBEncoding; scene.background = bg;
+scene.add(new THREE.HemisphereLight('#dfe8ff', '#4a4e66', 0.85));
+const key = new THREE.DirectionalLight('#ffffff', 0.85); key.position.set(2, 4, 5); scene.add(key);
+const rim = new THREE.DirectionalLight('#6fe0ff', 0.55); rim.position.set(-3, 2, -4); scene.add(rim);
+const cam = new THREE.PerspectiveCamera(30, 720 / 900, 0.01, 100);
+window.ANIM = {
+  resize(w, h) { cv.width = w; cv.height = h; r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); },
+  async load(url) {
+    const gl = await new GLTFLoader().loadAsync(url);
+    this.obj = gl.scene; scene.add(this.obj);
+    this.obj.traverse((o) => { if (o.isMesh || o.isSkinnedMesh) o.frustumCulled = false; });
+    this.mixer = new THREE.AnimationMixer(this.obj);
+    this.clips = gl.animations; this.dur = Math.max(0, ...gl.animations.map((c) => c.duration));
+    for (const c of gl.animations) this.mixer.clipAction(c).play();
+    this.mixer.setTime(0); this.obj.updateMatrixWorld(true);
+    const box = new THREE.Box3();
+    this.obj.traverse((o) => { if (o.isSkinnedMesh) { o.skeleton.update(); o.geometry.computeBoundingBox(); } });
+    box.setFromObject(this.obj);
+    this.center = box.getCenter(new THREE.Vector3()); this.size = box.getSize(new THREE.Vector3());
+    return { clips: gl.animations.map((c) => [c.name, c.duration, c.tracks.length]), size: this.size.toArray() };
+  },
+  frame(t, yawDeg, pitchDeg = 6, zoom = 1) {
+    this.mixer.setTime(t);
+    const h = this.size.y, w = Math.max(this.size.x, this.size.z);
+    const d = Math.max(h, w / cam.aspect) / 2 / Math.tan(cam.fov * Math.PI / 360) * 1.12 / zoom;
+    const a = yawDeg * Math.PI / 180, p = pitchDeg * Math.PI / 180, c = this.center;
+    cam.position.set(c.x + Math.sin(a) * Math.cos(p) * d, c.y + Math.sin(p) * d, c.z + Math.cos(a) * Math.cos(p) * d);
+    cam.lookAt(c); r.render(scene, cam); return cv.toDataURL('image/jpeg', 0.92);
+  },
+};
+window.ANIM_READY = true;
+</script></body></html>
