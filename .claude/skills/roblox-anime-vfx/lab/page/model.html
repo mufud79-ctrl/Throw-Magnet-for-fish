@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/examples/jsm/":"/three/examples/jsm/"}}</script>
+<style>html,body{margin:0;background:#1a1d26}canvas{display:block}</style></head>
+<body><canvas id="vp" width="640" height="900"></canvas><script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+const r = new THREE.WebGLRenderer({ canvas: document.getElementById('vp'), antialias: true, preserveDrawingBuffer: true });
+r.setSize(640, 900, false); r.outputEncoding = THREE.sRGBEncoding;
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#c9ccd4');
+scene.add(new THREE.HemisphereLight('#ffffff', '#8a8f9c', 0.9));
+const sun = new THREE.DirectionalLight('#ffffff', 0.9); sun.position.set(2, 4, 5); scene.add(sun);
+const cam = new THREE.PerspectiveCamera(30, 640 / 900, 0.01, 100);
+window.MODEL = {
+  async load(url) {
+    const g = await new GLTFLoader().loadAsync(url);
+    const obj = g.scene; const box = new THREE.Box3().setFromObject(obj); const c = box.getCenter(new THREE.Vector3()); const s = box.getSize(new THREE.Vector3());
+    obj.position.sub(c); scene.add(obj); this.size = s.toArray(); this.obj = obj; return this.size;
+  },
+  view(yawDeg) {
+    const h = this.size[1], d = Math.max(this.size[0], this.size[2], h) * 2.1, a = yawDeg * Math.PI / 180;
+    cam.position.set(Math.sin(a) * d, h * 0.08, Math.cos(a) * d); cam.lookAt(0, 0, 0);
+    r.render(scene, cam); return document.getElementById('vp').toDataURL('image/jpeg', 0.92);
+  },
+};
+window.MODEL_READY = true;
+</script></body></html>
