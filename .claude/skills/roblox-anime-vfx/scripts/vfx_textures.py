@@ -1113,6 +1113,287 @@ def water_drops(n=16, seed=341):
     return alphas, vals
 
 
+
+# ================================================================ THUNDER FRUIT (fractal lightning, painted in layers)
+def _frac_path(rng, a, b, rough=0.2, depth=7, decay=0.6):
+    """Midpoint-displacement lightning path from a to b (pixel coords)."""
+    pts = [np.array(a, float), np.array(b, float)]
+    disp = rough * np.linalg.norm(pts[1] - pts[0])
+    for _ in range(depth):
+        new = [pts[0]]
+        for p, q in zip(pts[:-1], pts[1:]):
+            d = q - p
+            n = np.array([-d[1], d[0]]) / (np.linalg.norm(d) + 1e-9)
+            new += [(p + q) / 2 + n * rng.normal(0, disp), q]
+        pts = new
+        disp *= decay
+    return pts
+
+
+def _bolt_tree(rng, a, b, w0, depth=2, branches=5, rough=0.2, inten=1.0, spread=(0.35, 0.9)):
+    """Main fractal path plus recursive tapering, dimming branches. Returns [(pts, w_start, w_end, intensity, rank)]."""
+    main = _frac_path(rng, a, b, rough)
+    out = [(main, w0, w0 * 0.35, inten, 0)]
+    if depth <= 0:
+        return out
+    L = np.linalg.norm(np.array(b, float) - np.array(a, float))
+    for _ in range(branches):
+        i = int(rng.uniform(0.12, 0.8) * (len(main) - 2)) + 1
+        p, q = main[i], main[min(len(main) - 1, i + 4)]
+        d = (q - p) / (np.linalg.norm(q - p) + 1e-9)
+        ang = rng.choice([-1, 1]) * rng.uniform(*spread)
+        c, s = math.cos(ang), math.sin(ang)
+        d2 = np.array([d[0] * c - d[1] * s, d[0] * s + d[1] * c])
+        ln = L * rng.uniform(0.15, 0.42) * (1 - i / len(main)) ** 0.5
+        wb = w0 * (1 - i / len(main)) * 0.5 + 1
+        for item in _bolt_tree(rng, p, p + d2 * ln, wb, depth - 1, max(1, branches // 2), rough * 1.1, inten * 0.7, spread):
+            out.append((item[0], item[1], item[2], item[3], item[4] + 1))
+    return out
+
+
+def _render_bolts(bolts, size, keep=1.0, jitter=0.0, rng=None, width_k=1.0, tip_cut=0.0):
+    """Draw tapered bolts (max-blended), each truncated to `keep` of its length (branches lose tips first
+    by tip_cut). Returns the hot core line field 0..1."""
+    F = np.zeros((size, size), np.float32)
+    for pts, w0, w1, inten, rank in bolts:
+        k = keep * (1 - tip_cut * min(rank, 2) / 2)
+        n = max(2, int(len(pts) * k))
+        P = pts[:n]
+        if jitter and rng is not None:
+            P = [p + rng.normal(0, jitter, 2) if 0 < j < len(P) - 1 else p for j, p in enumerate(P)]
+        img = Image.new("L", (size, size), 0)
+        d = ImageDraw.Draw(img)
+        for j in range(len(P) - 1):
+            t = j / max(1, len(pts) - 1)
+            w = max(1.0, (w0 + (w1 - w0) * t) * width_k)
+            d.line([tuple(P[j]), tuple(P[j + 1])], fill=int(255 * min(1, inten)), width=int(round(w)))
+            r = w / 2
+            d.ellipse([P[j + 1][0] - r, P[j + 1][1] - r, P[j + 1][0] + r, P[j + 1][1] + r], fill=int(255 * min(1, inten)))
+        F = np.maximum(F, np.asarray(img, np.float32) / 255)
+    return F
+
+
+def _electric_glow(core, size, k_inner=1.0, k_outer=1.0, k_haze=0.35, cool=0.0):
+    """Painted electricity: white-hot core, tight inner glow, wide bloom, faint ion haze. `cool` (0..1) shifts
+    energy from the core into the glow as the bolt cools in the afterglow."""
+    inner = blur(core, size * (0.004 + 0.004 * cool))
+    outer = blur(core, size * (0.016 + 0.01 * cool))
+    haze = blur(core, size * 0.05)
+    return np.clip(core * (1 - 0.55 * cool) + inner * (0.55 + 0.25 * cool) * k_inner + outer * (0.42 + 0.2 * cool) * k_outer + haze * k_haze * 0.5, 0, 1)
+
+
+STRIKE = [  # (keep, brightness, width, jitter, cool, tip_cut) per frame: leader, return stroke, re-strikes, afterglow
+    (0.55, 0.55, 0.45, 0, 0.0, 0.0), (1, 1.0, 1.25, 0, 0.0, 0.0), (1, 0.95, 1.1, 1, 0.0, 0.0), (1, 0.5, 0.8, 1, 0.1, 0.0),
+    (1, 0.9, 1.05, 2, 0.05, 0.0), (1, 0.55, 0.85, 2, 0.15, 0.1), (1, 0.8, 0.95, 3, 0.15, 0.15), (1, 0.6, 0.8, 3, 0.3, 0.25),
+    (1, 0.5, 0.7, 3, 0.4, 0.35), (1, 0.42, 0.62, 3, 0.5, 0.45), (1, 0.34, 0.55, 3, 0.6, 0.55), (1, 0.27, 0.5, 3, 0.7, 0.65),
+    (1, 0.2, 0.45, 3, 0.78, 0.75), (1, 0.14, 0.4, 3, 0.85, 0.85), (1, 0.08, 0.35, 3, 0.9, 0.95), (1, 0.03, 0.3, 3, 0.95, 1.0)]
+
+
+def thunder_bolt(n=16, seed=401):
+    """Sky-to-ground lightning strike (top to bottom of the cell): a stepped leader, the full white-hot return
+    stroke with branches, two re-strike flickers, then a cooling afterglow where branch tips die first. Layered."""
+    rng = np.random.default_rng(seed)
+    bolts = _bolt_tree(rng, (S * 0.5 + rng.normal(0, S * 0.04), S * 0.02), (S * 0.5 + rng.normal(0, S * 0.05), S * 0.98), S * 0.011, depth=2, branches=7, rough=0.22)
+    frames = []
+    for i in range(n):
+        keep, br, wk, jit, cool, cut = STRIKE[i]
+        fr = np.random.default_rng(seed * 10 + jit)
+        core = _render_bolts(bolts, S, keep, S * 0.003 * jit, fr, wk, cut)
+        frames.append(_electric_glow(core, S, cool=cool) * br)
+    return frames
+
+
+def thunder_burst(n=16, seed=411):
+    """Electric impact: a flash core and 7 fractal bolts striking outward in 2 frames, flickering, then cooling
+    from the tips inward; a thin shock ring rides out. Layered."""
+    rng = np.random.default_rng(seed)
+    c = (S / 2, S / 2)
+    bolts = []
+    for k in range(7):
+        a = k / 7 * TAU + rng.uniform(-0.3, 0.3)
+        L = S * rng.uniform(0.33, 0.47)
+        bolts += _bolt_tree(rng, c, (c[0] + math.cos(a) * L, c[1] + math.sin(a) * L), S * 0.009, depth=1, branches=3, rough=0.24)
+    x, y = coords(S)
+    r, _ = polar_of(x, y)
+    frames = []
+    for i in range(n):
+        keep, br, wk, jit, cool, cut = STRIKE[i]
+        keep = min(1.0, (i + 1) / 2.0)
+        fr = np.random.default_rng(seed * 10 + jit)
+        core = _render_bolts(bolts, S, keep, S * 0.003 * jit, fr, wk, cut)
+        I = _electric_glow(core, S, cool=cool) * br
+        flash = ss(r, 0.22 * (1 - cool) + 0.04, 0.0) * (1 - cool) ** 1.5
+        rr = 0.12 + 0.8 * ease_out(i / 10)
+        ring = ss(np.abs(r - rr), 0.018, 0.004) * max(0.0, 1 - i / 11) * 0.8
+        frames.append(np.clip(np.maximum.reduce([I, flash, ring]), 0, 1))
+    return frames
+
+
+def thunder_arc(n=16, seed=421):
+    """Crackling arcs (loop): short fractal arcs jump around a centre, re-striking every 2 frames, for charged
+    hands, auras and the god-mode body. Layered."""
+    frames = []
+    for i in range(n):
+        fr = np.random.default_rng(seed * 100 + i // 2)
+        bolts = []
+        for _ in range(3):
+            a = fr.uniform(0, TAU)
+            r0, r1 = S * fr.uniform(0.08, 0.2), S * fr.uniform(0.3, 0.46)
+            a1 = a + fr.uniform(-0.8, 0.8)
+            bolts += _bolt_tree(fr, (S / 2 + math.cos(a) * r0, S / 2 + math.sin(a) * r0), (S / 2 + math.cos(a1) * r1, S / 2 + math.sin(a1) * r1),
+                                S * 0.006, depth=1, branches=2, rough=0.3)
+        core = _render_bolts(bolts, S)
+        frames.append(_electric_glow(core, S, k_haze=0.2) * (0.85 + 0.15 * (i % 2)))
+    return frames
+
+
+def plasma_orb(n=16, seed=431):
+    """Charged plasma ball (loop): soft inner volume, crisp bright rim, fractal arcs crawling inside it and
+    sparking off the surface. Layered."""
+    x, y = coords(S)
+    r, _ = polar_of(x, y)
+    R = 0.38
+    vol = (1 - ss(r, 0.0, R)) * 0.45 + ss(r, R * 0.6, R) * (1 - ss(r, R, R + 0.015)) * 0.5
+    rim = ss(np.abs(r - R), 0.022, 0.004)
+    frames = []
+    for i in range(n):
+        fr = np.random.default_rng(seed * 100 + i // 2)
+        bolts = []
+        for _ in range(4):
+            a, b = fr.uniform(0, TAU), fr.uniform(0, TAU)
+            p = (S / 2 + math.cos(a) * S * R * 0.45 * fr.uniform(0, 1), S / 2 + math.sin(a) * S * R * 0.45 * fr.uniform(0, 1))
+            q = (S / 2 + math.cos(b) * S * R * 0.48, S / 2 + math.sin(b) * S * R * 0.48)
+            bolts += _bolt_tree(fr, p, q, S * 0.005, depth=1, branches=2, rough=0.3)
+        for _ in range(2):   # discharges leaving the surface
+            a = fr.uniform(0, TAU)
+            p = (S / 2 + math.cos(a) * S * R * 0.5, S / 2 + math.sin(a) * S * R * 0.5)
+            q = (S / 2 + math.cos(a + fr.uniform(-0.4, 0.4)) * S * fr.uniform(0.3, 0.46), S / 2 + math.sin(a + fr.uniform(-0.4, 0.4)) * S * fr.uniform(0.3, 0.46))
+            bolts += _bolt_tree(fr, p, q, S * 0.005, depth=0, rough=0.3)
+        arcs = _electric_glow(_render_bolts(bolts, S), S, k_haze=0.15)
+        frames.append(np.clip(np.maximum.reduce([vol, rim * 0.95, arcs]), 0, 1))
+    return frames
+
+
+def storm_cloud(n=16, seed=441):
+    """Dark storm cloud: heavy billowing lobes with painted underside shadow; lightning flashing inside lights
+    patches of it from within on a few frames. Shaded (tint deep navy; the flashes stay bright)."""
+    rng = np.random.default_rng(seed)
+
+    def layout(r):
+        sp = [(0, 0.05, 0.46), (-0.4, -0.02, 0.36), (0.42, 0.0, 0.38)]
+        for _ in range(18):
+            a = r.uniform(0, TAU)
+            d = r.uniform(0.3, 0.6)
+            sp.append((math.cos(a) * d * 1.25, math.sin(a) * d * 0.5 + 0.05, r.uniform(0.16, 0.3)))
+        return sp
+    alphas, vals = _cloud_frames(n, seed, layout, spread=(1.15, 0.85))
+    x, y = coords(S)
+    out_v = []
+    for i, (a, v) in enumerate(zip(alphas, vals)):
+        v = 0.42 + 0.5 * (v - 0.6) / 0.4           # heavy base tone, painted lit tops
+        if i in (2, 3, 6, 9, 10):                    # internal flashes
+            cx, cy = rng.uniform(-0.4, 0.4), rng.uniform(-0.15, 0.2)
+            fl = ss(np.hypot(x - cx, (y - cy) * 1.4), 0.6, 0.0) * (1.0 if i in (2, 6, 9) else 0.55)
+            v = np.clip(v + fl * 1.1, 0, 1)
+        out_v.append(np.clip(v, 0, 1))
+    return alphas, out_v
+
+
+def lichtenberg(seed=451):
+    """Electrical burn on the ground: a dense fractal branching figure radiating from the strike point,
+    glowing hot at first (layered, tint cyan/white) - pair with scorch_burn underneath."""
+    rng = np.random.default_rng(seed)
+    c = (S / 2, S / 2)
+    bolts = []
+    for k in range(9):
+        a = k / 9 * TAU + rng.uniform(-0.25, 0.25)
+        L = S * rng.uniform(0.34, 0.48)
+        bolts += _bolt_tree(rng, c, (c[0] + math.cos(a) * L, c[1] + math.sin(a) * L), S * 0.008, depth=3, branches=5, rough=0.3, spread=(0.3, 1.0))
+    core = _render_bolts(bolts, S)
+    x, y = coords(S)
+    r, _ = polar_of(x, y)
+    I = _electric_glow(core, S, k_outer=0.6, k_haze=0.15)
+    return np.clip(np.maximum(I, ss(r, 0.07, 0.0)), 0, 1) * ss(r, 0.98, 0.8)
+
+
+def scorch_burn(seed=451):
+    """Dark burn mark matching lichtenberg (same branches, thicker, soot halo). Shaded: tint near-black."""
+    rng = np.random.default_rng(seed)
+    c = (S / 2, S / 2)
+    bolts = []
+    for k in range(9):
+        a = k / 9 * TAU + rng.uniform(-0.25, 0.25)
+        L = S * rng.uniform(0.34, 0.48)
+        bolts += _bolt_tree(rng, c, (c[0] + math.cos(a) * L, c[1] + math.sin(a) * L), S * 0.012, depth=3, branches=6, rough=0.3, spread=(0.3, 1.0))
+    core = _render_bolts(bolts, S, width_k=1.8)
+    x, y = coords(S)
+    r, _ = polar_of(x, y)
+    nz = noise(S, S, 40, 40, seed + 1, 4)
+    soot = ss(r + (nz - 0.5) * 0.25, 0.55, 0.1) * 0.55
+    A = np.clip(np.maximum(blur(core, 1.5), soot), 0, 1) * ss(r, 0.98, 0.8)
+    V = np.clip(0.18 + 0.25 * nz - 0.12 * blur(core, 2), 0, 1)
+    return [A], [V]
+
+
+def static_sparks(n=16, seed=461):
+    """16 tiny electric crackles (FlipbookStartRandom): Y and zig-zag micro arcs with a bright pinpoint. Shaded."""
+    alphas, vals = [], []
+    for i in range(n):
+        rng = np.random.default_rng(seed * 7 + i)
+        a = rng.uniform(0, TAU)
+        p = (S / 2 - math.cos(a) * S * 0.3, S / 2 - math.sin(a) * S * 0.3)
+        q = (S / 2 + math.cos(a) * S * 0.32, S / 2 + math.sin(a) * S * 0.32)
+        bolts = _bolt_tree(rng, p, q, S * 0.016, depth=1, branches=2, rough=0.3)
+        core = _render_bolts(bolts, S)
+        I = _electric_glow(core, S, k_haze=0.1)
+        alphas.append(I)
+        vals.append(np.clip(0.65 + 0.35 * core, 0, 1))
+    return alphas, vals
+
+
+def ion_haze(n=16, seed=471):
+    """Faint ionised air: thin wispy veils that drift and thin out (behind arcs, inside god mode aura). Shaded."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    base = blur(noise(S, S, 140, 60, seed, 3), S * 0.01)
+    alphas, vals = [], []
+    for i in range(n):
+        t = i / (n - 1)
+        g = 0.5 + 0.5 * ease_out(t / 0.6)
+        f = pc.sample(base, np.clip(x / g, -1, 1), np.clip(y / g + t * 0.2, -1, 1))
+        A = blur(levels(f, 0.45 + 0.2 * t, 0.9), S * 0.008) * ss(r, g * 0.95, g * 0.3) * (1 - 0.7 * t) * 0.55
+        alphas.append(np.clip(A, 0, 1))
+        vals.append(np.clip(0.8 + 0.2 * f, 0, 1))
+    return alphas, vals
+
+
+def _thunder_strip(seed):
+    """Tileable lightning ribbon for Beams/Trails (u along, tiles): a fractal bolt pinned to the same height at
+    both ends so it wraps, with 2 short branches. 1024x256. Layered. Swap the 4 variants every ~0.05 s."""
+    def fn():
+        rng = np.random.default_rng(seed)
+        W, H = 1024 * SS, 256 * SS
+        main = _frac_path(rng, (0, H / 2), (W, H / 2), rough=0.1, depth=9, decay=0.62)
+        main = [np.array([p[0], np.clip(p[1], H * 0.18, H * 0.82)]) for p in main]
+        img = Image.new("L", (W, H), 0)
+        d = ImageDraw.Draw(img)
+        for j in range(len(main) - 1):
+            d.line([tuple(main[j]), tuple(main[j + 1])], fill=255, width=int(H * 0.022))
+        for _ in range(3):
+            i = int(rng.uniform(0.1, 0.9) * len(main))
+            p = main[i]
+            br = _frac_path(rng, p, (p[0] + rng.uniform(60, 160) * SS, p[1] + rng.choice([-1, 1]) * rng.uniform(0.15, 0.3) * H), rough=0.25, depth=5)
+            for j in range(len(br) - 1):
+                w = max(1, int(H * 0.014 * (1 - j / len(br))))
+                d.line([tuple(br[j]), tuple(br[j + 1])], fill=200, width=w)
+        core = np.asarray(img, np.float32) / 255
+        inner = ndi.gaussian_filter(core, H * 0.012, mode="wrap")
+        outer = ndi.gaussian_filter(core, H * 0.05, mode="wrap")
+        I = np.clip(core + inner * 0.6 + outer * 0.45, 0, 1)
+        return I
+    return fn
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -1159,6 +1440,19 @@ LIB = {
     "water_splash":  (water_splash,  "layered", 4, 4, "water"),
     "spray_puff":    (spray_puff,    "shaded",  4, 0, "spray"),
     "water_drops":   (water_drops,   "shaded",  4, 0, "spray"),
+    "thunder_bolt":  (thunder_bolt,  "layered", 4, 5, "thunder"),
+    "thunder_burst": (thunder_burst, "layered", 4, 5, "thunder"),
+    "thunder_arc":   (thunder_arc,   "layered", 4, 4, "thunder"),
+    "plasma_orb":    (plasma_orb,    "layered", 4, 5, "thunder"),
+    "storm_cloud":   (storm_cloud,   "shaded",  4, 0, "storm"),
+    "lichtenberg":   (lichtenberg,   "layered", 1, 4, "thunder"),
+    "scorch_burn":   (scorch_burn,   "shaded",  1, 0, "soot"),
+    "static_sparks": (static_sparks, "shaded",  4, 0, "spark_blue"),
+    "ion_haze":      (ion_haze,      "shaded",  4, 0, "ion"),
+    "thunder_strip_1": (_thunder_strip(481), "layered", 0, 5, "thunder"),
+    "thunder_strip_2": (_thunder_strip(482), "layered", 0, 5, "thunder"),
+    "thunder_strip_3": (_thunder_strip(483), "layered", 0, 5, "thunder"),
+    "thunder_strip_4": (_thunder_strip(484), "layered", 0, 5, "thunder"),
 }
 
 PALETTES = {
@@ -1175,7 +1469,11 @@ PALETTES = {
     "spark": {"mid": "#ffe27a", "additive": True},
     "magma": {"glow": "#ff3a0a", "rim": "#3a0a04", "mid": "#ff6a1a", "core": "#ffd27a"},
     "dark": {"glow": "#7a2cff", "rim": "#c9a0ff", "mid": "#3a1068", "core": "#0a0012"},
-    "thunder": {"glow": "#4aa8ff", "rim": "#1e4cff", "mid": "#bfe4ff", "core": "#ffffff"},
+    "thunder": {"glow": "#3a8cff", "rim": "#2a1a9a", "mid": "#6fe0ff", "core": "#ffffff"},
+    "storm": {"mid": "#2a3350"},
+    "soot": {"mid": "#1a1612"},
+    "spark_blue": {"mid": "#9fe8ff", "additive": True},
+    "ion": {"mid": "#7fc8ff", "additive": True},
     "water": {"glow": "#3ab0ff", "rim": "#0a5cc0", "mid": "#8fd4ff", "core": "#ffffff"},
     "mist": {"mid": "#e6f6ff"},
     "icechip": {"mid": "#bfe8ff", "additive": True},
@@ -1208,8 +1506,12 @@ def build(name, out):
         paths.append(p)
     elif kind == "shaded":
         alphas, vals = res
-        A = pc.sheet(alphas, grid, CELL)
-        V = pc.sheet(vals, grid, CELL, fade=False)
+        if grid == 1:
+            A = pc.down(alphas[0], CELL * 2) * pc.edge_fade(CELL * 2)
+            V = pc.down(vals[0], CELL * 2)
+        else:
+            A = pc.sheet(alphas, grid, CELL)
+            V = pc.sheet(vals, grid, CELL, fade=False)
         p = os.path.join(out, f"{name}.png")
         pc.save_white(A, p, V)
         paths.append(p)
