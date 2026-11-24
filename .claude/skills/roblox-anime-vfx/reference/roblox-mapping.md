@@ -3,19 +3,22 @@
 ## Spec format
 
 ```js
+const { stack, steps, flicker } = G.VFXSpec;
 G.VFX_EFFECTS.MyEffect = {
   name: 'MyEffect', version: 1, duration: 2.6,          // seconds; cleanup at duration + 0.25
-  beats: [[t, 'label'], ...],                           // shown as scrubber ticks + chips
-  lights: [{ name, position, Color, Range, Brightness: [[t, v], ...] }],   // PointLight track
+  stage: { camera: [x,y,z], target: [x,y,z],            // viewer only: framing, dummy, sword swing
+           dummy: { pos, face, sword: 'steel'|'fire'|null }, swing: [[t, deg], ...] },
+  beats: [[t, 'label'], ...],                           // scrubber ticks + chips
+  lights: [{ name, position, Color, Range, Brightness: [[t, v], ...] }],
   impactFrames: [{ t, dur, Brightness, Contrast, Saturation, TintColor?, Void?, Highlight?: { FillColor } }],
-  shakes: [{ t, dur, amp, freq }],                      // studs, decays quadratically
-  layers: [{
-    name, role, ref,                                    // role groups the Layers panel; ref = anime reference
-    position: [x, y, z],                                // offset from Play() origin
-    part: { Size: [x, y, z] },                          // omit for a point emitter
-    emits: [[t, count]],  rate: [[t0, t1, perSecond]],
-    props: { /* real ParticleEmitter properties */ },
-  }],
+  shakes: [{ t, dur, amp, freq }],
+  layers: [
+    ...stack({ name, role, ref, position, rotation?, emits,          // hero: 4 aligned emitters
+               props: { Texture: 'fx_blast', FlipbookLayout, FlipbookMode: 'OneShot', Lifetime: [L, L], Size, ... } },
+             { glow: { Color, Transparency: steps(flicker(0.45, 0.12, 9, 3), 1) }, rim: { Color }, mid: { Color }, core: { Color, Brightness } }),
+    { name, role, ref, position: [x,y,z], rotation: [rx,ry,rz],  // degrees, CFrame.Angles order
+      part: { Size: [x,y,z] }, emits: [[t, count]], rate: [[t0, t1, perSecond]], props: { ... } },
+  ],
 };
 ```
 
@@ -44,6 +47,7 @@ enums as strings (`'VelocityParallel'`).
 | Bloom | approximates Lighting.BloomEffect (Intensity ~1, Threshold ~1, Size 24) |
 | ColorCorrection | exact formula as used here (brightness, contrast, saturation, tint) |
 | Void + Highlights | emulated as background swap + unlit dummy fill |
+| Part rotation (`rotation`) | exact (Euler XYZ = CFrame.Angles); in-plane angle of VelocityPerpendicular quads may differ, so check in Studio |
 | Not emulated | Beams, Trails, MeshParts/tweens, wind, LockedToPart on moving parts, VelocityInheritance |
 
 ## Studio-side notes

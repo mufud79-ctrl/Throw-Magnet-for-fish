@@ -116,6 +116,9 @@
       this.mesh.frustumCulled = false;
       this.mesh.renderOrder = 10 + (p.ZOffset || 0) * 10 + (layer.order || 0) * 0.01;
       this.origin = new THREE.Vector3().fromArray(layer.position || [0, 0, 0]);
+      const R = layer.rotation || [0, 0, 0];
+      this.quat = new THREE.Quaternion().setFromEuler(new THREE.Euler(R[0] * DEG, R[1] * DEG, R[2] * DEG, 'XYZ'));
+      this.rotated = R.some((v) => v);
       this.partSize = layer.part ? layer.part.Size : null;
       this.reset();
     }
@@ -154,6 +157,10 @@
         }
       }
       if (useSpread && (p.SpreadAngle[0] || p.SpreadAngle[1])) dir = spread(dir, p.SpreadAngle, r);
+      if (this.rotated) {
+        const v = new THREE.Vector3(...pos).applyQuaternion(this.quat), w = new THREE.Vector3(...dir).applyQuaternion(this.quat);
+        pos = [v.x, v.y, v.z]; dir = [w.x, w.y, w.z];
+      }
       const sp = range(p.Speed, r);
       const life = range(p.Lifetime, r);
       const nFrames = this.grid * this.grid;
@@ -284,7 +291,7 @@
 
   class Sim {
     constructor(effect, scene) {
-      this.fx = effect; this.scene = scene; this.texCache = {};
+      this.fx = effect; this.scene = scene; this.texCache = {}; this.pending = [];
       this.emitters = effect.layers.map((L, i) => {
         const e = new Emitter(Object.assign({ order: i }, L), this, 1000 + i * 7919);
         scene.add(e.mesh);
@@ -295,11 +302,20 @@
     texture(name) {
       if (!name) return null;
       if (this.texCache[name]) return this.texCache[name];
-      const t = new THREE.CanvasTexture(G.VFXTex.get(name));
+      const t = new THREE.Texture();
       t.premultiplyAlpha = true; t.anisotropy = 4;
       t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
+      const src = G.VFX_TEXDATA && G.VFX_TEXDATA[name];
+      if (src) {
+        const img = new Image();
+        this.pending.push(new Promise((res) => { img.onload = () => { t.image = img; t.needsUpdate = true; res(); }; img.onerror = res; }));
+        img.src = src;
+      } else if (G.VFXPaint) { // live paint fallback (dev only)
+        t.image = G.VFXPaint.build(G.VFXPaint.resolve(name).def)[name]; t.needsUpdate = true;
+      }
       return (this.texCache[name] = t);
     }
+    dispose() { for (const e of this.emitters) { this.scene.remove(e.mesh); e.mesh.geometry.dispose(); e.mat.dispose(); } }
     reset() { this.t = 0; this.prev = -1e-6; for (const e of this.emitters) e.reset(); }
     step(dt) {
       const t1 = this.t + dt;
@@ -321,6 +337,7 @@
     post(t) {
       const fx = this.fx, out = { lights: [], cc: { b: 0, c: 0, s: 0, tint: [1, 1, 1] }, highlight: null, shake: [0, 0, 0], sky: null };
       for (const L of fx.lights || []) out.lights.push({ L, brightness: Math.max(0, track(L.Brightness, t)) });
+      if (fx.stage && fx.stage.swing) out.swing = track(fx.stage.swing, t);
       for (const f of fx.impactFrames || []) {
         if (t >= f.t && t < f.t + f.dur) {
           out.cc = { b: f.Brightness || 0, c: f.Contrast || 0, s: f.Saturation || 0, tint: hex(f.TintColor || '#ffffff') };

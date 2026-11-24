@@ -2,7 +2,8 @@
 (function (G) {
   'use strict';
   const THREE = G.THREE;
-  const FX = G.VFX_EFFECTS[G.VFX_ACTIVE || Object.keys(G.VFX_EFFECTS)[0]];
+  const NAMES = Object.keys(G.VFX_EFFECTS);
+  let FX = G.VFX_EFFECTS[NAMES[0]];
   const DT = 1 / 60, PAUSE = 0.7;
   const $ = (s) => document.querySelector(s);
 
@@ -62,34 +63,62 @@
     sun.color.setHex(env.sun[0]); sun.intensity = env.sun[1];
   }
 
-  // ---------- R15-proportioned dummy for scale (5.2 studs tall) ----------
+  // ---------- R15-proportioned dummy for scale (5.2 studs tall), right arm can swing a sword ----------
   const dummy = new THREE.Group();
   const dMat = new THREE.MeshLambertMaterial({ color: 0xc8c6cc });
   const hlMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-  const box = (w, h, d, x, y, z, col) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), col ? new THREE.MeshLambertMaterial({ color: col }) : dMat);
-    m.position.set(x, y, z); m.userData.mat = m.material; dummy.add(m); return m;
+  const parts = [];
+  const box = (w, h, d, x, y, z, col, parent, basic) => {
+    const mat = col ? (basic ? new THREE.MeshBasicMaterial({ color: col }) : new THREE.MeshLambertMaterial({ color: col })) : dMat;
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z); m.userData.mat = m.material; (parent || dummy).add(m); parts.push(m); return m;
   };
   box(1.2, 1.2, 1.2, 0, 4.6, 0);
   box(2, 1.9, 1, 0, 3.05, 0, 0x8a8890);
-  box(1, 1.9, 1, -1.5, 3.05, 0); box(1, 1.9, 1, 1.5, 3.05, 0);
+  box(1, 1.9, 1, -1.5, 3.05, 0);
   box(0.95, 2.1, 1, -0.5, 1.05, 0, 0x6a6870); box(0.95, 2.1, 1, 0.5, 1.05, 0, 0x6a6870);
-  dummy.position.set(-10, 0, 8);
-  dummy.lookAt(0, 0, 0);
+  const shoulder = new THREE.Group(); shoulder.position.set(1.5, 3.9, 0); dummy.add(shoulder);
+  box(1, 1.9, 1, 0, -0.85, 0, null, shoulder);
+  const sword = new THREE.Group(); sword.position.set(0, -1.7, 0); shoulder.add(sword);
+  box(0.3, 0.3, 1.2, 0, 0, 0.2, 0x3a2a22, sword);
+  box(0.25, 1.0, 0.25, 0, 0, -0.55, 0x2a1d18, sword).rotation.x = Math.PI / 2;
+  const blade = box(0.12, 0.5, 4.6, 0, 0, -3.3, 0xdfe8f0, sword, true);
+  box(1.1, 0.25, 0.22, 0, 0, -1.0, 0xb08a3a, sword);
   scene.add(dummy);
+  let swingAxis = new THREE.Vector3(1, 0, 0.45).normalize();
+  function placeDummy(st) {
+    const d = (st && st.dummy) || { pos: [-11, 0, 8], face: [0, 0, 0] };
+    dummy.position.fromArray(d.pos);
+    dummy.lookAt(new THREE.Vector3().fromArray(d.face || [0, 0, 0]));
+    dummy.rotateY(Math.PI); // R15 faces -Z (LookVector); three's lookAt points +Z at the target
+    sword.visible = !!d.sword;
+    blade.material.color.set(d.sword === 'fire' ? 0xffa040 : 0xdfe8f0);
+    blade.userData.mat = blade.material;
+    shoulder.quaternion.identity();
+    if (!d.sword) shoulder.rotation.set(0, 0, 0);
+  }
   function highlight(on, color) {
-    dummy.children.forEach((m) => { m.material = on ? hlMat : m.userData.mat; });
+    parts.forEach((m) => { m.material = on ? hlMat : m.userData.mat; });
     if (on) hlMat.color.set(color);
   }
 
   // ---------- effect ----------
-  const sim = new G.VFXSim.Sim(FX, scene);
-  const fxLights = (FX.lights || []).map((L) => {
-    const pl = new THREE.PointLight(L.Color, 0, L.Range, 1.2);
-    pl.position.fromArray(L.position);
-    scene.add(pl);
-    return pl;
-  });
+  let sim = null, fxLights = [];
+  function setupEffect() {
+    if (sim) sim.dispose();
+    fxLights.forEach((l) => scene.remove(l));
+    sim = new G.VFXSim.Sim(FX, scene);
+    fxLights = (FX.lights || []).map((L) => {
+      const pl = new THREE.PointLight(L.Color, 0, L.Range, 1.2);
+      pl.position.fromArray(L.position); scene.add(pl); return pl;
+    });
+    placeDummy(FX.stage);
+    const st = FX.stage || {};
+    camera.position.fromArray(st.camera || [19, 7.5, 25]);
+    controls.target.fromArray(st.target || [0, 6, 0]);
+    controls.update();
+    return Promise.all(sim.pending);
+  }
 
   // ---------- post: Bloom (Roblox BloomEffect-ish) + ColorCorrectionEffect ----------
   const gl = renderer.getContext();
@@ -145,6 +174,7 @@
     if (post.sky) { scene.background = new THREE.Color(post.sky); } else if (!(scene.background && scene.background.isTexture)) setEnv(envKey);
     ground.visible = !!env.ground;
     highlight(!!post.highlight, post.highlight ? post.highlight.FillColor : '#fff');
+    if (post.swing !== undefined && sword.visible) shoulder.quaternion.setFromAxisAngle(swingAxis, post.swing * Math.PI / 180);
     final.uniforms.ccB.value = post.cc.b; final.uniforms.ccC.value = post.cc.c; final.uniforms.ccS.value = post.cc.s;
     final.uniforms.tint.value.set(...post.cc.tint);
     const base = camera.position.clone();
@@ -202,26 +232,9 @@
     if (e.key === 'r') $('#replay').click();
   });
 
-  // beat ticks under the scrubber
-  const ticks = $('#ticks');
-  (FX.beats || []).forEach(([t, label]) => {
-    const b = document.createElement('button');
-    b.className = 'tick'; b.style.left = (t / FX.duration) * 100 + '%';
-    b.title = label; b.setAttribute('aria-label', `Jump to ${t.toFixed(2)}s: ${label}`);
-    b.onclick = () => { setPlaying(false); seek(t + 0.001); };
-    ticks.appendChild(b);
-  });
-  const beatList = $('#beats');
-  (FX.beats || []).forEach(([t, label]) => {
-    const li = document.createElement('li');
-    li.innerHTML = `<button type="button"><span class="bt">${t.toFixed(2)}s</span><span>${label}</span></button>`;
-    li.firstChild.onclick = () => { setPlaying(false); seek(t + 0.001); };
-    beatList.appendChild(li);
-  });
-
-  // ---------- layers panel ----------
-  const list = $('#layers');
-  const roles = [...new Set(FX.layers.map((l) => l.role))];
+  // ---------- per-effect UI (rebuilt on switch) ----------
+  const list = $('#layers'), ticks = $('#ticks'), beatList = $('#beats'), texGrid = $('#textures');
+  let code = '';
   function describe(L) {
     const p = L.props, bits = [];
     if (L.emits) bits.push(L.emits.map((e) => `Emit(${e[1]}) @${e[0].toFixed(2)}s`).join(', '));
@@ -230,44 +243,84 @@
     if (p.FlipbookLayout) bits.push(`${p.FlipbookLayout} ${p.FlipbookMode}`);
     return bits.join(' · ');
   }
-  roles.forEach((role) => {
-    const h = document.createElement('h3'); h.textContent = role; list.appendChild(h);
-    FX.layers.forEach((L, i) => {
-      if (L.role !== role) return;
-      const em = sim.emitters[i];
-      const row = document.createElement('div'); row.className = 'layer';
-      const id = 'ly-' + L.name;
-      const th = document.createElement('canvas'); th.width = th.height = 40; th.className = 'thumb';
-      const src = G.VFXTex.get(L.props.Texture), g = G.VFXTex.grid(L.props.Texture);
-      th.getContext('2d').drawImage(src, 0, 0, src.width / g[0], src.height / g[1], 0, 0, 40, 40);
-      row.innerHTML = `<input type="checkbox" id="${id}" checked><label for="${id}"><span class="ln">${L.name}</span><span class="lm">${describe(L)}</span><span class="lr">${L.ref || ''}</span></label><button type="button" class="solo" aria-pressed="false">Solo</button>`;
-      row.prepend(th);
-      const cb = row.querySelector('input');
-      cb.onchange = () => { em.hidden = !cb.checked; };
-      row.querySelector('.solo').onclick = (e) => {
-        const on = e.target.getAttribute('aria-pressed') !== 'true';
-        list.querySelectorAll('.solo').forEach((s) => s.setAttribute('aria-pressed', 'false'));
-        sim.emitters.forEach((x, j) => { x.hidden = on && j !== i; list.querySelector('#ly-' + FX.layers[j].name).checked = !x.hidden; });
-        e.target.setAttribute('aria-pressed', on);
-      };
-      list.appendChild(row);
+  function thumbOf(tex, size) {
+    const c = document.createElement('canvas'); c.width = c.height = size;
+    const img = sim.texCache[tex] && sim.texCache[tex].image;
+    if (img && img.width) {
+      const L = FX.layers.find((l) => l.props.Texture === tex), g = { Grid2x2: 2, Grid4x4: 4, Grid8x8: 8 }[L && L.props.FlipbookLayout] || 1;
+      const fi = g > 1 ? Math.min(g * g - 1, Math.floor(g * g * 0.2)) : 0;
+      c.getContext('2d').drawImage(img, (fi % g) * img.width / g, Math.floor(fi / g) * img.height / g, img.width / g, img.height / g, 0, 0, size, size);
+    }
+    return c;
+  }
+  function buildUI() {
+    scrub.max = FX.duration;
+    ticks.innerHTML = ''; beatList.innerHTML = ''; list.innerHTML = ''; texGrid.innerHTML = '';
+    (FX.beats || []).forEach(([t, label]) => {
+      const b = document.createElement('button');
+      b.className = 'tick'; b.style.left = (t / FX.duration) * 100 + '%';
+      b.title = label; b.setAttribute('aria-label', `Jump to ${t.toFixed(2)}s: ${label}`);
+      b.onclick = () => { setPlaying(false); seek(t + 0.001); };
+      ticks.appendChild(b);
+      const li = document.createElement('li');
+      li.innerHTML = `<button type="button"><span class="bt">${t.toFixed(2)}s</span><span>${label}</span></button>`;
+      li.firstChild.onclick = () => { setPlaying(false); seek(t + 0.001); };
+      beatList.appendChild(li);
     });
-  });
-
-  // ---------- textures + luau panels ----------
-  const texGrid = $('#textures');
-  Object.entries(G.VFXTex.defs).forEach(([name, d]) => {
-    if (!FX.layers.some((l) => l.props.Texture === name)) return;
-    const fig = document.createElement('figure');
-    const c = G.VFXTex.get(name); const img = document.createElement('canvas');
-    img.width = img.height = 160; img.getContext('2d').drawImage(c, 0, 0, 160, 160);
-    fig.appendChild(img);
-    const cap = document.createElement('figcaption');
-    cap.innerHTML = `<b>${name}.png</b><span>${c.width}px${d.grid[0] > 1 ? ` · ${d.grid[0]}×${d.grid[1]} flipbook` : ''}</span><span>${d.note}</span>`;
-    fig.appendChild(cap); texGrid.appendChild(fig);
-  });
-  const code = G.VFXLuau.toLuau(FX);
-  $('#luau').textContent = code;
+    // layers: stacked heroes collapse into one row with 4 layer toggles
+    const roles = [...new Set(FX.layers.map((l) => l.role))];
+    const soloAll = (pred) => sim.emitters.forEach((x, j) => { x.hidden = !pred(j); });
+    roles.forEach((role) => {
+      const h = document.createElement('h3'); h.textContent = role; list.appendChild(h);
+      const seen = new Set();
+      FX.layers.forEach((L, i) => {
+        if (L.role !== role) return;
+        const key = L.stack || L.name;
+        if (seen.has(key)) return; seen.add(key);
+        const idx = FX.layers.map((l, j) => ((l.stack || l.name) === key ? j : -1)).filter((j) => j >= 0);
+        const row = document.createElement('div'); row.className = 'layer';
+        const thumbWrap = document.createElement('div'); thumbWrap.className = 'thumb';
+        const tex = L.stack ? L.props.Texture.replace(/_(glow|rim|mid|core)$/, '_mid') : L.props.Texture;
+        thumbWrap.appendChild(thumbOf(tex, 40));
+        const toggles = L.stack ? `<span class="lt">${idx.map((j) => `<label><input type="checkbox" data-j="${j}" checked>${FX.layers[j].layer}</label>`).join('')}</span>` : '';
+        row.innerHTML = `<input type="checkbox" id="ly-${key}" checked><label for="ly-${key}"><span class="ln">${key}${L.stack ? ' <em>4 layers</em>' : ''}</span><span class="lm">${describe(L)}</span><span class="lr">${L.ref || ''}</span>${toggles}</label><button type="button" class="solo" aria-pressed="false">Solo</button>`;
+        row.prepend(thumbWrap);
+        const main = row.querySelector('#ly-' + key);
+        main.onchange = () => { idx.forEach((j) => { sim.emitters[j].hidden = !main.checked; }); row.querySelectorAll('[data-j]').forEach((c) => (c.checked = main.checked)); };
+        row.querySelectorAll('[data-j]').forEach((c) => (c.onchange = () => { sim.emitters[+c.dataset.j].hidden = !c.checked; }));
+        row.querySelector('.solo').onclick = (e) => {
+          const on = e.target.getAttribute('aria-pressed') !== 'true';
+          list.querySelectorAll('.solo').forEach((x) => x.setAttribute('aria-pressed', 'false'));
+          soloAll((j) => !on || idx.includes(j));
+          list.querySelectorAll('input[type=checkbox]').forEach((c) => { c.checked = true; });
+          if (on) list.querySelectorAll('.layer').forEach((r) => { if (r !== row) r.querySelectorAll('input').forEach((c) => (c.checked = false)); });
+          e.target.setAttribute('aria-pressed', on);
+        };
+        list.appendChild(row);
+      });
+    });
+    // textures
+    const texNames = [...new Set(FX.layers.map((l) => l.props.Texture))];
+    texNames.forEach((name) => {
+      const fig = document.createElement('figure');
+      const img = sim.texCache[name] && sim.texCache[name].image;
+      const c = document.createElement('canvas'); c.width = c.height = 200;
+      if (img && img.width) c.getContext('2d').drawImage(img, 0, 0, 200, 200);
+      fig.appendChild(c);
+      const layer = (name.match(/_(glow|rim|mid|core)$/) || [])[1];
+      const L = FX.layers.find((l) => l.props.Texture === name);
+      const cap = document.createElement('figcaption');
+      cap.innerHTML = `<b>${name}.png</b><span>${img ? img.width : '?'}px${L.props.FlipbookLayout ? ' · ' + L.props.FlipbookLayout : ''}</span><span>${layer ? `white ${layer} layer, tinted by Color` : 'white, tinted by Color'}</span>`;
+      fig.appendChild(cap); texGrid.appendChild(fig);
+    });
+    code = G.VFXLuau.toLuau(FX);
+    $('#luau').textContent = code;
+    $('#stat-layers').textContent = FX.layers.length;
+    $('#stat-tex').textContent = texNames.length;
+    $('#fxname').textContent = FX.name;
+    $('#fxver').textContent = FX.version;
+    document.querySelectorAll('[data-fx]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.fx === FX.name));
+  }
   $('#copy').onclick = async () => {
     const btn = $('#copy');
     try { await navigator.clipboard.writeText(code); btn.textContent = 'Copied'; }
@@ -278,14 +331,23 @@
     document.querySelectorAll('[role=tab]').forEach((t) => t.setAttribute('aria-selected', t === tab));
     document.querySelectorAll('[role=tabpanel]').forEach((p) => { p.hidden = p.id !== tab.getAttribute('aria-controls'); });
   }));
-  $('#stat-layers').textContent = FX.layers.length;
-  $('#stat-tex').textContent = new Set(FX.layers.map((l) => l.props.Texture)).size;
+  const fxBar = $('#fxbar');
+  NAMES.forEach((n) => {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.fx = n; b.textContent = n;
+    b.onclick = () => load(n);
+    fxBar.appendChild(b);
+  });
+  function load(name) {
+    FX = G.VFX_EFFECTS[name];
+    try { location.hash = name; } catch (e) { /* hash optional */ }
+    return setupEffect().then(() => { buildUI(); sim.reset(); state.wait = 0; if (!G.VFX_HEADLESS) setPlaying(true); });
+  }
 
   // ---------- loop ----------
   let last = performance.now();
   function tick(now) {
     const real = Math.min(0.1, (now - last) / 1000); last = now;
-    if (state.playing) {
+    if (sim && state.playing) {
       if (sim.t >= FX.duration) {
         if (state.loop) { state.wait += real; if (state.wait > PAUSE) { sim.reset(); state.wait = 0; } }
         else setPlaying(false);
@@ -294,22 +356,29 @@
         while (state.acc >= DT) { sim.step(DT); state.acc -= DT; }
       }
     }
-    controls.update();
-    render();
-    scrub.value = sim.t;
-    tRead.textContent = sim.t.toFixed(2) + 's';
-    fRead.textContent = 'f' + Math.round(sim.t * 60);
-    pRead.textContent = sim.count();
+    if (sim) {
+      controls.update();
+      render();
+      scrub.value = sim.t;
+      tRead.textContent = sim.t.toFixed(2) + 's';
+      fRead.textContent = 'f' + Math.round(sim.t * 60);
+      pRead.textContent = sim.count();
+    }
     if (!G.VFX_HEADLESS) requestAnimationFrame(tick);
   }
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { setPlaying(false); seek(0.62); }
+  const start = NAMES.includes((location.hash || '').slice(1)) ? location.hash.slice(1) : NAMES[0];
+  const ready = load(start).then(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { setPlaying(false); seek(FX.duration * 0.3); }
+  });
+  addEventListener('hashchange', () => { const n = location.hash.slice(1); if (NAMES.includes(n) && n !== FX.name) load(n); });
   requestAnimationFrame(tick);
 
-  // headless hooks (used by tools/headless.mjs for contact sheets + PNG export)
+  // headless hooks (used by headless.mjs for contact sheets + export)
   G.VFX = {
-    sim, setEnv, camera, controls,
+    ready, load, setEnv, camera, controls,
+    get sim() { return sim; },
     frame(t) { setPlaying(false); seek(t); controls.update(); render(); tRead.textContent = t.toFixed(2) + 's'; },
-    texturePNG(name) { return G.VFXTex.get(name).toDataURL('image/png'); },
-    luau: code,
+    luau: (name) => G.VFXLuau.toLuau(G.VFX_EFFECTS[name]),
+    names: NAMES,
   };
 })(window);

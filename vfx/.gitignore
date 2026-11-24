@@ -1,5 +1,4 @@
 node_modules/
 out/*/sheet.png
-out/*/shot.png
 out/*/page.png
-out/*/texture_sheet.png
+out/textures/_preview_*.png

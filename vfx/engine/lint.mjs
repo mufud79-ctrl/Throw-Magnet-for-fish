@@ -2,7 +2,7 @@
 const PROPS = new Set(['Brightness', 'Color', 'LightEmission', 'LightInfluence', 'Orientation', 'Size', 'Squash', 'Texture',
   'Transparency', 'ZOffset', 'EmissionDirection', 'Lifetime', 'Rate', 'Rotation', 'RotSpeed', 'Speed', 'SpreadAngle', 'Shape',
   'ShapeInOut', 'ShapeStyle', 'ShapePartial', 'Acceleration', 'Drag', 'LockedToPart', 'TimeScale', 'VelocityInheritance',
-  'WindAffectsDrag', 'FlipbookLayout', 'FlipbookMode', 'FlipbookFramerate', 'FlipbookStartRandom']);
+  'WindAffectsDrag', 'Enabled', 'FlipbookLayout', 'FlipbookMode', 'FlipbookFramerate', 'FlipbookStartRandom']);
 const ENUM = {
   Orientation: ['FacingCamera', 'FacingCameraWorldUp', 'VelocityParallel', 'VelocityPerpendicular'],
   EmissionDirection: ['Top', 'Bottom', 'Front', 'Back', 'Left', 'Right'],
@@ -35,6 +35,22 @@ export function lint(fx, textureNames) {
     const end = Math.max(0, ...(L.emits || []).map((e) => e[0]), ...(L.rate || []).map((r) => r[1])) + Math.max(...[].concat(p.Lifetime || 1));
     if (end > fx.duration + 0.3) warn.push(`${w}: particles outlive duration (${end.toFixed(2)}s > ${fx.duration}s), cleanup will cut them`);
     if ((L.emits || []).reduce((s, e) => s + e[1], 0) > 200) warn.push(`${w}: >200 particles in one layer, check mobile perf`);
+  }
+  // stacked heroes: every layer must move identically or they drift apart in Roblox
+  const stacks = {};
+  for (const L of fx.layers) if (L.stack) (stacks[L.stack] = stacks[L.stack] || []).push(L);
+  const SHARED = ['Lifetime', 'Speed', 'Rotation', 'RotSpeed', 'SpreadAngle', 'Acceleration', 'Drag', 'Size', 'Squash', 'Orientation', 'EmissionDirection', 'Shape', 'FlipbookLayout', 'FlipbookMode'];
+  for (const [name, Ls] of Object.entries(stacks)) {
+    const a = Ls[0];
+    for (const L of Ls) {
+      for (const k of ['position', 'rotation', 'part', 'emits', 'rate']) if (JSON.stringify(L[k]) !== JSON.stringify(a[k])) errs.push(`${L.name}: ${k} differs from ${a.name} (stack ${name})`);
+      for (const k of SHARED) if (JSON.stringify(L.props[k]) !== JSON.stringify(a.props[k])) errs.push(`${L.name}: ${k} differs within stack ${name}`);
+      const p = L.props;
+      for (const k of ['Lifetime', 'Speed', 'Rotation', 'RotSpeed']) if (Array.isArray(p[k]) && p[k][0] !== p[k][1]) errs.push(`${L.name}: ${k} must be fixed (min = max) in a stack`);
+      for (const k of ['Size', 'Squash']) if (Array.isArray(p[k]) && p[k].some((kp) => kp[2])) errs.push(`${L.name}: ${k} envelope breaks stack alignment`);
+      if (p.SpreadAngle && (p.SpreadAngle[0] || p.SpreadAngle[1])) errs.push(`${L.name}: SpreadAngle must be 0 in a stack`);
+      if (L.part) errs.push(`${L.name}: stacked layers must be point emitters (no part.Size)`);
+    }
   }
   return { errs, warn };
 }

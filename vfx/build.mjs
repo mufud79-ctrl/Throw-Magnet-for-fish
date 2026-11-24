@@ -1,26 +1,47 @@
-// node build.mjs <effect_file_basename>  ->  out/<Name>/<Name>.html (artifact page, single file)
+// node build.mjs  -> lints every effect in effects/, then writes
+//   out/lab.html                  (artifact page: all effects, PNG textures embedded)
+//   out/<Name>/<Name>.lua         (ModuleScript per effect)
+//   out/<Name>/textures.txt       (which PNGs from out/textures/ that effect needs)
+// Run `node paint.mjs` first whenever engine/paint.js changes.
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { lint } from './engine/lint.mjs';
 const here = path.dirname(new URL(import.meta.url).pathname);
-const file = process.argv[2] || 'fire_explosion';
-const effectSrc = fs.readFileSync(path.join(here, 'effects', file + '.js'), 'utf8');
-const ctx = { globalThis: {} }; ctx.globalThis = ctx; vm.runInNewContext(effectSrc, ctx);
-const name = Object.keys(ctx.VFX_EFFECTS)[0];
-const fx = ctx.VFX_EFFECTS[name];
-const texSrc = fs.readFileSync(path.join(here, 'engine/textures.js'), 'utf8');
-const texNames = [...texSrc.matchAll(/^    (\w+): \{ build:/gm)].map((m) => m[1]);
-const { errs, warn } = lint(fx, texNames);
-warn.forEach((w) => console.warn('warn:', w));
-if (errs.length) { errs.forEach((e) => console.error('ERROR:', e)); process.exit(1); }
-const parts = ['engine/textures.js', 'engine/sim.js', 'engine/luau.js'].map((f) => fs.readFileSync(path.join(here, f), 'utf8'));
-parts.push(effectSrc, `window.VFX_ACTIVE = ${JSON.stringify(name)};`, fs.readFileSync(path.join(here, 'viewer/app.js'), 'utf8'));
-const scripts = parts.map((s) => `<script>\n${s}\n</script>`).join('\n');
-const html = fs.readFileSync(path.join(here, 'viewer/shell.html'), 'utf8')
-  .replace('{{TITLE}}', `${name} VFX`).replace('{{NAME}}', name).replace('{{VERSION}}', fx.version)
-  .replace('{{SCRIPTS}}', () => scripts);
-const outDir = path.join(here, 'out', name);
-fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(path.join(outDir, name + '.html'), html);
-console.log(path.join(outDir, name + '.html'), (html.length / 1024).toFixed(0) + 'KB');
+const read = (f) => fs.readFileSync(path.join(here, f), 'utf8');
+const effectFiles = fs.readdirSync(path.join(here, 'effects')).filter((f) => f.endsWith('.js')).sort();
+const ctx = {}; ctx.globalThis = ctx;
+vm.runInNewContext(read('engine/spec.js'), ctx);
+vm.runInNewContext(read('engine/luau.js'), ctx);
+for (const f of effectFiles) vm.runInNewContext(read('effects/' + f), ctx);
+const texDir = path.join(here, 'out', 'textures');
+const have = new Set(fs.readdirSync(texDir).filter((f) => f.endsWith('.png') && !f.startsWith('_')).map((f) => f.slice(0, -4)));
+let failed = false;
+const used = new Set();
+for (const [name, fx] of Object.entries(ctx.VFX_EFFECTS)) {
+  const { errs, warn } = lint(fx, [...have]);
+  warn.forEach((w) => console.warn(`warn ${name}: ${w}`));
+  errs.forEach((e) => console.error(`ERROR ${name}: ${e}`));
+  if (errs.length) { failed = true; continue; }
+  const tex = [...new Set(fx.layers.map((l) => l.props.Texture))];
+  tex.forEach((t) => used.add(t));
+  const dir = path.join(here, 'out', name);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, name + '.lua'), ctx.VFXLuau.toLuau(fx));
+  fs.writeFileSync(path.join(dir, 'textures.txt'), tex.map((t) => `out/textures/${t}.png`).join('\n') + '\n');
+  console.log(`${name} v${fx.version}: ${fx.layers.length} emitters, ${tex.length} textures`);
+}
+if (failed) process.exit(1);
+const texdata = {};
+for (const t of [...used].sort()) texdata[t] = 'data:image/png;base64,' + fs.readFileSync(path.join(texDir, t + '.png')).toString('base64');
+const scripts = [
+  `window.VFX_TEXDATA = ${JSON.stringify(texdata)};`,
+  read('engine/spec.js'), read('engine/sim.js'), read('engine/luau.js'),
+  ...effectFiles.map((f) => read('effects/' + f)),
+  read('viewer/app.js'),
+].map((s) => `<script>\n${s}\n</script>`).join('\n');
+const first = Object.values(ctx.VFX_EFFECTS)[0];
+const html = read('viewer/shell.html').replace('{{TITLE}}', 'Anime VFX Lab').replace('{{NAME}}', first.name)
+  .replace('{{VERSION}}', first.version).replace('{{SCRIPTS}}', () => scripts);
+fs.writeFileSync(path.join(here, 'out', 'lab.html'), html);
+console.log('out/lab.html', (html.length / 1024 / 1024).toFixed(2) + 'MB');
