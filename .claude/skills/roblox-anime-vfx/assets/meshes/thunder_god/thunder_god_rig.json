@@ -1,0 +1,133 @@
+{
+ "bones": [
+  "HumanoidRootPart",
+  "LowerTorso",
+  "UpperTorso",
+  "Head",
+  "Mane_1_1",
+  "Mane_1_2",
+  "Mane_1_3",
+  "Mane_2_1",
+  "Mane_2_2",
+  "Mane_2_3",
+  "Mane_3_1",
+  "Mane_3_2",
+  "Mane_3_3",
+  "Mane_4_1",
+  "Mane_4_2",
+  "Mane_4_3",
+  "Mane_5_1",
+  "Mane_5_2",
+  "Mane_5_3",
+  "Mane_6_1",
+  "Mane_6_2",
+  "Mane_6_3",
+  "LeftUpperArm",
+  "LeftLowerArm",
+  "LeftHand",
+  "RightUpperArm",
+  "RightLowerArm",
+  "RightHand",
+  "Cape_R_1",
+  "Cape_R_2",
+  "Cape_R_3",
+  "Cape_R_4",
+  "Cape_C_1",
+  "Cape_C_2",
+  "Cape_C_3",
+  "Cape_C_4",
+  "Cape_L_1",
+  "Cape_L_2",
+  "Cape_L_3",
+  "Cape_L_4",
+  "LeftUpperLeg",
+  "LeftLowerLeg",
+  "LeftFoot",
+  "RightUpperLeg",
+  "RightLowerLeg",
+  "RightFoot",
+  "Sash_L_1",
+  "Sash_L_2",
+  "Sash_L_Tassel",
+  "Sash_R_1",
+  "Sash_R_2",
+  "Sash_R_Tassel",
+  "Hakama_F_1",
+  "Hakama_F_2",
+  "Hakama_B_1",
+  "Hakama_B_2"
+ ],
+ "chains": {
+  "Cape_R": [
+   "Cape_R_1",
+   "Cape_R_2",
+   "Cape_R_3",
+   "Cape_R_4"
+  ],
+  "Cape_C": [
+   "Cape_C_1",
+   "Cape_C_2",
+   "Cape_C_3",
+   "Cape_C_4"
+  ],
+  "Cape_L": [
+   "Cape_L_1",
+   "Cape_L_2",
+   "Cape_L_3",
+   "Cape_L_4"
+  ],
+  "Mane_1": [
+   "Mane_1_1",
+   "Mane_1_2",
+   "Mane_1_3"
+  ],
+  "Mane_2": [
+   "Mane_2_1",
+   "Mane_2_2",
+   "Mane_2_3"
+  ],
+  "Mane_3": [
+   "Mane_3_1",
+   "Mane_3_2",
+   "Mane_3_3"
+  ],
+  "Mane_4": [
+   "Mane_4_1",
+   "Mane_4_2",
+   "Mane_4_3"
+  ],
+  "Mane_5": [
+   "Mane_5_1",
+   "Mane_5_2",
+   "Mane_5_3"
+  ],
+  "Mane_6": [
+   "Mane_6_1",
+   "Mane_6_2",
+   "Mane_6_3"
+  ],
+  "Sash_L": [
+   "Sash_L_1",
+   "Sash_L_2",
+   "Sash_L_Tassel"
+  ],
+  "Sash_R": [
+   "Sash_R_1",
+   "Sash_R_2",
+   "Sash_R_Tassel"
+  ],
+  "Hakama_F": [
+   "Hakama_F_1",
+   "Hakama_F_2"
+  ],
+  "Hakama_B": [
+   "Hakama_B_1",
+   "Hakama_B_2"
+  ]
+ },
+ "tris": {
+  "Body": 18000,
+  "Cape": 3999,
+  "Mane": 5999
+ }
+}
