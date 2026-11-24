@@ -237,14 +237,34 @@ def god_rays(n=16, seed=61):
     return frames
 
 
-def orb_glow():
-    """Soft bloom orb: hot disc, wide falloff, four faint glints. Single white, alpha only."""
-    x, y = coords(S)
-    r, a = polar_of(x, y)
-    disc = 1 - ss(r, 0.12, 0.3)
-    halo = np.exp(-r * 4.2) * (1 - ss(r, 0.8, 1.0))
-    glint = np.exp(-np.abs(np.sin(2 * a)) * r * 30) * np.exp(-r * 3.5) * 0.35
-    return np.clip(disc + halo * 0.8 + glint, 0, 1)
+def orb_glow(n=16, seed=63):
+    """Churning anime energy ball (loop): white-hot core, swirling streaks inside the body, a bright
+    rim, and short flame-like tongues licking off the edge. Angle-periodic noise rolls one full period,
+    so FlipbookMode = Loop is seamless. Layered."""
+    H, W = 256, 1024
+    sw = tnoise(H, W, 40, 160, seed, 4)            # rows = radius (outer -> centre), cols = angle
+    tg = tnoise(H, W, 140, 70, seed + 1, 3)
+    wob = tnoise(1, W, 1, 180, seed + 2, 2)[0]
+    v = np.linspace(0, 1, H)[:, None]              # 0 = outer limit (r=0.98), 1 = centre
+    frames = []
+    for i in range(n):
+        o = int(W * i / n)
+        a = np.roll(sw, -o, axis=1)
+        b = np.roll(tg, o * 2 % W, axis=1)
+        w = np.roll(wob, -o)[None, :]
+        r = 0.98 * (1 - v)                          # actual radius of each row
+        edge = 0.46 + 0.035 * (w - 0.5) * 2         # wobbly silhouette
+        inside = ss(r, edge + 0.012, edge - 0.012)
+        body = inside * (0.5 + 0.32 * a + 0.25 * ss(r, edge * 0.55, 0.0))
+        rim = ss(np.abs(r - (edge - 0.03)), 0.035, 0.006) * 0.95
+        tl = 0.05 + 0.32 * levels(b, 0.35, 0.95)
+        out = np.clip((r - edge) / tl, 0, 1)
+        tongues = ss(r, edge - 0.02, edge + 0.01) * ss(out, 1.0, 0.75) * (1 - out) ** 0.8 * 0.8 * (tl > 0.07)
+        core = ss(r, 0.2, 0.04) * np.ones_like(a)
+        I = np.clip(np.maximum.reduce([body, rim, tongues, core]), 0, 1)
+        I = mblur(I, 2, axis=0)
+        frames.append(pc.polar_strip(I, S, 0.98, 0.0, 0.0, TAU))
+    return frames
 
 
 # ================================================================ FLECKS / EMBERS
@@ -254,47 +274,101 @@ def _poly_mask(pts, size):
     return np.asarray(big, np.float32) / 255
 
 
+def _painted(mask, soft=1.2):
+    return np.clip(blur(mask, soft), 0, 1)
+
+
 def flecks():
-    """2x2 sheet of small light flecks: rounded square, diamond, needle, angular chip. Each has a hot
-    core and a baked soft halo. Single white. FlipbookLayout Grid2x2 + FlipbookStartRandom to mix."""
+    """2x2 sheet of painted sparks, each with a hot centre and a soft painted halo: (1) uneven 4-point
+    glint, (2) needle spark with a smear trail, (3) faceted light chip (lit / shadow face, rim
+    highlight), (4) crystal shard with a tip glint. Shaded (grey value = painted tone).
+    FlipbookLayout Grid2x2 + FlipbookStartRandom to mix them in one emitter."""
+    rng = np.random.default_rng(73)
     x, y = coords(S)
-    r, _ = polar_of(x, y)
-    cells = []
-    sq = np.maximum(np.abs(x), np.abs(y))
-    rsq = np.hypot(np.clip(np.abs(x) - 0.2, 0, None), np.clip(np.abs(y) - 0.2, 0, None))
-    cells.append(1 - ss(rsq, 0.06, 0.1))
-    dia = np.abs(x) + np.abs(y)
-    cells.append(1 - ss(dia, 0.36, 0.42))
-    cells.append(1 - ss(np.abs(x) / 0.12 + (y / 0.85) ** 2, 0.85, 1.0))
-    cells.append(_poly_mask([(S * .32, S * .24), (S * .7, S * .3), (S * .76, S * .62), (S * .44, S * .78), (S * .26, S * .55)], S))
-    out = []
-    for c in cells:
-        halo = blur(c, S * 0.035) * 0.55
-        out.append(np.clip(np.maximum(c, halo), 0, 1))
-    return out
+    r, a = polar_of(x, y)
+    alphas, vals = [], []
+    # 1 glint: uneven arms, slightly off-axis, concave taper, small diagonal arms
+    F = np.zeros_like(x)
+    for k, L in enumerate([0.92, 0.52, 0.78, 0.46]):
+        ang = k * math.pi / 2 + rng.uniform(-0.08, 0.08)
+        da = np.abs(np.angle(np.exp(1j * (a - ang))))
+        wd = 0.07 * (1 - np.clip(r / L, 0, 1)) ** 2.2
+        F = np.maximum(F, ss(da * r, wd + 0.004, wd * 0.2) * (r < L))
+    for k in range(4):
+        ang = math.pi / 4 + k * math.pi / 2 + rng.uniform(-0.1, 0.1)
+        da = np.abs(np.angle(np.exp(1j * (a - ang))))
+        wd = 0.03 * (1 - np.clip(r / 0.3, 0, 1)) ** 2
+        F = np.maximum(F, 0.8 * ss(da * r, wd + 0.003, wd * 0.2) * (r < 0.3))
+    core = ss(r, 0.12, 0.02)
+    halo = blur(F, S * 0.02) * 0.6 + np.exp(-r * 7) * 0.5
+    alphas.append(np.clip(np.maximum.reduce([F, core, halo]), 0, 1))
+    vals.append(np.clip(0.62 + 0.38 * np.maximum(core, F * ss(r, 0.5, 0.0)), 0, 1))
+    # 2 needle spark: bright teardrop head at the top, smeared tail downward
+    head = ss(np.hypot(x / 0.11, (y - 0.4) / 0.24), 1.0, 0.6)
+    tail = ss(np.abs(x) / (0.09 * np.clip((y + 0.85) / 1.25, 0, 1) + 1e-3), 1.0, 0.35) * ss(y, -0.85, 0.3) * (y < 0.45)
+    tail = mblur(tail, S * 0.02, axis=0) * np.clip((y + 0.85) / 1.3, 0, 1)
+    F = np.maximum(head, tail * 0.85)
+    halo = blur(F, S * 0.03) * 0.55
+    alphas.append(np.clip(np.maximum(F, halo), 0, 1))
+    vals.append(np.clip(0.6 + 0.4 * np.maximum(head, tail * ss(y, -0.3, 0.4)), 0, 1))
+    # 3 light chip: soft-cornered, slightly irregular square, glowing hot from the centre out
+    nz = noise(S, S, 50, 50, 77, 3)
+    th = 0.3
+    xr, yr = x * math.cos(th) - y * math.sin(th), x * math.sin(th) + y * math.cos(th)
+    sq = np.maximum(np.abs(xr) * 1.05, np.abs(yr)) + (nz - 0.5) * 0.05
+    m = ss(sq, 0.34, 0.3)
+    inner = ss(sq, 0.3, 0.02)
+    lit = 0.12 * ss(xr - yr, -0.3, 0.3)                       # one side catches more light
+    halo = blur(m, S * 0.05) * 0.5
+    alphas.append(np.clip(np.maximum(m, halo), 0, 1))
+    vals.append(np.clip(np.where(m > 0.3, 0.6 + 0.3 * inner + lit + 0.15 * ss(sq, 0.12, 0.0), 0.62), 0, 1))
+    # 4 crystal shard: tapered sliver, bright at the tip fading down its length, soft painted edges, tip glint
+    th = 0.25
+    xr, yr = x * math.cos(th) - y * math.sin(th), x * math.sin(th) + y * math.cos(th)
+    w = 0.12 * np.clip((0.8 - yr) / 1.4, 0, 1) ** 0.6 * np.clip((yr + 0.8) / 0.25, 0, 1)
+    m = ss(np.abs(xr) - w, 0.012, -0.012) * (np.abs(yr) < 0.8)
+    m = blur(m, 1.6)
+    along = np.clip((yr + 0.8) / 1.6, 0, 1)
+    tx, ty = -math.sin(-th) * 0.62, math.cos(-th) * 0.62
+    rr, aa = polar_of(x - tx, y - ty)
+    gl = np.zeros_like(x)
+    for ang in (0, math.pi / 2):
+        da = np.abs(np.angle(np.exp(1j * (aa - ang))))
+        da = np.minimum(da, math.pi - da)
+        gl = np.maximum(gl, ss(da * rr, 0.025 * (1 - np.clip(rr / 0.26, 0, 1)) ** 2 + 0.003, 0.0) * (rr < 0.26))
+    gl = np.maximum(gl, ss(rr, 0.06, 0.0))
+    halo = blur(np.maximum(m, gl), S * 0.03) * 0.5
+    alphas.append(np.clip(np.maximum.reduce([m * (0.55 + 0.45 * along), gl, halo]), 0, 1))
+    vals.append(np.clip(0.6 + 0.4 * np.maximum(along ** 1.5 * (m > 0.3), gl), 0, 1))
+    return alphas, vals
 
 
 def embers(n=16, seed=71):
-    """16 angular ember / petal chips (Random start). Hot inner value, slightly darker edge. Shaded."""
+    """16 painted ember flakes (use FlipbookStartRandom): torn, irregular outlines from warped
+    ellipses with a pointed tail, a glowing hot centre, a charred darker edge on one side and, on some,
+    a fold line splitting two facets. Faint baked halo. Shaded."""
     rng = np.random.default_rng(seed)
-    alphas, vals = [], []
     x, y = coords(S)
+    alphas, vals = [], []
     for i in range(n):
-        k = rng.integers(4, 7)
-        elong = rng.uniform(1.4, 2.6)
         rot = rng.uniform(0, TAU)
-        pts = []
-        for j in range(k):
-            ang = j / k * TAU + rng.uniform(-0.35, 0.35)
-            rad = rng.uniform(0.35, 0.8) * (1.0 if j % 2 == 0 else 0.6)
-            px, py = math.cos(ang) * rad * elong * 0.5, math.sin(ang) * rad * 0.5
-            qx = px * math.cos(rot) - py * math.sin(rot)
-            qy = px * math.sin(rot) + py * math.cos(rot)
-            pts.append(((qx * 0.8 + 1) / 2 * S, (1 - (qy * 0.8 + 1) / 2) * S))
-        m = blur(_poly_mask(pts, S), 1.2)
-        inner = blur(m, S * 0.05)
-        alphas.append(m)
-        vals.append(np.clip(0.7 + 0.45 * levels(inner, 0.3, 0.9), 0, 1))
+        el = rng.uniform(1.6, 3.0)
+        xr, yr = x * math.cos(rot) - y * math.sin(rot), x * math.sin(rot) + y * math.cos(rot)
+        nz = noise(S, S, rng.uniform(40, 80), rng.uniform(40, 80), seed * 10 + i, 3)
+        tailw = 1 + 0.9 * ss(xr, 0.0, 0.5)                  # one end drawn out into a point
+        d = np.hypot(xr / (0.5 * el / 2.2), yr * tailw / 0.24)
+        field = 1 - d + (nz - 0.5) * 0.75
+        m = ss(field, 0.0, 0.05)
+        dist = ndi.distance_transform_edt(field > 0)
+        depth = dist / (dist.max() + 1e-6)
+        val = 0.42 + 0.58 * levels(depth, 0.05, 0.75, 0.75)
+        char = ss(yr + (nz - 0.5) * 0.15, -0.05, -0.18)          # charred band on one side
+        val = val * (1 - 0.4 * char)
+        if rng.random() < 0.5:                                  # fold: two facets
+            val = val * np.where(xr * 0.6 + yr > 0, 1.0, 0.82)
+        halo = blur(m, S * 0.03) * 0.3
+        alphas.append(np.clip(np.maximum(m, halo), 0, 1))
+        vals.append(np.clip(np.where(m > 0.5, val, 0.6), 0, 1))
     return alphas, vals
 
 
@@ -468,23 +542,39 @@ def glass_shatter(seed=121):
 
 
 def lightning(n=16, seed=131):
-    """Crackling forked bolts around a centre; each frame re-strikes, last frames fade. Layered."""
+    """Anime lightning strike: three forked bolts draw in from the centre over 2 frames, hold the SAME
+    paths while flickering (tiny vertex jitter, brightness pulses, branches popping on and off), then
+    break apart from the tips and fade. Layered."""
     rng = np.random.default_rng(seed)
+    bolts = []
+    for k in range(3):
+        ang = k / 3 * TAU + rng.uniform(-0.5, 0.5)
+        pts, a2 = _walk(rng, (S / 2 + rng.normal(0, S * 0.02), S / 2 + rng.normal(0, S * 0.02)), ang, S * 0.045, 9, 0.5)
+        brs = []
+        for j in (2, 4, 6):
+            bp, _ = _walk(rng, pts[j], a2 + rng.uniform(-1.3, 1.3), S * 0.03, int(rng.integers(3, 6)), 0.9)
+            brs.append((j, bp))
+        bolts.append((pts, brs))
+    flick = [1.0, 1.0, 0.75, 1.0, 0.6, 0.95, 0.8, 1.0, 0.7, 0.9, 0.8, 0.65, 0.5, 0.38, 0.25, 0.12]
     frames = []
     for i in range(n):
+        fr = np.random.default_rng(seed * 100 + i)
+        reveal = min(1.0, (i + 1) / 2.0)
+        breakup = max(0.0, (i - 9) / 6)
         polys, widths = [], []
-        for _ in range(3):
-            ang = rng.uniform(0, TAU)
-            pts, a2 = _walk(rng, (S / 2 + rng.normal(0, S * 0.04), S / 2 + rng.normal(0, S * 0.04)), ang, S * 0.045, 9, 0.85)
-            polys.append(pts)
-            widths.append(S * 0.012)
-            j = int(rng.integers(2, 6))
-            bp, _ = _walk(rng, pts[j], a2 + rng.uniform(-1.2, 1.2), S * 0.03, 4, 0.9)
-            polys.append(bp)
-            widths.append(S * 0.007)
+        for pts, brs in bolts:
+            npts = len(pts)
+            keep = max(2, int(round(npts * reveal * (1 - 0.75 * breakup))))
+            jit = [(px + fr.normal(0, S * 0.004), py + fr.normal(0, S * 0.004)) if 0 < q < npts - 1 else (px, py) for q, (px, py) in enumerate(pts)]
+            polys.append(jit[:keep])
+            widths.append(S * 0.012 * (1 - 0.5 * breakup))
+            for j, bp in brs:
+                if j < keep - 1 and fr.random() < (0.85 if i < 3 else 0.55):
+                    bkeep = max(2, int(round(len(bp) * (1 - breakup))))
+                    polys.append([jit[j]] + [(px + fr.normal(0, S * 0.004), py + fr.normal(0, S * 0.004)) for px, py in bp[1:bkeep]])
+                    widths.append(S * 0.007 * (1 - 0.5 * breakup))
         line = _lines_to_field(polys, S, widths)
-        fade = 1 - max(0.0, (i - 9) / 7)
-        frames.append(_glow_lines(line, S) * fade)
+        frames.append(_glow_lines(line, S) * flick[i])
     return frames
 
 
@@ -532,8 +622,8 @@ LIB = {
     "dust_burst":    (dust_burst,    "shaded",  4, 0, "dust"),
     "star_flash":    (star_flash,    "layered", 4, 6, "light"),
     "god_rays":      (god_rays,      "layered", 4, 5, "white"),
-    "orb_glow":      (orb_glow,      "white",   1, 0, "light"),
-    "flecks":        (flecks,        "white",   2, 0, "light"),
+    "orb_glow":      (orb_glow,      "layered", 4, 6, "light"),
+    "flecks":        (flecks,        "shaded",  2, 0, "spark"),
     "embers":        (embers,        "shaded",  4, 0, "ember"),
     "shock_ring":    (shock_ring,    "layered", 1, 5, "quake"),
     "wind_arcs":     (wind_arcs,     "white",   2, 0, "ice"),
@@ -555,7 +645,8 @@ PALETTES = {
     "white": {"glow": "#ffffff", "rim": "#dfe8ff", "mid": "#ffffff", "core": "#ffffff"},
     "smoke": {"mid": "#f4f1ec"},
     "dust":  {"mid": "#e8d6b0"},
-    "ember": {"mid": "#ff7a22", "additive": True},
+    "ember": {"mid": "#ff8a2a", "additive": True},
+    "spark": {"mid": "#ffe27a", "additive": True},
 }
 
 
