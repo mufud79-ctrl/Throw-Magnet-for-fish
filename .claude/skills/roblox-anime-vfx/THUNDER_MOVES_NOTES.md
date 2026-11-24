@@ -13,7 +13,7 @@ god-mode moves stay on `claude/ecstatic-mayer-950cm0`; THUNDER_HANDOFF.md is not
 - Export (after all 7 approved): `python3 scripts/export_luau.py --effects lab/thunder/moves`
   (the default `lab/effects` is the rejected 100-move batch: do not export it with these)
 
-## Step 2: new layer types (done, waiting for approval)
+## Step 2: new layer types (polish pass 2, waiting for approval)
 - `trail`: real Roblox Trail on two attachments riding `path` / `move` / `wave`. Ages on real time like Roblox,
   so a hit-stop holds the head and the tail keeps fading (previewer matches). Texture swapping for strip variants.
 - `vbeam`: Neon/ForceField cylinder core + optional sheath + lists of crossed Beam plane sets (taper, twist,
@@ -23,3 +23,19 @@ god-mode moves stay on `claude/ecstatic-mayer-950cm0`; THUNDER_HANDOFF.md is not
   sheaths dim (brightness ~0.3), and give every ribbon/beam a navy alpha-blended (lightEmission 0) layer.
 - Luau parse check: luaparse 0.3.1 after rewriting `x += y` (script in the session scratchpad; recreate with
   `npm i luaparse@0.3.1`). Not run in Studio.
+
+## Polish pass after "looks like poop" (user feedback on the first test renders)
+The first tests were thin white noodles: no caster, far camera, no colour script, no flicker/afterglow, no scar,
+and the beam was a white slab. Every render shown, tests included, must meet the full bar. Fixes now in `lab/thunder/kit.py`:
+- Layer conventions of the approved textures: glow additive blue, **rim alpha-blended indigo (LightEmission 0)**,
+  mid cyan LE 0.1, core white LE 0.35. The indigo rim keeps lightning saturated and outlined on sand.
+- Colour script over cooling age (white -> cyan -> blue -> indigo), flicker as a transparency sequence
+  (solid strike, two-on-one-off, fade), widthScale squash (fat on the strike, thinning as it cools).
+- PointLight brightness <= ~8 and range ~10-14: hotter floods the sand with white pools.
+- Hit-stop starts one frame (~0.025 s) AFTER the strike so the frozen frame shows the bolt; at exactly T the
+  emitters and reach haven't fired yet. vbeam reach for lightning = 1 (instant).
+- Angular ribbons: one trail per straight leg (`leg_trails`) so kinks stay sharp (a Trail samples once a frame
+  and rounds corners between samples, in Roblox too). Static texture mode, textureLength ~16 so runs read straight.
+- Burn scar calling card `scar()`: lichtenberg stack flat on the ground cooling through the colour script over
+  a soot scorch that fades last.
+- Frame cameras so the whole action is in shot with the caster visible; elevate it when the path zig-zags on the ground.
