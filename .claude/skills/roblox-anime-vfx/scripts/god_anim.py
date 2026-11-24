@@ -92,18 +92,22 @@ def idle(god, ring, T=3.2):
         rot(god, "LowerTorso", 1.0 * b_lag)
         rot(god, "UpperTorso", -2.0 - 1.4 * b, 0, 0)
         rot(god, "Head", 3.0 + 1.0 * b_lag, 0, 0.8 * wave(t, T, 1, 0, 0, 1.3))
-        # arms: powerful floating stance (down, slightly out and forward, elbows soft), drifting after the torso
-        for side, s in (("Left", 1), ("Right", -1)):
-            rot(god, f"{side}UpperArm", -6 - 2.0 * b_lag, s * (52 + 1.5 * b_lag), s * -10)
-            rot(god, f"{side}LowerArm", 0, 0, s * -(24 + 3.0 * wave(t, T, 1, 0, 0, -1.6)))
-            rot(god, f"{side}Hand", 0, s * 8, s * -(6 + 2.5 * wave(t, T, 1, 0, 0, -2.2)))
-        # legs dangling: left knee bent, toes pointed, both swinging slightly behind the float
-        rot(god, "LeftUpperLeg", -12 - 2.5 * b_lag, 0, 3)
-        rot(god, "LeftLowerLeg", 28 + 3.0 * wave(t, T, 1, 0, 0, -1.7))
-        rot(god, "LeftFoot", 22 + 2.0 * wave(t, T, 1, 0, 0, -2.4))
-        rot(god, "RightUpperLeg", 5 - 1.5 * b_lag, 0, -3)
-        rot(god, "RightLowerLeg", 12 + 2.0 * wave(t, T, 1, 0, 0, -1.9))
-        rot(god, "RightFoot", 26 + 2.0 * wave(t, T, 1, 0, 0, -2.6))
+        # arms: powerful floating stance (down, slightly out and forward, elbows soft). They drift weightlessly:
+        # shoulder swings fore/aft and in/out, the elbow follows later, the hand last (follow-through); the two
+        # arms are out of step so the pose never looks mirrored
+        for side, s, ph in (("Left", 1, 0.0), ("Right", -1, 2.1)):
+            sw = wave(t, T, 1, 0, 0, ph - 0.9)
+            sw2 = wave(t, T, 2, 0, 0, ph * 0.7 - 0.5)
+            rot(god, f"{side}UpperArm", -8 - 8.0 * sw - 2.0 * sw2, s * (50 + 6.0 * wave(t, T, 1, 0, 0, ph - 0.3)), s * (-10 - 4.0 * sw))
+            rot(god, f"{side}LowerArm", 0, 0, s * -(26 + 12.0 * wave(t, T, 1, 0, 0, ph - 1.8) + 3.0 * sw2))
+            rot(god, f"{side}Hand", 6.0 * wave(t, T, 1, 0, 0, ph - 2.6), s * (8 + 5.0 * wave(t, T, 2, 0, 0, ph - 2.0)), s * -(8 + 10.0 * wave(t, T, 1, 0, 0, ph - 2.7)))
+        # legs dangling: a slow, gentle tread. Each leg swings from the hip, the knee bends as the thigh comes
+        # forward and trails behind it, the toes point last; left and right alternate
+        for side, sgn, ph, knee0, foot0, splay in (("Left", 1, 0.0, 30, 22, 3), ("Right", -1, math.pi * 0.85, 16, 26, -3)):
+            hip = wave(t, T, 1, 0, 0, ph - 0.8)
+            rot(god, f"{side}UpperLeg", (-10 if sgn > 0 else 2) - 9.0 * hip, 0, splay + 2.0 * wave(t, T, 2, 0, 0, ph))
+            rot(god, f"{side}LowerLeg", knee0 + 13.0 * wave(t, T, 1, 0, 0, ph - 1.9))
+            rot(god, f"{side}Foot", foot0 + 10.0 * wave(t, T, 1, 0, 0, ph - 2.8))
         # cape: drifting back on the updraft, a 2-per-loop wave down each column, columns out of phase,
         # plus a slow side sway; amplitude grows down the chain
         for ci, col in enumerate("RCL"):
