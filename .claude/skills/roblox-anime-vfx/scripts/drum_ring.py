@@ -624,6 +624,7 @@ def main():
     # single drum (for close-ups)
     d1 = bpy.data.objects["Drum_4"]
     export_glb(os.path.join(a.out, "drum.glb"), [d1])
+    bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(a.out, "drum_ring.blend"))
     if a.export:
         bpy.ops.object.select_all(action="SELECT")
