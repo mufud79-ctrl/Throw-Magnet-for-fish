@@ -70,7 +70,7 @@
     const aw = (2 / cell) * 1.15, rimW = def.rim || 0.045, coreIn = def.coreInset || 0.05, gr = def.glow || 0.2;
     const s = { d: 1, c: 9, k: 9 };
     for (let i = 0; i < n; i++) {
-      const samp = def.frame(i, n);
+      const samp = def.frame(i, n), gf = def.glowFade ? seq(def.glowFade, i) : 1;
       const ox = (i % g) * cell, oy = Math.floor(i / g) * cell;
       for (let py = 0; py < cell; py++) {
         const y = 1 - ((py + 0.5) / cell) * 2;
@@ -89,7 +89,7 @@
             const t = 1 - d / gr, w = aw / gr;
             glow = 0.42 * aa(t - 0.62, w) + 0.3 * aa(t - 0.3, w) + 0.28 * Math.pow(clamp(t, 0, 1), 2);
           }
-          glow *= aa(0.97 - edge, aw);
+          glow *= aa(0.97 - edge, aw) * gf;
           const A = [glow, rim, mid, core];
           for (let L = 0; L < 4; L++) {
             const b = bufs[names[L]].data;
@@ -163,7 +163,7 @@
       const bend = t.bend + 0.4 * Math.sin(i * 1.9 + t.ph);
       const tipD = t.h * 1.05 + det * 0.05, tl = t.pinch && det > 0 ? 1 - det / 9 : 0;
       return { ang, bx, by, h, bend, r1: t.r1 * (0.55 + 0.45 * lenK),
-        tx: bx + Math.sin(ang) * tipD, ty: Math.min(0.58, by + Math.cos(ang) * tipD + det * 0.03), tipH: 0.22 * tl, tipR: 0.095 * tl };
+        tx: bx + Math.sin(ang) * tipD, ty: Math.min(0.58, by + Math.cos(ang) * tipD + det * 0.03), tipH: 0.24 * tl, tipR: tl > 0 ? 0.1 : 0 };
     });
     const P = { lobes, T }, CK = 0.56, base = -0.9;
     const coreOn = seq([1, 1, 1, 0.95, 0.85, 0.72, 0.58, 0.45, 0.32, 0.2, 0.1, 0], i);
@@ -173,7 +173,8 @@
       const x = x0 + wx, y = y0 + wy;
       let d = blastShape(i, x, y, P);
       const k = CK * coreOn;
-      const c = k > 0.02 ? blastShape(i, x / k, (y - base) / k + base - 0.05, P) * k : 9;
+      let c = k > 0.02 ? blastShape(i, x / k, (y - base) / k + base - 0.05, P) * k : 9;
+      for (const t of P.T) if (t.tipH > 0.01) c = Math.min(c, tongue(x, y, t.tx, t.ty - 0.03, t.ang * 0.5, t.tipH * 0.6, t.tipR * 0.45, 0, t.bend * 0.5, 0));
       if (erode > 0) d = Math.max(d, (erode * 0.8 - fbm(NC, x0 * 2.6, y0 * 2.6 - i * 0.12)) * 0.6 + 0.1 * erode);
       s.d = d; s.c = c;
       if (i >= 2 && i <= 12) {
@@ -187,7 +188,7 @@
   const SMOKE_L = (() => {
     const r = rng(41), L = [[0, -0.15, 0.36]];
     for (let k = 0; k < 9; k++) { const a = r() * 6.28, d = 0.22 + r() * 0.28; L.push([Math.cos(a) * d, Math.sin(a) * d * 0.75 - 0.05, 0.17 + r() * 0.15, 8 + r() * 7]); }
-    L[0].push(15);
+    L[0].push(11.5);
     return L;
   })();
   const SMOKE_H = (() => { const r = rng(43), H = []; for (let k = 0; k < 14; k++) H.push([(r() - 0.5) * 1.3, (r() - 0.5) * 1.0, 3 + r() * 9]); return H; })();
@@ -235,7 +236,7 @@
       : [0.045, 0.2, 0.22, 0.2, 0.17, 0.13, 0.1, 0.075, 0.055, 0.042, 0.032, 0.024, 0.017, 0.011, 0.007, 0.004]);
     const r = rng(fire ? 61 : 67);
     const STREAKS = [0.3, 0.48, 0.62, 0.78].map((q) => [q, 0.15 + r() * 0.25, 0.55 + r() * 0.4]);
-    const SHARDS = Array.from({ length: 9 }, () => [r() * 0.9, 0.02 + r() * 0.03, 3 + Math.floor(r() * 5), 0.6 + r() * 0.8]);
+    const SHARDS = Array.from({ length: 7 }, () => [r() * 0.9, 0.04 + r() * 0.015, 3 + Math.floor(r() * 5), 0.6 + r() * 0.8]);
     const FT = Array.from({ length: 11 }, (_, k) => ({ s: 0.08 + (k / 10) * 0.88 + (r() - 0.5) * 0.04, h: 0.16 + r() * 0.2, bend: -0.3 - r() * 0.5, ph: r() * 6.28, r1: 0.05 + r() * 0.03 }));
     return (i) => {
       const H = head[i], Ts = tail[i], Tm = tmax[i], span = Math.max(1e-3, H - Ts);
@@ -277,7 +278,8 @@
           const age = i - birth, life = 1 - age / 8;
           if (life <= 0) continue;
           const sa = angAt(sk), rr = R - 0.03 + age * 0.03 * sp;
-          d = Math.min(d, tongue(x, y, Math.cos(sa) * rr, Math.sin(sa) * rr, -sa + Math.PI, sz * 7 * life, sz * 0.55 * life, 0, 0, 0));
+          const sh = tongue(x, y, Math.cos(sa) * rr, Math.sin(sa) * rr, -sa + Math.PI, 0.26 * life + 0.06, sz * (0.5 + 0.5 * life), 0, 0, 0);
+          d = Math.min(d, sh); c = Math.min(c, sh);
         }
         for (const t of tongues) {
           if (t.h < 0.02) continue;
@@ -379,11 +381,11 @@
   // ---------- registry ----------
   const DEFS = {
     // layered heroes: each produces <name>_glow/_rim/_mid/_core
-    fx_blast: { layered: true, grid: 4, rim: 0.045, glow: 0.18, coreInset: 0.05, frame: fit(blast, 0.8, -0.9), note: 'Ground fire blast, 16 drawings on 2s' },
-    fx_smoke: { layered: true, grid: 4, rim: 0.04, glow: 0.12, coreInset: 0.05, frame: smoke, note: 'Cel smoke cloud: lobes, creases, round-hole dissolve' },
+    fx_blast: { layered: true, grid: 4, rim: 0.045, glow: 0.18, coreInset: 0.05, glowFade: [1, 1, 1, 1, 1, 1, 1, 1, 0.9, 0.75, 0.6, 0.45, 0.3, 0.15, 0.05, 0], frame: fit(blast, 0.74, -0.9), note: 'Ground fire blast, 16 drawings on 2s' },
+    fx_smoke: { layered: true, grid: 4, rim: 0.04, glow: 0.12, coreInset: 0.05, glowFade: [1, 1, 1, 1, 0.9, 0.8, 0.65, 0.5, 0.35, 0.2, 0.1, 0], frame: smoke, note: 'Cel smoke cloud: lobes, creases, round-hole dissolve' },
     fx_flash: { layered: true, grid: 2, rim: 0.035, glow: 0.2, coreInset: 0.04, frame: flash, note: 'Impact flash star, 4 drawings' },
-    fx_slash: { layered: true, grid: 4, rim: 0.03, glow: 0.14, coreInset: 0.02, frame: slashDrawing('steel'), note: 'Steel crescent: streaks, echo arc, shards, dash-out' },
-    fx_fireslash: { layered: true, grid: 4, rim: 0.035, glow: 0.18, coreInset: 0.03, frame: slashDrawing('fire'), note: 'Fire crescent: trailing tongues, boil, burn-out' },
+    fx_slash: { layered: true, grid: 4, rim: 0.03, glow: 0.12, coreInset: 0.02, glowFade: [0.7, 1, 1, 1, 0.85, 0.7, 0.5, 0.32, 0.18, 0.08, 0], frame: slashDrawing('steel'), note: 'Steel crescent: streaks, echo arc, shards, dash-out' },
+    fx_fireslash: { layered: true, grid: 4, rim: 0.035, glow: 0.13, coreInset: 0.03, glowFade: [0.7, 1, 1, 1, 0.9, 0.75, 0.6, 0.45, 0.3, 0.15, 0.05, 0], frame: slashDrawing('fire'), note: 'Fire crescent: trailing tongues, boil, burn-out' },
     // single white sprites
     spark: { grid: 1, size: 256, frame: streakMask(0.15, 0.45), note: 'Spark streak (tip = velocity)' },
     speedline: { grid: 1, size: 256, frame: streakMask(0.04, 0.4), note: 'Speed line' },

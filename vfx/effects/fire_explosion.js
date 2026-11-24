@@ -4,10 +4,10 @@
 // the impact star and saturated orange body.
 (function (G) {
   const { stack, steps, flicker } = G.VFXSpec;
-  const C = 4, BLAST = 38, SMOKE = 40;
+  const C = 4, BLAST = 41, SMOKE = 40;
   G.VFX_EFFECTS = G.VFX_EFFECTS || {};
   G.VFX_EFFECTS.FireExplosion = {
-    name: 'FireExplosion', version: 2, duration: 2.9,
+    name: 'FireExplosion', version: 3, duration: 2.9,
     stage: { camera: [17, 8, 24], target: [0, 9, 0], dummy: { pos: [-11, 0, 8], face: [0, 0, 0] } },
     beats: [
       [0.0, 'Charge: lines pulled in, glint flickers'],

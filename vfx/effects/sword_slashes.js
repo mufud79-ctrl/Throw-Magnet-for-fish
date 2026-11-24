@@ -83,7 +83,7 @@
   }
 
   G.VFX_EFFECTS.SwordSlash = {
-    name: 'SwordSlash', version: 1, duration: 1.05,
+    name: 'SwordSlash', version: 2, duration: 1.05,
     stage: STAGE('steel'),
     beats: [[0, 'Tip glint (anticipation)'], [0.09, 'Smear drawing'], [0.13, 'Full slash holds 2 drawings'], [0.3, 'Thins from inside, splits into streaks'], [0.5, 'Dashes and shards drift off']],
     lights: [{ name: 'SlashLight', position: [0.4, 4.5, -3.6], Color: '#8fd0ff', Range: 22, Brightness: [[0, 0], [0.09, 0], [0.11, 2.4], [0.3, 1], [0.7, 0]] }],
@@ -102,7 +102,7 @@
   };
 
   G.VFX_EFFECTS.FireSlash = {
-    name: 'FireSlash', version: 1, duration: 1.7,
+    name: 'FireSlash', version: 2, duration: 1.7,
     stage: STAGE('fire'),
     beats: [[0, 'Tip glint (anticipation)'], [0.09, 'Smear drawing'], [0.13, 'Flaming crescent holds, tongues boil'], [0.4, 'Tongues pinch off into wisps'], [0.6, 'Burns out: embers, heat smoke']],
     lights: [{ name: 'FireLight', position: [0.4, 4.5, -3.6], Color: '#ff8a30', Range: 26, Brightness: [[0, 0], [0.09, 0], [0.11, 3.2], [0.2, 2], [0.26, 2.6], [0.34, 1.7], [0.42, 2.1], [0.9, 0]] }],
