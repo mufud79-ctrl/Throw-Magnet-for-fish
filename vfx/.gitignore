@@ -1,0 +1,5 @@
+node_modules/
+out/*/sheet.png
+out/*/shot.png
+out/*/page.png
+out/*/texture_sheet.png

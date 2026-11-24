@@ -1,0 +1,157 @@
+<title>{{TITLE}}</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a Studio-style workbench. Viewport dominates; transport hugs its bottom edge; inspector on the right, stacks below on phones. */
+:root {
+  --ink: #0e0c14;        /* page ground: night ink */
+  --panel: #17141f;      /* inspector surface */
+  --line: #2b2636;       /* hairlines */
+  --fg: #efe9e1;         /* paper white */
+  --mute: #9b93a8;       /* secondary text */
+  --flame: #ffa51e;      /* accent: the effect's own mid-tone */
+  --crimson: #d4260d;    /* ink-rim red, used sparingly */
+  --display: "Dela Gothic One", "Arial Black", Impact, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--ink); color: var(--fg); font: 14px/1.45 var(--body); }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 340px; grid-template-rows: auto minmax(0, 1fr); gap: 0; min-height: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px; column-gap: 16px; row-gap: 12px; box-sizing: border-box; }
+header { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; }
+h1 { font: 400 22px/1.1 var(--display); letter-spacing: 0.01em; margin: 0; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--flame); }
+.meta { color: var(--mute); font: 12px var(--mono); display: flex; gap: 14px; flex-wrap: wrap; }
+.meta b { color: var(--fg); font-weight: 500; }
+.opts { margin-left: auto; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+select, button, input { font: inherit; color: inherit; }
+select { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+label.chk { display: inline-flex; gap: 6px; align-items: center; color: var(--mute); cursor: pointer; }
+input[type=checkbox] { accent-color: var(--flame); }
+:focus-visible { outline: 2px solid var(--flame); outline-offset: 2px; }
+
+.stage { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.vp { position: relative; flex: 1; min-height: 300px; aspect-ratio: 16 / 9; max-height: calc(100vh - 170px); max-width: 100%; background: #000; border: 1px solid var(--line); border-bottom: 0; }
+.vp canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.hud { position: absolute; left: 10px; top: 8px; font: 500 12px var(--mono); display: flex; gap: 10px; pointer-events: none; text-shadow: 0 1px 2px #000; }
+.hud span { background: rgba(10, 8, 14, 0.6); padding: 2px 6px; border-radius: 3px; }
+.hud .t { color: var(--flame); }
+.hint { position: absolute; right: 10px; bottom: 8px; font: 11px var(--mono); color: rgba(239, 233, 225, 0.55); pointer-events: none; }
+
+.transport { background: var(--panel); border: 1px solid var(--line); padding: 10px 12px 12px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.btns, .speeds { display: flex; gap: 4px; }
+.ib { width: 34px; height: 30px; border-radius: 6px; border: 1px solid var(--line); background: var(--ink); cursor: pointer; display: grid; place-items: center; padding: 0; }
+.ib:hover { border-color: var(--flame); }
+.ib svg { width: 14px; height: 14px; fill: var(--fg); }
+#play { background: var(--flame); border-color: var(--flame); }
+#play svg { fill: var(--ink); }
+#play[data-state=pause] .i-play, #play[data-state=play] .i-pause { display: none; }
+.track { position: relative; padding-bottom: 12px; min-width: 0; }
+input[type=range] { width: 100%; accent-color: var(--flame); margin: 0; }
+.ticks { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; }
+.tick { position: absolute; width: 10px; height: 10px; margin-left: -5px; border: 0; padding: 0; background: none; cursor: pointer; }
+.tick::after { content: ""; position: absolute; left: 4px; top: 0; width: 2px; height: 8px; background: var(--crimson); }
+.speeds button { font: 500 12px var(--mono); padding: 5px 7px; border-radius: 5px; border: 1px solid var(--line); background: var(--ink); cursor: pointer; }
+.speeds button[aria-pressed=true] { background: var(--fg); color: var(--ink); border-color: var(--fg); }
+
+.beats { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.beats button { display: flex; gap: 8px; align-items: baseline; background: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; cursor: pointer; font-size: 12.5px; color: var(--mute); text-align: left; }
+.beats button:hover { color: var(--fg); border-color: var(--mute); }
+.bt { font: 500 11.5px var(--mono); color: var(--flame); font-variant-numeric: tabular-nums; }
+
+aside { background: var(--panel); border: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; min-height: 0; max-height: calc(100vh - 80px); }
+[role=tablist] { display: flex; border-bottom: 1px solid var(--line); }
+[role=tab] { flex: 1; background: none; border: 0; padding: 10px 6px; cursor: pointer; color: var(--mute); font-weight: 500; border-bottom: 2px solid transparent; }
+[role=tab][aria-selected=true] { color: var(--fg); border-bottom-color: var(--flame); }
+[role=tabpanel] { overflow: auto; padding: 4px 12px 14px; min-height: 0; flex: 1; }
+h3 { font: 500 10.5px var(--mono); text-transform: uppercase; letter-spacing: 0.12em; color: var(--mute); margin: 14px 0 6px; }
+.layer { display: grid; grid-template-columns: 40px auto minmax(0, 1fr) auto; gap: 8px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line); }
+.thumb { width: 40px; height: 40px; border-radius: 4px; background: repeating-conic-gradient(#221e2a 0 25%, #191621 0 50%) 0 0 / 10px 10px; }
+.layer input { margin-top: 3px; }
+.layer label { display: flex; flex-direction: column; gap: 1px; cursor: pointer; min-width: 0; }
+.ln { font-weight: 600; }
+.lm { font: 11px var(--mono); color: var(--flame); overflow-wrap: anywhere; }
+.lr { font-size: 12px; color: var(--mute); }
+.solo { font: 500 11px var(--mono); background: none; border: 1px solid var(--line); color: var(--mute); border-radius: 4px; padding: 3px 6px; cursor: pointer; }
+.solo[aria-pressed=true] { background: var(--crimson); border-color: var(--crimson); color: #fff; }
+pre { font: 11.5px/1.5 var(--mono); white-space: pre; overflow: auto; margin: 10px 0 0; color: #d9d2e6; max-height: 60vh; }
+.copyrow { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: var(--mute); }
+.copyrow button { background: var(--flame); color: var(--ink); border: 0; border-radius: 6px; padding: 6px 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.texgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 12px; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 5px; }
+figure canvas { width: 100%; aspect-ratio: 1; border-radius: 4px; background: repeating-conic-gradient(#221e2a 0 25%, #191621 0 50%) 0 0 / 16px 16px; }
+figcaption { display: flex; flex-direction: column; font-size: 11.5px; color: var(--mute); gap: 1px; }
+figcaption b { font: 500 12px var(--mono); color: var(--fg); }
+.note { color: var(--mute); font-size: 12.5px; max-width: 65ch; margin: 10px 0 0; }
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .vp { max-height: none; aspect-ratio: 4 / 3; }
+  aside { max-height: none; }
+  .transport { grid-template-columns: minmax(0, 1fr); }
+  .btns, .speeds { justify-content: center; }
+  .opts { margin-left: 0; }
+  .hint { display: none; }
+}
+</style>
+
+<div class="app">
+  <header>
+    <h1>Anime VFX Lab · <em>{{NAME}}</em></h1>
+    <div class="meta"><span>v<b>{{VERSION}}</b></span><span><b id="stat-layers">0</b> emitters</span><span><b id="stat-tex">0</b> textures</span><span>emulated Roblox ParticleEmitter</span></div>
+    <div class="opts">
+      <select id="env" aria-label="Environment"><option value="dusk">Dusk arena</option><option value="day">Day baseplate</option><option value="void">Black void</option></select>
+      <label class="chk"><input type="checkbox" id="dummy" checked> R15 dummy</label>
+      <label class="chk"><input type="checkbox" id="loop" checked> Loop</label>
+    </div>
+  </header>
+
+  <div class="stage">
+    <div class="vp">
+      <canvas id="vp" aria-label="3D viewport: drag to orbit, scroll to zoom"></canvas>
+      <div class="hud"><span class="t" id="tread">0.00s</span><span id="fread">f0</span><span><b id="pread">0</b> particles</span></div>
+      <div class="hint">drag orbit · scroll zoom · space play · ←/→ frame</div>
+    </div>
+    <div class="transport">
+      <div class="btns">
+        <button class="ib" id="prev" type="button" aria-label="Previous frame"><svg viewBox="0 0 16 16"><path d="M3 2h2v12H3zM14 2v12L6 8z"/></svg></button>
+        <button class="ib" id="play" type="button" aria-label="Pause" data-state="pause"><svg class="i-play" viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z"/></svg><svg class="i-pause" viewBox="0 0 16 16"><path d="M3 2h4v12H3zM9 2h4v12H9z"/></svg></button>
+        <button class="ib" id="next" type="button" aria-label="Next frame"><svg viewBox="0 0 16 16"><path d="M11 2h2v12h-2zM2 2v12l8-6z"/></svg></button>
+        <button class="ib" id="replay" type="button" aria-label="Replay from start"><svg viewBox="0 0 16 16"><path d="M8 2a6 6 0 1 1-5.6 3.9l1.8.7A4 4 0 1 0 8 4v2.5L4 3.2 8 0z"/></svg></button>
+      </div>
+      <div class="track">
+        <input type="range" id="scrub" min="0" value="0" aria-label="Timeline">
+        <div class="ticks" id="ticks"></div>
+      </div>
+      <div class="speeds" role="group" aria-label="Playback speed">
+        <button type="button" data-speed="1" aria-pressed="true">1×</button>
+        <button type="button" data-speed="0.5" aria-pressed="false">½×</button>
+        <button type="button" data-speed="0.25" aria-pressed="false">¼×</button>
+        <button type="button" data-speed="0.1" aria-pressed="false">⅒×</button>
+      </div>
+    </div>
+    <ul class="beats" id="beats"></ul>
+    <p class="note">Every layer is a real ParticleEmitter with real property values; the Luau tab builds the same thing in Studio. Lighting, Bloom and ColorCorrection are approximations of Roblox's renderer. Tell me what to change by layer name or beat time.</p>
+  </div>
+
+  <aside>
+    <div role="tablist">
+      <button role="tab" type="button" aria-selected="true" aria-controls="p-layers" id="t-layers">Layers</button>
+      <button role="tab" type="button" aria-selected="false" aria-controls="p-tex" id="t-tex">Textures</button>
+      <button role="tab" type="button" aria-selected="false" aria-controls="p-luau" id="t-luau">Luau</button>
+    </div>
+    <div role="tabpanel" id="p-layers" aria-labelledby="t-layers"><div id="layers"></div></div>
+    <div role="tabpanel" id="p-tex" aria-labelledby="t-tex" hidden><div class="texgrid" id="textures"></div></div>
+    <div role="tabpanel" id="p-luau" aria-labelledby="t-luau" hidden>
+      <div class="copyrow"><span>ModuleScript · paste texture ids after upload</span><button type="button" id="copy">Copy Luau</button></div>
+      <pre id="luau"></pre>
+    </div>
+  </aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+{{SCRIPTS}}
