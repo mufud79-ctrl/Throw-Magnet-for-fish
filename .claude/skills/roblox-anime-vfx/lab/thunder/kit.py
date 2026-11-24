@@ -111,3 +111,60 @@ def leg_trails(base, path, widths, **kw):
         b = dict(base, path=[[ta, pa], [tb, pb]], t0=ta, t1=tb)
         out += trail_stack(b, widths, **kw)
     return out
+
+
+# ---------------------------------------------------------------- building blocks (compose per move; never a fixed recipe)
+def sparks(at, t, n, speed=(8, 18), life=(0.25, 0.45), size=(0.8, 1.4), seed=7, color=CYAN, grav=-35):
+    return {"type": "emitter", "at": at, "emits": [[t, n]], "seed": seed, "props": {
+        "Texture": "static_sparks", "Color": [[0, WHITE], [0.3, color], [1, BLUE]], "LightEmission": 1, "Brightness": 1.6,
+        "Size": [[0, size[1]], [1, size[0] * 0.4]], "Lifetime": list(life), "Speed": list(speed), "SpreadAngle": [180, 180],
+        "Acceleration": [0, grav, 0], "Drag": 3, "Rotation": [0, 360], "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random",
+        "FlipbookFramerate": [20, 30], "FlipbookStartRandom": True, "ZOffset": 0.4}}
+
+
+def haze(at, t0, t1, rate, size=(4, 8), rise=2.5, seed=11, part=None, color=NAVY, tr=0.45):
+    e = {"type": "emitter", "at": at, "rate": [[t0, t1, rate]], "seed": seed, "props": {
+        "Texture": "ion_haze", "Color": color, "LightEmission": 0, "Brightness": 1,
+        "Size": [[0, size[0]], [1, size[1]]], "Lifetime": [0.9, 1.4], "Speed": [0.5, rise], "SpreadAngle": [40, 40],
+        "Rotation": [0, 360], "RotSpeed": [-20, 20], "Transparency": [[0, 1], [0.2, tr], [1, 1]],
+        "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot", "ZOffset": -0.3}}
+    if part:
+        e["part"] = part
+        e["props"]["Shape"] = "Cylinder"
+    return e
+
+
+def crackle(at, t, size=4.0, life=0.16, seed=50):
+    """Instant arc flash (thunder_arc played once): the angular replacement for camera-facing ring bursts."""
+    return emit_stack("thunder_arc_v2", at, t, size=[[0, size * 0.8], [0.2, size], [1, size * 1.1]], life=life, seed=seed,
+                      colors=COOL, transparency=[[0, 0], [0.5, 0.2], [1, 1]])
+
+
+def ground_ring(at, t, size=12.0, life=0.45, seed=55):
+    """thunder_burst laid flat on the ground: its shock ring becomes a shockwave in perspective, its bolts rake the sand."""
+    return emit_stack("thunder_burst_v2", [at[0], 0.25, at[2]], t, size=[[0, size * 0.7], [0.15, size], [1, size * 1.08]], life=life,
+                      seed=seed, orient="VelocityPerpendicular", colors=COOL, z=-0.2)
+
+
+def dust(at, t, n=9, size=(5, 11), seed=61):
+    """White anime dust thrown out low and sideways from a landing (RELL impact)."""
+    return {"type": "emitter", "at": [at[0], 0.6, at[2]], "emits": [[t, n]], "seed": seed, "part": [5, 0.2, 5], "props": {
+        "Texture": "dust_burst", "Color": "#d9d3c6", "LightEmission": 0, "Brightness": 1.0, "Shape": "Disc",
+        "Size": [[0, size[0]], [1, size[1]]], "Lifetime": [0.6, 0.9], "Speed": [18, 26], "SpreadAngle": [8, 8],
+        "EmissionDirection": "Top", "ShapeInOut": "Outward", "Drag": 4, "Acceleration": [0, 2, 0], "Rotation": [-15, 15],
+        "Transparency": [[0, 0.05], [0.6, 0.3], [1, 1]], "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot",
+        "Orientation": "FacingCameraWorldUp", "ZOffset": -0.6}}
+
+
+def smoke_burst(at, t, n=6, seed=63):
+    """Dark storm smoke kicked up by the strike (the dark anchor at the hit)."""
+    return {"type": "emitter", "at": at, "emits": [[t, n]], "seed": seed, "props": {
+        "Texture": "smoke_puff", "Color": [[0, "#3a4570"], [1, NAVY]], "LightEmission": 0, "Brightness": 1,
+        "Size": [[0, 3], [1, 7.5]], "Lifetime": [0.8, 1.2], "Speed": [4, 9], "SpreadAngle": [70, 70], "Drag": 3,
+        "Acceleration": [0, 3, 0], "Rotation": [0, 360], "RotSpeed": [-30, 30], "Transparency": [[0, 0.15], [0.7, 0.5], [1, 1]],
+        "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot", "ZOffset": -0.4}}
+
+
+def light(at, keys, color=CYAN, rng=14):
+    # Roblox PointLight brightness ~1-8; anything hotter floods the sand white
+    return {"at": at, "color": color, "range": rng, "brightness": [[t, round(v * 0.18, 2)] + k[2:] for t, v, *k in [list(x) for x in keys]]}

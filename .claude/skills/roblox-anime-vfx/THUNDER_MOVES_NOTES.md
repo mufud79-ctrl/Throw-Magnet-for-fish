@@ -63,6 +63,15 @@ crackling bush; charge = white pinpoint star with speed rays; big hits flash the
 ground hits = tall thin white-violet streaks shattering slabs.
 Done: new `cel` texture kind in vfx_textures.py (explicit layers, tapered polygon strokes with mitred joins, pointed
 tips, draw-in follows the trunk) -> thunder_bolt_v2, thunder_burst_v2, thunder_arc_v2, thunder_strip_v2_1..4.
-Kit + showcases switched to v2. Comparison sheets: assets/previews/v2_compare/. Waiting on user approval of v2.
+Kit + showcases switched to v2. Comparison sheets: assets/previews/v2_compare/. User: "Much better" -> v2 textures and the trail/vbeam types approved.
 Ideas from the reference still to use in moves: cyan-mono impact frame for the biggest hits (Judgment Pillar),
 pinpoint charge star with rays (Plasma Bomb hold), tall white-violet streak + slabs for ground strikes.
+
+## Move 1: Volt Lance (Z) - waiting for approval
+Spec script `lab/thunder/moves/volt_lance.py` -> `thunder_01_VoltLance.json`; render + strips in assets/renders/thunder/.
+Mechanic: hitscan javelin. Signature (no other move uses it): after the 1-frame line strike the shaft SNAPS SHORT
+into a compact cel spear impaled through the target (neon spike head out its back), riding the knockback, flickering,
+cooling, dissolving tail-to-head, head shattering into sparks. Wind-up: spear crackles into the raised hand and pinches.
+Camera: wide side-on for the throw, glides in on the impaled target after the strike.
+Lessons: the strike bolt must end before the shaft snaps (else a disjoint white noodle); a lingering full-length line
+just reads as a beam, so the signature has to change shape; spear needs width ~2-5 studs to read at game distance.
