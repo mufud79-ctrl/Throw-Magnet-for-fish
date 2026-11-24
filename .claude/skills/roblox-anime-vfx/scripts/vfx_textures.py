@@ -611,6 +611,102 @@ def speedlines():
     return F
 
 
+
+# ================================================================ MESH STRIPS (UV u along the stroke, v across)
+def slash_strip():
+    """For crescent shells: u = head (0) -> tail (1), v = outer edge (0) -> inner edge (1). White-hot leading
+    rim, painted body falling off inward with streaks, ragged inner feather, tail breaking up. 1024x256. Shaded."""
+    H, W = 256 * SS, 1024 * SS
+    u = np.linspace(0, 1, W)[None, :]
+    v = np.linspace(0, 1, H)[:, None]
+    st = noise(H, W, 18, 300, 161, 4)
+    fe = noise(H, W, 40, 120, 162, 3)
+    br = noise(H, W, 30, 80, 163, 4)
+    rim = ss(v, 0.1, 0.02)
+    body = ss(v, 0.85 + (fe - 0.5) * 0.4, 0.35) * (0.6 + 0.4 * st)
+    along = ss(u + (br - 0.5) * 0.3, 1.0, 0.55)
+    A = np.clip(np.maximum(rim, body) * along, 0, 1)
+    V = np.clip(0.62 + 0.38 * np.maximum(rim, ss(v, 0.35, 0.05) * 0.6), 0, 1)
+    return pc.down_rect(A, W // SS, H // SS), pc.down_rect(V, W // SS, H // SS)
+
+
+def energy_strip():
+    """Tileable (in u) streaky energy for rings, spheres, tubes and swirls: soft at both v edges, flowing
+    filaments along u. Scroll it (shell 'scroll') for motion. 1024x256. Shaded."""
+    H, W = 256 * SS, 1024 * SS
+    v = np.linspace(-1, 1, H)[:, None]
+    st = tnoise(H, W, 16, 420, 171, 4)
+    st2 = tnoise(H, W, 50, 900, 172, 3)
+    edge = ss(np.abs(v), 1.0, 0.55 + (st2 - 0.5) * 0.4)
+    fil = levels(st, 0.35, 0.85)
+    A = np.clip(edge * (0.35 + 0.75 * fil), 0, 1)
+    V = np.clip(0.62 + 0.38 * fil * ss(np.abs(v), 0.7, 0.1), 0, 1)
+    return mblur(A, 6, axis=1)[::SS, ::SS], mblur(V, 6, axis=1)[::SS, ::SS]
+
+
+def edge_strip():
+    """Tileable shockwave band: crisp hot edge at v=0, streaky fade to nothing at v=1. 1024x256. Shaded."""
+    H, W = 256 * SS, 1024 * SS
+    v = np.linspace(0, 1, H)[:, None]
+    st = tnoise(H, W, 26, 360, 181, 4)
+    rim = ss(v, 0.12, 0.03)
+    body = levels(1 - v + (st - 0.5) * 0.7, 0.15, 0.95) * ss(v, 0.0, 0.05)
+    A = np.clip(np.maximum(rim, body * 0.85), 0, 1)
+    V = np.clip(0.62 + 0.38 * np.maximum(rim, ss(v, 0.4, 0.0) * 0.5), 0, 1) * np.ones((1, W))
+    return mblur(A, 6, axis=1)[::SS, ::SS], mblur(V, 6, axis=1)[::SS, ::SS]
+
+
+def wind_strip():
+    """Tileable wispy wind filaments for tornado swirls and dash sleeves. 1024x256. White."""
+    H, W = 256 * SS, 1024 * SS
+    v = np.linspace(-1, 1, H)[:, None]
+    wob = tnoise(H, W, 60, 500, 191, 3)
+    lines = np.abs(np.sin((v + (wob - 0.5) * 0.5) * 9.0))
+    gaps = tnoise(H, W, 30, 260, 192, 3)
+    A = ss(lines, 0.86, 0.98) * levels(gaps, 0.35, 0.7) * ss(np.abs(v), 1.0, 0.6)
+    return mblur(np.clip(A, 0, 1), 8, axis=1)[::SS, ::SS]
+
+
+
+# ================================================================ SOURCE ART (AI-generated paintings -> layered white textures)
+ART = os.path.join(HERE, "..", "assets", "source_art")
+
+
+def art(name, lo=0.04, hi=0.9, gamma=0.9):
+    """Load a painted silhouette from assets/source_art (Figma / Meshy image generation, greyscale, black or
+    transparent background) and turn brightness into a layered intensity image."""
+    im = np.asarray(Image.open(os.path.join(ART, name + ".png")).convert("RGBA"), np.float32) / 255
+    lum = im[..., :3] @ np.array([0.299, 0.587, 0.114], np.float32)
+    I = levels(lum * im[..., 3], lo, hi, gamma)
+    img = Image.fromarray(np.ascontiguousarray(I, dtype=np.float32)).resize((S * 2 // 2 * 2, S * 2 // 2 * 2), Image.LANCZOS)
+    return np.clip(np.asarray(img, np.float32), 0, 1)
+
+
+def dragon_head():
+    """Roaring energy dragon head, side profile facing right (Figma image generation, repainted into layers). Layered."""
+    return art("dragon_head", 0.05, 0.85)
+
+
+def phoenix_wing():
+    """Spread phoenix wing of flame feathers, root at the left (Figma image generation). Layered."""
+    return art("phoenix_wing")
+
+
+def giant_fist():
+    """Giant energy fist punching right with a flame trail (Figma image generation). Layered."""
+    return art("giant_fist")
+
+
+def water_shark():
+    """Charging shark of splashing water, facing right (Figma image generation). Layered."""
+    return art("water_shark")
+
+
+def palm_strike():
+    """Giant open palm strike with a radiating ring (Figma image generation). Layered."""
+    return art("palm_strike")
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -633,6 +729,15 @@ LIB = {
     "lightning":     (lightning,     "layered", 4, 5, "haki"),
     "beam_strip":    (beam_strip,    "layered", 0, 6, "light"),
     "speedlines":    (speedlines,    "white",   0, 0, "white"),
+    "slash_strip":   (slash_strip,   "strip",   0, 0, "slash"),
+    "energy_strip":  (energy_strip,  "strip",   0, 0, "quake"),
+    "edge_strip":    (edge_strip,    "strip",   0, 0, "light"),
+    "wind_strip":    (wind_strip,    "white",   0, 0, "white"),
+    "dragon_head":   (dragon_head,   "layered", 1, 5, "fire"),
+    "phoenix_wing":  (phoenix_wing,  "layered", 1, 5, "slash"),
+    "giant_fist":    (giant_fist,    "layered", 1, 5, "fire"),
+    "water_shark":   (water_shark,   "layered", 1, 4, "slash"),
+    "palm_strike":   (palm_strike,   "layered", 1, 5, "light"),
 }
 
 PALETTES = {
@@ -668,6 +773,11 @@ def build(name, out):
             p = os.path.join(out, f"{name}_{L}.png")
             pc.save_white(a, p)
             paths.append(p)
+    elif kind == "strip":
+        A, V = res
+        p = os.path.join(out, f"{name}.png")
+        pc.save_white(A, p, V)
+        paths.append(p)
     elif kind == "shaded":
         alphas, vals = res
         A = pc.sheet(alphas, grid, CELL)
@@ -679,7 +789,7 @@ def build(name, out):
         frames = res if isinstance(res, list) else [res]
         if grid == 0:
             h, w = frames[0].shape
-            A = pc.down_rect(frames[0], w // SS, h // SS)
+            A = frames[0] if name.endswith("_strip") else pc.down_rect(frames[0], w // SS, h // SS)
         elif grid == 1:
             A = pc.down(frames[0], CELL * 2) * pc.edge_fade(CELL * 2)
         else:

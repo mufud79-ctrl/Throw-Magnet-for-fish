@@ -22,7 +22,7 @@ def layers_for(name, tex):
         L = {k: load(os.path.join(tex, f"{name}_{k}.png"))[0] for k in ("glow", "rim", "mid", "core")}
         return L, None, grid, pal, kind
     a, v = load(os.path.join(tex, f"{name}.png"))
-    return {"single": a}, (v if kind == "shaded" else None), grid, pal, kind
+    return {"single": a}, (v if kind in ("shaded", "strip") else None), grid, pal, kind
 
 def backdrop(w, h):
     """Bright daylight sky over sand, like the RELL showcase arenas."""

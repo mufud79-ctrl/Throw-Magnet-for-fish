@@ -12,8 +12,10 @@ import vfx_textures as v
 GROUPS = [("Fire", ["fire_burst", "flame_lick", "aura_wisp", "embers"]), ("Smoke & dust", ["smoke_puff", "dust_burst"]),
           ("Flash & light", ["star_flash", "god_rays", "orb_glow", "flecks"]),
           ("Energy", ["slash", "shock_ring", "wind_arcs", "beam_strip", "speedlines"]),
-          ("Quake & lightning", ["crack_glow", "glass_shatter", "lightning"])]
-KIND = {"layered": "4 stacked layers", "shaded": "1 shaded texture", "white": "1 white texture"}
+          ("Quake & lightning", ["crack_glow", "glass_shatter", "lightning"]),
+          ("Mesh strips", ["slash_strip", "energy_strip", "edge_strip", "wind_strip"]),
+          ("Hero silhouettes (Figma image gen)", ["dragon_head", "phoenix_wing", "giant_fist", "water_shark", "palm_strike"])]
+KIND = {"layered": "4 stacked layers", "shaded": "1 shaded texture", "white": "1 white texture", "strip": "1 shaded mesh strip"}
 GRID = {0: "strip / full-screen", 1: "single image", 2: "2×2 sheet", 4: "4×4 flipbook, 16 frames"}
 CSS = """
 /* Layout: a dark VFX-lab light table; cards in a responsive grid so effects glow like they do in game */
