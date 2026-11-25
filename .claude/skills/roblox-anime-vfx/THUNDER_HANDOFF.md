@@ -80,6 +80,12 @@ This is the first fruit built to the "design first, user approves everything, th
   mid/core additive (all-additive whited out). Impact frames are inverted on capture. `lab/render_reel.sh` renders
   every clip plain + `_vfx`. These previews are not the Roblox runtime: the moves still need porting to the
   JSON spec / Luau runtime (export_luau.py) once approved.
+- **Polish pass (waiting on user review)**: `scripts/anim_audit.py` checks every frame for forearm/hand triangles
+  intersecting torso/legs/head/cape/mane, stretched edges, wrist bend and joint pops (wrist vs forearm, forearm vs
+  upper arm). All clips are clipping-free except the transform's curled guard (inside the beam). Idle arm hang
+  `IDLE_ARM=62,16,32` / swing `6,8` (tunable via env vars). Eases: `snap` is quadratic, `strike` = u^1.7. Hand
+  shapes keep a curl cascade; head leads (overlap -0.03 s), a head spring reacts to root motion, and keyed bones get
+  a non-repeating "moving hold" drift (`ALIVE` amplitudes).
 - `lab/model_views.mjs` takes an optional `WxH` viewport; materials named `XRAY*` draw on top (skeleton overlays).
 
 ## Waiting on the user (original list)
