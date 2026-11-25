@@ -1654,6 +1654,115 @@ def _thunder_strip_v2(seed):
     return fn
 
 
+# ================================================================ ANIME PLASMA (cel energy ball + cel blast, hard edges)
+def _jag_edge(a, n, amp, phase, seed, sharp=1.0):
+    """Angular spiky edge offset: n triangle spikes of random height around the circle (rotating with phase)."""
+    rng = np.random.default_rng(seed)
+    hs = rng.uniform(0.35, 1.0, n)
+    u = ((a + phase) % TAU) / TAU * n
+    i = np.floor(u).astype(int) % n
+    f = u - np.floor(u)
+    tri = 1 - np.abs(f * 2 - 1) ** sharp
+    return amp * hs[i] * tri
+
+
+def anime_plasma():
+    """Anime energy ball (loop, 16 frames): flat cel bands - spiky indigo outline (rim), flat cyan body (mid), white
+    core with an offset highlight and 3 spiral streaks rotating one full period (seamless), small surface bolts
+    re-striking every 2 frames; tight halo (glow). Explicit hard-edged layers like the v2 lightning."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    R = 0.52
+    aa = 0.006
+    frames = []
+    for i in range(16):
+        ph = i / 16 * TAU / 3                                   # 3 arms -> a third of a turn loops seamlessly
+        edge = R * (0.92 + _jag_edge(a, 14, 0.30, ph * 1.5, 77, 0.55) + 0.02 * np.sin(a * 5 - ph * 4))
+        rim = ss(r, edge * 1.1 + aa, edge * 1.1 - aa)
+        body = ss(r, edge + aa, edge - aa)
+        # core: offset bright blob + spiral streaks
+        cx, cy = -0.12 * R, -0.14 * R
+        core = ss(np.hypot(x - cx, y - cy), R * 0.42 + aa, R * 0.42 - aa)
+        spiral = np.zeros_like(r)
+        for k in range(3):
+            th = a - ph - k * TAU / 3 - np.log(np.maximum(r, 1e-3) / R) * 1.9
+            band = np.abs(((th + np.pi) % TAU) - np.pi)
+            w = 0.16 * (1 - r / R)
+            spiral = np.maximum(spiral, ss(band, w + 0.02, w) * ss(r, R * 0.92, R * 0.86) * ss(r, R * 0.12, R * 0.2))
+        fr = np.random.default_rng(4310 + i // 2)
+        bolts = []
+        for _ in range(3):
+            t0 = fr.uniform(0, TAU)
+            p0 = (S / 2 + math.cos(t0) * S / 2 * R * 0.2, S / 2 + math.sin(t0) * S / 2 * R * 0.2)
+            t1 = t0 + fr.uniform(-0.8, 0.8)
+            p1 = (S / 2 + math.cos(t1) * S / 2 * R * 1.15, S / 2 + math.sin(t1) * S / 2 * R * 1.15)
+            bolts += _cel_tree(fr, p0, p1, S * 0.008, forks=0, hooks=0.4, depth=0, seg=(0.15, 0.3))
+        bl = _cel_draw(bolts, S, S, 1.0)
+        out = {"rim": np.maximum(rim, _cel_draw(bolts, S, S, 3.2)), "mid": np.maximum(body, _cel_draw(bolts, S, S, 2.2)),
+               "core": np.clip(np.maximum.reduce([core * 0.9, spiral, bl]), 0, 1)}
+        out["glow"] = np.clip(ndi.gaussian_filter(rim, S * 0.03) * 1.3, 0, 1) * 0.7
+        frames.append(out)
+    return frames
+
+
+def anime_blast():
+    """Anime plasma explosion (one-shot, 16 frames): white flash disc with star spikes (f0-1) -> expanding flat-banded
+    sphere with a spiky edge and radial cel bolts (f1-6) -> hollows into a ring (f6-11) that breaks into flying
+    triangular shards (f9-15) and thins out. Hard-edged cel layers."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    aa = 0.006
+    rng = np.random.default_rng(4410)
+    shards = [(rng.uniform(0, TAU), rng.uniform(0.6, 1.0), rng.uniform(0.05, 0.09), rng.uniform(0, TAU)) for _ in range(16)]
+    frames = []
+    for i in range(16):
+        t = i / 15
+        ro = 0.16 + 0.66 * (1 - (1 - min(1, t / 0.45)) ** 2.2)              # outer radius
+        ri = 0.0 if t < 0.35 else ro * min(0.94, (t - 0.35) / 0.4) ** 0.8    # hollow grows
+        edge = ro * (0.92 + _jag_edge(a, 16, 0.26 * (1 - t * 0.5), 0.3 * i, 88, 0.55))
+        outer = ss(r, edge * 1.08 + aa, edge * 1.08 - aa)
+        body = ss(r, edge + aa, edge - aa)
+        hole = ss(r, ri - aa, ri + aa) if ri > 0 else np.ones_like(r)
+        rim = outer * (ss(r, ri * 0.93 - aa, ri * 0.93 + aa) if ri > 0 else 1)
+        mid = body * hole
+        inner_lip = (ss(r, ri + 0.05 + aa, ri + 0.05 - aa) * hole) if ri > 0 else ss(r, ro * 0.55 + aa, ro * 0.55 - aa)
+        flash = ss(r, 0.5 * (1 - t / 0.15) + aa, 0.5 * (1 - t / 0.15) - aa) if t < 0.15 else np.zeros_like(r)
+        star = np.zeros_like(r)
+        if i < 3:
+            sp = (0.25 + 0.55 * np.abs(np.cos(a * 4 + 0.3)) ** 8) * (1 - i / 3)
+            star = ss(r, sp + aa, sp - aa)
+        core = np.maximum.reduce([inner_lip * (1 - t) ** 0.6, flash, star])
+        # radial cel bolts while it swells
+        bolts = []
+        if 1 <= i <= 7:
+            fr = np.random.default_rng(4420 + i // 2)
+            for k in range(7):
+                th = k / 7 * TAU + fr.uniform(-0.2, 0.2)
+                p0 = (S / 2 + math.cos(th) * S / 2 * ro * 0.3, S / 2 + math.sin(th) * S / 2 * ro * 0.3)
+                p1 = (S / 2 + math.cos(th) * S / 2 * min(0.98, ro * 1.25), S / 2 + math.sin(th) * S / 2 * min(0.98, ro * 1.25))
+                bolts += _cel_tree(fr, p0, p1, S * 0.007, forks=0, hooks=0.4, depth=0, seg=(0.15, 0.3))
+        shard = np.zeros_like(r)
+        if i >= 9:
+            for (th, rr, sz, rot) in shards:
+                d = ro * rr + (t - 0.6) * 0.5
+                if d > 0.97:
+                    continue
+                cxs, cys = math.cos(th) * d, math.sin(th) * d
+                lx, ly = x - cxs, y - cys
+                c_, s_ = math.cos(rot + i * 0.5), math.sin(rot + i * 0.5)
+                u_, v_ = lx * c_ + ly * s_, -lx * s_ + ly * c_
+                sz2 = sz * (1 - (t - 0.6) * 1.2)
+                tri = (v_ > -sz2) & (np.abs(u_) < (sz2 - v_) * 0.6) & (v_ < sz2 * 1.4)
+                shard = np.maximum(shard, tri.astype(np.float32))
+        fade = 1.0 if t < 0.6 else max(0.0, 1 - (t - 0.6) / 0.4)
+        out = {"rim": np.clip(np.maximum(rim, _cel_draw(bolts, S, S, 3.2) if bolts else 0) * fade + shard, 0, 1),
+               "mid": np.clip(np.maximum(mid, _cel_draw(bolts, S, S, 2.2) if bolts else 0) * fade + shard * 0.8, 0, 1),
+               "core": np.clip(np.maximum(core, _cel_draw(bolts, S, S, 1.0) if bolts else 0) * fade, 0, 1)}
+        out["glow"] = np.clip(ndi.gaussian_filter(out["rim"], S * 0.03) * 1.3, 0, 1) * 0.7
+        frames.append(out)
+    return frames
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -1722,6 +1831,8 @@ LIB = {
     "thunder_strip_v2_2": (_thunder_strip_v2(2482), "cel", 0, 0, "thunder"),
     "thunder_strip_v2_3": (_thunder_strip_v2(2483), "cel", 0, 0, "thunder"),
     "thunder_strip_v2_4": (_thunder_strip_v2(2484), "cel", 0, 0, "thunder"),
+    "anime_plasma": (anime_plasma, "cel", 4, 0, "thunder"),
+    "anime_blast":  (anime_blast,  "cel", 4, 0, "thunder"),
 }
 
 PALETTES = {

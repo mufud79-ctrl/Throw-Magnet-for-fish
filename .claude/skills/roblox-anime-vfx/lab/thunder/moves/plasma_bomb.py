@@ -54,6 +54,29 @@ def _keys_at(keys, k):
     return keys[-1][1]
 
 
+def anime_ball(where, t0, life, radius_keys, *, tex="anime_plasma", mode="Loop", fps=24, rot=0, z=0.3, colors=None, fade=None):
+    """ONE flat-shaded anime energy ball (new anime_plasma cel flipbook): one locked particle per cel layer spanning the
+    whole life, its Size sequence carrying the radius keys (charge, pinch, swell, implode). where: point or path."""
+    S = 4.0                                              # quad size per stud of visual radius (texture ball r ~0.27 of quad)
+    ks = []
+    for k in [i / 24 for i in range(25)]:
+        ks.append([round(k, 4), round(max(0.05, _keys_at([[a, b] for a, b, *_ in radius_keys], k)) * S, 3)])
+    out = []
+    is_path = isinstance(where[0], list)
+    for i, L in enumerate(LAYERS):
+        props = {"Texture": f"{tex}_{L}", "Color": (colors or HOT)[L], "LightEmission": LE[L], "Brightness": BR[L], "Size": ks,
+                 "Lifetime": [life, life], "Speed": [0.01, 0.01], "Rotation": [rot, rot], "LockedToPart": True,
+                 "FlipbookLayout": "Grid4x4", "FlipbookMode": mode, "FlipbookFramerate": [fps, fps], "ZOffset": round(z + 0.05 * i, 3),
+                 "Transparency": fade if fade is not None else 0}
+        e = {"type": "emitter", "emits": [[round(t0, 3), 1]], "seed": 4242, "props": props}
+        if is_path:
+            e["at"], e["path"] = where[0][1], where
+        else:
+            e["at"] = where
+        out.append(e)
+    return out
+
+
 def plasma_sphere(where, t0, life, radius_keys, spin=240, core=True, bright=1.5, fade=None, dt=0.028, seed=0):
     """The plasma body in the house style: a small neon core inside a BALL OF CEL ARCS - short curved arcs flicker
     across the sphere surface (bowing outward) two at a time, plus a cel crackle bush at the centre. Same cel strokes
@@ -113,7 +136,7 @@ def build():
     kk = lambda t: round(t / TB, 4)
     R = [[0, 0.25], [kk(0.6), 1.7, "out"], [kk(0.74), 1.95], [kk(0.79), 1.35, "in"], [kk(TR), 2.1, "outBack"], [kk(TI), 2.0],
          [kk(TB - 0.01), 0.15, "in"], [1, 0.05]]
-    L += plasma_sphere(P, 0.0, TB, R)
+    L += anime_ball(P, 0.0, TB, R)
     # tendrils leaping off the orb surface while it charges
     t = 0.15
     while t < TR:
@@ -121,7 +144,7 @@ def build():
         rr = 1.5 + 1.6 * (t / TR)
         tip = [round(ORB[0] + math.cos(a) * math.cos(e) * rr * 1.7, 2), round(ORB[1] + math.sin(e) * rr * 1.7, 2), round(ORB[2] + math.sin(a) * math.cos(e) * rr * 1.7, 2)]
         L += arc_jump(ORB, tip, round(t, 3), life=0.06, bow=[0, 0.4, 0], width=0.7, seed=int(t * 100))
-        t += rnd.uniform(0.04, 0.07)
+        t += rnd.uniform(0.07, 0.11)
     # arcs leap UP out of the sand into the orb (the charge drinks from the ground)
     t = 0.12
     while t < TR - 0.04:
@@ -159,7 +182,8 @@ def build():
     # ---- bloom: the implode releases radial waves of cel arcs bursting out over A (house matter, this move's shape)
     L.append({"type": "shell", "mesh": "sphere", "material": "Neon", "at": [IMPACT[0], 2.5, IMPACT[2]], "t0": TB, "life": 0.14,
               "scale": [[0, 0.4], [0.3, 2.4, "out"], [1, 0.2, "in"]], "color": WHITE, "transparency": [[0, 0], [0.6, 0.2], [1, 1]]})
-    for w, (dtw, n, rad, hgt, wd) in enumerate([(0.0, 12, 5.5, 4.5, 1.8), (0.06, 10, 7.5, 5.5, 1.5), (0.12, 8, 9.0, 6.0, 1.2)]):
+    L += emit_stack("anime_blast", [IMPACT[0], 3.2, IMPACT[2]], TB + 0.11, size=15, life=0.5, z=0.6)
+    for w, (dtw, n, rad, hgt, wd) in enumerate([(0.02, 9, 8.0, 5.5, 1.6)]):
         for i in range(n):
             a, e = i / n * math.tau + w * 0.4 + rnd.uniform(-0.15, 0.15), rnd.uniform(0.1, 1.0)
             tip = [round(IMPACT[0] + math.cos(a) * math.cos(e) * rad, 2), round(0.3 + math.sin(e) * hgt, 2), round(IMPACT[2] + math.sin(a) * math.cos(e) * rad, 2)]
@@ -186,15 +210,15 @@ def build():
                           "color": COOL[lay], "lightEmission": LE[lay], "brightness": BR[lay], "width": [[0, w * 1.4], [0.2, w], [1, w * 0.3]],
                           "transparency": [[0, 0], [0.4, 0], [0.45, 0.7], [0.5, 0.05], [0.7, 0.4], [1, 1]]})
         # the plasma bead (a small plasma sphere) racing down the tether
-        L += plasma_sphere([[tl + 0.02, a_], [tb, b_]], tl + 0.02, tb - tl - 0.02, [[0, 1.2], [1, 1.5]], spin=500, bright=1.7)
+        L += anime_ball([[tl + 0.02, a_], [tb, b_]], tl + 0.02, tb - tl - 0.02, [[0, 0.9], [1, 1.1]], fps=40)
         encase.append((q, tb))
         hits.append({"t": tb, "dummy": n + 1, "dir": [round((q[0] - p[0]) / 12, 2), 0, -0.6], "power": 0.35})
         hs.append({"t": tb + 0.012, "dur": 0.05})
         numbers.append({"t": tb + 0.02, "at": [q[0] + 1.5, 6.8, q[2]], "text": "70", "color": CYAN, "vel": [2, 9, 0], "size": 1.7, "life": 0.5})
     for j, (d, te) in enumerate(encase):                # each target: encased in a plasma sphere that pops
         c = chest(d)
-        L += plasma_sphere(c, te, 0.34, [[0, 0.6], [0.25, 2.6, "outBack"], [0.75, 2.4], [0.85, 3.6, "out"], [1, 4.0]], spin=300, core=False,
-                           bright=1.4, fade=[[0, 0], [0.75, 0.1], [1, 1]])
+        L += anime_ball(c, te, 0.3, [[0, 0.6], [0.2, 2.7], [0.8, 2.4], [1, 1.6]], fps=32, rot=40 * j, z=0.4)
+        L += emit_stack("anime_blast", c, te + 0.29, size=10, life=0.4, z=0.5, rot=30 * j)
         L.append(sparks(c, te + 0.29, 18, speed=(10, 24), seed=820 + j))
         L += emit_stack("thunder_arc_v2", c, te, size=[[0, 3.8], [1, 4.4]], life=0.14, mode="Loop", rate=[[te + 0.3, te + 1.0, 8]],
                         seed=830 + j, colors=COOL, transparency=[[0, 0], [0.6, 0.3], [1, 1]])

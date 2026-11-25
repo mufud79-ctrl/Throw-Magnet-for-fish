@@ -172,3 +172,9 @@ curved arc_jumps flickering across the sphere surface, 3 per tick, bowing outwar
 (cel body / white core / indigo outline) around a small neon core; the dome is replaced by three radial waves of cel
 arcs bursting out of the implode. RULE: one visual language across the fruit - cel strokes; a move's identity comes
 from its shape and mechanic, never from a different rendering style (no glassy textured shells for energy).
+
+### Plasma Bomb v4 (anime stylized)
+- New cel textures `anime_plasma` (loop: spiky indigo outline, flat cyan body, white core, rotating spiral streaks, surface bolts) and `anime_blast` (one-shot: flash star -> spiky banded sphere with radial bolts -> hollow ring -> triangular shards).
+- Orb = one locked anime_plasma particle per layer whose Size sequence carries the charge/pinch/swell/implode radius keys (`anime_ball`). Bead and encasing use the same ball; bloom and pops use anime_blast.
+- Lesson: start the blast flipbook AFTER the hit-stop. Freezing on its flash frame reads as a flat grey star. Keep the blast ~15 studs; at 24 it swallows the frame.
+- Status: awaiting approval.
