@@ -11,7 +11,7 @@ First run: git fetch origin claude/dragon-fruit-vfx-k354ta && git merge --no-edi
 3. `.claude/skills/roblox-anime-vfx/DRAGON_MOVES_NOTES.md`, `references/modern-vfx.md`,
    `references/move-workflow.md`, `THUNDER_MOVES_NOTES.md`, `lab/thunder/kit.py`, `scripts/rig_serpent.py`.
 
-## The dragon (concept APPROVED; the hybrid look is hybrid_r15_v2.png)
+## The dragon (concept APPROVED; the hybrid look is hybrid_r15_v3.png)
 - Look: `assets/source_art/dragon/dragon_hero_v3.png`. Model sheet: `dragon_sheet_v3.png`. Meshy inputs:
   `v3_view_side.png`, `v3_view_top.png`, `v3_view_front.png`.
 - Design: as close to the classic wingless Eastern dragon emperor as possible while staying original. Deep azure/
