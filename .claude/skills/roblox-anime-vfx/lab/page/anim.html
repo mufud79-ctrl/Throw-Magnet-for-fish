@@ -19,14 +19,14 @@ const rim = new THREE.DirectionalLight('#6fe0ff', 0.55); rim.position.set(-3, 2,
 const cam = new THREE.PerspectiveCamera(30, 720 / 900, 0.01, 100);
 window.ANIM = {
   resize(w, h) { cv.width = w; cv.height = h; r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); },
-  async load(url) {
+  async load(url, frameAt = 0) {
     const gl = await new GLTFLoader().loadAsync(url);
     this.obj = gl.scene; scene.add(this.obj);
     this.obj.traverse((o) => { if (o.isMesh || o.isSkinnedMesh) o.frustumCulled = false; });
     this.mixer = new THREE.AnimationMixer(this.obj);
     this.clips = gl.animations; this.dur = Math.max(0, ...gl.animations.map((c) => c.duration));
     for (const c of gl.animations) this.mixer.clipAction(c).play();
-    this.mixer.setTime(0); this.obj.updateMatrixWorld(true);
+    this.mixer.setTime(frameAt); this.obj.updateMatrixWorld(true);
     const box = new THREE.Box3();
     this.obj.traverse((o) => { if (o.isSkinnedMesh) { o.skeleton.update(); o.geometry.computeBoundingBox(); } });
     box.setFromObject(this.obj);

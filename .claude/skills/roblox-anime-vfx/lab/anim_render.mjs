@@ -10,7 +10,8 @@ const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf(k); if (i < 0) return d; const v = args[i + 1]; args.splice(i, 2); return v; };
 const fps = +opt('--fps', 30), size = opt('--size', '720x900'), yaw = +opt('--yaw', 25), orbit = +opt('--orbit', 0), loops = +opt('--loops', 1), pitch = +opt('--pitch', 6), zoom = +opt('--zoom', 1);
 const period = +opt('--period', 0);
-const target = opt('--target', null), dist = +opt('--dist', 0);   // close-ups: three.js world coords (Y up), camera distance
+const target = opt('--target', null), dist = +opt('--dist', 0);
+const frameAt = +opt('--frame-at', 0);   // clip time whose bounding box frames the camera   // close-ups: three.js world coords (Y up), camera distance
 const [glb, out] = args; const [W, H] = size.split('x').map(Number);
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
@@ -23,7 +24,7 @@ await page.route('http://lab.local/**', (r) => {
 });
 await page.goto('http://lab.local/page/anim.html'); await page.waitForFunction(() => window.ANIM_READY);
 await page.evaluate(([w, h]) => window.ANIM.resize(w, h), [W, H]);
-const info = await page.evaluate(() => window.ANIM.load('/model.glb'));
+const info = await page.evaluate((fa) => window.ANIM.load('/model.glb', fa), frameAt);
 console.log('clips', JSON.stringify(info.clips));
 const dur = period || info.clips.reduce((m, c) => Math.max(m, c[1]), 0);
 const n = Math.round(dur * loops * fps);
