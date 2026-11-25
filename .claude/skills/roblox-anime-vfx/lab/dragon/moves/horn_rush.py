@@ -71,16 +71,16 @@ def wall(t0, t1, z0, z1, width, seed, scale=1.0):
                       rot=90, seed=seed, move=mv(0.35), locked=True, z=0.1, orient="VelocityPerpendicular",
                       transparency=[[0, 0.05], [0.6, 0.15], [1, 1]])
     # tongues standing on the front, riding it
-    for j in range(11):
-        u = (j - 5) / 5
-        dx = u * width * 0.46
-        h = (7.0 - 3.4 * u * u) * scale                      # tallest in the middle: a wall, not a row of candles
-        bz = -1.2 * (1 - u * u)                              # follows the arc of the front (centre leads)
-        m = {"from": [dx, h * 0.42, z0 + bz], "to": [dx, h * 0.42, z1 + bz], "t0": t0, "t1": t1, "ease": "out"}
-        for e in emit_stack("flame_tongue", m["from"], t0, size=[[0, h * 0.9], [1, h]], life=0.3,
-                            rate=[[t0, t1 - 0.06, 11]], seed=seed + 10 + j, layers=("rim", "mid", "core"), orient="FacingCameraWorldUp",
-                            move=m, locked=True, rot=u * 10):
-            out.append(e)
+    # the wall itself: ONE fused curtain of fire (flame_wall Beams), bowing forward, growing up on the charge and
+    # dying down at the end; it rides the front
+    life = t1 - t0 + 0.12
+    k1 = (t1 - t0) / life
+    zk = lambda z: [[0, z], [k1 * 0.35, z + (z1 - z0) * 0.7], [k1, z1 + (z1 - z0) * 0.0], [1, z1 - 0.6]]
+    hmax = 7.0 * scale
+    frm = [[k, [-width * 0.5, hmax * 0.5, z]] for k, z in zk(z0)]
+    to = [[k, [width * 0.5, hmax * 0.5, z]] for k, z in zk(z0)]
+    hk = [[0, hmax * 0.25], [0.12, hmax, "out"], [k1 * 0.8, hmax], [1, hmax * 0.15, "in"]]
+    out += wall_beam(frm, to, t0, life, hk, bow=[0, 0, -1.6 * scale], tlen=12 * scale)
     # rolling billows dropped behind the front (they stay where they're born: the wall leaves fire behind it)
     for j in range(5):
         dx = (j - 2) / 2 * width * 0.38

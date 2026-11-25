@@ -127,13 +127,10 @@ def build():
     L += molten_crack(g, T + 0.01, size=17, rot=20, glow_life=1.6, char_life=3.2, seed=590)
     L.append(scorch(g, T + 0.3, size=12, life=2.2, seed=591))
     # the ring of standing flames (signature): tongues stand up all around the ring for ~1 s, then burn down
-    for k in range(16):
-        a = k / 16 * 2 * math.pi + 0.1
-        r = 8.2 + 0.6 * math.sin(k * 2.3)
-        p = [g[0] + math.cos(a) * r, 0, g[2] + math.sin(a) * r]
-        tk = T + 0.06 + 0.012 * (k % 4)
-        L += burning(p, tk, T + 0.75, height=4.2 + 0.8 * (k % 3), every=0.16, life=0.45, seed=601 + k)
-        L += burning(p, T + 0.75, T + 1.1, height=2.2, every=0.2, life=0.4, seed=631 + k)
+    # the ring of fire (signature): ONE continuous curtain drawn around the crater in 0.12 s, then a lower ring as it
+    # burns down - fused fire, never separate tongues
+    L += ring_wall(g, 8.4, T + 0.05, 0.95, 5.2, sweep=0.12, start=0.3, fade=[[0, 0], [0.75, 0.05], [1, 1]])
+    L += ring_wall(g, 8.6, T + 0.72, 0.6, 2.6, sweep=0.1, start=2.0, reverse=True, fade=[[0, 0.1], [0.6, 0.3], [1, 1]])
     L.append(glow_pool(g, T + 0.1, 20, life=0.6, rate=[[T + 0.1, T + 1.0, 4]], peak=0.25, seed=661, hold=0.4))
     # black smoke column rolling up, after-smoke, shimmer, ash
     L.append(smoke([g[0], 1.5, g[2]], 0, rate=[[T + 0.06, T + 0.5, 22]], size=(5, 11), speed=(6, 11), life=(1.2, 1.8), seed=662,

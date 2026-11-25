@@ -2732,6 +2732,78 @@ def fire_scorch(seed=1101):
     return [np.clip(alpha, 0, 1)], [np.clip(val, 0, 1)]
 
 
+_WALL_SRC = {}
+
+
+def _wall_src():
+    if not _WALL_SRC:
+        _WALL_SRC["tongue"] = flame_tongue()
+        _WALL_SRC["flicker"] = flame_flicker()
+        _WALL_SRC["billow"] = flame_billow()
+    return _WALL_SRC
+
+
+def _flame_wall(seed):
+    """Continuous fire wall built FROM the approved cel flame matter, composed like real fire (u along, tileable; TOP
+    row = tips, BOTTOM row = base): a few BIG licking tongues (flame_tongue frames: swaying, curling, tearing at the
+    tip) dominate the skyline, medium tongues fill between them, small flickers stand in front, and rounded billow
+    lobes fuse the base - everything heavily overlapped so it reads as ONE mass of fire with an uneven skyline, not a
+    row of spikes. Drawn as one ribbon (camera-facing Beam for a moving wall, vertical Trail for a ring of fire).
+    Variants use different source frames, so swapping the 4 (~0.07 s) animates the wall. 1024x256."""
+    def fn():
+        src = _wall_src()
+        W, H = 1024 * SS, 256 * SS
+        rng = np.random.default_rng(seed)
+        var = seed % 10
+        out = {L: np.zeros((H, W), np.float32) for L in ("rim", "mid", "core")}
+
+        def place(fr, cx, w, h, base_frac, flip):
+            for L in ("rim", "mid", "core"):
+                a = fr[L][:, ::-1] if flip else fr[L]
+                a = np.clip(np.asarray(Image.fromarray(np.ascontiguousarray(a).astype(np.float32)).resize((w, h), Image.LANCZOS), np.float32), 0, 1)
+                y0 = H - int(h * base_frac)
+                ys, ye = max(0, y0), min(H, y0 + h)
+                if ye <= ys:
+                    continue
+                xs = (np.arange(w) + cx - w // 2) % W
+                blk = out[L][ys:ye][:, xs]
+                out[L][ys:ye, :][:, xs] = np.maximum(blk, a[ys - y0:ye - y0])
+
+        # base: rounded billow lobes, wide and low
+        for j in range(9):
+            fr = src["billow"][4 + (j + var) % 4]
+            hb = int(H * rng.uniform(0.7, 0.95))
+            place(fr, int(W * (j + rng.uniform(-0.3, 0.3)) / 9), int(hb * 1.5), hb, 0.62, rng.random() < 0.5)
+        # big licking tongues (4) - their sway, curl and torn tips give the skyline
+        for j in range(4):
+            fr = src["tongue"][(4 + j * 2 + var) % 7 + 3]
+            hb = int(H * rng.uniform(1.02, 1.14))
+            place(fr, int(W * (j + rng.uniform(-0.15, 0.15)) / 4), int(hb * 1.25), hb, 0.98, rng.random() < 0.5)
+        # medium tongues between them
+        for j in range(7):
+            fr = src["tongue"][(3 + j + var) % 6 + 3]
+            hb = int(H * rng.uniform(0.68, 0.86))
+            place(fr, int(W * (j + 0.5 + rng.uniform(-0.2, 0.2)) / 7), int(hb * 1.3), hb, 0.98, rng.random() < 0.5)
+        # small flickers in front
+        for j in range(10):
+            fr = src["flicker"][(j * 3 + var * 5) % 16]
+            hb = int(H * rng.uniform(0.45, 0.62))
+            place(fr, int(W * (j + rng.uniform(-0.3, 0.3)) / 10), int(hb * 1.2), hb, 0.98, rng.random() < 0.5)
+
+        hh = 1 - (np.arange(H) + 0.5) / H
+        Hh = np.repeat(hh[:, None], W, 1)
+        out["mid"] = np.maximum(out["mid"], out["core"])
+        out["core"] = out["core"] * ss(Hh, 0.09, 0.04)             # white-gold only as a thin hot base
+        out["rim"] = np.maximum(out["rim"], out["mid"])
+        for L in ("rim", "mid", "core"):
+            out[L] = out[L] * ss(Hh, 0.995, 0.94)
+        tight = _blurw(out["rim"], H * 0.03, True) * 1.3
+        wide = _blurw(out["rim"], H * 0.1, True) * 1.9
+        out["glow"] = np.clip(np.maximum(tight, wide), 0, 1) * 0.85
+        return out
+    return fn
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2838,6 +2910,10 @@ LIB = {
     "ash_flakes":    (ash_flakes,    "shaded", 4, 0, "smoke"),
     "anime_glint":   (anime_glint,   "cel", 4, 0, "dragonfire"),
     "fire_scorch":   (fire_scorch,   "shaded", 1, 0, "soot"),
+    "flame_wall_1": (_flame_wall(3101), "cel", 0, 0, "dragonfire"),
+    "flame_wall_2": (_flame_wall(3102), "cel", 0, 0, "dragonfire"),
+    "flame_wall_3": (_flame_wall(3103), "cel", 0, 0, "dragonfire"),
+    "flame_wall_4": (_flame_wall(3104), "cel", 0, 0, "dragonfire"),
 }
 
 PALETTES = {

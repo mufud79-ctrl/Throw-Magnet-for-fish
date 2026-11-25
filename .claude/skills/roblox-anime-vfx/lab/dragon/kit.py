@@ -689,3 +689,61 @@ def follow_cam(pose, dur, base=None, step=0.05, y_follow=0.0):
         pos.append([round(i / n, 4), R([P0[0] + o[0], P0[1] + o[1] * y_follow, P0[2] + o[2]])])
         look.append([round(i / n, 4), R([L0[0] + o[0], L0[1] + o[1] * y_follow, L0[2] + o[2]])])
     return {"pos": pos, "look": look, "fov": base["fov"]}
+
+
+# ---------------------------------------------------------------- fire walls (one fused ribbon of flame_wall, never candles)
+WALLS = [f"flame_wall_{i}" for i in range(1, 5)]
+
+
+def _lerp_keys(A, B, f):
+    """Point f of the way from keys A to keys B (both constant points or [[k, p], ...] keyed on the same k)."""
+    if A and isinstance(A[0], list):
+        return [[a[0], R([x + (y - x) * f for x, y in zip(a[1], b[1])])] + a[2:] for a, b in zip(A, B)]
+    return R([x + (y - x) * f for x, y in zip(A, B)])
+
+
+def wall_beam(frm, to, t0, life, height, *, pal="fire", tlen=18, swap=0.07, tr=None, speed=0.0, flip=True, taper=0.22, end=0.3, bow=None):
+    """A moving wall of fire: camera-facing Beams spanning frm -> to (keys over the beam's life allowed); beam width =
+    the wall's height (the centre line sits at mid-height). Three spans: the end spans taper to `end` x height so the
+    wall fades into short flames at its edges instead of a cut-off rectangle. No glow layer (a glow Beam shows its
+    rectangle). `height` may be keys over life [[k, h], ...]."""
+    P = PALS[pal]
+    out = []
+    a, b = (to, frm) if flip else (frm, to)
+    hk = height if isinstance(height, list) else [[0, height], [1, height]]
+    pts = [a, _lerp_keys(a, b, taper), _lerp_keys(a, b, 1 - taper), b]
+    if bow:                                   # push the inner points along `bow` (e.g. [0, 0, -2]): the wall bows forward
+        def push(K):
+            if K and isinstance(K[0], list):
+                return [[k[0], R([x + d for x, d in zip(k[1], bow)])] + k[2:] for k in K]
+            return R([x + d for x, d in zip(K, bow)])
+        pts[1], pts[2] = push(pts[1]), push(pts[2])
+    spans = [(0, 1, end, 1.0), (1, 2, 1.0, 1.0), (2, 3, 1.0, end)]
+    for i, j, w0, w1 in spans:
+        seg_len = taper if i != 1 else 1 - 2 * taper
+        for L in ("rim", "mid", "core"):
+            out.append({"type": "beam", "from": pts[i], "to": pts[j], "t0": t0, "life": life, "textures": [f"{w}_{L}" for w in WALLS],
+                        "swap": swap, "textureLength": tlen * (1 if i == 1 else 0.6), "textureSpeed": speed, "segments": 8,
+                        "color": P["HOT"][L], "lightEmission": LE[L], "brightness": BR[L],
+                        "width": [[k, [v * w0, v * w1]] + e for k, v, *e in hk],
+                        "transparency": (tr[L] if isinstance(tr, dict) else tr) if tr is not None else 0})
+    return out
+
+
+def ring_wall(centre, radius, t0, life, height, *, sweep=0.12, pal="fire", tlen=16, swap=0.07, start=0.0, reverse=False, fade=None):
+    """A ring of fire: a vertical Trail (up = world Y) drawn around the circle in `sweep` s; the curtain it leaves IS the
+    ring (one continuous fused fire, not separate tongues). The trail point rides at mid-height."""
+    P = PALS[pal]
+    n = 48
+    path = []
+    for i in range(n + 1):
+        u = i / n
+        a = start + (-1 if reverse else 1) * u * 2 * math.pi * 1.04
+        path.append([R(t0 + sweep * u, 4), R([centre[0] + math.cos(a) * radius, height / 2, centre[2] + math.sin(a) * radius])])
+    out = []
+    for L in ("rim", "mid", "core"):
+        out.append({"type": "trail", "path": path, "at": path[0][1], "t0": t0, "t1": t0 + sweep, "lifetime": life, "width": height,
+                    "up": [0, 1, 0], "textures": [f"{w}_{L}" for w in WALLS], "swap": swap, "textureMode": "Wrap", "textureLength": tlen,
+                    "color": P["HOT"][L], "lightEmission": LE[L], "brightness": BR[L],
+                    "transparency": fade or [[0, 0], [0.7, 0.1], [1, 1]]})
+    return out

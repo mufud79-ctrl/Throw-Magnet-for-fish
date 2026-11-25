@@ -146,3 +146,13 @@ around the body) with flame bursts at take-off and a mid-air boost; apex claw sw
 fire trail; impact = mono frame + hit-stop 0.15 + crater + molten_crack + fire_ring + 16 standing flame spots that burn
 down + black smoke column + after-smoke / shimmer / ash. Follow camera with y_follow 0.8 and a wider base framing
 (a 16-stud leap leaves the default frame). Long-lived trails on a vertical dive read as laser lines: keep them short.
+
+### Fused fire walls (user: "the flames look individual vs a large combined flame like real life")
+Rows/rings of separate tongue particles read as candles. New `flame_wall_1..4` strips (1024x256, tile in u, TOP = tips):
+composed FROM the approved cel matter like real fire - 4 big swaying flame_tongue frames dominate the skyline, medium
+tongues between, small flickers in front, billow lobes fusing the base, heavily overlapped (each gold body covers its
+neighbours' outlines). Two from-scratch attempts were rejected first: a flat clip-art curtain ("doesn't fit our style")
+and evenly spaced flicker teardrops ("spikes, not fire"). Lesson: fire walls need a size hierarchy and an uneven skyline.
+Drawn as ONE ribbon: `kit.wall_beam` (camera-facing Beams, width = wall height, three spans with tapered ends, optional
+bow; flip=True puts the tips up; no glow Beam - it shows its rectangle) and `kit.ring_wall` (a vertical Trail drawn
+around the circle in ~0.12 s; the curtain it leaves is the ring). Horn Rush and Sky Drop now use them.
