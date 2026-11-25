@@ -100,3 +100,7 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
   Open mouth with red interior, fangs and tongue modelled (rig the jaw to close). Body much thicker; strong jointed
   legs. Weak spots: talons are small; the tail still narrows into a thin neck right before the curl fan (thicken in
   rig_dragon.py); whiskers come out as 3-4 strands per side (pick 2 per side or merge).
+- Hybrid v6 concept "becoming the dragon": assets/source_art/dragon/hybrid_r15_v6.png (Figma gpt-image-2.5-flare,
+  1 image, file "Anime VFX source art"). Scale plates swallow the arms with 3-claw talon gauntlets (no fingers), scales
+  climb the neck and back of the head, horns + back pair burst out, a glowing spine ridge, a short thick curl-fan tail
+  off the ground, molten fire cracks where skin turns to scale. Waiting for the user's verdict.
