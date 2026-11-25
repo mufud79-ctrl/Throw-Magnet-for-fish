@@ -677,7 +677,7 @@ def glint(at, t, size=4, life=0.22, pal="fire", seed=90, rot=0):
 
 
 
-def follow_cam(pose, dur, base=None, step=0.05):
+def follow_cam(pose, dur, base=None, step=0.05, y_follow=0.0):
     """The gameplay camera follows the player (no cinematic moves): base framing + the caster's pose offset."""
     base = base or GAMEPLAY_CAM
     P0, L0 = base["pos"][0][1], base["look"][0][1]
@@ -686,6 +686,6 @@ def follow_cam(pose, dur, base=None, step=0.05):
     for i in range(n + 1):
         t = dur * i / n
         o = _keys(pose.get("offset"), t, [0, 0, 0])
-        pos.append([round(i / n, 4), R([P0[0] + o[0], P0[1], P0[2] + o[2]])])
-        look.append([round(i / n, 4), R([L0[0] + o[0], L0[1], L0[2] + o[2]])])
+        pos.append([round(i / n, 4), R([P0[0] + o[0], P0[1] + o[1] * y_follow, P0[2] + o[2]])])
+        look.append([round(i / n, 4), R([L0[0] + o[0], L0[1] + o[1] * y_follow, L0[2] + o[2]])])
     return {"pos": pos, "look": look, "fov": base["fov"]}

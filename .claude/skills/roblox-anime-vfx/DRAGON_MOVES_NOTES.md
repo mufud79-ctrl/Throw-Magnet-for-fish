@@ -139,3 +139,10 @@ as a vector hoop from behind; white gust_lines sprites read as vertical bars whe
 VelocityParallel needles); the camera must FOLLOW the caster (`kit.follow_cam`) - gameplay cameras track the player.
 Bug fixed: `scorch()` and the calling-card char decals sampled 4x4 sheets with FlipbookLayout None (grid of 16
 asterisks). New single-image `fire_scorch`; char decals play their sheet (hidden until the glow cools).
+
+## Move 3: Sky Drop (hybrid C) - built
+`lab/dragon/moves/sky_drop.py` -> `dragon_03_SkyDrop.json`. Leap rides two spiral flame ribbons (trails on a helix
+around the body) with flame bursts at take-off and a mid-air boost; apex claw swirls; stretched dive with a short
+fire trail; impact = mono frame + hit-stop 0.15 + crater + molten_crack + fire_ring + 16 standing flame spots that burn
+down + black smoke column + after-smoke / shimmer / ash. Follow camera with y_follow 0.8 and a wider base framing
+(a 16-stud leap leaves the default frame). Long-lived trails on a vertical dive read as laser lines: keep them short.
