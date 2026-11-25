@@ -1948,15 +1948,27 @@ def _depth(F, scale, wrap=False):
     return 1 - np.exp(-d / max(1e-6, scale))
 
 
+FIRE_CEL = os.environ.get("FIRE_CEL", "1") != "0"   # anime cel tones (hard edges, flat bands); 0 = the soft painted v1
+
+
 def _fire_layers(F, heat, cool=0.0, e=0.02, mid_th=0.3, core_th=0.8, vol=None, glow=(0.012, 0.04), gk=0.85, wrap=False,
                  core_extra=None):
-    sil = ss(F, 0.0, e)
     mt = mid_th + (0.98 - mid_th) * cool ** 0.8
     ct = core_th + 0.35 * cool
-    mid = sil * ss(heat, mt, mt + 0.07)
-    if vol is not None:
-        mid = mid * (0.5 + 0.5 * vol)
-    core = sil * ss(heat, ct, ct + 0.05)
+    if FIRE_CEL:
+        # anime cel: a crisp silhouette, a hard-edged gold body with ONE flat shadow band (mid at 55% over the crimson
+        # rim reads as an orange tone), a hard white-gold hot spot. Same layers, same emitter conventions.
+        sil = ss(F, 0.0, e * 0.3)
+        mid = sil * ss(heat, mt, mt + 0.018)
+        if vol is not None:
+            mid = mid * np.where(blur(vol, SS * 1.5) < 0.5, 0.5, 1.0)
+        core = sil * ss(heat, ct - 0.07, ct - 0.07 + 0.015)
+    else:
+        sil = ss(F, 0.0, e)
+        mid = sil * ss(heat, mt, mt + 0.07)
+        if vol is not None:
+            mid = mid * (0.5 + 0.5 * vol)
+        core = sil * ss(heat, ct, ct + 0.05)
     if core_extra is not None:
         core = np.maximum(core, core_extra * sil)
     n = min(F.shape)
@@ -2682,6 +2694,29 @@ def ash_flakes(n=16, seed=1081):
     return alphas, vals
 
 
+def anime_glint(n=16, seed=1091):
+    """Anime star glint (one-shot 16f, cel layers): a sharp 4-point star (long vertical + horizontal spikes, short
+    diagonals) snaps open in 1 frame, rotates a little, its spikes retract and thin to nothing. Hit sparkles, the hot
+    point of a strike, a horn flash."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        k = 1.0 if i < 2 else (1 - t) ** 1.4
+        rot = 0.25 * t
+        da = a - rot
+        spike = np.maximum(np.abs(np.cos(da)) ** 60, np.abs(np.sin(da)) ** 60) * 0.95 + np.abs(np.sin(2 * da)) ** 40 * 0.42
+        reach = (0.05 + 0.88 * spike) * k
+        F = (reach - r) / 0.01
+        lay = {"rim": np.clip(ss(F, 0, 1.2), 0, 1)}
+        lay["mid"] = np.clip(ss((reach * 0.7 - r) / 0.01, 0, 1.2), 0, 1)
+        lay["core"] = np.clip(ss((reach * 0.38 - r) / 0.01, 0, 1.2) * (1 if i < 8 else 0.5), 0, 1)
+        lay["glow"] = np.clip(blur(lay["rim"], S * 0.03) * 2.0 + np.exp(-(r / (0.18 * k + 1e-3)) ** 2) * 0.5 * k, 0, 1) * 0.85
+        frames.append(lay)
+    return frames
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2786,6 +2821,7 @@ LIB = {
     "heat_haze":     (heat_haze,     "white", 4, 0, "white"),
     "smoke_wisp":    (smoke_wisp,    "shaded", 4, 0, "charsmoke"),
     "ash_flakes":    (ash_flakes,    "shaded", 4, 0, "smoke"),
+    "anime_glint":   (anime_glint,   "cel", 4, 0, "dragonfire"),
 }
 
 PALETTES = {

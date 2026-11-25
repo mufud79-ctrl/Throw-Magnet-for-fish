@@ -122,3 +122,11 @@ rides the hands through `kit.hand()` FK until rig v2 `attach` exists - GAP for t
   gust_lines, heat_haze (loop), smoke_wisp, ash_flakes + kit helpers wisps / swirl / flicker / ember_spray / smear /
   gusts / haze / smoke_wisps / ash. Rule: every beat gets filler (swirl on charge, smear on swing, spray on hit, wisps
   and after-smoke after), so no frame is only the big shape.
+
+### Anime cel pass (user: "could look more anime to fit our style")
+`_fire_layers` FIRE_CEL mode (default on; FIRE_CEL=0 paints the soft v1): crisp silhouette, hard-edged gold body with
+ONE flat shadow band (mid at 50% over the crimson rim = an orange tone), a larger hard white-gold inner flame. Repainted
+flame_billow, flame_tongue, flame_strip_1-4, claw_rake, fire_crescent, fire_ring, fire_impact, flame_flicker. Stroke
+sheets (cracks, gouges, slice, wisps, swirl, sprays) were already crisp. New `anime_glint` (4-point star) + kit.glint.
+Comparison: assets/previews/dragon/cel_compare.jpg. Wide glow trails against the sky read as pale haze blocks: keep
+glow ribbons slim (<= 1.6) and translucent.

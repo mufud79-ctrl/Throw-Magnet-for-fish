@@ -668,3 +668,8 @@ def ash(at, t0, t1, rate, part=(20, 2, 20), seed=89, fall=-2.5):
         "Lifetime": [2.0, 3.0], "Speed": [0.5, 1.5], "SpreadAngle": [180, 180], "Acceleration": [0, fall, 0], "Drag": 1.2,
         "Rotation": [0, 360], "RotSpeed": [-120, 120], "Transparency": [[0, 1], [0.1, 0.1], [0.85, 0.2], [1, 1]],
         "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random", "FlipbookFramerate": [0.01, 0.01], "FlipbookStartRandom": True, "ZOffset": 0.1}}
+
+
+def glint(at, t, size=4, life=0.22, pal="fire", seed=90, rot=0):
+    """Anime star glint (anime_glint): the sharp 4-point sparkle on a strike's hot point."""
+    return emit_stack("anime_glint", at, t, size=size, life=life, pal=pal, cool=False, rot=rot, seed=seed, z=0.9)

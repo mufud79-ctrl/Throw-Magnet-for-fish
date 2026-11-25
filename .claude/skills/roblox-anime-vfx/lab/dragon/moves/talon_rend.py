@@ -61,7 +61,7 @@ def claw_trails(side, t0, t1, seed):
                         "transparency": [[0, 0], [0.4, 0.05], [0.8, 0.5], [1, 1]], "widthScale": [[0, 1], [0.6, 0.75], [1, 0.2]]})
     hp = hand_path(POSE, t0, t1, side, step=1 / 120, reach=2.2)
     out += trail_stack({"path": hp, "at": hp[0][1], "t0": t0, "t1": t1, "lifetime": 0.2, "faceCamera": True,
-                        "transparency": [[0, 0.2], [1, 1]], "widthScale": [[0, 1], [1, 0.3]]}, {"glow": 3.4}, layers=("glow",))
+                        "transparency": [[0, 0.45], [1, 1]], "widthScale": [[0, 1], [1, 0.3]]}, {"glow": 1.6}, layers=("glow",))
     return out
 
 
@@ -135,6 +135,7 @@ def build():
         L += smear(at, t, sz, rot, life=0.2, seed=431 + int(t * 100))
     for i, (t, sz) in enumerate(((T1, 5.0), (T2, 5.0), (T3, 8.5))):
         L += ember_spray([0.3, 3.4, -6.7], t + 0.02, size=sz, life=0.55, seed=441 + i, rot=30 * i)
+        L += glint([0.5 - 0.3 * i, 3.6 + 0.2 * i, -6.2], t + 0.02, size=3.5 + 1.5 * (i == 2), life=0.2, seed=471 + i, rot=15 * i)
     L.append(haze([0, 5.5, -6.5], 0.15, DUR, size=10, seed=451))
     L.append(smoke_wisps([0, 0.4, -9.4], T3 + 0.25, DUR, 7, size=3.5, part=[6, 0.2, 2], seed=452))
     L.append(smoke_wisps([0, 3.5, -8.4], T3 + 0.1, DUR - 0.2, 4, size=4.0, part=[1.5, 2, 1.5], seed=453))
