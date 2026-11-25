@@ -29,7 +29,7 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 ## Credits
 | item | estimate | spent |
 |---|---|---|
-| Figma concept image | 1-2 images | 9 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3, hybrid v4), gpt-image-2.5-flare |
+| Figma concept image | 1-2 images | 11 images (+ sheet v4, hybrid v5) (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3, hybrid v4), gpt-image-2.5-flare |
 | Meshy multi-image-to-3D | 30 (cap 60) | - |
 
 ## Step 2: concept (direction change)
@@ -67,3 +67,9 @@ can rig it easier". dragon_sheet_v4_openmouth.png: jaw dropped ~40 deg in side +
 tongue modelled, so the jaw bone only has to close it), a THICK body tapering into a tail that stays thick into the
 curl fan, strong legs with clear joints, clean feet (3 forward toes + 1 back toe, one big ivory talon each) + a foot
 close-up. Meshy inputs: v4_view_side/top/front.png (+ v4_view_foot.png for reference). Re-run ~30 credits.
+
+## Step 2g: hybrid v5 from dragon pieces
+User: "Looks good (sheet v4), make sure the hybrid matches the new references and uses pieces of that dragon model".
+hybrid_r15_v5.png: horns, mane-curl collar, mini open-mouthed dragon-head pauldrons, body-sleeve bracers with
+talons, spine ridge, tail with curl fan. All kitbashed from the one dragon mesh and texture, with no Meshy jobs for
+the hybrid. The crown and sash are dropped.
