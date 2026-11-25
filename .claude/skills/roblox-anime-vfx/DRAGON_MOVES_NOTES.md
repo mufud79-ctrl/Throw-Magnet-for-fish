@@ -110,3 +110,15 @@ Diagnosis from full-size frames, and the fixes (kit-level, so every move gets th
 ## Move 1: Talon Rend (hybrid Z) - built, composition pass done
 `lab/dragon/moves/talon_rend.py` -> `dragon_01_TalonRend.json`. Stand-in: plain avatar (no hybrid pieces; claw fire
 rides the hands through `kit.hand()` FK until rig v2 `attach` exists - GAP for the rigging session).
+
+### Fluidity pass (user: "stiff and boring, needs to be fluid, hands need a flame trail"; "it's an ability, not a cutscene")
+- Poses: `kit.smooth()` Catmull-Rom control keys resampled at 60 Hz: arms swing on arcs with overshoot and settle, the
+  torso leads each swing (overlap). Linear 3-key snaps read stiff.
+- Claw trails: three flame trails per hand riding the three claw tips (`hand_path(..., lateral=, fwd=)`), 0.26 s life,
+  hot head cooling along the trail: the swipe is DRAWN by the motion.
+- Camera: one fixed gameplay view for every move (`GAMEPLAY_CAM`: behind, above, right of the caster, FOV 70).
+  No cinematic cameras: these are abilities. Light shakes on hits only.
+- Filler matter (new, all moves): fire_wisp, fire_swirl (loop), flame_flicker (loop), ember_burst, smear_arc,
+  gust_lines, heat_haze (loop), smoke_wisp, ash_flakes + kit helpers wisps / swirl / flicker / ember_spray / smear /
+  gusts / haze / smoke_wisps / ash. Rule: every beat gets filler (swirl on charge, smear on swing, spray on hit, wisps
+  and after-smoke after), so no frame is only the big shape.

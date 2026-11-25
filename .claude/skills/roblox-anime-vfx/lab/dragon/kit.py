@@ -431,14 +431,14 @@ def _rz(v, a):
     return [v[0] * c - v[1] * s, v[0] * s + v[1] * c, v[2]]
 
 
-def hand(pose, t, side="R", reach=1.9):
+def hand(pose, t, side="R", reach=1.9, lateral=0.0, fwd=0.0):
     """World position of the previewer avatar's hand at effect time t (same FK as poseAvatar in lab/page/vfx.js:
     root (feet) > upper (pivot at the hips, lean = X, twist = Y) > arm (shoulder, X then Z)). Lets claw fire ride the
     hands until rig v2's `attach` layer exists."""
     D = math.pi / 180
     ax = _keys(pose.get("arm" + side), t, 0) * D
     az = _keys(pose.get("arm" + side + "z"), t, 0) * D
-    v = [0, -reach, 0]
+    v = [lateral, -reach, fwd]
     v = _rz(v, az); v = _rx(v, ax)       # three.js Euler XYZ: R = Rx * Ry * Rz
     v = [v[0] + (1.5 if side == "R" else -1.5), v[1] + 1.9, v[2]]
     lean = _keys(pose.get("lean"), t, 0) * D
@@ -450,9 +450,33 @@ def hand(pose, t, side="R", reach=1.9):
     return [v[0] * sc[0] + off[0], v[1] * sc[1] + off[1], v[2] * sc[2] + off[2]]
 
 
-def hand_path(pose, t0, t1, side="R", step=1 / 60, reach=1.9):
+def hand_path(pose, t0, t1, side="R", step=1 / 60, reach=1.9, lateral=0.0, fwd=0.0):
+    """Dense time-keyed path of a point on the hand (lateral / fwd offsets in the arm's frame: claw tips)."""
     n = max(2, int((t1 - t0) / step))
-    return [[R(t0 + (t1 - t0) * i / n, 4), R(hand(pose, t0 + (t1 - t0) * i / n, side, reach))] for i in range(n + 1)]
+    return [[R(t0 + (t1 - t0) * i / n, 4), R(hand(pose, t0 + (t1 - t0) * i / n, side, reach, lateral, fwd))] for i in range(n + 1)]
+
+
+def smooth(ctrl, dt=1 / 60):
+    """Fluid pose curves: Catmull-Rom through control keys [[t, v], ...] (v scalar or list), resampled densely, so arms
+    swing on arcs with ease and overshoot instead of snapping linearly between a few keys. Add an overshoot key past
+    the target and a settle key after it for follow-through."""
+    ts = [c[0] for c in ctrl]
+    vs = [c[1] for c in ctrl]
+    vec = isinstance(vs[0], list)
+    def at(i):
+        return vs[max(0, min(len(vs) - 1, i))]
+    out = []
+    t = ts[0]
+    while t <= ts[-1] + 1e-9:
+        j = max(0, min(len(ts) - 2, next((k for k in range(len(ts) - 1) if t <= ts[k + 1]), len(ts) - 2)))
+        u = (t - ts[j]) / ((ts[j + 1] - ts[j]) or 1)
+        p0, p1, p2, p3 = at(j - 1), at(j), at(j + 1), at(j + 2)
+        def cr(a, b, c, d):
+            return 0.5 * ((2 * b) + (-a + c) * u + (2 * a - 5 * b + 4 * c - d) * u * u + (-a + 3 * b - 3 * c + d) * u ** 3)
+        v = [cr(a, b, c, d) for a, b, c, d in zip(p0, p1, p2, p3)] if vec else cr(p0, p1, p2, p3)
+        out.append([round(t, 4), R(v)])
+        t += dt
+    return out
 
 
 def dragon(path, t0, life, *, jaw=None, scale=1.3, color=AZURE, brightness=1.15, transparency=None, roll=None, model=None):
@@ -547,3 +571,100 @@ def write(fx, path, form="hybrid"):
 
 def out_path(here, name):
     return os.path.join(here, f"{name}.json")
+
+
+# ---------------------------------------------------------------- the preview camera
+# Moves are abilities, not cutscenes: one fixed third-person gameplay view (behind, above and right of the caster,
+# who faces -Z), the same for every hybrid move, so the effects are judged from what a player actually sees.
+GAMEPLAY_CAM = {"pos": [[0, [7.2, 6.2, 6.2]], [1, [7.2, 6.2, 6.2]]], "look": [[0, [-1.2, 3.0, -5.5]], [1, [-1.2, 3.0, -5.5]]], "fov": [[0, 70], [1, 70]]}
+# Full form: the same idea pulled back for a ~23-stud dragon.
+GAMEPLAY_CAM_FULL = {"pos": [[0, [12, 16, 26]], [1, [12, 16, 26]]], "look": [[0, [0, 6, -8]], [1, [0, 6, -8]]], "fov": [[0, 62], [1, 62]]}
+
+
+# ---------------------------------------------------------------- filler matter (the glue: use generously)
+def wisps(at, t0, t1, rate, size=2.2, life=0.45, pal="fire", seed=81, path=None, rots=(-20, 25), rise=4.0, locked=False):
+    """Curling fire wisps shed off a source (hands, horns, a burning target, the dragon's body). One deterministic
+    stack per fixed rotation (stacks can't share random numbers)."""
+    out = []
+    for k, rot in enumerate(rots):
+        for e in emit_stack("fire_wisp", at, t0, size=[[0, size * 0.85], [1, size * 1.1]], life=life, pal=pal, rot=rot,
+                            seed=seed + k, rate=[[t0, t1, rate / len(rots)]], layers=("rim", "mid", "core"),
+                            orient="FacingCameraWorldUp", speed=rise, direction=None, locked=locked):
+            if path:
+                e["path"] = path
+            out.append(e)
+    return out
+
+
+def swirl(at, t0, t1, size, pal="fire", seed=82, path=None, fps=22, rot=0):
+    """Looping charge swirl (fire_swirl) riding a point: one long particle that loops while the charge lasts."""
+    out = emit_stack("fire_swirl", at, t0, size=[[0, size * 0.6], [0.15, size], [0.85, size], [1, size * 0.4]], life=t1 - t0, pal=pal,
+                     cool=False, mode="Loop", fps=fps, seed=seed, locked=True, rot=rot, transparency=[[0, 1], [0.1, 0], [0.85, 0], [1, 1]])
+    if path:
+        for e in out:
+            e["path"] = path
+    return out
+
+
+def flicker(base, t0, t1, height, pal="fire", seed=83, path=None):
+    """A small looping flame standing on `base` for t0..t1 (one long Loop particle)."""
+    at = [base[0], base[1] + height * 0.42, base[2]]
+    out = emit_stack("flame_flicker", at, t0, size=height, life=t1 - t0, pal=pal, cool=False, mode="Loop", fps=20, seed=seed,
+                     orient="FacingCameraWorldUp", locked=True, layers=("glow", "rim", "mid", "core"),
+                     transparency=[[0, 1], [0.08, 0], [0.75, 0.1], [1, 1]])
+    if path:
+        for e in out:
+            e["path"] = path
+    return out
+
+
+def ember_spray(at, t, size=6, life=0.5, pal="fire", seed=84, rot=0):
+    """Radial spray of hot droplets arcing down (ember_burst): the small layer on every hit."""
+    return emit_stack("ember_burst", at, t, size=[[0, size * 0.9], [1, size * 1.1]], life=life, pal=pal, seed=seed, rot=rot, z=0.55,
+                      layers=("glow", "rim", "mid", "core"))
+
+
+def smear(at, t, size, rot, life=0.2, pal="fire", seed=85):
+    """Motion smear along a swing (smear_arc): snaps on in 2 frames, streaks off. Head at the swing's end."""
+    return emit_stack("smear_arc", at, t, size=size, life=life, pal=pal, rot=rot, seed=seed, z=0.2, cool=False, layers=("rim", "mid", "core"))
+
+
+def gusts(at, t, size=8, life=0.35, rot=0, color="#ffe2b0", seed=86, tr=0.25, rate=None, orient="FacingCamera", move=None):
+    """Wind gust lines (white sheet, warm tint, additive-ish)."""
+    e = _fb("gust_lines", at, t, size, life, color=color, le=0.6, br=1.2, rot=rot, z=0.3, tr=[[0, tr], [0.7, tr + 0.2], [1, 1]],
+            seed=seed, orient=orient)
+    if rate:
+        e.pop("emits"); e["rate"] = rate
+    if move:
+        e["move"] = move
+    return e
+
+
+def haze(at, t0, t1, size=8, seed=87, path=None, tr=0.82):
+    """Heat shimmer above fire (heat_haze loop): faint, warm, alpha-blended."""
+    e = _fb("heat_haze", at, t0, size, t1 - t0, color="#ffd2a0", le=0.25, br=1, z=-0.2, tr=[[0, 1], [0.15, tr], [0.8, tr], [1, 1]],
+            seed=seed, mode="Loop", fps=12)
+    if path:
+        e["path"] = path
+    return e
+
+
+def smoke_wisps(at, t0, t1, rate, size=4, life=(1.0, 1.6), seed=88, part=None, color=SMOKE):
+    """Thin curling after-smoke rising off burnt things (smoke_wisp, random)."""
+    e = {"type": "emitter", "at": R(at), "rate": [[t0, t1, rate]], "seed": seed, "props": {
+        "Texture": "smoke_wisp", "Color": color, "LightEmission": 0, "Brightness": 1, "Size": [[0, size * 0.8], [1, size * 1.3]],
+        "Lifetime": list(life), "Speed": [1.5, 3], "SpreadAngle": [15, 15], "Rotation": [-15, 15], "Acceleration": [0, 1.5, 0],
+        "Transparency": [[0, 1], [0.15, 0.35], [0.7, 0.5], [1, 1]], "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot",
+        "Orientation": "FacingCameraWorldUp", "ZOffset": -0.6}}
+    if part:
+        e["part"] = part
+    return e
+
+
+def ash(at, t0, t1, rate, part=(20, 2, 20), seed=89, fall=-2.5):
+    """Grey ash flakes drifting down (ash_flakes, random frames)."""
+    return {"type": "emitter", "at": R(at), "rate": [[t0, t1, rate]], "seed": seed, "part": list(part), "props": {
+        "Texture": "ash_flakes", "Color": "#9a948e", "LightEmission": 0, "Brightness": 1, "Size": [0.4, 0.9],
+        "Lifetime": [2.0, 3.0], "Speed": [0.5, 1.5], "SpreadAngle": [180, 180], "Acceleration": [0, fall, 0], "Drag": 1.2,
+        "Rotation": [0, 360], "RotSpeed": [-120, 120], "Transparency": [[0, 1], [0.1, 0.1], [0.85, 0.2], [1, 1]],
+        "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random", "FlipbookFramerate": [0.01, 0.01], "FlipbookStartRandom": True, "ZOffset": 0.1}}

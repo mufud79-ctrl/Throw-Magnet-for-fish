@@ -2432,6 +2432,256 @@ def soft_glow():
     return np.clip(np.exp(-(r / 0.42) ** 2) * 0.85 + np.exp(-(r / 0.16) ** 2) * 0.25, 0, 1) * ss(r, 0.98, 0.8)
 
 
+# ================================================================ DRAGON FILLER MATTER (the glue between the big shapes)
+def _stroke_layers(strokes, ks=(1.0, 0.55, 0.2), soft=0.8, warp=None, glow=(0.012, 0.035), gk=0.85, W=None, H=None):
+    """Tapered painted strokes -> explicit fire layers (rim = full width, mid = inner, core = thin hot line)."""
+    W = W or S; H = H or S
+    lay = {}
+    for L, k in zip(("rim", "mid", "core"), ks):
+        f = _cel_draw(strokes, W, H, k) if k > 0.01 else np.zeros((H, W), np.float32)
+        if warp is not None:
+            f = pc.warp(f, warp[0], warp[1])
+        lay[L] = np.clip(blur(f, SS * soft), 0, 1)
+    n = min(W, H)
+    lay["glow"] = np.clip(np.maximum(blur(lay["rim"], n * glow[0]) * 1.3, blur(lay["rim"], n * glow[1]) * 1.9), 0, 1) * gk
+    return lay
+
+
+def _px(x, y):
+    return np.array([(x + 1) / 2 * S, (1 - y) / 2 * S])
+
+
+def fire_wisp(n=16, seed=1001):
+    """Curling flame wisp (one-shot 16f): a thin tapered S-ribbon licks up out of the bottom of the cell, curls as it
+    rises, thins and breaks apart at the top. Filler around burning hands, hits and bodies; randomise Rotation."""
+    rng = np.random.default_rng(seed)
+    wx = (noise(S, S, 30, 30, seed + 1, 3) - 0.5) * S * 0.02
+    wy = (noise(S, S, 30, 30, seed + 2, 3) - 0.5) * S * 0.02
+    frames = []
+    ph0 = rng.uniform(0, TAU)
+    for i in range(n):
+        t = i / (n - 1)
+        top = -0.85 + 1.75 * ease_out(min(1.0, (i + 1) / 7), 1.6)
+        bot = -0.9 + 1.2 * max(0.0, (t - 0.35) / 0.65) ** 1.3          # the base lifts off: the wisp detaches and rises
+        pts, ws = [], []
+        m = 22
+        for j in range(m + 1):
+            u = j / m
+            y = bot + (top - bot) * u
+            amp = 0.07 + 0.22 * u
+            x = amp * math.sin(ph0 + u * 5.2 - t * 4.0) + 0.06 * math.sin(u * 11 + t * 7)
+            pts.append(_px(x, y))
+            ws.append(S * 0.075 * (1 - t * 0.55) * math.sin(math.pi * min(1, u * 1.1)) ** 0.7 * (1 - u) ** 0.6)
+        ws[0] = ws[-1] = 0
+        lay = _stroke_layers([(pts, np.array(ws), 0.0)], ks=(1.0, 0.55 * (1 - 0.6 * t), 0.18 * max(0, 1 - t * 2.2)), warp=(wx, wy))
+        frames.append(_fade(lay, 1 - ss(t, 0.7, 1.0) * 0.95))
+    return frames
+
+
+def fire_swirl(n=16, seed=1011):
+    """Charge swirl (loop 16f): three torn flame arcs orbit a ring (1/3 turn per loop = seamless), hot heads, tails
+    cooling to crimson; a fainter inner pair counter-rotates. Wrap a charging claw, throat or fist."""
+    wx = (noise(S, S, 26, 26, seed + 1, 3) - 0.5) * S * 0.018
+    wy = (noise(S, S, 26, 26, seed + 2, 3) - 0.5) * S * 0.018
+    frames = []
+    for i in range(n):
+        ph = i / n * TAU / 3
+        strokes = []
+        for k in range(3):
+            for R0, span, w0, rot, sgn in ((0.62, 1.6, 0.075, ph, 1), (0.4, 1.0, 0.045, -ph * 2 + 1.0, -1)):
+                a0 = rot * sgn + k * TAU / 3
+                pts, ws = [], []
+                m = 18
+                for j in range(m + 1):
+                    u = j / m
+                    a = a0 - sgn * span * u
+                    r = R0 * (1 - 0.12 * u)
+                    pts.append(_px(math.cos(a) * r, math.sin(a) * r))
+                    ws.append(S * w0 * (1 - u) ** 0.9 * min(1, u * 8 + 0.2))
+                ws[-1] = 0
+                strokes.append((pts, np.array(ws), 0.0))
+        frames.append(_stroke_layers(strokes, ks=(1.0, 0.55, 0.2), warp=(wx, wy)))
+    return frames
+
+
+def flame_flicker(n=16, seed=1021):
+    """Small looping flame (loop 16f, seamless): a teardrop flame whose tongues scroll up exactly one noise period per
+    loop. Persistent burning spots, claws, horns, torches of the full-form body. Base at the bottom of the cell."""
+    x, y = coords(S)
+    tall = tnoise(S, S, 180, 60, seed, 4)
+    tg = tnoise(S, S, 120, 30, seed + 1, 3)
+    wx = tnoise(S, S, 240, 240, seed + 2, 2)
+    frames = []
+    for i in range(n):
+        o = int(S * i / n)
+        a = np.roll(tall, -o, axis=0)
+        b = np.roll(tg, -(o * 2) % S, axis=0)
+        c = np.roll(wx, -o, axis=0)
+        h = np.clip((y + 0.88) / 1.7, 0, 1)
+        xw = x + (c - 0.5) * 0.3 * h
+        wdt = 0.42 * (h ** 0.35) * (1 - h) ** 0.9 * 1.6 + 0.01
+        F = (1 - np.abs(xw) / wdt) * 0.6 + (a - 0.5) * (0.4 + 0.5 * h) + (b - 0.5) * 0.8 * h - 0.2 * h
+        F = np.where(y < -0.9, -1, F)
+        heat = _depth(F, S * 0.04) * (1.1 - 0.7 * h)
+        vol = shade(blur(np.clip(F, 0, None), 6), light=(-0.6, 0.6, 0.5), strength=120)
+        frames.append(_fire_layers(F, heat, mid_th=0.22, core_th=0.94, vol=vol, e=0.03))
+    return frames
+
+
+def ember_burst(n=16, seed=1031):
+    """Hit filler (one-shot 16f): a radial spray of hot droplets streaks out of the centre, arcs down under gravity,
+    shrinks and cools (heads hot white-gold, tails crimson)."""
+    rng = np.random.default_rng(seed)
+    drops = [(rng.uniform(0, TAU), rng.uniform(0.55, 1.0), rng.uniform(0.8, 1.2)) for _ in range(20)]
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        strokes = []
+        for th, v, w in drops:
+            def pos(tt):
+                d = 0.06 + 0.8 * v * (1 - (1 - tt) ** 2.2)
+                return math.cos(th) * d, math.sin(th) * d - 0.35 * tt ** 2
+            h = pos(t)
+            tl = pos(max(0.0, t - 0.12 - 0.08 * (1 - t)))
+            if max(abs(h[0]), abs(h[1])) > 0.95:
+                continue
+            ln = 1 - t ** 1.3
+            strokes.append(([_px(*tl), _px((tl[0] + h[0]) / 2, (tl[1] + h[1]) / 2), _px(*h)], np.array([0.0, 0.6, 1.0]) * S * 0.026 * w * ln + 1e-3, 0.0))
+        lay = _stroke_layers(strokes, ks=(1.0, 0.6, 0.25 * max(0, 1 - t * 1.6)), soft=0.6)
+        frames.append(_fade(lay, 1 - ss(t, 0.75, 1.0)))
+    return frames
+
+
+def smear_arc(n=16, seed=1041):
+    """Motion smear (one-shot 16f): a thin crescent of parallel brush streaks that snaps on in 2 frames along a swing
+    and streaks off from the tail. Behind every swing so motion reads fluid (no texture of its own: it's speed). Head
+    at the right."""
+    H, W = 300, 1400
+    u = np.linspace(0, 1, W)[None, :] * np.ones((H, 1))
+    v = np.linspace(0, 1, H)[:, None] * np.ones((1, W))
+    st = noise(H, W, 5, 260, seed + 1, 3)
+    st2 = noise(H, W, 9, 120, seed + 2, 3)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        front = 1 - ease_out((i + 1) / 2.5, 2.0)
+        back = 1 - (0.85 * min(1.0, max(0.0, (t - 0.1) / 0.8)) ** 1.1) * (1 - front)
+        q = np.clip((u - front) / max(1e-3, back - front), 0, 1)
+        inside = (u >= front) & (u <= back)
+        half = 0.42 * ss(u - front, 0, 0.05) * (1 - q) ** 0.7 * (1 - 0.4 * t) + 1e-4
+        band = np.clip(1 - np.abs(v - 0.5) / half, 0, 1)
+        streak = ss(st * 0.7 + st2 * 0.3, 0.35 + 0.35 * q + 0.2 * t, 0.6 + 0.3 * q + 0.2 * t)
+        F = np.where(inside, band ** 0.6 * streak, 0)
+        heat = np.where(inside, band * (1 - q) * (1 - 0.6 * t), 0)
+        lay = {"rim": np.clip(F * 1.3, 0, 1), "mid": np.clip(F * ss(heat, 0.25, 0.5), 0, 1), "core": np.clip(F * ss(heat, 0.65, 0.8), 0, 1)}
+        lay = {k: pc.polar_strip(f, S, 0.9, 0.55, math.radians(200), math.radians(200))[::-1, ::-1] for k, f in lay.items()}
+        lay["glow"] = np.clip(np.maximum(blur(lay["rim"], S * 0.012) * 1.2, blur(lay["rim"], S * 0.035) * 1.6), 0, 1) * 0.8
+        frames.append(lay)
+    return frames
+
+
+def gust_lines(n=16, seed=1051):
+    """Wind gust lines (one-shot 16f, white): six thin curling lines streak left -> right across the cell, each drawn
+    in from its tail and wiped out behind its head; one curls up at the end. Charges, dashes, the wind-blade breath."""
+    rng = np.random.default_rng(seed)
+    lines = []
+    for k in range(6):
+        y0 = -0.6 + 1.2 * k / 5 + rng.uniform(-0.06, 0.06)
+        curl = rng.uniform(0.15, 0.35) * (1 if k == 2 else 0.3)
+        delay = rng.uniform(0, 0.25)
+        pts = []
+        m = 30
+        for j in range(m + 1):
+            u = j / m
+            x = -1 + 2.1 * u
+            y = y0 + 0.04 * math.sin(u * 6 + k) + curl * ss(u, 0.75, 1.0) * math.sin((u - 0.75) * 9)
+            pts.append((x, y))
+        lines.append((pts, delay, rng.uniform(0.7, 1.2)))
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        img = np.zeros((S, S), np.float32)
+        for pts, delay, w in lines:
+            tt = (t - delay) / (1 - delay)
+            if tt <= 0:
+                continue
+            head = ease_out(min(1.0, tt / 0.6), 2.0)
+            tail = max(0.0, (tt - 0.25) / 0.75) ** 1.2
+            P = [p for j, p in enumerate(pts) if tail <= j / (len(pts) - 1) <= head]
+            if len(P) < 2:
+                continue
+            m = len(P)
+            ws = np.array([S * 0.012 * w * max(0.0, math.sin(math.pi * j / (m - 1))) ** 0.8 for j in range(m)])
+            img = np.maximum(img, _cel_draw([([_px(*p) for p in P], ws, 0.0)], S, S, 1.0))
+        frames.append(np.clip(blur(img, SS * 0.8) * (1 - ss(t, 0.85, 1.0)), 0, 1))
+    return frames
+
+
+def heat_haze(n=16, seed=1061):
+    """Heat shimmer (loop 16f, white): faint wavy bands rising one noise period per loop inside a soft round mask.
+    Play it big, alpha-blended, warm-tinted, mostly transparent, above every fire source."""
+    x, y = coords(S)
+    r = np.hypot(x, y)
+    f1 = tnoise(S, S, 40, 160, seed, 3)
+    f2 = tnoise(S, S, 90, 90, seed + 1, 2)
+    frames = []
+    for i in range(n):
+        o = int(S * i / n)
+        a = np.roll(f1, -o, axis=0)
+        b = np.roll(f2, -o, axis=0)
+        yy = y + (b - 0.5) * 0.25
+        bands = 0.5 + 0.5 * np.sin(yy * 18 + (a - 0.5) * 7)
+        frames.append(np.clip(blur(ss(bands, 0.72, 1.0), SS * 2.5) * ss(r, 0.95, 0.3) * 0.55, 0, 1))
+    return frames
+
+
+def smoke_wisp(n=16, seed=1071):
+    """Thin curling after-smoke (one-shot 16f, shaded): a soft S-ribbon of smoke rises out of the bottom, widens and
+    curls, lit on one side, then thins and breaks up. Tint charcoal for burnt-out fire."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    det = noise(S, S, 22, 22, seed + 1, 4)
+    holes = noise(S, S, 40, 40, seed + 2, 4)
+    ph0 = rng.uniform(0, TAU)
+    alphas, vals = [], []
+    for i in range(n):
+        t = i / (n - 1)
+        top = -0.9 + 1.8 * ease_out(min(1.0, (i + 1) / 8), 1.5)
+        bot = -0.95 + 1.0 * max(0.0, (t - 0.4) / 0.6) ** 1.4
+        u = np.clip((y - bot) / max(0.05, top - bot), 0, 1)
+        cx = (0.08 + 0.25 * u) * np.sin(ph0 + u * 4.5 - t * 3.0)
+        wdt = (0.1 + 0.32 * u) * (0.6 + 0.6 * t) * np.clip(np.sin(np.pi * np.clip(u * 1.05, 0, 1)), 0, None) ** 0.5 + 1e-3
+        F = 1 - np.abs(x - cx) / wdt + (det - 0.5) * 0.7
+        F = np.where((y < bot) | (y > top), -1, F)
+        diss = max(0.0, (t - 0.45) / 0.55)
+        a = ss(F, 0.0, 0.25) * ss(holes, diss * 1.1, diss * 1.1 + 0.15)
+        side = ss(x - cx, -0.05, 0.08)
+        val = 0.35 + 0.55 * side + 0.1 * det
+        alphas.append(np.clip(a * (1 - 0.3 * diss), 0, 1))
+        vals.append(np.clip(val, 0, 1))
+    return alphas, vals
+
+
+def ash_flakes(n=16, seed=1081):
+    """16 grey ash flakes (shaded, FlipbookStartRandom): small torn curled flakes with a lit and a shadow facet and a
+    darker burnt edge. Drifting ash over Ash Rain and burnt-out ground."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    alphas, vals = [], []
+    for i in range(n):
+        rot = rng.uniform(0, TAU)
+        xr, yr = x * math.cos(rot) - y * math.sin(rot), x * math.sin(rot) + y * math.cos(rot)
+        nz = noise(S, S, rng.uniform(30, 60), rng.uniform(30, 60), seed * 10 + i, 3)
+        d = np.hypot(xr / rng.uniform(0.35, 0.6), yr / rng.uniform(0.2, 0.35))
+        F = 1 - d + (nz - 0.5) * 0.9
+        a = ss(F, 0.0, 0.06)
+        fold = np.where(xr * rng.uniform(0.3, 1.0) + yr > 0, 1.0, 0.72)
+        edge = 1 - 0.45 * (1 - ss(F, 0.05, 0.3))
+        alphas.append(np.clip(a, 0, 1))
+        vals.append(np.clip((0.55 + 0.35 * nz) * fold * edge, 0, 1))
+    return alphas, vals
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2526,6 +2776,16 @@ LIB = {
     "heat_ring":     (heat_ring,     "cel", 4, 0, "dragonfire"),
     "fire_slice":    (fire_slice,    "cel", 4, 0, "dragonfire"),
     "soft_glow":     (soft_glow,     "white", 1, 0, "white"),
+    # dragon filler matter (the glue between the big shapes)
+    "fire_wisp":     (fire_wisp,     "cel", 4, 0, "dragonfire"),
+    "fire_swirl":    (fire_swirl,    "cel", 4, 0, "dragonfire"),
+    "flame_flicker": (flame_flicker, "cel", 4, 0, "dragonfire"),
+    "ember_burst":   (ember_burst,   "cel", 4, 0, "dragonfire"),
+    "smear_arc":     (smear_arc,     "cel", 4, 0, "dragonfire"),
+    "gust_lines":    (gust_lines,    "white", 4, 0, "white"),
+    "heat_haze":     (heat_haze,     "white", 4, 0, "white"),
+    "smoke_wisp":    (smoke_wisp,    "shaded", 4, 0, "charsmoke"),
+    "ash_flakes":    (ash_flakes,    "shaded", 4, 0, "smoke"),
 }
 
 PALETTES = {
