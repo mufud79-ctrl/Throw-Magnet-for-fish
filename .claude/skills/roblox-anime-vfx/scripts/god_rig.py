@@ -232,7 +232,7 @@ def build(src):
         idx = np.where(w > 1e-3)[0]
         add_chain(extra, idx, c["bones"], hat_weights(s_[idx], 2) * w[idx, None])
     apply_weights(body, W, names_r15, extra)
-    smooth_groups(body, iterations=3)
+    smooth_groups(body, iterations=3, freeze=np.abs(PB[:, 0]) > 0.635)
     limit_influences(body)
 
     # ---- cape and mane: procedural chain weights
@@ -342,8 +342,10 @@ def limit_influences(ob, limit=4):
     set_groups(ob, {nm: W[:, k] for k, nm in enumerate(names)}, None)
 
 
-def smooth_groups(ob, iterations=3, keep=0.5):
-    """Laplacian-smooth every vertex group over the mesh edges (removes speckle and hard seams), renormalise."""
+def smooth_groups(ob, iterations=3, keep=0.5, freeze=None):
+    """Laplacian-smooth every vertex group over the mesh edges (removes speckle and hard seams), renormalise.
+    freeze: bool mask of vertices that keep their weights (the hands: smoothing across the small, close-packed
+    fingers blurred each finger into its neighbours and the palm, so a 90 degree curl only half-moved it)."""
     me = ob.data
     n = len(me.vertices)
     e = np.zeros(len(me.edges) * 2, int)
@@ -354,8 +356,11 @@ def smooth_groups(ob, iterations=3, keep=0.5):
     deg = np.asarray(A.sum(1)).ravel()
     names = [vg.name for vg in ob.vertex_groups]
     W = weight_matrix(ob, names)
+    W0 = W.copy()
     for _ in range(iterations):
         W = keep * W + (1 - keep) * (A @ W) / np.maximum(deg, 1)[:, None]
+        if freeze is not None:
+            W[freeze] = W0[freeze]
     W /= np.maximum(W.sum(1, keepdims=True), 1e-9)
     for vg in list(ob.vertex_groups):
         ob.vertex_groups.remove(vg)
