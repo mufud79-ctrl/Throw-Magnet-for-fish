@@ -67,7 +67,7 @@ Kit + showcases switched to v2. Comparison sheets: assets/previews/v2_compare/. 
 Ideas from the reference still to use in moves: cyan-mono impact frame for the biggest hits (Judgment Pillar),
 pinpoint charge star with rays (Plasma Bomb hold), tall white-violet streak + slabs for ground strikes.
 
-## Move 1: Volt Lance (Z) - waiting for approval
+## Move 1: Volt Lance (Z) - approved ("Nice")
 Spec script `lab/thunder/moves/volt_lance.py` -> `thunder_01_VoltLance.json`; render + strips in assets/renders/thunder/.
 Mechanic: hitscan javelin. Signature (no other move uses it): after the 1-frame line strike the shaft SNAPS SHORT
 into a compact cel spear impaled through the target (neon spike head out its back), riding the knockback, flickering,
@@ -75,3 +75,12 @@ cooling, dissolving tail-to-head, head shattering into sparks. Wind-up: spear cr
 Camera: wide side-on for the throw, glides in on the impaled target after the strike.
 Lessons: the strike bolt must end before the shaft snaps (else a disjoint white noodle); a lingering full-length line
 just reads as a beam, so the signature has to change shape; spear needs width ~2-5 studs to read at game distance.
+
+## Move 2: Thunderclap (X) - waiting for approval
+`lab/thunder/moves/thunderclap.py` -> `thunder_02_Thunderclap.json`. Mechanic: AoE stun around the caster.
+Signature: a geodesic dome cage (25 curved crackling edges = 75 camera-facing Beams) bursts out on the clap,
+overshoots 10 studs, edges blink individually, shrinks back as it cools; arcs crawl on the 3 stunned targets.
+Wind-up: hands spread overhead with an arc between the palms that tightens as they close. Camera: close on the
+wind-up, snaps wide on the clap to reveal the cage.
+Runtime upgrades for it: beam `from` keys, `curve` (keys) in Luau via CurveSize Bezier, beam texture swapping.
+Perf note: 75 Beams for the cage; on low Quality drop the rim layer (50 Beams).

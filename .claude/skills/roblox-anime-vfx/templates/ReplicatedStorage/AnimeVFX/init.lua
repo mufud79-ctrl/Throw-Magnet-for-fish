@@ -400,18 +400,20 @@ local function makeBeam(play, L)
 	local item = {}
 	local a0 = Instance.new("Attachment")
 	local a1 = Instance.new("Attachment")
-	a0.Position = v3(L.from)
-	a1.Position = v3(L.from)
+	local from0 = v3(evalKeys(L.from, 0, L.from))
+	a0.Position = from0
+	a1.Position = from0
 	a0.Parent = play.root
 	a1.Parent = play.root
 	local beam = Instance.new("Beam")
 	beam.Attachment0 = a0
 	beam.Attachment1 = a1
-	beam.Texture = Assets.texture(L.texture)
+	beam.Texture = Assets.texture(swapName(L, 0))
 	beam.TextureMode = Enum.TextureMode.Wrap
 	beam.TextureLength = L.textureLength or 8
 	beam.TextureSpeed = L.textureSpeed or 0 -- texture lengths per second, same unit the previewer uses
 	beam.LightEmission = L.lightEmission or 1
+	beam.LightInfluence = 0
 	beam.Brightness = L.brightness or 1
 	beam.FaceCamera = true
 	beam.Segments = L.segments or 20
@@ -419,6 +421,7 @@ local function makeBeam(play, L)
 	beam.Parent = play.root
 	local life = L.life or 1
 	local t0 = L.t0 or 0
+	local current
 	function item:step(t)
 		local age = t - t0
 		if age < 0 or age >= life then
@@ -426,15 +429,40 @@ local function makeBeam(play, L)
 			return
 		end
 		local k = age / life
-		local from = v3(L.from)
+		local from = v3(evalKeys(L.from, k, L.from))
 		local to = v3(evalKeys(L.to, k, L.to))
 		local reach = evalKeys(L.reach, k, 1)
-		a1.Position = from:Lerp(to, reach)
+		local b = from:Lerp(to, reach)
+		-- curve: the previewer bends the beam by `curve` (studs) at its middle with a sine profile. A Beam is a
+		-- cubic Bezier: offsetting both inner control points by c * 4/3 puts the midpoint at exactly +c.
+		local c = v3(evalKeys(L.curve, k, { 0, 0, 0 }))
+		local d = b - from
+		if c.Magnitude > 1e-3 and d.Magnitude > 1e-3 then
+			local cu = c.Unit
+			local side = d:Cross(cu)
+			if side.Magnitude < 1e-4 then
+				side = Vector3.yAxis:Cross(cu)
+			end
+			a0.CFrame = CFrame.fromMatrix(from, cu, side.Unit)
+			a1.CFrame = CFrame.fromMatrix(b, cu, side.Unit)
+			beam.CurveSize0 = c.Magnitude * 4 / 3
+			beam.CurveSize1 = -c.Magnitude * 4 / 3
+		else
+			a0.CFrame = CFrame.new(from)
+			a1.CFrame = CFrame.new(b)
+			beam.CurveSize0 = 0
+			beam.CurveSize1 = 0
+		end
 		local w = evalKeys(L.width, k, 1)
 		beam.Width0 = type(w) == "table" and w[1] or w
 		beam.Width1 = type(w) == "table" and w[2] or w
 		beam.Color = ColorSequence.new(evalColor(L.color, k))
 		beam.Transparency = NumberSequence.new(math.clamp(evalKeys(L.transparency, k, 0), 0, 1))
+		local name = swapName(L, age)
+		if name ~= current then
+			current = name
+			beam.Texture = Assets.texture(name)
+		end
 		beam.Enabled = true
 	end
 	function item:destroy()

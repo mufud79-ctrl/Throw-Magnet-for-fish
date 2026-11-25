@@ -32,8 +32,10 @@ the item's life; for `pose`, `lights.brightness` and `camera` it is seconds/norm
 - **shell** (Part + SpecialMesh FileMesh): `mesh`, `material` Neon|ForceField|Glass|Ice|Textured, `texture`,
   `t0`, `life`, `scale` keys (number or [x,y,z]), `transparency` keys, `color` (hex or keys), `rot`, `spin`
   (deg/s or keys) + `spinAxis`, `move`, `velocity`, `scroll`, `tile`, `brightness`.
-- **beam**: `from`, `to`, `t0`, `life`, `texture`, `color`, `width` keys ([w0, w1]), `reach` keys (0..1 of the
-  length drawn), `lightEmission`, `textureSpeed` (texture lengths/s), `textureLength`, `transparency`.
+- **beam**: `from`, `to` (both may be keys over life), `t0`, `life`, `texture` or `textures` + `swap`, `color`,
+  `width` keys ([w0, w1]), `reach` keys (0..1 of the length drawn), `curve` (studs the middle bows out, keys allowed;
+  Roblox: attachment Axis + CurveSize0/1 = |c| * 4/3 so the Bezier midpoint matches), `lightEmission`,
+  `textureSpeed` (texture lengths/s), `textureLength`, `transparency`, `segments`.
 - **bolt** (neon zig-zag parts): `from`, `to`, `t0`, `life`, `color`, `thickness`, `jitter`, `segments`,
   `flicker` (rebuild interval), `seed`.
 - **trail** (Roblox `Trail` on two attachments): rides `path` / `move` / `wave` (below); emits while

@@ -345,12 +345,13 @@ class Beam {
     geo.setAttribute('uv', new THREE.BufferAttribute(this.uv, 2).setUsage(THREE.DynamicDrawUsage));
     geo.setIndex(idx);
     this.mat = new THREE.ShaderMaterial({
-      uniforms: { map: { value: texture(L.texture, true) }, color: { value: new THREE.Color() }, alpha: { value: 1 }, le: { value: L.lightEmission ?? 1 }, bright: { value: L.brightness || 1 } },
+      uniforms: { map: { value: texture(swapName(L, 0), true) }, color: { value: new THREE.Color() }, alpha: { value: 1 }, le: { value: L.lightEmission ?? 1 }, bright: { value: L.brightness || 1 } },
       vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
       fragmentShader: `uniform sampler2D map; uniform vec3 color; uniform float alpha, le, bright; varying vec2 vUv;
         void main(){ vec4 t = texture2D(map, vUv); float a = t.a * alpha; gl_FragColor = vec4(t.rgb * color * bright * a, a * (1.0 - le)); }`,
       transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
     });
+    for (const nm of L.textures || []) texture(nm, true);
     this.mesh = new THREE.Mesh(geo, this.mat);
     this.mesh.frustumCulled = false; this.mesh.renderOrder = 30 + (L.order || 0) * 0.001;
     scene.add(this.mesh);
@@ -358,13 +359,13 @@ class Beam {
   draw(cam, t) {
     const L = this.L, life = L.life || 1, age = t - (L.t0 || 0);
     if (age < 0 || age >= life) { this.mesh.visible = false; return; }
-    const k = age / life, a = L.from, b = evalKeys(L.to, k, L.to);
+    const k = age / life, a = evalKeys(L.from, k, L.from), b = evalKeys(L.to, k, L.to);
     const len = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]);
     const reach = evalKeys(L.reach, k, 1);
     const w = evalKeys(L.width, k, 1), w0 = Array.isArray(w) ? w[0] : w, w1 = Array.isArray(w) ? w[1] : w;
     const cp = cam.position, segs = this.segs, P = this.pos, U = this.uv;
     const dir = norm([b[0] - a[0], b[1] - a[1], b[2] - a[2]], [0, 0, -1]);
-    const curve = L.curve || [0, 0, 0];
+    const curve = evalKeys(L.curve, k, [0, 0, 0]);
     const tl = L.textureLength || 8, scroll = (L.textureSpeed || 0) * age;
     for (let i = 0; i <= segs; i++) {
       const s = (i / segs) * reach, bend = Math.sin(Math.PI * s);
@@ -379,6 +380,7 @@ class Beam {
     const c = typeof L.color === 'string' ? hex(L.color) : evalCol(L.color, k);
     this.mat.uniforms.color.value.setRGB(c[0], c[1], c[2]);
     this.mat.uniforms.alpha.value = Math.max(0, 1 - evalKeys(L.transparency, k, 0));
+    this.mat.uniforms.map.value = texture(swapName(L, age), true);
     this.mesh.visible = true;
   }
 }
