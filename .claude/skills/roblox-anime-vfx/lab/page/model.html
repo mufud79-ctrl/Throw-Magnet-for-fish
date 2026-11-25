@@ -5,20 +5,25 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 const r = new THREE.WebGLRenderer({ canvas: document.getElementById('vp'), antialias: true, preserveDrawingBuffer: true });
-r.setSize(640, 900, false); r.outputEncoding = THREE.sRGBEncoding;
+const VW = window.innerWidth || 640, VH = window.innerHeight || 900;
+r.setSize(VW, VH, false); r.outputEncoding = THREE.sRGBEncoding;
 const scene = new THREE.Scene(); scene.background = new THREE.Color('#c9ccd4');
 scene.add(new THREE.HemisphereLight('#ffffff', '#8a8f9c', 0.9));
 const sun = new THREE.DirectionalLight('#ffffff', 0.9); sun.position.set(2, 4, 5); scene.add(sun);
-const cam = new THREE.PerspectiveCamera(30, 640 / 900, 0.01, 100);
+const cam = new THREE.PerspectiveCamera(30, VW / VH, 0.01, 100);
 window.MODEL = {
   async load(url) {
     const g = await new GLTFLoader().loadAsync(url);
     const obj = g.scene; const box = new THREE.Box3().setFromObject(obj); const c = box.getCenter(new THREE.Vector3()); const s = box.getSize(new THREE.Vector3());
     obj.position.sub(c); scene.add(obj); this.size = s.toArray(); this.obj = obj; return this.size;
   },
-  view(yawDeg) {
-    const h = this.size[1], d = Math.max(this.size[0], this.size[2], h) * 2.1, a = yawDeg * Math.PI / 180;
-    cam.position.set(Math.sin(a) * d, h * 0.08, Math.cos(a) * d); cam.lookAt(0, 0, 0);
+  // view(yaw) or view(yaw, pitch): the camera fits the bounding sphere in both fovs, so long models stay in frame
+  view(yawDeg, pitchDeg = 4, zoom = 1, fz = 0) {
+    const rad = new THREE.Vector3(...this.size).length() / 2, vf = cam.fov * Math.PI / 360, hf = Math.atan(Math.tan(vf) * cam.aspect);
+    const d = rad / Math.sin(Math.min(vf, hf)) * 1.05 / zoom, a = yawDeg * Math.PI / 180, p = pitchDeg * Math.PI / 180;
+    const tz = fz * this.size[2] / 2;
+    cam.position.set(Math.sin(a) * Math.cos(p) * d, Math.sin(p) * d, Math.cos(a) * Math.cos(p) * d + tz);
+    cam.up.set(0, Math.abs(pitchDeg) > 80 ? 0 : 1, Math.abs(pitchDeg) > 80 ? -1 : 0); cam.lookAt(0, 0, tz);
     r.render(scene, cam); return document.getElementById('vp').toDataURL('image/jpeg', 0.92);
   },
 };

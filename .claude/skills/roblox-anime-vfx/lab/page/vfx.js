@@ -2,7 +2,8 @@
 // Coordinates are Roblox studs: Y up, the caster stands at the origin facing -Z.
 //
 // Layer types: emitter (ParticleEmitter), shell (Part + SpecialMesh FileMesh), beam (Beam),
-// bolt (neon zig-zag parts), trail (Trail ribbon), vbeam (volumetric beam: cylinder core + crossed Beams). Effect tracks: lights (PointLight), debris (crater slabs / flung rocks),
+// bolt (neon zig-zag parts), trail (Trail ribbon), vbeam (volumetric beam: cylinder core + crossed Beams),
+// rig (skinned model whose spine follows a path). Effect tracks: lights (PointLight), debris (crater slabs / flung rocks),
 // shakes (camera), grade (ColorCorrection keys), impact (impact frames).
 // Fidelity: particle maths follow Roblox semantics (sequences + envelopes, NumberRange, Speed/Spread,
 // Acceleration, Drag, Rotation, flipbooks, Orientation modes, LightEmission blend, ZOffset,
@@ -12,6 +13,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const DEG = Math.PI / 180;
 let W = 640, H = 360; // render.mjs --hd sets window.LAB_SIZE = [1280, 720] before the first load
@@ -532,6 +534,113 @@ class VBeam {
   }
 }
 
+// ---------------------------------------------------------------- rigged model (skinned mesh whose spine follows a path)
+// The head bone rides path / move / wave. Every other spine bone sits a fixed ARC LENGTH behind the head along the
+// head's own past trajectory (a pure function of t, so hit-stops and scrubbing stay exact): the body traces the
+// path and can coil for real. Before the head has travelled far enough, trailing bones collapse onto the start
+// point, so the creature pours out of it. Bones face along the path tangent (world up, optional roll keys).
+// Model: assets/models/<model>.glb, built straight along -Z (head at -Z), bones named <bones.prefix>00 (head) ..
+// NN (tail tip), optional jaw bone. Roblox: a skinned MeshPart; the runtime sets each Bone.WorldCFrame the same way.
+const rigCache = {};
+async function loadRig(name) {
+  if (!rigCache[name]) rigCache[name] = new Promise((res, rej) => new GLTFLoader().load(`${ASSET_BASE}/models/${name}.glb`, res, undefined, rej));
+  return rigCache[name];
+}
+class Rig {
+  constructor(L, scene, gltf) {
+    this.L = L;
+    const root = this.root = gltf.scene.clone(true);
+    // SkeletonUtils-free clone: rebind skinned meshes to the cloned bones by name
+    const byName = {}; root.traverse((o) => { if (o.isBone) byName[o.name] = o; });
+    root.traverse((o) => {
+      if (o.isSkinnedMesh) {
+        const bones = o.skeleton.bones.map((b) => byName[b.name]);
+        o.bind(new THREE.Skeleton(bones, o.skeleton.boneInverses), o.bindMatrix);
+        const map = o.material.map || null;
+        o.material = new THREE.MeshBasicMaterial({ map, color: new THREE.Color(1, 1, 1), transparent: true, depthWrite: true, side: THREE.DoubleSide });
+        o.frustumCulled = false; o.renderOrder = 12;
+        this.mats = (this.mats || []).concat(o.material);
+      }
+    });
+    const sc = L.scale || 1;
+    root.scale.setScalar(sc);
+    scene.add(root);
+    root.updateMatrixWorld(true);
+    const pre = (L.bones && L.bones.prefix) || 'spine_';
+    this.spine = Object.keys(byName).filter((n) => n.startsWith(pre)).sort().map((n) => byName[n]);
+    this.jaw = L.jawBone ? byName[L.jawBone] : null;
+    this.jawRest = this.jaw ? this.jaw.quaternion.clone() : null;
+    // rest pose (world, root at origin with scale): matrices, positions, arc offsets from the head along the body
+    this.rest = this.spine.map((b) => b.matrixWorld.clone());
+    this.restPos = this.rest.map((m) => new THREE.Vector3().setFromMatrixPosition(m));
+    // the body axis: path points map to (0, y_head, z_i) so bones keep their natural heights (no neck kink)
+    this.axisY = this.restPos[0].y;
+    this.offs = [0];
+    for (let i = 1; i < this.restPos.length; i++) this.offs.push(this.offs[i - 1] + Math.abs(this.restPos[i].z - this.restPos[i - 1].z));
+    root.visible = false;
+  }
+  // positions along the head's past trajectory at arc distances `offs` behind the head at time t
+  trace(t) {
+    const L = this.L, t0 = L.t0 || 0, h = 1 / 120, maxD = this.offs[this.offs.length - 1] + 0.5;
+    const pts = [attachPos(L, t)], ds = [0];
+    let tau = t;
+    while (ds[ds.length - 1] < maxD && tau > t0) {
+      tau = Math.max(t0, tau - h);
+      const q = attachPos(L, tau), p = pts[pts.length - 1];
+      ds.push(ds[ds.length - 1] + Math.hypot(q[0] - p[0], q[1] - p[1], q[2] - p[2])); pts.push(q);
+    }
+    const at = (d) => {
+      if (d >= ds[ds.length - 1]) return pts[pts.length - 1].slice();
+      let j = 1; while (ds[j] < d) j++;
+      const k = (d - ds[j - 1]) / ((ds[j] - ds[j - 1]) || 1), a = pts[j - 1], b = pts[j];
+      return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+    };
+    // birth direction: where the path heads right after t0 (used by bones still collapsed at the start point)
+    const s0 = attachPos(L, t0), s1 = attachPos(L, t0 + 0.02);
+    const birth = norm([s1[0] - s0[0], s1[1] - s0[1], s1[2] - s0[2]], [0, 0, -1]);
+    return this.offs.map((d) => {
+      const p = at(d), a = at(Math.max(0, d - 0.35)), b = at(d + 0.35);
+      const dir = norm([a[0] - b[0], a[1] - b[1], a[2] - b[2]], birth);
+      return { p, dir };
+    });
+  }
+  draw(cam, t) {
+    const L = this.L, age = t - (L.t0 || 0), life = L.life || 1;
+    if (age < 0 || age >= life) { this.root.visible = false; return; }
+    this.root.visible = true;
+    const k = age / life, fr = this.trace(t), roll = evalKeys(L.roll, k, 0) * DEG;
+    const fwd = new THREE.Vector3(0, 0, -1), desired = [];
+    for (let i = 0; i < this.spine.length; i++) {
+      const { p, dir } = fr[i];
+      const q = new THREE.Quaternion().setFromUnitVectors(fwd, new THREE.Vector3(...dir));
+      // keep the creature upright: twist about the tangent so local +Y stays as close to world up as possible
+      const upNow = new THREE.Vector3(0, 1, 0).applyQuaternion(q), d3 = new THREE.Vector3(...dir);
+      const want = new THREE.Vector3(0, 1, 0).addScaledVector(d3, -d3.y).normalize();
+      if (want.lengthSq() > 1e-6) {
+        const upProj = upNow.clone().addScaledVector(d3, -upNow.dot(d3)).normalize();
+        let ang = Math.acos(Math.max(-1, Math.min(1, upProj.dot(want))));
+        if (new THREE.Vector3().crossVectors(upProj, want).dot(d3) < 0) ang = -ang;
+        q.premultiply(new THREE.Quaternion().setFromAxisAngle(d3, ang + roll));
+      }
+      const F = new THREE.Matrix4().compose(new THREE.Vector3(...p), q, new THREE.Vector3(1, 1, 1));
+      const rp = this.restPos[i];
+      desired.push(F.multiply(new THREE.Matrix4().makeTranslation(0, -this.axisY, -rp.z)).multiply(this.rest[i]));
+    }
+    // world -> local, parents first (spine bones are a chain; the first one's parent is the armature)
+    this.root.updateMatrixWorld(true);
+    for (let i = 0; i < this.spine.length; i++) {
+      const b = this.spine[i], parentW = i > 0 && b.parent === this.spine[i - 1] ? desired[i - 1] : b.parent.matrixWorld;
+      const loc = new THREE.Matrix4().copy(parentW).invert().multiply(desired[i]);
+      loc.decompose(b.position, b.quaternion, b.scale);
+    }
+    if (this.jaw) this.jaw.quaternion.copy(this.jawRest).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), evalKeys(L.jaw, k, 0) * DEG));
+    this.root.updateMatrixWorld(true);
+    const c = L.color === undefined ? [1, 1, 1] : typeof L.color === 'string' ? hex(L.color) : evalCol(L.color, k), br = L.brightness || 1;
+    const al = Math.max(0, 1 - evalKeys(L.transparency, k, 0));
+    for (const m of this.mats) { m.color.setRGB(c[0] * br, c[1] * br, c[2] * br); m.opacity = al; }
+  }
+}
+
 // ---------------------------------------------------------------- neon bolt (zig-zag parts)
 class Bolt {
   constructor(L, scene) {
@@ -768,6 +877,7 @@ class Player {
       else if (L.type === 'bolt') this.items.push(new Bolt(L, scene));
       else if (L.type === 'trail') this.items.push(new Trail(L, scene, this));
       else if (L.type === 'vbeam') this.items.push(new VBeam(L, scene));
+      else if (L.type === 'rig') this.items.push(new Rig(L, scene, await loadRig(L.model)));
     }
     for (const D of fx.debris || []) this.items.push(new Debris(D, scene, this.groundColor));
     for (const N of fx.numbers || []) this.items.push(new DamageNumber(N, scene));

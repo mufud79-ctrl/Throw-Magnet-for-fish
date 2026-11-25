@@ -16,7 +16,7 @@ const [VW, VH] = hd ? [1280, 720] : [640, 360];
 fs.mkdirSync(out, { recursive: true });
 let files = [];
 for (const a of args) files = files.concat(fs.statSync(a).isDirectory() ? fs.readdirSync(a).filter((f) => f.endsWith('.json')).sort().map((f) => path.join(a, f)) : [a]);
-const types = { '.js': 'application/javascript', '.html': 'text/html', '.png': 'image/png', '.json': 'application/json' };
+const types = { '.js': 'application/javascript', '.html': 'text/html', '.png': 'image/png', '.json': 'application/json', '.glb': 'model/gltf-binary', '.jpg': 'image/jpeg' };
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage({ viewport: { width: VW, height: VH } });
 const errors = [];

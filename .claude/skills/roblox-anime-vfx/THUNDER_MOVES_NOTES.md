@@ -114,3 +114,17 @@ User: "You might need a rigged model for that too, u can use meshy if needed". P
 5. the move: glowing cel serpent + braided chained lightning ribbons, S-curve swim, coil around the target, burst.
 Beat sheet (from the approved design): 0.00 arm sweep / 0.25 serpent born from the hand / 0.25-0.85 swims an S-curve /
 0.85 coils around the target and bursts / 1.3 afterglow.
+
+### Serpent model (waiting for approval)
+- Concept sheet v1 approved ("Yes looks good"). Meshy CLI via npm exec was blocked by the session's permission check;
+  used the Meshy REST API with the user's key held by the environment secret store (proxy-injected; never in the repo).
+  multi-image-to-3d with the 3 cropped views (view_side/top/front.png): 30 credits (2019 -> 1989). Raw: 30k tris, 2048 tex.
+  assets/source_art/meshy/thunder_serpent.glb
+- User: "Open mouth too". scripts/rig_serpent.py: turn head to glTF -Z, 18 studs long, decimate to ~8.1k tris, CUT the
+  mouth along the lip line (split edges between jaw faces and head faces, else opening stretches a skin curtain),
+  indigo palate/floor + 4 upper/4 lower fangs inside (UVs on existing indigo/white texels: one mesh, one texture),
+  spine_00..13 chain + jaw bone, smooth weights. Out: assets/models/thunder_serpent.glb, assets/meshes/thunder_serpent.fbx.
+- New `rig` layer in the previewer: head rides the path, bones at fixed arc length behind it along the head's past
+  trajectory (pure function of t), body axis mapped at the head bone's rest height (fixes a neck kink), jaw keys.
+  Luau side still to do (skinned MeshPart, Bone.WorldCFrame).
+- lab/model_views.mjs: --wide and yaw:pitch:zoom:fz views for long models.

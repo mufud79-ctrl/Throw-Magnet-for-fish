@@ -1,0 +1,67 @@
+{
+ "name": "test_jaw_q34",
+ "title": "jaw",
+ "element": "T",
+ "archetype": "t",
+ "duration": 2.0,
+ "layers": [
+  {
+   "type": "rig",
+   "model": "thunder_serpent",
+   "path": [
+    [
+     0.0,
+     [
+      0,
+      4,
+      24
+     ]
+    ],
+    [
+     1.0,
+     [
+      0,
+      4,
+      0
+     ]
+    ]
+   ],
+   "t0": 0.0,
+   "life": 2.0,
+   "jawBone": "jaw",
+   "jaw": [
+    [
+     0,
+     0
+    ],
+    [
+     0.6,
+     0
+    ],
+    [
+     0.75,
+     -40
+    ],
+    [
+     1,
+     -40
+    ]
+   ],
+   "brightness": 1.0
+  }
+ ],
+ "caster": false,
+ "camera": {
+  "pos": [
+   3.2,
+   3.2,
+   -6.5
+  ],
+  "look": [
+   0,
+   3.8,
+   0.5
+  ],
+  "fov": 40
+ }
+}
