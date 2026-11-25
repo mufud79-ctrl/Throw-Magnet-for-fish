@@ -81,6 +81,10 @@ def wave(t, T, harm, lag, i, phase=0.0):
 # ================================================================ poses
 # A pose is two dicts: rots[bone] = (x, y, z) degrees in armature space, locs[bone] = (x, y, z) armature offset.
 IDLE_T = 3.2
+# idle arm hang (down from horizontal, forward swing, elbow bend): out and forward enough that the hands hover
+# in front of the flared apron and sash instead of sinking into them (tuned with scripts/anim_audit.py)
+IDLE_ARM = tuple(float(v) for v in os.environ.get("IDLE_ARM", "62,16,32").split(","))
+IDLE_SWING = tuple(float(v) for v in os.environ.get("IDLE_SWING", "6,8").split(","))   # fore/aft swing, elbow swing
 SIDES = (("Left", 1), ("Right", -1))
 FINGER_NAMES = ("Index", "Middle", "Ring", "Pinky")
 
@@ -109,11 +113,12 @@ def head(nod=0.0, tilt=0.0, turn=0.0):
 
 
 HAND_SHAPES = {   # per finger: (k1, k2, k3 curl), spread; thumb: (k1, k2, k3 curl), thumb in/out
-    "relaxed": ({"Index": ((20, 26, 18), -3), "Middle": ((26, 32, 22), 0), "Ring": ((32, 36, 25), 2), "Pinky": ((38, 40, 28), 5)}, ((12, 14, 12), 16)),
+    # every shape keeps a natural cascade (more curl toward ring and pinky) and never bends fingers backwards
+    "relaxed": ({"Index": ((28, 34, 22), -3), "Middle": ((34, 40, 26), 0), "Ring": ((40, 44, 30), 3), "Pinky": ((46, 48, 32), 6)}, ((16, 18, 14), 22)),
     "fist":    ({"Index": ((80, 95, 65), 0), "Middle": ((85, 95, 65), 0), "Ring": ((88, 95, 65), 1), "Pinky": ((90, 95, 65), 2)}, ((25, 35, 30), 38)),
-    "open":    ({"Index": ((3, 3, 2), -4), "Middle": ((3, 3, 2), 0), "Ring": ((4, 3, 2), 3), "Pinky": ((5, 4, 3), 6)}, ((2, 2, 2), 2)),
-    "spread":  ({"Index": ((-6, 0, 0), -14), "Middle": ((-6, 0, 0), -3), "Ring": ((-5, 0, 0), 7), "Pinky": ((-4, 0, 0), 16)}, ((-4, 0, 0), -22)),
-    "point":   ({"Index": ((0, 2, 2), -2), "Middle": ((80, 95, 65), 0), "Ring": ((86, 95, 65), 1), "Pinky": ((90, 95, 65), 2)}, ((25, 35, 30), 38)),
+    "open":    ({"Index": ((6, 8, 5), -4), "Middle": ((8, 10, 6), 0), "Ring": ((11, 13, 8), 3), "Pinky": ((14, 16, 10), 7)}, ((6, 8, 6), 10)),
+    "spread":  ({"Index": ((-1, 4, 3), -12), "Middle": ((0, 4, 3), -3), "Ring": ((2, 6, 4), 6), "Pinky": ((4, 8, 5), 14)}, ((0, 4, 4), -18)),
+    "point":   ({"Index": ((3, 5, 4), -2), "Middle": ((80, 95, 65), 0), "Ring": ((86, 95, 65), 1), "Pinky": ((90, 95, 65), 2)}, ((25, 35, 30), 38)),
     "claw":    ({"Index": ((22, 45, 40), -10), "Middle": ((24, 48, 40), -2), "Ring": ((26, 48, 40), 5), "Pinky": ((28, 46, 40), 12)}, ((10, 25, 25), 0)),
 }
 
@@ -150,15 +155,18 @@ def idle_pose(t, T=IDLE_T):
     turn = wave(t, T, 1, 0, 0, 2.2)
     gr["LowerTorso"] = (1.0 * b_lag, -0.8 * sway, -1.2 * turn)
     gr["UpperTorso"] = (-2.5 - 2.0 * b, 2.2 * sway, 3.0 * turn)
-    gr["Head"] = (4.0 + 1.6 * b_lag, -1.5 * sway, 6.0 * wave(t, T, 1, 0, 0, 1.6) - 2.0 * turn)
+    glance = max(0.0, wave(t, T, 1, 0, 0, -2.6)) ** 3          # once a loop he glances down at his right hand
+    gr["Head"] = (4.0 + 2.2 * b_lag + 9.0 * glance + 1.5 * wave(t, T, 3, 0, 0, 0.4), -1.5 * sway + 2.5 * wave(t, T, 2, 0, 0, 1.0),
+                  11.0 * wave(t, T, 1, 0, 0, 1.6) + 3.0 * wave(t, T, 2, 0, 0, 0.3) - 2.0 * turn - 10.0 * glance)
     # arms hang naturally (about 74 degrees below horizontal, slightly forward, soft elbows) and swing a little
     # as if weightless: shoulder leads, elbow trails, wrist trails last; the two arms are out of step
     for side, s, ph in (("Left", 1, 0.0), ("Right", -1, 2.1)):
         fore = wave(t, T, 1, 0, 0, ph - 0.9) + 0.3 * wave(t, T, 2, 0, 0, ph * 0.7 - 0.5)
-        gr.update(arm(side, 74 + 4.0 * wave(t, T, 1, 0, 0, ph - 0.3), 14 + 9.0 * fore,
+        down0, fwd0, elb0 = IDLE_ARM
+        gr.update(arm(side, down0 + 4.0 * wave(t, T, 1, 0, 0, ph - 0.3), fwd0 + IDLE_SWING[0] * fore,
                       roll=8.0 + 6.0 * wave(t, T, 1, 0, 0, ph - 1.2),
-                      elbow=28 + 12.0 * wave(t, T, 1, 0, 0, ph - 1.7), twist=12.0 + 8.0 * wave(t, T, 1, 0, 0, ph - 2.0),
-                      wflex=14 + 9.0 * wave(t, T, 1, 0, 0, ph - 2.5), wside=6 + 6.0 * wave(t, T, 1, 0, 0, ph - 2.8)))
+                      elbow=elb0 + IDLE_SWING[1] * wave(t, T, 1, 0, 0, ph - 1.7), twist=12.0 + 8.0 * wave(t, T, 1, 0, 0, ph - 2.0),
+                      wflex=9 + 5.0 * wave(t, T, 1, 0, 0, ph - 2.5), wside=1 + 2.5 * wave(t, T, 1, 0, 0, ph - 2.8)))
         relaxed = HAND_SHAPES["relaxed"][0]
         for fi, fn in enumerate(FINGER_NAMES):
             curls, spread = relaxed[fn]
@@ -209,8 +217,10 @@ def _ease(name, u):
         return u ** 3
     if name == "out":
         return 1 - (1 - u) ** 3
-    if name == "snap":                         # very fast start: strikes, releases
-        return 1 - (1 - u) ** 5
+    if name == "snap":                         # fast start (releases): quadratic, so no joint jumps most of its way in one frame
+        return 1 - (1 - u) ** 2.2
+    if name == "strike":                       # accelerate into a hit, but spread over the frames (no single-frame pop)
+        return u ** 1.7
     if name == "back":                         # overshoot then settle
         c = 2.2
         return 1 + (c + 1) * (u - 1) ** 3 + c * (u - 1) ** 2
@@ -279,6 +289,8 @@ def bake(god, ring, spec, hitstop=True):
     life = spec.get("life", 0.5)
     tracks, ctr, rtr = spec["tracks"], spec.get("chain_tracks", Tracks()), spec.get("ring_tracks", Tracks())
     springs = {g: (Spring(c[1], c[2]), Spring(c[1], c[2])) for g, c in CHAINS.items()}
+    head_p, head_r = Spring(2.4, 0.33), Spring(2.4, 0.33)    # head reacts to the body's motion (bob, lag, settle)
+    head_off = (0.0, 0.0)
     hist = {g: [] for g in CHAINS}
     prev_root, prev_lean = None, None
 
@@ -306,7 +318,7 @@ def bake(god, ring, spec, hitstop=True):
         for b, v in kr.items():                                  # keyed bones keep a little idle drift (no stiffness)
             drift = [life * (a - c) for a, c in zip(gr.get(b, (0, 0, 0)), idle0.get(b, (0, 0, 0)))] if "Cape" not in b else [0, 0, 0]
             if any(fn in b for fn in FINGER_NAMES + ("Thumb",)):
-                drift = [0.5 * d for d in drift]
+                drift = [0.12 * d for d in drift]
             gr[b] = tuple(x + d for x, d in zip(v, drift))
         for b, v in kl.items():
             idle_l, idle0_l = gl.get(b, (0, 0, 0)), STANCE[1].get(b, (0, 0, 0))
@@ -338,6 +350,19 @@ def bake(god, ring, spec, hitstop=True):
                 for bn in row:
                     x0, y0, z0 = gr[bn]
                     gr[bn] = (x0 + p * gain + add[0] * 0.3, y0 + r * gain + add[1] * 0.3, z0)
+        if spec.get("springs", True):
+            # head: lags behind lunges and rises and settles with a little overshoot, tilts with sideways motion
+            if not frozen:
+                tp = 15.0 * vel.z - 12.0 * (-vel.y) - 0.12 * lean_v
+                head_off = (head_p.step(max(-10.0, min(10.0, tp)), 1 / FPS), head_r.step(max(-8.0, min(8.0, 15.0 * vel.x)), 1 / FPS))
+            hx, hy, hz = gr["Head"]
+            gr["Head"] = (hx + head_off[0], hy + head_off[1], hz)
+            # moving holds: a small smooth drift that never repeats, so no pose freezes between keys
+            env = min(1.0, t / 0.15, max(0.0, (T - t) / 0.15))
+            for b in kr:
+                amp = alive_amp(b)
+                if amp:
+                    gr[b] = tuple(v + env * a * alive_noise(b, t, axis) for axis, (v, a) in enumerate(zip(gr[b], amp)))
         # drums: idle bob + hit recoil (+ overrides)
         kr2, kl2 = rtr.eval(t) if (rtr.r or rtr.l) else ({}, {})
         rr.update(kr2)
@@ -369,13 +394,34 @@ def bake(god, ring, spec, hitstop=True):
     return n
 
 
+ALIVE = {"Head": (2.5, 2.0, 3.2), "UpperTorso": (1.2, 1.0, 1.6), "LowerTorso": (0.5, 0.4, 0.8),
+         "UpperArm": (1.6, 2.0, 2.4), "LowerArm": (2.0, 0.0, 3.0), "Hand": (0.0, 3.0, 2.0),
+         "UpperLeg": (1.5, 0.0, 0.8), "LowerLeg": (2.5, 0.0, 0.0), "Foot": (2.5, 0.0, 0.0)}
+
+
+def alive_amp(b):
+    if any(fn in b for fn in FINGER_NAMES + ("Thumb",)):
+        return None
+    for k, a in ALIVE.items():
+        if b.endswith(k):
+            return a
+    return None
+
+
+def alive_noise(b, t, axis):
+    """Smooth, non-repeating drift in [-1, 1]: three incommensurate sines with phases hashed from the bone."""
+    h = sum(ord(c) * (i + 1) for i, c in enumerate(b)) + axis * 97
+    return (0.55 * math.sin(TAU * 0.37 * t + h % 6.28) + 0.3 * math.sin(TAU * 0.71 * t + (h * 3) % 6.28)
+            + 0.15 * math.sin(TAU * 1.13 * t + (h * 7) % 6.28))
+
+
 def overlap_delay(b):
     """Seconds a bone trails the keys: hips lead, chest on time, head after the chest, each arm joint after the
     one above, fingers last; knees and feet after the thigh. Small on the arm so strikes still land on the hit."""
     if b == "LowerTorso":
         return 0.0
     if b == "Head":
-        return 0.05
+        return -0.03                      # the eyes lead: the head turns to where the action goes a beat early
     for part, d in (("UpperArm", 0.0), ("LowerArm", 0.02), ("Hand", 0.035), ("Thumb", 0.06), ("Index", 0.05),
                     ("Middle", 0.055), ("Ring", 0.06), ("Pinky", 0.065), ("LowerLeg", 0.04), ("Foot", 0.07)):
         if part in b:
@@ -540,18 +586,19 @@ def cast():
     to the hip (counter-motion), the back leg kicks. Hit-stop, overshoot, recoil, settle."""
     tr = Tracks()
     start(tr)
-    tr.key(0.10, merge(torso(6, 2, -6, 3), head(2, 0, 3), arm("Right", 68, 20, roll=10, elbow=45), arm("Left", 70, 25, elbow=40)),
+    tr.key(0.10, merge(torso(6, 2, -6, 3), head(2, 0, 3), arm("Right", 56, 28, roll=10, elbow=40), arm("Left", 58, 28, elbow=36)),
            root(0, 0.01, -0.03), "inout")
     tr.key(0.34, merge(torso(-6, 5, -30, -2), head(-2, -3, 22),
-                       arm("Right", 18, -50, roll=-35, elbow=125, twist=-20, wflex=-35),
+                       arm("Right", 18, -50, roll=-30, elbow=105, twist=-15, wflex=-35),
                        arm("Left", 40, 68, roll=12, elbow=32, wflex=-12, wside=-5),
                        hand("Right", "claw"), hand("Left", "open"),
                        leg("Left", 18, 32, 18, 3), leg("Right", 26, 62, 22, 4)), root(0, 0.05, 0.04), "inout")
+    tr.key(0.38, merge(arm("Right", 15, 30, roll=-18, elbow=72, twist=-6, wflex=-48)), None, "in")
     tr.key(0.43, merge(torso(9, -4, 28, 4), head(3, 2, -12),
-                       arm("Right", 8, 88, roll=0, elbow=6, twist=10, wflex=-70),
+                       arm("Right", 8, 88, roll=0, elbow=12, twist=6, wflex=-62),
                        arm("Left", 72, -18, roll=-10, elbow=78, wflex=10),
                        hand("Right", "spread"), hand("Left", "fist"),
-                       leg("Left", 22, 40, 20, 3), leg("Right", -16, 24, 30, 3)), root(0, -0.08, 0.0), "snap")
+                       leg("Left", 22, 40, 20, 3), leg("Right", -16, 24, 30, 3)), root(0, -0.08, 0.0), "lin")
     tr.key(0.56, merge(torso(12, -5, 34, 5), arm("Right", 3, 95, elbow=0, wflex=-74)), root(0, -0.10, 0.005), "out")
     tr.key(0.72, merge(torso(7, -2, 20, 2), arm("Right", 22, 80, elbow=22, wflex=-40)), root(0, -0.07, 0), "inout")
     tr.key(1.0, merge(torso(2, 0, 6, 1), head(2, 0, -2), arm("Right", 55, 45, roll=6, elbow=40, wflex=-5),
@@ -580,9 +627,9 @@ def drum_barrage():
     hit-stop; the arms rebound and the hands shake out."""
     tr = Tracks()
     start(tr)
-    cock = lambda side: arm(side, -48, 38, roll=-10, elbow=118, twist=-10, wflex=28)
-    strike = lambda side: arm(side, 32, 70, roll=5, elbow=18, wflex=-4)
-    tr.key(0.12, merge(torso(5, 0, 0, 2), head(3), arm("Left", 75, 30, elbow=60), arm("Right", 75, 30, elbow=60),
+    cock = lambda side: arm(side, -45, 40, roll=-8, elbow=96, twist=-8, wflex=22)
+    strike = lambda side: arm(side, 22, 76, roll=4, elbow=30, wflex=-4)          # ends out in front of the chest, clear of the belly
+    tr.key(0.12, merge(torso(5, 0, 0, 2), head(3), arm("Left", 62, 40, elbow=55), arm("Right", 62, 40, elbow=55),
                        hand("Left", "fist"), hand("Right", "fist")), root(0, 0, -0.02), "inout")
     tr.key(0.26, merge(torso(-12, 0, -10, -3), head(-8, 0, 6), cock("Right"), arm("Left", 30, 50, elbow=90, wflex=10),
                        leg("Left", 26, 56, 20, 3), leg("Right", 12, 42, 25, 3)), root(0, 0.03, 0.07), "inout")
@@ -593,21 +640,21 @@ def drum_barrage():
         side = "Right" if k % 2 == 0 else "Left"
         other = "Left" if side == "Right" else "Right"
         tr.key(tb - 0.09, cock(side), None, "out")
-        tr.key(tb, strike(side), None, "in")
+        tr.key(tb, strike(side), None, "strike")
         tr.key(tb, cock(other) if k < 6 else arm(other, -70, 28, elbow=60, wflex=20), None, "out")
-        tw = -22 if side == "Right" else 22
-        tr.key(tb, merge(torso(10, 8 if side == "Right" else -8, tw, 3), head(7, 0, tw * 0.4)), root(0, -0.01, 0.045), "snap")
+        tw = -16 if side == "Right" else 16
+        tr.key(tb, merge(torso(10, 8 if side == "Right" else -8, tw, 3), head(10, 0, tw * 0.6)), root(0, -0.01, 0.045), "snap")
         tr.key(tb + 0.07, merge(torso(-3, 0, tw * 0.25, 0), head(-3, 0, 0)), root(0, 0.01, 0.065), "out")
     tr.key(beats[6] + 0.08, merge(arm("Left", -72, 26, elbow=58, wflex=22), arm("Right", -72, 26, elbow=58, wflex=22), torso(-14, 0, 0, -3), head(-8)),
            root(0, 0.02, 0.08), "out")
     tb = beats[7]
-    tr.key(tb, merge(arm("Left", 42, 62, elbow=10, wflex=-6), arm("Right", 42, 62, elbow=10, wflex=-6), torso(20, 0, 0, 5), head(-2)),
-           root(0, -0.03, 0.02), "in")
+    tr.key(tb, merge(arm("Left", 34, 68, elbow=22, wflex=-6), arm("Right", 34, 68, elbow=22, wflex=-6), torso(18, 0, 0, 5), head(-2)),
+           root(0, -0.03, 0.02), "strike")
     tr.key(1.30, merge(arm("Left", 15, 55, elbow=40, wflex=15), arm("Right", 18, 58, elbow=36, wflex=15), torso(4), head(2)), root(0, 0, 0.05), "out")
     for i, tt in enumerate((1.38, 1.44, 1.50)):
         j = 1 if i % 2 == 0 else -1
-        tr.key(tt, merge(arm("Left", 55, 40, elbow=40, wflex=15 * j), arm("Right", 55, 40, elbow=40, wflex=-15 * j),
-                         hand("Left", "open"), hand("Right", "open")), None, "inout")
+        tr.key(tt, merge(arm("Left", 55, 40, elbow=40, wflex=10 + 12 * j), arm("Right", 55, 40, elbow=40, wflex=10 - 12 * j),
+                         hand("Left", "relaxed"), hand("Right", "relaxed")), None, "inout")
     finish(tr, 1.9)
     for k, tb in enumerate(beats):
         d = k + 1
@@ -637,7 +684,7 @@ def heavens_palm():
     back. Hit-stop, overshoot, recoil, settle."""
     tr = Tracks()
     start(tr)
-    tr.key(0.16, merge(torso(9, -2, 8, 3), head(4, 0, 4), arm("Right", 70, 42, roll=30, elbow=82, wflex=10),
+    tr.key(0.16, merge(torso(7, -2, 8, 3), head(4, 0, 4), arm("Right", 44, 62, roll=20, elbow=30, twist=-30, wflex=12),
                        arm("Left", 66, 30, elbow=58), hand("Right", "relaxed")), root(0, 0.01, -0.03), "inout")
     tr.key(0.38, merge(torso(-6, 6, -6, -1), head(-8, 0, -8), arm("Right", -10, 32, roll=40, elbow=30, wflex=-10), hand("Right", "open")),
            root(0, 0.01, 0.06), "inout")
@@ -650,12 +697,14 @@ def heavens_palm():
                root(0, 0.02, 0.142 + 0.004 * j), "lin")
     tr.key(0.74, hand("Right", "claw"), None, "inout")
     tr.key(0.78, merge(arm("Right", -88, -6, roll=80, elbow=10, wflex=-20), torso(-21, 10, -14, -5), head(-24, -4, -10)), root(0, 0.03, 0.15), "out")
-    tr.key(0.82, merge(arm("Right", -28, 70, roll=40, elbow=10, wflex=-50), hand("Right", "spread")), None, "in")
-    tr.key(0.86, merge(torso(14, -6, 16, 3), head(-4, 0, 4), arm("Right", 38, 82, roll=10, elbow=0, wflex=-80),
+    tr.key(0.82, merge(arm("Right", -28, 70, roll=40, elbow=10, wflex=-45), hand("Right", "spread")), None, "in")
+    tr.key(0.86, merge(torso(14, -6, 16, 3), head(-4, 0, 4), arm("Right", 38, 82, roll=10, elbow=4, wflex=-64),
                        arm("Left", 48, -44, roll=-10, elbow=24, wflex=10), leg("Left", 30, 60, 15, 3), leg("Right", -15, 15, 30, 3)),
            root(0, -0.06, -0.05), "in")
-    tr.key(1.02, merge(torso(18, -6, 18, 4), head(-2, 0, 4), arm("Right", 46, 80, elbow=0, wflex=-82)), root(0, -0.07, -0.07), "out")
+    tr.key(1.02, merge(torso(18, -6, 18, 4), head(-2, 0, 4), arm("Right", 46, 80, elbow=4, wflex=-66)), root(0, -0.07, -0.07), "out")
+    tr.key(1.12, head(10, 0, 6), None, "out")                     # looks down at the impact...
     tr.key(1.22, merge(torso(10, -3, 10, 2), arm("Right", 40, 72, elbow=20, wflex=-50)), root(0, -0.05, -0.04), "inout")
+    tr.key(1.40, head(-4, 2, 0), None, "inout")                    # ...then lifts his chin
     tr.key(1.45, merge(torso(4, 0, 4, 1), arm("Right", 62, 40, roll=10, elbow=35, wflex=-10), arm("Left", 68, 15, elbow=35),
                        hand("Right", "relaxed"), hand("Left", "relaxed")), root(0, -0.02, 0), "inout")
     finish(tr, 1.95)
@@ -692,7 +741,7 @@ def thunder_gods_wrath():
     then both fists drive down for the colossal strike (hit-stop), overshoot, a heaving breath, and he descends."""
     tr = Tracks()
     start(tr)
-    tr.key(0.22, merge(torso(12, 0, 0, 4), head(6), arm("Left", 60, 55, elbow=95, wflex=10), arm("Right", 60, 55, elbow=95, wflex=10),
+    tr.key(0.22, merge(torso(10, 0, 0, 4), head(6), arm("Left", 36, 50, roll=-10, elbow=100, wflex=12), arm("Right", 36, 50, roll=-10, elbow=100, wflex=12),
                        hand("Left", "fist"), hand("Right", "fist"), leg("Left", 35, 70, 20, 3), leg("Right", 30, 65, 22, 3)), root(0, 0, -0.04), "inout")
     tr.key(0.85, merge(torso(-16, 0, 4, -4), head(-22, 2, 0),
                        arm("Left", -12, 40, roll=-60, elbow=45, wflex=-22), arm("Right", -20, 36, roll=-60, elbow=40, wflex=-22),
@@ -711,7 +760,7 @@ def thunder_gods_wrath():
         t += dt
         dt = max(0.05, dt * 0.85)
         k += 1
-    ready = lambda side: arm(side, 15, 45, elbow=75, wflex=10)
+    ready = lambda side: arm(side, 15, 50, elbow=52, wflex=10)
     tr.key(1.98, merge(ready("Left"), ready("Right"), hand("Left", "point"), hand("Right", "point"), torso(-4), head(-4)), None, "out")
     targets = [(-1.6, -3.4), (1.5, -3.8), (-0.6, -4.8), (2.3, -2.6), (-2.4, -2.4), (0.6, -3.0)]
     for i, tp in enumerate((2.05, 2.2, 2.35, 2.5, 2.65, 2.8)):
@@ -719,20 +768,20 @@ def thunder_gods_wrath():
         side = "Right" if x < 0 else "Left"
         other = "Left" if side == "Right" else "Right"
         tw = -24 if side == "Right" else 24
-        tr.key(tp - 0.05, ready(side), None, "out")
-        tr.key(tp, merge(arm(side, 34, 74, roll=0, elbow=4, wflex=-8, wside=-8), arm(other, 62, -18, elbow=88, wflex=5),
+        tr.key(tp - 0.07, ready(side), None, "out")
+        tr.key(tp, merge(arm(side, 34, 74, roll=0, elbow=8, wflex=-8, wside=-8), arm(other, 60, -12, elbow=70, wflex=5),
                          hand(other, "fist"), hand(side, "point"),
-                         torso(8, 6 if side == "Right" else -6, tw, 2), head(9, 0, tw * 0.55)), None, "snap")
+                         torso(8, 6 if side == "Right" else -6, tw, 2), head(11, 0, tw * 0.85)), None, "snap")
         tr.key(tp + 0.1, merge(ready(side), ready(other), hand(other, "point")), None, "out")
     tr.key(3.05, merge(arm("Left", -80, 22, roll=0, elbow=30, wflex=10), arm("Right", -80, 22, roll=0, elbow=30, wflex=10),
                        hand("Left", "fist"), hand("Right", "fist"), torso(-22), head(-25), leg("Left", 35, 80, 25), leg("Right", 35, 80, 25)),
            root(0, 0.02, 0.70), "out")
     tr.key(3.14, merge(arm("Left", -84, 18, elbow=26), arm("Right", -84, 18, elbow=26), torso(-24), head(-26)), root(0, 0.025, 0.73), "out")
-    tr.key(3.25, merge(arm("Left", 50, 72, elbow=5, wflex=-4), arm("Right", 50, 72, elbow=5, wflex=-4), torso(18, 0, 0, 4), head(-4),
+    tr.key(3.25, merge(arm("Left", 42, 76, elbow=8, wflex=-4), arm("Right", 42, 76, elbow=8, wflex=-4), torso(16, 0, 0, 4), head(-4),
                        leg("Left", -20, 20, 30), leg("Right", -20, 20, 30)), root(0, -0.05, 0.35), "in")
-    tr.key(3.45, merge(torso(21, 0, 0, 5), head(-2), arm("Left", 58, 76, elbow=6), arm("Right", 58, 76, elbow=6)), root(0, -0.06, 0.32), "out")
-    tr.key(3.7, merge(torso(-6), head(-6), arm("Left", 50, 40, elbow=45, wflex=10), arm("Right", 52, 42, elbow=42, wflex=10),
-                      hand("Left", "open"), hand("Right", "open")), root(0, -0.03, 0.3), "inout")
+    tr.key(3.45, merge(torso(18, 0, 0, 4), head(-2), arm("Left", 48, 80, elbow=10), arm("Right", 48, 80, elbow=10)), root(0, -0.06, 0.32), "out")
+    tr.key(3.7, merge(torso(-6), head(-6), arm("Left", 40, 22, elbow=22, wflex=10), arm("Right", 41, 20, elbow=20, wflex=10),
+                      hand("Left", "relaxed"), hand("Right", "relaxed")), root(0, -0.03, 0.3), "inout")
     tr.key(3.95, merge(torso(6), head(4), hand("Left", "relaxed"), hand("Right", "relaxed")), root(0, -0.02, 0.2), "inout")
     finish(tr, 4.4)
     hits += [(3.25, d, 1.5) for d in range(1, 9)]
@@ -769,24 +818,24 @@ def transform():
     drive down and out (not a T), every drum strikes, hit-stop; settles into the idle."""
     import drum_ring as dr
     tr = Tracks()
-    curl = merge(torso(35, 0, 0, 20), head(35), arm("Left", 60, 75, roll=20, elbow=115), arm("Right", 60, 75, roll=20, elbow=115),
-                 hand("Left", "fist"), hand("Right", "fist"), leg("Left", 70, 120, 30), leg("Right", 70, 120, 30))
-    tr.key(0.0, merge(curl, {"LowerTorso": (20, 0, -360)}), root(0, 0, -0.42))
-    tr.key(0.96, merge(curl, {"LowerTorso": (20, 0, -360)}), root(0, 0, -0.36), "lin")
-    tr.key(1.85, merge(curl, torso(42, 0, 0, 24), {"LowerTorso": (24, 0, 0)}, leg("Left", 75, 130, 30), leg("Right", 75, 130, 30)),
+    curl = merge(torso(20, 0, 0, 12), head(26), arm("Left", 24, 86, roll=-10, elbow=118, wflex=10), arm("Right", 30, 86, roll=-10, elbow=114, wflex=10),
+                 hand("Left", "fist"), hand("Right", "fist"), leg("Left", 62, 108, 30, 6), leg("Right", 62, 108, 30, 6))
+    tr.key(0.0, merge(curl, {"LowerTorso": (15, 0, -360)}), root(0, 0, -0.42))
+    tr.key(0.96, merge(curl, {"LowerTorso": (15, 0, -360)}), root(0, 0, -0.36), "lin")
+    tr.key(1.85, merge(curl, torso(27, 0, 0, 15), {"LowerTorso": (15, 0, 0)}, leg("Left", 66, 112, 30, 8), leg("Right", 66, 112, 30, 8)),
            root(0, 0, -0.2), "inout")
     burst = merge(torso(-20, -4, 8, -6), head(-24, 3, -4),
                   arm("Right", -55, 30, roll=-20, elbow=25, wflex=-30), arm("Left", 30, -25, roll=10, elbow=22, wflex=-20),
                   hand("Left", "spread"), hand("Right", "spread"), leg("Left", -8, 12, 38), leg("Right", 30, 70, 30, 4))
-    tr.key(1.95, burst, root(0, 0, 0.40), "snap")
+    tr.key(1.95, burst, root(0, 0, 0.40), "lin")
     tr.key(2.62, merge(arm("Right", -64, 28, roll=-24, elbow=22, wflex=-32), arm("Left", 24, -28, roll=12, elbow=20, wflex=-22),
                        head(2, 2, 0), torso(-14, -3, 4, -4)), root(0, 0, 0.46), "out")
-    tr.key(2.74, merge(arm("Left", 45, 70, elbow=100, wflex=10), arm("Right", 45, 70, elbow=100, wflex=10), torso(10, 0, 0, 3), head(6),
+    tr.key(2.70, merge(arm("Left", 38, 82, elbow=84, wflex=10), arm("Right", 38, 82, elbow=84, wflex=10), torso(8, 0, 0, 3), head(6),
                        hand("Left", "fist"), hand("Right", "fist"), leg("Left", 24, 50, 20, 3), leg("Right", 20, 45, 22, 3)), root(0, 0, 0.42), "inout")
     tr.key(2.80, merge(arm("Left", 55, 14, roll=8, elbow=12, wflex=-30), arm("Right", 52, 18, roll=8, elbow=14, wflex=-30), torso(-10, 0, 0, -2), head(2),
                        hand("Left", "spread"), hand("Right", "spread"), leg("Left", 10, 30, 25, 3), leg("Right", 0, 18, 28, 3)),
            root(0, 0, 0.36), "snap")
-    tr.key(3.0, merge(hand("Left", "open"), hand("Right", "open"), arm("Left", 62, 18, elbow=22), arm("Right", 60, 20, elbow=24)), None, "inout")
+    tr.key(3.0, merge(hand("Left", "relaxed"), hand("Right", "relaxed"), arm("Left", 62, 18, elbow=22), arm("Right", 60, 20, elbow=24)), None, "inout")
     finish(tr, 3.5)
     ctr = Tracks()
     ctr.key(1.95, {"@Cape": (0, 0, 0), "@Mane": (0, 0, 0)})

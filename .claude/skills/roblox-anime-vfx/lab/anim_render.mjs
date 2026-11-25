@@ -13,6 +13,7 @@ const period = +opt('--period', 0);
 const target = opt('--target', null), dist = +opt('--dist', 0);
 const frameAt = +opt('--frame-at', 0);
 const vfxPath = opt('--vfx', null);   // <clip>.vfx.json: play the effects layer
+const stills = opt('--times', null);  // comma list of times -> <out>.jpg tile of stills instead of a video
 const [glb, out] = args; const [W, H] = size.split('x').map(Number);
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
@@ -30,6 +31,16 @@ const info = await page.evaluate((fa) => window.ANIM.load('/model.glb', fa), fra
 console.log('clips', JSON.stringify(info.clips));
 if (vfxPath) console.log('vfx events', await page.evaluate((d) => window.ANIM.loadVfx(d), JSON.parse(fs.readFileSync(vfxPath, 'utf8'))));
 const dur = period || info.clips.reduce((m, c) => Math.max(m, c[1]), 0);
+if (stills) {
+  const ts = stills.split(',').map(Number), tmp0 = fs.mkdtempSync('/tmp/stills_');
+  for (const [i, t] of ts.entries()) {
+    const u = await page.evaluate(([t, y, p, z, tg, ds]) => window.ANIM.frame(t, y, p, z, tg, ds), [t, yaw, pitch, zoom, target ? target.split(',').map(Number) : null, dist]);
+    fs.writeFileSync(path.join(tmp0, `s${i}.jpg`), Buffer.from(u.split(',')[1], 'base64'));
+  }
+  await browser.close();
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', path.join(tmp0, 's%d.jpg'), '-vf', `scale=${Math.min(480, W)}:-1,tile=${ts.length}x1`, '-frames:v', '1', out + '.jpg']);
+  console.log(out + '.jpg'); process.exit(0);
+}
 const n = Math.round(dur * loops * fps);
 const tmp = fs.mkdtempSync('/tmp/anim_');
 for (let i = 0; i < n; i++) {
