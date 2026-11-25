@@ -104,3 +104,8 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
   1 image, file "Anime VFX source art"). Scale plates swallow the arms with 3-claw talon gauntlets (no fingers), scales
   climb the neck and back of the head, horns + back pair burst out, a glowing spine ridge, a short thick curl-fan tail
   off the ground, molten fire cracks where skin turns to scale. Waiting for the user's verdict.
+- User: "Hybrid is base form, just the horns and tail, no arm stuff, no back stuff, just the horns and some scales."
+  -> DESIGN.md "Revision v5": horns + tail + a few scale patches, all kitbashed from dragon_v4.glb. v5 and v6 sheets dropped.
+- Meshy audit (user asked): balance 1989 -> 1749 today = 240 spent. This session: 90 (dragon v3, hybrid v4, dragon v4).
+  The other 150 (a v3 dragon multi-image + 4 image-to-3d jobs, all at 15:25 UTC) were not submitted by this session;
+  the timing matches the duplicate session. Rule from now on: no Meshy job without the user's explicit OK in this chat.

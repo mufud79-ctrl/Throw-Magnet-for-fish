@@ -3,6 +3,19 @@
 Status: **v3 (user feedback): an Eastern serpent dragon emperor, wingless, Kaido-matched colours; the hybrid is R15
 add-ons. The concept look is waiting for approval.** The v3 and v2 revision blocks OVERRIDE anything below that mentions wings, half-wings or a western build.
 
+## Revision v5: hybrid = the BASE form, minimal (supersedes every earlier hybrid block)
+User: "Hybrid is base form btw, I think just the horns and tail would be fine, no arm stuff, no back stuff, just the
+horns and some scales." (v5 sheet: "needs full redesign"; v6 "becoming the dragon" sheet dropped.) The hybrid is
+what the player looks like with the fruit and no transformation, so it stays light:
+- **Horns** (Head): the v4 dragon model's horns plus its back pair, cut from the mesh with its texture.
+- **Tail** (LowerTorso): the last part of the dragon's tail with the curl fan, scaled down, skinned (about 7 bones),
+  held off the ground.
+- **Some scales:** a few azure scale patches cut from the dragon's skin (placement to confirm: sides of the head /
+  neck), rigid.
+- Nothing on the arms, back, hands, collar or waist. No pauldrons, bracers, gauntlets, spine ridge, crown or sash.
+- No Meshy jobs: everything is kitbashed from `assets/source_art/meshy/dragon_v4.glb` (`scripts/build_hybrid.py`).
+- Hybrid moves that relied on claws or other add-ons get their reach from the VFX (fire claws etc.), not meshes.
+
 ## Revision v4: dragon sheet v4 + hybrid v5 built FROM the dragon model (supersedes v3d hybrid)
 - Dragon model sheet: `dragon_sheet_v4_openmouth.png`. The mouth is open for rigging (the jaw closes from rest),
   with clean 3+1-toe feet, a thick body, and a tail that stays thick into the curl fan. User: "Looks good."
