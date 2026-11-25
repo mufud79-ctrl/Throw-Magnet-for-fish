@@ -307,13 +307,17 @@ def bake(god, ring, spec, hitstop=True):
     for f in range(n + 1):
         tr = f / FPS
         t, frozen = warp(tr)
-        gr, gl, rr, rl = (dict(x) for x in idle_pose(t % IDLE_T))
+        base_fn, period = spec.get("pose_fn", idle_pose), spec.get("period", IDLE_T)
+        gr, gl, rr, rl = (dict(x) for x in base_fn(t % period))
         idle0 = STANCE[0]
         kr, kl = tracks.eval(t)
         if spec.get("overlap", True):                         # successive breaking of joints (follow-through)
             for b in kr:
                 d = overlap_delay(b)
-                if d:
+                # no trailing on the way INTO a strike: the whole arm must arrive on the hit (the hit-stop would
+                # otherwise freeze a still-bent forearm); the overlap shows on the follow-through instead
+                nxt = next((k for k in sorted(tracks.r[b], key=lambda k: k[0]) if k[0] >= t - 1e-6), None)
+                if d and not (nxt and nxt[2] in ("strike", "snap", "lin") and nxt[0] - t < 0.12):
                     kr[b] = Tracks._eval(tracks.r[b], max(0.0, t - d))
         for b, v in kr.items():                                  # keyed bones keep a little idle drift (no stiffness)
             drift = [life * (a - c) for a, c in zip(gr.get(b, (0, 0, 0)), idle0.get(b, (0, 0, 0)))] if "Cape" not in b else [0, 0, 0]
@@ -928,8 +932,150 @@ def transform():
             "hitstops": [(2.8, 0.14)], "life": 0.3, "vfx": vfx}
 
 
+
+# ================================================================ flight locomotion (in-place loops)
+def flight_pose(t, T, P):
+    """Flying locomotion as data, in place (the character controller moves him). P holds the style:
+    lean (forward pitch from the hips), arm mode, swing sizes, wind strength, flutter speed."""
+    import drum_ring as dr
+    gr, gl, rr, rl = {}, {}, {}, {}
+    w = lambda h, ph=0.0: wave(t, T, h, 0, 0, ph)
+    bob = w(2, 0.0)                                   # two bobs per cycle (one per leg kick)
+    gl["HumanoidRootPart"] = (0, 0, 0.08 + P["bob"] * bob)
+    bank = P["bank"] * w(1, 0.4)
+    low = (P["lean"] + 2.0 * w(2, -0.6), bank, -P["twist"] * 0.4 * w(1, 0.0))
+    up = (P["lean_up"] - 1.5 * w(2, -1.0), 0.6 * bank, P["twist"] * w(1, 0.0))
+    gr["LowerTorso"], gr["UpperTorso"] = low, up
+    gr["Head"] = (-(P["lean"] + P["lean_up"]) * P["look"] + 2.0 * w(2, -1.4), -0.8 * bank, -0.6 * P["twist"] * w(1, 0.2))
+    for side, s, ph in (("Left", 1, 0.0), ("Right", -1, math.pi)):
+        if P["arms"] == "swing":                      # loose, floaty swing opposite the legs
+            gr.update(arm(side, P["arm_down"] + 3.0 * w(1, ph + 1.0), P["arm_fwd"] + P["swing"] * w(1, ph),
+                          roll=8.0, elbow=P["elbow"] + 10.0 * w(1, ph - 0.9), twist=10.0,
+                          wflex=10.0 + 8.0 * w(1, ph - 1.6), wside=1.0))
+        else:                                         # streamlined: arms swept back, hands trailing
+            gr.update(arm(side, P["arm_down"] + 2.0 * w(2, ph * 0.5 + 0.3), P["arm_fwd"] + P["swing"] * w(2, ph * 0.5),
+                          roll=-20.0, elbow=P["elbow"] + 4.0 * w(2, ph * 0.5 - 0.8), twist=-25.0,
+                          wflex=-18.0 + 6.0 * w(2, ph * 0.5 - 1.4), wside=6.0))
+        relaxed = HAND_SHAPES["relaxed"][0]
+        for fi, fn in enumerate(FINGER_NAMES):
+            curls, spread = relaxed[fn]
+            for k in (1, 2, 3):
+                c = curls[k - 1] * P["curl"] + 4.0 * w(1, ph - 2.0 - 0.3 * fi - 0.4 * k)
+                gr[f"{side}{fn}{k}"] = (0, s * c, s * spread if k == 1 else 0)
+        for k in (1, 2, 3):
+            c = 14 + 3 * w(1, ph - 1.9)
+            gr[f"{side}Thumb{k}"] = (0, s * c * 0.6, s * (18 + c * 0.6) if k == 1 else s * c * 0.4)
+        kick = w(1, ph + math.pi)                     # legs flutter behind the body, the knee trails the hip
+        gr[f"{side}UpperLeg"] = (-(P["hip"] + P["kick"] * kick), 0, s * (3.0 + 1.5 * w(2, ph)))
+        gr[f"{side}LowerLeg"] = (P["knee"] + P["knee_kick"] * w(1, ph + math.pi - 1.3), 0, 0)
+        gr[f"{side}Foot"] = (P["foot"] + 8.0 * w(1, ph + math.pi - 2.2), 0, 0)
+    fl, wind = P["flutter"], P["wind"]
+    for ci, col in enumerate("RCL"):
+        for i in range(1, 5):
+            gr[f"Cape_{col}_{i}"] = (wind * (0.6 if i == 1 else 1.0) + (2.0 + 1.2 * i) * wave(t, T, fl, 0.9, i, ci * 1.1),
+                                     (1.0 + 0.6 * i) * wave(t, T, max(1, fl - 1), 0.7, i, ci * 1.7), 0)
+    for li in range(1, 7):
+        for k in range(1, 4):
+            gr[f"Mane_{li}_{k}"] = (wind * 0.8 + (1.5 + 1.0 * k) * wave(t, T, fl, 1.0, k, li * 0.9),
+                                    (0.8 + 0.6 * k) * wave(t, T, max(1, fl - 1), 0.8, k, li * 1.3), 0)
+    for si, sd in enumerate("LR"):
+        for k, bn in enumerate((f"Sash_{sd}_1", f"Sash_{sd}_2", f"Sash_{sd}_Tassel")):
+            gr[bn] = (wind * 0.9 + (2.0 + 1.5 * k) * wave(t, T, fl + 1, 0.9, k, si * 1.3), (1.0 + k) * wave(t, T, fl, 0.7, k, si), 0)
+    for key, sgn in (("Hakama_F", 1), ("Hakama_B", 1)):
+        for k in (1, 2):
+            gr[f"{key}_{k}"] = (sgn * wind * 0.25 + (1.5 + k) * wave(t, T, fl, 0.8, k, 0.3 if key == "Hakama_B" else 0), 0, 0)
+    # the drum ring tilts with his back (rigidly, about the hips) and rattles in the wind
+    lean = low[0] + 0.6 * up[0]
+    piv = Vector(J_ROOT)
+    p = Vector((0.0, dr.BAND_Y, float(dr.C[2])))
+    rot = Euler((math.radians(lean), math.radians(-bank * 0.5), 0), "XYZ").to_matrix()
+    off = rot @ (p - piv) + piv - p
+    rr["Root"] = (lean, -bank * 0.5, 0)
+    rl["Root"] = (off.x, off.y, off.z + 0.01 * wave(t, T, 2, 0, 0, -1.0))
+    for d in range(1, 9):
+        ph = -d * TAU / 8
+        rl[f"Drum_{d}"] = (0, 0.004 * wave(t, T, fl, 0, 0, ph + 1.0), P["rattle"] * wave(t, T, fl, 0, 0, ph))
+        rr[f"Drum_{d}"] = (P["rattle"] * 300 * wave(t, T, fl, 0, 0, ph - 0.6), 0, 1.5 * wave(t, T, 1, 0, 0, ph))
+        rr[f"Tassel_{d}"] = (wind * 0.8 + 6.0 * wave(t, T, fl, 0, 0, ph - 1.4), 4.0 * wave(t, T, 1, 0, 0, ph - 1.0), 0)
+    return gr, gl, rr, rl
+
+
+J_ROOT = (0.0, -0.125, -0.03)                          # hips pivot (god_rig J["root"])
+WALK = dict(lean=12.0, lean_up=4.0, look=0.6, twist=6.0, bank=1.5, bob=0.022, arms="swing", arm_down=62.0, arm_fwd=12.0,
+            swing=11.0, elbow=28.0, curl=1.0, hip=8.0, kick=12.0, knee=26.0, knee_kick=14.0, foot=30.0,
+            wind=16.0, flutter=3, rattle=0.006)
+RUN = dict(lean=38.0, lean_up=8.0, look=0.75, twist=4.0, bank=4.0, bob=0.015, arms="back", arm_down=62.0, arm_fwd=-38.0,
+           swing=4.0, elbow=14.0, curl=0.7, hip=12.0, kick=10.0, knee=30.0, knee_kick=18.0, foot=40.0,
+           wind=32.0, flutter=4, rattle=0.01)
+
+
+def fly_walk():
+    T = 1.2
+    vfx = [grade([(0, 0.2, 0.9, "#2a3350"), (T, 0.2, 0.9, "#2a3350")]),
+           arcs(0.3, ["LeftLowerArm", "LeftHand"], life=0.2, count=2, radius=0.07, seed=21),
+           arcs(0.9, ["RightLowerArm", "RightHand"], life=0.2, count=2, radius=0.07, seed=22)]
+    return {"T": T, "period": T, "pose_fn": lambda t: flight_pose(t, T, WALK), "tracks": Tracks(), "springs": False, "vfx": vfx}
+
+
+def fly_run():
+    T = 0.8
+    body = ["UpperTorso", "LowerTorso", "LeftUpperArm", "RightUpperArm", "LeftUpperLeg", "RightUpperLeg"]
+    vfx = [grade([(0, 0.3, 0.85, "#2a3350"), (T, 0.3, 0.85, "#2a3350")]),
+           arcs(0.0, body, life=T, count=3, radius=0.14, seed=31)]
+    for i in range(4):                                 # streaks of static peeling off behind him
+        tt = i * T / 4
+        vfx.append(bolt(tt, Bn("UpperTorso", (0.25 * (1 if i % 2 else -1), 0.3, 0.1)), Bn("UpperTorso", (0.35 * (1 if i % 2 else -1), 1.6, -0.1)),
+                        life=0.16, width=0.018, seg=7, branches=1, seed=40 + i))
+        vfx.append(sprite(tt + 0.05, Bn("LowerTorso", (0, 0.9, 0)), "static_sparks", life=0.25, layered=False,
+                          size=((0, 0.3), (1, 0.6)), palette="spark"))
+    return {"T": T, "period": T, "pose_fn": lambda t: flight_pose(t, T, RUN), "tracks": Tracks(), "springs": False, "vfx": vfx}
+
+
+def punch():
+    """Flying three-hit combo: guard, left jab, right cross (the whole body turns into it, back leg kicks), then a
+    rising left uppercut as the finisher. Hit-stops grow with each hit; fists crackle; each hit bursts at the fist."""
+    tr = Tracks()
+    start(tr)
+    # guard: the upper arm rolls in so the elbow hinge folds the forearm UP (fists at chin height, elbows down);
+    # without the roll the elbow folds sideways across the chest
+    guardL = arm("Left", 24, 70, roll=-80, elbow=118, wflex=6)
+    guardR = arm("Right", 28, 64, roll=-80, elbow=116, wflex=6)
+    tr.key(0.10, merge(guardL, guardR, hand("Left", "fist"), hand("Right", "fist"), torso(5, 0, -10, 2), head(3, 0, 8),
+                       leg("Left", 18, 40, 22, 3), leg("Right", 4, 30, 26, 3)), root(0, 0.02, 0.02), "inout")
+    # hit 1: left jab
+    tr.key(0.19, merge(arm("Left", 12, 88, roll=0, elbow=10, wflex=-4), torso(7, 0, 12, 2), head(4, 0, -2)), root(0, -0.04, 0.02), "strike")
+    tr.key(0.30, merge(guardL, torso(4, 0, -6, 1), head(3, 0, 6)), root(0, -0.01, 0.02), "inout")
+    # hit 2: right cross (wind-up twist, then the whole body turns into it)
+    tr.key(0.36, merge(torso(2, 0, -20, 0), head(2, 0, 14), arm("Right", 30, 56, roll=-80, elbow=122, wflex=8)), root(0, 0.03, 0.03), "inout")
+    chin = arm("Left", 18, 72, roll=-80, elbow=124, wflex=8)        # left fist covers the chin during the cross
+    tr.key(0.45, merge(arm("Right", 10, 90, roll=0, elbow=8, wflex=-4), chin, torso(9, -3, 28, 3), head(5, 0, -10),
+                       leg("Left", 24, 40, 20, 3), leg("Right", -18, 22, 32, 3)), root(0, -0.08, 0.0), "strike")
+    tr.key(0.58, merge(guardR, chin, torso(4, 0, 8, 1), head(3, 0, 0), leg("Left", 16, 38, 22, 3), leg("Right", 4, 30, 26, 3)), root(0, -0.03, 0.02), "inout")
+    # hit 3: rising left uppercut (dip and chamber low, then drive the fist up in front of the face as the body rises)
+    tr.key(0.70, merge(torso(12, 6, -16, 4), head(6, 0, 10), arm("Left", 50, 62, roll=-80, elbow=82, wflex=10)), root(0, 0.0, -0.05), "inout")
+    tr.key(0.80, merge(arm("Left", 6, 82, roll=-80, elbow=72, twist=-10, wflex=-6), torso(-8, -5, 22, -2), head(-10, 0, -8)),
+           root(0, -0.05, 0.09), "strike")
+    tr.key(0.96, merge(torso(-6, -4, 24, -1), arm("Left", -4, 84, roll=-80, elbow=64, wflex=-6)), root(0, -0.06, 0.12), "out")
+    tr.key(1.20, merge(guardL, guardR, torso(3, 0, 6, 1), head(2, 0, 0)), root(0, -0.03, 0.04), "inout")
+    tr.key(1.40, merge(hand("Left", "relaxed"), hand("Right", "relaxed")), None, "inout")
+    finish(tr, 1.75)
+    fistL, fistR = Bn("LeftMiddle1", (0, -0.05, 0)), Bn("RightMiddle1", (0, -0.05, 0))
+    vfx = [grade([(0, 0.0, 1.0, "#000000"), (0.2, 0.25, 0.85, "#2a3350"), (1.4, 0.2, 0.9, "#2a3350"), (1.75, 0.0, 1.0, "#000000")]),
+           arcs(0.08, ["LeftHand", "RightHand", "LeftLowerArm", "RightLowerArm"], life=1.1, count=3, radius=0.07, seed=51)]
+    for tt, fist, big, seed in ((0.19, fistL, 0.6, 61), (0.45, fistR, 0.85, 62), (0.80, fistL, 1.2, 63)):
+        vfx += [sprite(tt, fist, "thunder_burst", life=0.22, size=((0, 0.25 * big), (1, 0.75 * big))),
+                sprite(tt, fist, "star_flash", life=0.12, size=((0, 0.3 * big), (1, 0.8 * big))),
+                ring(tt, fist, size=((0, 0.15), (1, 0.9 * big)), life=0.22, orient="face"),
+                bolt(tt, fist, Bn("UpperTorso", (0.0, -1.4 * big, 0.25 * (big - 0.6))), life=0.18, width=0.025, seg=6, branches=1, seed=seed),
+                light(tt, fist, life=0.22, intensity=((0, 6 * big), (1, 0)), rng=4),
+                shake(tt, amp=0.08 + 0.12 * big, dur=0.2)]
+    vfx += [impact(0.80, frames=1)]
+    return {"T": 1.75, "tracks": tr, "hitstops": [(0.19, 0.04), (0.45, 0.06), (0.80, 0.09)], "hits": [(0.45, 3, 0.4), (0.80, 6, 0.6)],
+            "vfx": vfx, "life": 0.45}
+
+
 CLIPS = {"idle": idle_clip, "cast": cast, "drum_barrage": drum_barrage, "heavens_palm": heavens_palm,
-         "thunder_gods_wrath": thunder_gods_wrath, "transform": transform}
+         "thunder_gods_wrath": thunder_gods_wrath, "transform": transform, "fly_walk": fly_walk, "fly_run": fly_run, "punch": punch}
 
 
 def main():

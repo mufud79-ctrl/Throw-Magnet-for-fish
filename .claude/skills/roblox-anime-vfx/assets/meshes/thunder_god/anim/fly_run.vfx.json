@@ -1,0 +1,338 @@
+{
+"clip": "fly_run",
+"ground": -0.95,
+"holds": [],
+"events": [
+{
+"type": "grade",
+"t": 0.0,
+"keys": [
+[
+0.0,
+0.3,
+0.85,
+"#2a3350"
+],
+[
+0.8,
+0.3,
+0.85,
+"#2a3350"
+]
+]
+},
+{
+"type": "arcs",
+"t": 0.0,
+"bones": [
+"UpperTorso",
+"LowerTorso",
+"LeftUpperArm",
+"RightUpperArm",
+"LeftUpperLeg",
+"RightUpperLeg"
+],
+"life": 0.8,
+"count": 3,
+"radius": 0.14,
+"width": 0.012,
+"seed": 31
+},
+{
+"type": "bolt",
+"t": 0.0,
+"life": 0.16,
+"from": {
+"bone": "UpperTorso",
+"off": [
+-0.25,
+0.3,
+0.1
+]
+},
+"to": {
+"bone": "UpperTorso",
+"off": [
+-0.35,
+1.6,
+-0.1
+]
+},
+"width": 0.018,
+"seg": 7,
+"kink": 0.22,
+"branches": 1,
+"seed": 40,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "sprite",
+"t": 0.05,
+"at": {
+"bone": "LowerTorso",
+"off": [
+0.0,
+0.9,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.6
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "bolt",
+"t": 0.2,
+"life": 0.16,
+"from": {
+"bone": "UpperTorso",
+"off": [
+0.25,
+0.3,
+0.1
+]
+},
+"to": {
+"bone": "UpperTorso",
+"off": [
+0.35,
+1.6,
+-0.1
+]
+},
+"width": 0.018,
+"seg": 7,
+"kink": 0.22,
+"branches": 1,
+"seed": 41,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "sprite",
+"t": 0.25,
+"at": {
+"bone": "LowerTorso",
+"off": [
+0.0,
+0.9,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.6
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "bolt",
+"t": 0.4,
+"life": 0.16,
+"from": {
+"bone": "UpperTorso",
+"off": [
+-0.25,
+0.3,
+0.1
+]
+},
+"to": {
+"bone": "UpperTorso",
+"off": [
+-0.35,
+1.6,
+-0.1
+]
+},
+"width": 0.018,
+"seg": 7,
+"kink": 0.22,
+"branches": 1,
+"seed": 42,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "sprite",
+"t": 0.45,
+"at": {
+"bone": "LowerTorso",
+"off": [
+0.0,
+0.9,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.6
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "bolt",
+"t": 0.6000000000000001,
+"life": 0.16,
+"from": {
+"bone": "UpperTorso",
+"off": [
+0.25,
+0.3,
+0.1
+]
+},
+"to": {
+"bone": "UpperTorso",
+"off": [
+0.35,
+1.6,
+-0.1
+]
+},
+"width": 0.018,
+"seg": 7,
+"kink": 0.22,
+"branches": 1,
+"seed": 43,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "sprite",
+"t": 0.6500000000000001,
+"at": {
+"bone": "LowerTorso",
+"off": [
+0.0,
+0.9,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.6
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+}
+]
+}

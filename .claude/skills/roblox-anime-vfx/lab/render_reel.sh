@@ -14,7 +14,13 @@ r $G/heavens_palm.glb $A/heavens_palm --size 640x800 --yaw -58 --zoom 1.0
 r $G/thunder_gods_wrath.glb $A/thunder_gods_wrath --size 640x800 --yaw 35 --frame-at 3.3 --zoom 0.84
 r $G/thunder_gods_wrath.glb $A/wrath_hands --size 900x700 --yaw 35 --pitch 2 --target 0.0,0.95,0.0 --dist 2.3
 r $G/transform.glb $A/transform --size 800x800 --yaw 28 --pitch 12 --frame-at 3.4 --zoom 0.72
+r $G/fly_walk.glb $A/fly_walk --size 640x800 --yaw -55 --pitch 6 --period 1.2 --loops 2 --frame-at 0.6 --zoom 0.95
+r $G/fly_run.glb $A/fly_run --size 640x800 --yaw -65 --pitch 8 --period 0.8 --loops 3 --frame-at 0.4 --zoom 0.92
+r $G/punch.glb $A/punch --size 640x800 --yaw -45 --pitch 4
 # effects (wider framing so targets, pillars and the sky are in shot)
+r $G/fly_walk.glb $A/fly_walk_vfx --vfx $G/fly_walk.vfx.json --size 640x800 --yaw -55 --pitch 6 --period 1.2 --loops 2 --frame-at 0.6 --zoom 0.95
+r $G/fly_run.glb $A/fly_run_vfx --vfx $G/fly_run.vfx.json --size 640x800 --yaw -65 --pitch 8 --period 0.8 --loops 3 --frame-at 0.4 --zoom 0.92
+r $G/punch.glb $A/punch_vfx --vfx $G/punch.vfx.json --size 640x800 --yaw -45 --pitch 4
 r $G/idle.glb $A/idle_front34_vfx --vfx $G/idle.vfx.json --size 640x800 --yaw 22 --period 3.2 --zoom 1.08
 r $G/idle.glb $A/idle_orbit_vfx --vfx $G/idle.vfx.json --size 640x800 --yaw 0 --orbit 360 --loops 2 --period 3.2
 r $G/idle.glb $A/idle_hands_vfx --vfx $G/idle.vfx.json --size 900x640 --yaw 12 --pitch 4 --target 0.0,0.22,0.12 --dist 2.15 --period 3.2

@@ -1,0 +1,51 @@
+{
+"clip": "fly_walk",
+"ground": -0.95,
+"holds": [],
+"events": [
+{
+"type": "grade",
+"t": 0.0,
+"keys": [
+[
+0.0,
+0.2,
+0.9,
+"#2a3350"
+],
+[
+1.2,
+0.2,
+0.9,
+"#2a3350"
+]
+]
+},
+{
+"type": "arcs",
+"t": 0.3,
+"bones": [
+"LeftLowerArm",
+"LeftHand"
+],
+"life": 0.2,
+"count": 2,
+"radius": 0.07,
+"width": 0.012,
+"seed": 21
+},
+{
+"type": "arcs",
+"t": 0.9,
+"bones": [
+"RightLowerArm",
+"RightHand"
+],
+"life": 0.2,
+"count": 2,
+"radius": 0.07,
+"width": 0.012,
+"seed": 22
+}
+]
+}
