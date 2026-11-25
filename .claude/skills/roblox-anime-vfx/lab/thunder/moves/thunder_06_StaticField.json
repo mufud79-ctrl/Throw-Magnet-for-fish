@@ -19507,11 +19507,11 @@
     "Size": [
      [
       0,
-      3.2
+      4.2
      ],
      [
       1,
-      4.2
+      5.4
      ]
     ],
     "Lifetime": [
@@ -19611,7 +19611,7 @@
     [
      0.35,
      3.0,
-     26
+     44
     ]
    ],
    "seed": 613,
@@ -19637,24 +19637,24 @@
     "Size": [
      [
       0,
-      0.4
+      0.6
      ],
      [
       0.3,
-      1.0
+      1.7
      ],
      [
       1,
-      0.3
+      0.4
      ]
     ],
     "Lifetime": [
-     0.5,
-     0.9
+     0.4,
+     0.8
     ],
     "Speed": [
-     0.6,
-     1.6
+     0.8,
+     2.2
     ],
     "SpreadAngle": [
      25,
@@ -19786,8 +19786,8 @@
      ]
     ],
     "Lifetime": [
-     3.6,
-     3.6
+     4.0,
+     4.0
     ],
     "Speed": [
      0.01,
@@ -19801,11 +19801,15 @@
     "Transparency": [
      [
       0,
-      0.15
+      1
      ],
      [
-      0.7,
-      0.3
+      0.75,
+      0.2
+     ],
+     [
+      0.8,
+      0.35
      ],
      [
       1,
@@ -19855,8 +19859,8 @@
      ]
     ],
     "Lifetime": [
-     1.2,
-     1.2
+     2.8,
+     2.8
     ],
     "Speed": [
      0.01,
@@ -19945,8 +19949,8 @@
      ]
     ],
     "Lifetime": [
-     1.2,
-     1.2
+     2.8,
+     2.8
     ],
     "Speed": [
      0.01,
@@ -20039,8 +20043,8 @@
      ]
     ],
     "Lifetime": [
-     1.2,
-     1.2
+     2.8,
+     2.8
     ],
     "Speed": [
      0.01,
@@ -20133,8 +20137,8 @@
      ]
     ],
     "Lifetime": [
-     1.2,
-     1.2
+     2.8,
+     2.8
     ],
     "Speed": [
      0.01,
@@ -20184,7 +20188,6533 @@
    ]
   },
   {
-   "type": "bolt",
+   "type": "emitter",
+   "at": [
+    0.0,
+    1.4,
+    -9.0
+   ],
+   "part": [
+    18.0,
+    2.4,
+    18.0
+   ],
+   "rate": [
+    [
+     0.42,
+     3.0,
+     90
+    ]
+   ],
+   "seed": 615,
+   "props": {
+    "Texture": "thunder_arc_v2_mid",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.3,
+      "#6fe0ff"
+     ],
+     [
+      1,
+      "#3a5cff"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.3,
+    "Shape": "Cylinder",
+    "ShapeStyle": "Surface",
+    "Size": [
+     [
+      0,
+      4.0
+     ],
+     [
+      1,
+      5.4
+     ]
+    ],
+    "Lifetime": [
+     0.08,
+     0.14
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -30,
+     30
+    ],
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "Random",
+    "FlipbookFramerate": [
+     24,
+     24
+    ],
+    "FlipbookStartRandom": true,
+    "ZOffset": 0.3
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    1.4,
+    -9.0
+   ],
+   "part": [
+    18.0,
+    2.4,
+    18.0
+   ],
+   "rate": [
+    [
+     0.42,
+     3.0,
+     45
+    ]
+   ],
+   "seed": 616,
+   "props": {
+    "Texture": "thunder_arc_v2_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.35,
+    "Brightness": 1.3,
+    "Shape": "Cylinder",
+    "ShapeStyle": "Surface",
+    "Size": [
+     [
+      0,
+      3.4
+     ],
+     [
+      1,
+      4.6
+     ]
+    ],
+    "Lifetime": [
+     0.08,
+     0.14
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -30,
+     30
+    ],
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "Random",
+    "FlipbookFramerate": [
+     24,
+     24
+    ],
+    "FlipbookStartRandom": true,
+    "ZOffset": 0.3
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    1.4,
+    -9.0
+   ],
+   "part": [
+    18.0,
+    2.4,
+    18.0
+   ],
+   "rate": [
+    [
+     0.42,
+     3.0,
+     40
+    ]
+   ],
+   "seed": 617,
+   "props": {
+    "Texture": "thunder_arc_v2_rim",
+    "Color": "#2a1a9a",
+    "LightEmission": 0,
+    "Brightness": 1,
+    "Shape": "Cylinder",
+    "ShapeStyle": "Surface",
+    "Size": [
+     [
+      0,
+      4.4
+     ],
+     [
+      1,
+      6.0
+     ]
+    ],
+    "Lifetime": [
+     0.08,
+     0.14
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -30,
+     30
+    ],
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "Random",
+    "FlipbookFramerate": [
+     24,
+     24
+    ],
+    "FlipbookStartRandom": true,
+    "ZOffset": 0.2
+   }
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.03,
+    0.6111888434943027,
+    -0.95
+   ],
+   "to": [
+    -1.09,
+    0.3,
+    -10.51
+   ],
+   "curve": [
+    0,
+    3.4,
+    0
+   ],
+   "t0": 0.45,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.03,
+    0.6111888434943027,
+    -0.95
+   ],
+   "to": [
+    -1.09,
+    0.3,
+    -10.51
+   ],
+   "curve": [
+    0,
+    3.4,
+    0
+   ],
+   "t0": 0.45,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.03,
+    0.6111888434943027,
+    -0.95
+   ],
+   "to": [
+    -1.09,
+    0.3,
+    -10.51
+   ],
+   "curve": [
+    0,
+    3.4,
+    0
+   ],
+   "t0": 0.45,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.55,
+    0.3,
+    -7.26
+   ],
+   "to": [
+    -2.1,
+    0.3,
+    -9.1
+   ],
+   "curve": [
+    0,
+    1.38,
+    0
+   ],
+   "t0": 0.531,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.55,
+    0.3,
+    -7.26
+   ],
+   "to": [
+    -2.1,
+    0.3,
+    -9.1
+   ],
+   "curve": [
+    0,
+    1.38,
+    0
+   ],
+   "t0": 0.531,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.55,
+    0.3,
+    -7.26
+   ],
+   "to": [
+    -2.1,
+    0.3,
+    -9.1
+   ],
+   "curve": [
+    0,
+    1.38,
+    0
+   ],
+   "t0": 0.531,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.71,
+    0.3,
+    -7.73
+   ],
+   "to": [
+    -3.5,
+    3.049038378285028,
+    -11
+   ],
+   "curve": [
+    0,
+    2.78,
+    0
+   ],
+   "t0": 0.609,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.71,
+    0.3,
+    -7.73
+   ],
+   "to": [
+    -3.5,
+    3.049038378285028,
+    -11
+   ],
+   "curve": [
+    0,
+    2.78,
+    0
+   ],
+   "t0": 0.609,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.71,
+    0.3,
+    -7.73
+   ],
+   "to": [
+    -3.5,
+    3.049038378285028,
+    -11
+   ],
+   "curve": [
+    0,
+    2.78,
+    0
+   ],
+   "t0": 0.609,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.63,
+    0.3,
+    -6.41
+   ],
+   "to": [
+    -4.89,
+    0.3,
+    -14.04
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.702,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.63,
+    0.3,
+    -6.41
+   ],
+   "to": [
+    -4.89,
+    0.3,
+    -14.04
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.702,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.63,
+    0.3,
+    -6.41
+   ],
+   "to": [
+    -4.89,
+    0.3,
+    -14.04
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.702,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -7.17,
+    1.7667571478300879,
+    -3.56
+   ],
+   "to": [
+    4.81,
+    0.3,
+    -7.55
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.785,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -7.17,
+    1.7667571478300879,
+    -3.56
+   ],
+   "to": [
+    4.81,
+    0.3,
+    -7.55
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.785,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -7.17,
+    1.7667571478300879,
+    -3.56
+   ],
+   "to": [
+    4.81,
+    0.3,
+    -7.55
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.785,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.79,
+    0.3,
+    -6.72
+   ],
+   "to": [
+    -2.35,
+    0.3,
+    -2.9
+   ],
+   "curve": [
+    0,
+    2.31,
+    0
+   ],
+   "t0": 0.857,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.79,
+    0.3,
+    -6.72
+   ],
+   "to": [
+    -2.35,
+    0.3,
+    -2.9
+   ],
+   "curve": [
+    0,
+    2.31,
+    0
+   ],
+   "t0": 0.857,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.79,
+    0.3,
+    -6.72
+   ],
+   "to": [
+    -2.35,
+    0.3,
+    -2.9
+   ],
+   "curve": [
+    0,
+    2.31,
+    0
+   ],
+   "t0": 0.857,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.72,
+    0.3,
+    -12.22
+   ],
+   "to": [
+    3.5,
+    2.944795085451463,
+    -6
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.924,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.72,
+    0.3,
+    -12.22
+   ],
+   "to": [
+    3.5,
+    2.944795085451463,
+    -6
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.924,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.72,
+    0.3,
+    -12.22
+   ],
+   "to": [
+    3.5,
+    2.944795085451463,
+    -6
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 0.924,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.17,
+    0.3,
+    -8.1
+   ],
+   "to": [
+    1.64,
+    0.3,
+    -3.22
+   ],
+   "curve": [
+    0,
+    2.13,
+    0
+   ],
+   "t0": 1.006,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.17,
+    0.3,
+    -8.1
+   ],
+   "to": [
+    1.64,
+    0.3,
+    -3.22
+   ],
+   "curve": [
+    0,
+    2.13,
+    0
+   ],
+   "t0": 1.006,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.17,
+    0.3,
+    -8.1
+   ],
+   "to": [
+    1.64,
+    0.3,
+    -3.22
+   ],
+   "curve": [
+    0,
+    2.13,
+    0
+   ],
+   "t0": 1.006,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -3.53,
+    1.2197866089106943,
+    -0.72
+   ],
+   "to": [
+    -2.99,
+    0.3,
+    -8.09
+   ],
+   "curve": [
+    0,
+    2.76,
+    0
+   ],
+   "t0": 1.083,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -3.53,
+    1.2197866089106943,
+    -0.72
+   ],
+   "to": [
+    -2.99,
+    0.3,
+    -8.09
+   ],
+   "curve": [
+    0,
+    2.76,
+    0
+   ],
+   "t0": 1.083,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -3.53,
+    1.2197866089106943,
+    -0.72
+   ],
+   "to": [
+    -2.99,
+    0.3,
+    -8.09
+   ],
+   "curve": [
+    0,
+    2.76,
+    0
+   ],
+   "t0": 1.083,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.2,
+    0.3,
+    -12.63
+   ],
+   "to": [
+    -4.76,
+    0.3,
+    -11.4
+   ],
+   "curve": [
+    0,
+    1.84,
+    0
+   ],
+   "t0": 1.175,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.2,
+    0.3,
+    -12.63
+   ],
+   "to": [
+    -4.76,
+    0.3,
+    -11.4
+   ],
+   "curve": [
+    0,
+    1.84,
+    0
+   ],
+   "t0": 1.175,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.2,
+    0.3,
+    -12.63
+   ],
+   "to": [
+    -4.76,
+    0.3,
+    -11.4
+   ],
+   "curve": [
+    0,
+    1.84,
+    0
+   ],
+   "t0": 1.175,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.59,
+    0.3,
+    -13.57
+   ],
+   "to": [
+    -3.5,
+    4.160349694985165,
+    -11
+   ],
+   "curve": [
+    0,
+    2.27,
+    0
+   ],
+   "t0": 1.27,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.59,
+    0.3,
+    -13.57
+   ],
+   "to": [
+    -3.5,
+    4.160349694985165,
+    -11
+   ],
+   "curve": [
+    0,
+    2.27,
+    0
+   ],
+   "t0": 1.27,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.59,
+    0.3,
+    -13.57
+   ],
+   "to": [
+    -3.5,
+    4.160349694985165,
+    -11
+   ],
+   "curve": [
+    0,
+    2.27,
+    0
+   ],
+   "t0": 1.27,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.5,
+    0.3,
+    -5.89
+   ],
+   "to": [
+    2.98,
+    0.3,
+    -4.78
+   ],
+   "curve": [
+    0,
+    3.04,
+    0
+   ],
+   "t0": 1.334,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.5,
+    0.3,
+    -5.89
+   ],
+   "to": [
+    2.98,
+    0.3,
+    -4.78
+   ],
+   "curve": [
+    0,
+    3.04,
+    0
+   ],
+   "t0": 1.334,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.5,
+    0.3,
+    -5.89
+   ],
+   "to": [
+    2.98,
+    0.3,
+    -4.78
+   ],
+   "curve": [
+    0,
+    3.04,
+    0
+   ],
+   "t0": 1.334,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.42,
+    1.4703992126979384,
+    -16.84
+   ],
+   "to": [
+    -4.55,
+    0.3,
+    -11.25
+   ],
+   "curve": [
+    0,
+    2.33,
+    0
+   ],
+   "t0": 1.396,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.42,
+    1.4703992126979384,
+    -16.84
+   ],
+   "to": [
+    -4.55,
+    0.3,
+    -11.25
+   ],
+   "curve": [
+    0,
+    2.33,
+    0
+   ],
+   "t0": 1.396,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.42,
+    1.4703992126979384,
+    -16.84
+   ],
+   "to": [
+    -4.55,
+    0.3,
+    -11.25
+   ],
+   "curve": [
+    0,
+    2.33,
+    0
+   ],
+   "t0": 1.396,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.9,
+    0.3,
+    -14.31
+   ],
+   "to": [
+    -4.39,
+    0.3,
+    -11.41
+   ],
+   "curve": [
+    0,
+    1.86,
+    0
+   ],
+   "t0": 1.468,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.9,
+    0.3,
+    -14.31
+   ],
+   "to": [
+    -4.39,
+    0.3,
+    -11.41
+   ],
+   "curve": [
+    0,
+    1.86,
+    0
+   ],
+   "t0": 1.468,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.9,
+    0.3,
+    -14.31
+   ],
+   "to": [
+    -4.39,
+    0.3,
+    -11.41
+   ],
+   "curve": [
+    0,
+    1.86,
+    0
+   ],
+   "t0": 1.468,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    5.39,
+    0.3,
+    -10.95
+   ],
+   "to": [
+    3.5,
+    3.528304410949349,
+    -6
+   ],
+   "curve": [
+    0,
+    2.45,
+    0
+   ],
+   "t0": 1.562,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    5.39,
+    0.3,
+    -10.95
+   ],
+   "to": [
+    3.5,
+    3.528304410949349,
+    -6
+   ],
+   "curve": [
+    0,
+    2.45,
+    0
+   ],
+   "t0": 1.562,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    5.39,
+    0.3,
+    -10.95
+   ],
+   "to": [
+    3.5,
+    3.528304410949349,
+    -6
+   ],
+   "curve": [
+    0,
+    2.45,
+    0
+   ],
+   "t0": 1.562,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.76,
+    0.3,
+    -14.6
+   ],
+   "to": [
+    6.56,
+    0.3,
+    -9.28
+   ],
+   "curve": [
+    0,
+    3.37,
+    0
+   ],
+   "t0": 1.624,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.76,
+    0.3,
+    -14.6
+   ],
+   "to": [
+    6.56,
+    0.3,
+    -9.28
+   ],
+   "curve": [
+    0,
+    3.37,
+    0
+   ],
+   "t0": 1.624,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.76,
+    0.3,
+    -14.6
+   ],
+   "to": [
+    6.56,
+    0.3,
+    -9.28
+   ],
+   "curve": [
+    0,
+    3.37,
+    0
+   ],
+   "t0": 1.624,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.78,
+    1.3361138022378634,
+    -3.08
+   ],
+   "to": [
+    3.74,
+    0.3,
+    -8.47
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 1.696,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.78,
+    1.3361138022378634,
+    -3.08
+   ],
+   "to": [
+    3.74,
+    0.3,
+    -8.47
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 1.696,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.78,
+    1.3361138022378634,
+    -3.08
+   ],
+   "to": [
+    3.74,
+    0.3,
+    -8.47
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 1.696,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.74,
+    0.3,
+    -7.43
+   ],
+   "to": [
+    0.34,
+    0.3,
+    -11.97
+   ],
+   "curve": [
+    0,
+    2.09,
+    0
+   ],
+   "t0": 1.763,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.74,
+    0.3,
+    -7.43
+   ],
+   "to": [
+    0.34,
+    0.3,
+    -11.97
+   ],
+   "curve": [
+    0,
+    2.09,
+    0
+   ],
+   "t0": 1.763,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.74,
+    0.3,
+    -7.43
+   ],
+   "to": [
+    0.34,
+    0.3,
+    -11.97
+   ],
+   "curve": [
+    0,
+    2.09,
+    0
+   ],
+   "t0": 1.763,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.88,
+    0.3,
+    -4.2
+   ],
+   "to": [
+    -3.5,
+    2.3611626024002774,
+    -11
+   ],
+   "curve": [
+    0,
+    2.77,
+    0
+   ],
+   "t0": 1.832,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.88,
+    0.3,
+    -4.2
+   ],
+   "to": [
+    -3.5,
+    2.3611626024002774,
+    -11
+   ],
+   "curve": [
+    0,
+    2.77,
+    0
+   ],
+   "t0": 1.832,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.88,
+    0.3,
+    -4.2
+   ],
+   "to": [
+    -3.5,
+    2.3611626024002774,
+    -11
+   ],
+   "curve": [
+    0,
+    2.77,
+    0
+   ],
+   "t0": 1.832,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.46,
+    0.3,
+    -11.08
+   ],
+   "to": [
+    2.83,
+    0.3,
+    -15.09
+   ],
+   "curve": [
+    0,
+    3.43,
+    0
+   ],
+   "t0": 1.91,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.46,
+    0.3,
+    -11.08
+   ],
+   "to": [
+    2.83,
+    0.3,
+    -15.09
+   ],
+   "curve": [
+    0,
+    3.43,
+    0
+   ],
+   "t0": 1.91,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.46,
+    0.3,
+    -11.08
+   ],
+   "to": [
+    2.83,
+    0.3,
+    -15.09
+   ],
+   "curve": [
+    0,
+    3.43,
+    0
+   ],
+   "t0": 1.91,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -7.76,
+    0.9022796314642747,
+    -4.43
+   ],
+   "to": [
+    3.95,
+    0.3,
+    -12.52
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 1.982,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -7.76,
+    0.9022796314642747,
+    -4.43
+   ],
+   "to": [
+    3.95,
+    0.3,
+    -12.52
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 1.982,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -7.76,
+    0.9022796314642747,
+    -4.43
+   ],
+   "to": [
+    3.95,
+    0.3,
+    -12.52
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 1.982,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.67,
+    0.3,
+    -5.65
+   ],
+   "to": [
+    0.54,
+    0.3,
+    -3.88
+   ],
+   "curve": [
+    0,
+    1.42,
+    0
+   ],
+   "t0": 2.048,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.67,
+    0.3,
+    -5.65
+   ],
+   "to": [
+    0.54,
+    0.3,
+    -3.88
+   ],
+   "curve": [
+    0,
+    1.42,
+    0
+   ],
+   "t0": 2.048,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.67,
+    0.3,
+    -5.65
+   ],
+   "to": [
+    0.54,
+    0.3,
+    -3.88
+   ],
+   "curve": [
+    0,
+    1.42,
+    0
+   ],
+   "t0": 2.048,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.15,
+    0.3,
+    -7.13
+   ],
+   "to": [
+    3.5,
+    3.037893002250656,
+    -6
+   ],
+   "curve": [
+    0,
+    2.08,
+    0
+   ],
+   "t0": 2.131,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.15,
+    0.3,
+    -7.13
+   ],
+   "to": [
+    3.5,
+    3.037893002250656,
+    -6
+   ],
+   "curve": [
+    0,
+    2.08,
+    0
+   ],
+   "t0": 2.131,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.15,
+    0.3,
+    -7.13
+   ],
+   "to": [
+    3.5,
+    3.037893002250656,
+    -6
+   ],
+   "curve": [
+    0,
+    2.08,
+    0
+   ],
+   "t0": 2.131,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.44,
+    0.3,
+    -11.85
+   ],
+   "to": [
+    -1.93,
+    0.3,
+    -13.92
+   ],
+   "curve": [
+    0,
+    2.14,
+    0
+   ],
+   "t0": 2.206,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.44,
+    0.3,
+    -11.85
+   ],
+   "to": [
+    -1.93,
+    0.3,
+    -13.92
+   ],
+   "curve": [
+    0,
+    2.14,
+    0
+   ],
+   "t0": 2.206,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -6.44,
+    0.3,
+    -11.85
+   ],
+   "to": [
+    -1.93,
+    0.3,
+    -13.92
+   ],
+   "curve": [
+    0,
+    2.14,
+    0
+   ],
+   "t0": 2.206,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.03,
+    0.4755900505133063,
+    -17.05
+   ],
+   "to": [
+    3.88,
+    0.3,
+    -11.83
+   ],
+   "curve": [
+    0,
+    3.27,
+    0
+   ],
+   "t0": 2.291,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.03,
+    0.4755900505133063,
+    -17.05
+   ],
+   "to": [
+    3.88,
+    0.3,
+    -11.83
+   ],
+   "curve": [
+    0,
+    3.27,
+    0
+   ],
+   "t0": 2.291,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -4.03,
+    0.4755900505133063,
+    -17.05
+   ],
+   "to": [
+    3.88,
+    0.3,
+    -11.83
+   ],
+   "curve": [
+    0,
+    3.27,
+    0
+   ],
+   "t0": 2.291,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.39,
+    0.3,
+    -13.47
+   ],
+   "to": [
+    -2.23,
+    0.3,
+    -7.36
+   ],
+   "curve": [
+    0,
+    2.68,
+    0
+   ],
+   "t0": 2.386,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.39,
+    0.3,
+    -13.47
+   ],
+   "to": [
+    -2.23,
+    0.3,
+    -7.36
+   ],
+   "curve": [
+    0,
+    2.68,
+    0
+   ],
+   "t0": 2.386,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.39,
+    0.3,
+    -13.47
+   ],
+   "to": [
+    -2.23,
+    0.3,
+    -7.36
+   ],
+   "curve": [
+    0,
+    2.68,
+    0
+   ],
+   "t0": 2.386,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.53,
+    0.3,
+    -7.96
+   ],
+   "to": [
+    -3.5,
+    2.617526370892329,
+    -11
+   ],
+   "curve": [
+    0,
+    2.68,
+    0
+   ],
+   "t0": 2.471,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.53,
+    0.3,
+    -7.96
+   ],
+   "to": [
+    -3.5,
+    2.617526370892329,
+    -11
+   ],
+   "curve": [
+    0,
+    2.68,
+    0
+   ],
+   "t0": 2.471,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    2.53,
+    0.3,
+    -7.96
+   ],
+   "to": [
+    -3.5,
+    2.617526370892329,
+    -11
+   ],
+   "curve": [
+    0,
+    2.68,
+    0
+   ],
+   "t0": 2.471,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.22,
+    0.3,
+    -7.08
+   ],
+   "to": [
+    3.17,
+    0.3,
+    -9.0
+   ],
+   "curve": [
+    0,
+    2.1,
+    0
+   ],
+   "t0": 2.537,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.22,
+    0.3,
+    -7.08
+   ],
+   "to": [
+    3.17,
+    0.3,
+    -9.0
+   ],
+   "curve": [
+    0,
+    2.1,
+    0
+   ],
+   "t0": 2.537,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -1.22,
+    0.3,
+    -7.08
+   ],
+   "to": [
+    3.17,
+    0.3,
+    -9.0
+   ],
+   "curve": [
+    0,
+    2.1,
+    0
+   ],
+   "t0": 2.537,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.89,
+    0.435701241332604,
+    -2.2
+   ],
+   "to": [
+    3.03,
+    0.3,
+    -12.05
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 2.602,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.89,
+    0.435701241332604,
+    -2.2
+   ],
+   "to": [
+    3.03,
+    0.3,
+    -12.05
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 2.602,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.89,
+    0.435701241332604,
+    -2.2
+   ],
+   "to": [
+    3.03,
+    0.3,
+    -12.05
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 2.602,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.06,
+    0.3,
+    -4.56
+   ],
+   "to": [
+    -1.93,
+    0.3,
+    -6.78
+   ],
+   "curve": [
+    0,
+    1.63,
+    0
+   ],
+   "t0": 2.667,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.06,
+    0.3,
+    -4.56
+   ],
+   "to": [
+    -1.93,
+    0.3,
+    -6.78
+   ],
+   "curve": [
+    0,
+    1.63,
+    0
+   ],
+   "t0": 2.667,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -0.06,
+    0.3,
+    -4.56
+   ],
+   "to": [
+    -1.93,
+    0.3,
+    -6.78
+   ],
+   "curve": [
+    0,
+    1.63,
+    0
+   ],
+   "t0": 2.667,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    5.68,
+    0.3,
+    -9.25
+   ],
+   "to": [
+    3.5,
+    3.167669312832539,
+    -6
+   ],
+   "curve": [
+    0,
+    2.11,
+    0
+   ],
+   "t0": 2.761,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    5.68,
+    0.3,
+    -9.25
+   ],
+   "to": [
+    3.5,
+    3.167669312832539,
+    -6
+   ],
+   "curve": [
+    0,
+    2.11,
+    0
+   ],
+   "t0": 2.761,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    5.68,
+    0.3,
+    -9.25
+   ],
+   "to": [
+    3.5,
+    3.167669312832539,
+    -6
+   ],
+   "curve": [
+    0,
+    2.11,
+    0
+   ],
+   "t0": 2.761,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    3.53,
+    0.3,
+    -6.36
+   ],
+   "to": [
+    -0.61,
+    0.3,
+    -2.44
+   ],
+   "curve": [
+    0,
+    2.33,
+    0
+   ],
+   "t0": 2.825,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    3.53,
+    0.3,
+    -6.36
+   ],
+   "to": [
+    -0.61,
+    0.3,
+    -2.44
+   ],
+   "curve": [
+    0,
+    2.33,
+    0
+   ],
+   "t0": 2.825,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    3.53,
+    0.3,
+    -6.36
+   ],
+   "to": [
+    -0.61,
+    0.3,
+    -2.44
+   ],
+   "curve": [
+    0,
+    2.33,
+    0
+   ],
+   "t0": 2.825,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    8.91,
+    1.7313798020245827,
+    -7.7
+   ],
+   "to": [
+    -2.31,
+    0.3,
+    -9.41
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 2.891,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     4.488
+    ],
+    [
+     1,
+     2.244
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    8.91,
+    1.7313798020245827,
+    -7.7
+   ],
+   "to": [
+    -2.31,
+    0.3,
+    -9.41
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 2.891,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     3.6719999999999997
+    ],
+    [
+     1,
+     1.8359999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    8.91,
+    1.7313798020245827,
+    -7.7
+   ],
+   "to": [
+    -2.31,
+    0.3,
+    -9.41
+   ],
+   "curve": [
+    0,
+    3.5,
+    0
+   ],
+   "t0": 2.891,
+   "life": 0.08,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.8359999999999999
+    ],
+    [
+     1,
+     0.9179999999999999
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
    "from": [
     4.5,
     0.2,
@@ -20195,22 +26725,383 @@
     15,
     -12.4
    ],
+   "curve": [
+    1.5,
+    0,
+    0.0
+   ],
    "t0": 0.5,
-   "life": 0.07,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     5.28
+    ],
+    [
+     1,
+     2.64
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    4.5,
+    0.2,
+    -13.0
+   ],
+   "to": [
+    4.5,
+    15,
+    -12.4
+   ],
+   "curve": [
+    1.5,
+    0,
+    0.0
+   ],
+   "t0": 0.5,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
    "color": "#6fe0ff",
-   "thickness": 0.28,
-   "jitter": 1.0,
-   "segments": 12,
-   "flicker": 0.034,
-   "branch": 0.25,
-   "seed": 621,
-   "brightness": 2.2
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     4.32
+    ],
+    [
+     1,
+     2.16
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    4.5,
+    0.2,
+    -13.0
+   ],
+   "to": [
+    4.5,
+    15,
+    -12.4
+   ],
+   "curve": [
+    1.5,
+    0,
+    0.0
+   ],
+   "t0": 0.5,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     2.16
+    ],
+    [
+     1,
+     1.08
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    4.5,
+    0.2,
+    -13.0
+   ],
+   "to": [
+    3.5,
+    13,
+    -12.4
+   ],
+   "curve": [
+    -1.5,
+    0,
+    -0.0
+   ],
+   "t0": 0.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     3.4320000000000004
+    ],
+    [
+     1,
+     1.7160000000000002
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    4.5,
+    0.2,
+    -13.0
+   ],
+   "to": [
+    3.5,
+    13,
+    -12.4
+   ],
+   "curve": [
+    -1.5,
+    0,
+    -0.0
+   ],
+   "t0": 0.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     2.8080000000000003
+    ],
+    [
+     1,
+     1.4040000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    4.5,
+    0.2,
+    -13.0
+   ],
+   "to": [
+    3.5,
+    13,
+    -12.4
+   ],
+   "curve": [
+    -1.5,
+    0,
+    -0.0
+   ],
+   "t0": 0.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.4040000000000001
+    ],
+    [
+     1,
+     0.7020000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
   },
   {
    "type": "emitter",
    "at": [
     4.5,
-    7.5,
+    8.5,
     -13.0
    ],
    "props": {
@@ -20234,16 +27125,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -20271,7 +27162,7 @@
    "type": "emitter",
    "at": [
     4.5,
-    7.5,
+    8.5,
     -13.0
    ],
    "props": {
@@ -20295,16 +27186,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -20332,7 +27223,7 @@
    "type": "emitter",
    "at": [
     4.5,
-    7.5,
+    8.5,
     -13.0
    ],
    "props": {
@@ -20360,16 +27251,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -20397,7 +27288,7 @@
    "type": "emitter",
    "at": [
     4.5,
-    7.5,
+    8.5,
     -13.0
    ],
    "props": {
@@ -20425,16 +27316,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -20451,6 +27342,274 @@
     "Transparency": 0
    },
    "seed": 631,
+   "emits": [
+    [
+     0.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    4.5,
+    0.35,
+    -13.0
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_glow",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#3040d0"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 1,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": 0
+   },
+   "seed": 691,
+   "emits": [
+    [
+     0.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    4.5,
+    0.35,
+    -13.0
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_rim",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#2a1a9a"
+     ],
+     [
+      1,
+      "#2a3350"
+     ]
+    ],
+    "LightEmission": 0,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": 0
+   },
+   "seed": 691,
+   "emits": [
+    [
+     0.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    4.5,
+    0.35,
+    -13.0
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_mid",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.12,
+      "#6fe0ff"
+     ],
+     [
+      0.5,
+      "#3a5cff"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 0.1,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": 0
+   },
+   "seed": 691,
+   "emits": [
+    [
+     0.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    4.5,
+    0.35,
+    -13.0
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_core",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.3,
+      "#bff3ff"
+     ],
+     [
+      0.6,
+      "#6fe0ff"
+     ],
+     [
+      1,
+      "#3a5cff"
+     ]
+    ],
+    "LightEmission": 0.35,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": 0
+   },
+   "seed": 691,
    "emits": [
     [
      0.5,
@@ -21153,8 +28312,8 @@
      ]
     ],
     "Lifetime": [
-     2.0,
-     2.0
+     2.4,
+     2.4
     ],
     "Speed": [
      0.01,
@@ -21168,11 +28327,15 @@
     "Transparency": [
      [
       0,
-      0.15
+      1
      ],
      [
-      0.7,
-      0.3
+      0.25,
+      0.2
+     ],
+     [
+      0.8,
+      0.35
      ],
      [
       1,
@@ -21551,7 +28714,7 @@
    ]
   },
   {
-   "type": "bolt",
+   "type": "beam",
    "from": [
     -3.5,
     0.2,
@@ -21562,22 +28725,383 @@
     15,
     -11.077306696577315
    ],
+   "curve": [
+    -0.484934350295255,
+    0,
+    1.4194501315311217
+   ],
    "t0": 1.0,
-   "life": 0.07,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     5.28
+    ],
+    [
+     1,
+     2.64
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -3.5,
+    0.2,
+    -11
+   ],
+   "to": [
+    -2.9820743800106757,
+    15,
+    -11.077306696577315
+   ],
+   "curve": [
+    -0.484934350295255,
+    0,
+    1.4194501315311217
+   ],
+   "t0": 1.0,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
    "color": "#6fe0ff",
-   "thickness": 0.28,
-   "jitter": 1.0,
-   "segments": 12,
-   "flicker": 0.034,
-   "branch": 0.25,
-   "seed": 622,
-   "brightness": 2.2
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     4.32
+    ],
+    [
+     1,
+     2.16
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -3.5,
+    0.2,
+    -11
+   ],
+   "to": [
+    -2.9820743800106757,
+    15,
+    -11.077306696577315
+   ],
+   "curve": [
+    -0.484934350295255,
+    0,
+    1.4194501315311217
+   ],
+   "t0": 1.0,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     2.16
+    ],
+    [
+     1,
+     1.08
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -3.5,
+    0.2,
+    -11
+   ],
+   "to": [
+    -3.9820743800106757,
+    13,
+    -11.077306696577315
+   ],
+   "curve": [
+    0.484934350295255,
+    0,
+    -1.4194501315311217
+   ],
+   "t0": 1.1,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     3.4320000000000004
+    ],
+    [
+     1,
+     1.7160000000000002
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -3.5,
+    0.2,
+    -11
+   ],
+   "to": [
+    -3.9820743800106757,
+    13,
+    -11.077306696577315
+   ],
+   "curve": [
+    0.484934350295255,
+    0,
+    -1.4194501315311217
+   ],
+   "t0": 1.1,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     2.8080000000000003
+    ],
+    [
+     1,
+     1.4040000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -3.5,
+    0.2,
+    -11
+   ],
+   "to": [
+    -3.9820743800106757,
+    13,
+    -11.077306696577315
+   ],
+   "curve": [
+    0.484934350295255,
+    0,
+    -1.4194501315311217
+   ],
+   "t0": 1.1,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.4040000000000001
+    ],
+    [
+     1,
+     0.7020000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
   },
   {
    "type": "emitter",
    "at": [
     -3.5,
-    7.5,
+    8.5,
     -11
    ],
    "props": {
@@ -21601,16 +29125,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -21638,7 +29162,7 @@
    "type": "emitter",
    "at": [
     -3.5,
-    7.5,
+    8.5,
     -11
    ],
    "props": {
@@ -21662,16 +29186,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -21699,7 +29223,7 @@
    "type": "emitter",
    "at": [
     -3.5,
-    7.5,
+    8.5,
     -11
    ],
    "props": {
@@ -21727,16 +29251,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -21764,7 +29288,7 @@
    "type": "emitter",
    "at": [
     -3.5,
-    7.5,
+    8.5,
     -11
    ],
    "props": {
@@ -21792,16 +29316,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -21818,6 +29342,274 @@
     "Transparency": 0
    },
    "seed": 632,
+   "emits": [
+    [
+     1.0,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.5,
+    0.35,
+    -11
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_glow",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#3040d0"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 1,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": 0
+   },
+   "seed": 692,
+   "emits": [
+    [
+     1.0,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.5,
+    0.35,
+    -11
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_rim",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#2a1a9a"
+     ],
+     [
+      1,
+      "#2a3350"
+     ]
+    ],
+    "LightEmission": 0,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": 0
+   },
+   "seed": 692,
+   "emits": [
+    [
+     1.0,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.5,
+    0.35,
+    -11
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_mid",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.12,
+      "#6fe0ff"
+     ],
+     [
+      0.5,
+      "#3a5cff"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 0.1,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": 0
+   },
+   "seed": 692,
+   "emits": [
+    [
+     1.0,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.5,
+    0.35,
+    -11
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_core",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.3,
+      "#bff3ff"
+     ],
+     [
+      0.6,
+      "#6fe0ff"
+     ],
+     [
+      1,
+      "#3a5cff"
+     ]
+    ],
+    "LightEmission": 0.35,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": 0
+   },
+   "seed": 692,
    "emits": [
     [
      1.0,
@@ -22520,8 +30312,8 @@
      ]
     ],
     "Lifetime": [
-     2.0,
-     2.0
+     2.4,
+     2.4
     ],
     "Speed": [
      0.01,
@@ -22535,11 +30327,15 @@
     "Transparency": [
      [
       0,
-      0.15
+      1
      ],
      [
-      0.7,
-      0.3
+      0.25,
+      0.2
+     ],
+     [
+      0.8,
+      0.35
      ],
      [
       1,
@@ -22918,7 +30714,7 @@
    ]
   },
   {
-   "type": "bolt",
+   "type": "beam",
    "from": [
     -5.0,
     0.2,
@@ -22929,22 +30725,383 @@
     15,
     -6.080078915547677
    ],
+   "curve": [
+    -1.1864515678716252,
+    0,
+    -0.9177868364140784
+   ],
    "t0": 1.5,
-   "life": 0.07,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     5.28
+    ],
+    [
+     1,
+     2.64
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.0,
+    0.2,
+    -5.5
+   ],
+   "to": [
+    -5.522945463448153,
+    15,
+    -6.080078915547677
+   ],
+   "curve": [
+    -1.1864515678716252,
+    0,
+    -0.9177868364140784
+   ],
+   "t0": 1.5,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
    "color": "#6fe0ff",
-   "thickness": 0.28,
-   "jitter": 1.0,
-   "segments": 12,
-   "flicker": 0.034,
-   "branch": 0.25,
-   "seed": 623,
-   "brightness": 2.2
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     4.32
+    ],
+    [
+     1,
+     2.16
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.0,
+    0.2,
+    -5.5
+   ],
+   "to": [
+    -5.522945463448153,
+    15,
+    -6.080078915547677
+   ],
+   "curve": [
+    -1.1864515678716252,
+    0,
+    -0.9177868364140784
+   ],
+   "t0": 1.5,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     2.16
+    ],
+    [
+     1,
+     1.08
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.0,
+    0.2,
+    -5.5
+   ],
+   "to": [
+    -6.522945463448153,
+    13,
+    -6.080078915547677
+   ],
+   "curve": [
+    1.1864515678716252,
+    0,
+    0.9177868364140784
+   ],
+   "t0": 1.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     3.4320000000000004
+    ],
+    [
+     1,
+     1.7160000000000002
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.0,
+    0.2,
+    -5.5
+   ],
+   "to": [
+    -6.522945463448153,
+    13,
+    -6.080078915547677
+   ],
+   "curve": [
+    1.1864515678716252,
+    0,
+    0.9177868364140784
+   ],
+   "t0": 1.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     2.8080000000000003
+    ],
+    [
+     1,
+     1.4040000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    -5.0,
+    0.2,
+    -5.5
+   ],
+   "to": [
+    -6.522945463448153,
+    13,
+    -6.080078915547677
+   ],
+   "curve": [
+    1.1864515678716252,
+    0,
+    0.9177868364140784
+   ],
+   "t0": 1.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.4040000000000001
+    ],
+    [
+     1,
+     0.7020000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
   },
   {
    "type": "emitter",
    "at": [
     -5.0,
-    7.5,
+    8.5,
     -5.5
    ],
    "props": {
@@ -22968,16 +31125,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -23005,7 +31162,7 @@
    "type": "emitter",
    "at": [
     -5.0,
-    7.5,
+    8.5,
     -5.5
    ],
    "props": {
@@ -23029,16 +31186,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -23066,7 +31223,7 @@
    "type": "emitter",
    "at": [
     -5.0,
-    7.5,
+    8.5,
     -5.5
    ],
    "props": {
@@ -23094,16 +31251,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -23131,7 +31288,7 @@
    "type": "emitter",
    "at": [
     -5.0,
-    7.5,
+    8.5,
     -5.5
    ],
    "props": {
@@ -23159,16 +31316,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -23185,6 +31342,274 @@
     "Transparency": 0
    },
    "seed": 633,
+   "emits": [
+    [
+     1.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -5.0,
+    0.35,
+    -5.5
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_glow",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#3040d0"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 1,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": 0
+   },
+   "seed": 693,
+   "emits": [
+    [
+     1.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -5.0,
+    0.35,
+    -5.5
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_rim",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#2a1a9a"
+     ],
+     [
+      1,
+      "#2a3350"
+     ]
+    ],
+    "LightEmission": 0,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": 0
+   },
+   "seed": 693,
+   "emits": [
+    [
+     1.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -5.0,
+    0.35,
+    -5.5
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_mid",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.12,
+      "#6fe0ff"
+     ],
+     [
+      0.5,
+      "#3a5cff"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 0.1,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": 0
+   },
+   "seed": 693,
+   "emits": [
+    [
+     1.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -5.0,
+    0.35,
+    -5.5
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_core",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.3,
+      "#bff3ff"
+     ],
+     [
+      0.6,
+      "#6fe0ff"
+     ],
+     [
+      1,
+      "#3a5cff"
+     ]
+    ],
+    "LightEmission": 0.35,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": 0
+   },
+   "seed": 693,
    "emits": [
     [
      1.5,
@@ -23887,8 +32312,8 @@
      ]
     ],
     "Lifetime": [
-     2.0,
-     2.0
+     2.4,
+     2.4
     ],
     "Speed": [
      0.01,
@@ -23902,11 +32327,15 @@
     "Transparency": [
      [
       0,
-      0.15
+      1
      ],
      [
-      0.7,
-      0.3
+      0.25,
+      0.2
+     ],
+     [
+      0.8,
+      0.35
      ],
      [
       1,
@@ -24285,7 +32714,7 @@
    ]
   },
   {
-   "type": "bolt",
+   "type": "beam",
    "from": [
     3.5,
     0.2,
@@ -24296,22 +32725,383 @@
     15,
     -5.773213354372212
    ],
+   "curve": [
+    1.252069177258739,
+    0,
+    -0.8260283138964575
+   ],
    "t0": 2.0,
-   "life": 0.07,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     5.28
+    ],
+    [
+     1,
+     2.64
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    3.5,
+    0.2,
+    -6
+   ],
+   "to": [
+    3.5100883402906105,
+    15,
+    -5.773213354372212
+   ],
+   "curve": [
+    1.252069177258739,
+    0,
+    -0.8260283138964575
+   ],
+   "t0": 2.0,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
    "color": "#6fe0ff",
-   "thickness": 0.28,
-   "jitter": 1.0,
-   "segments": 12,
-   "flicker": 0.034,
-   "branch": 0.25,
-   "seed": 624,
-   "brightness": 2.2
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     4.32
+    ],
+    [
+     1,
+     2.16
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    3.5,
+    0.2,
+    -6
+   ],
+   "to": [
+    3.5100883402906105,
+    15,
+    -5.773213354372212
+   ],
+   "curve": [
+    1.252069177258739,
+    0,
+    -0.8260283138964575
+   ],
+   "t0": 2.0,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     2.16
+    ],
+    [
+     1,
+     1.08
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    3.5,
+    0.2,
+    -6
+   ],
+   "to": [
+    2.5100883402906105,
+    13,
+    -5.773213354372212
+   ],
+   "curve": [
+    -1.252069177258739,
+    0,
+    0.8260283138964575
+   ],
+   "t0": 2.1,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     3.4320000000000004
+    ],
+    [
+     1,
+     1.7160000000000002
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    3.5,
+    0.2,
+    -6
+   ],
+   "to": [
+    2.5100883402906105,
+    13,
+    -5.773213354372212
+   ],
+   "curve": [
+    -1.252069177258739,
+    0,
+    0.8260283138964575
+   ],
+   "t0": 2.1,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     2.8080000000000003
+    ],
+    [
+     1,
+     1.4040000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    3.5,
+    0.2,
+    -6
+   ],
+   "to": [
+    2.5100883402906105,
+    13,
+    -5.773213354372212
+   ],
+   "curve": [
+    -1.252069177258739,
+    0,
+    0.8260283138964575
+   ],
+   "t0": 2.1,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.4040000000000001
+    ],
+    [
+     1,
+     0.7020000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
   },
   {
    "type": "emitter",
    "at": [
     3.5,
-    7.5,
+    8.5,
     -6
    ],
    "props": {
@@ -24335,16 +33125,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -24372,7 +33162,7 @@
    "type": "emitter",
    "at": [
     3.5,
-    7.5,
+    8.5,
     -6
    ],
    "props": {
@@ -24396,16 +33186,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -24433,7 +33223,7 @@
    "type": "emitter",
    "at": [
     3.5,
-    7.5,
+    8.5,
     -6
    ],
    "props": {
@@ -24461,16 +33251,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -24498,7 +33288,7 @@
    "type": "emitter",
    "at": [
     3.5,
-    7.5,
+    8.5,
     -6
    ],
    "props": {
@@ -24526,16 +33316,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -24552,6 +33342,274 @@
     "Transparency": 0
    },
    "seed": 634,
+   "emits": [
+    [
+     2.0,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.5,
+    0.35,
+    -6
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_glow",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#3040d0"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 1,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": 0
+   },
+   "seed": 694,
+   "emits": [
+    [
+     2.0,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.5,
+    0.35,
+    -6
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_rim",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#2a1a9a"
+     ],
+     [
+      1,
+      "#2a3350"
+     ]
+    ],
+    "LightEmission": 0,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": 0
+   },
+   "seed": 694,
+   "emits": [
+    [
+     2.0,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.5,
+    0.35,
+    -6
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_mid",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.12,
+      "#6fe0ff"
+     ],
+     [
+      0.5,
+      "#3a5cff"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 0.1,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": 0
+   },
+   "seed": 694,
+   "emits": [
+    [
+     2.0,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.5,
+    0.35,
+    -6
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_core",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.3,
+      "#bff3ff"
+     ],
+     [
+      0.6,
+      "#6fe0ff"
+     ],
+     [
+      1,
+      "#3a5cff"
+     ]
+    ],
+    "LightEmission": 0.35,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": 0
+   },
+   "seed": 694,
    "emits": [
     [
      2.0,
@@ -25254,8 +34312,8 @@
      ]
     ],
     "Lifetime": [
-     2.0,
-     2.0
+     2.4,
+     2.4
     ],
     "Speed": [
      0.01,
@@ -25269,11 +34327,15 @@
     "Transparency": [
      [
       0,
-      0.15
+      1
      ],
      [
-      0.7,
-      0.3
+      0.25,
+      0.2
+     ],
+     [
+      0.8,
+      0.35
      ],
      [
       1,
@@ -25652,7 +34714,7 @@
    ]
   },
   {
-   "type": "bolt",
+   "type": "beam",
    "from": [
     1.0,
     0.2,
@@ -25663,22 +34725,383 @@
     15,
     -14.978361505790105
    ],
+   "curve": [
+    0.3768897638733836,
+    0,
+    1.4518795080472295
+   ],
    "t0": 2.5,
-   "life": 0.07,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_1_rim",
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     5.28
+    ],
+    [
+     1,
+     2.64
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.0,
+    0.2,
+    -15.5
+   ],
+   "to": [
+    1.5127593448529684,
+    15,
+    -14.978361505790105
+   ],
+   "curve": [
+    0.3768897638733836,
+    0,
+    1.4518795080472295
+   ],
+   "t0": 2.5,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_1_mid",
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
    "color": "#6fe0ff",
-   "thickness": 0.28,
-   "jitter": 1.0,
-   "segments": 12,
-   "flicker": 0.034,
-   "branch": 0.25,
-   "seed": 625,
-   "brightness": 2.2
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     4.32
+    ],
+    [
+     1,
+     2.16
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.0,
+    0.2,
+    -15.5
+   ],
+   "to": [
+    1.5127593448529684,
+    15,
+    -14.978361505790105
+   ],
+   "curve": [
+    0.3768897638733836,
+    0,
+    1.4518795080472295
+   ],
+   "t0": 2.5,
+   "life": 0.12,
+   "textures": [
+    "thunder_strip_v2_1_core",
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     2.16
+    ],
+    [
+     1,
+     1.08
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.0,
+    0.2,
+    -15.5
+   ],
+   "to": [
+    0.5127593448529684,
+    13,
+    -14.978361505790105
+   ],
+   "curve": [
+    -0.3768897638733836,
+    0,
+    -1.4518795080472295
+   ],
+   "t0": 2.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_2_rim",
+    "thunder_strip_v2_3_rim",
+    "thunder_strip_v2_4_rim",
+    "thunder_strip_v2_1_rim"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#2a1a9a",
+   "lightEmission": 0,
+   "brightness": 1.0,
+   "width": [
+    [
+     0,
+     3.4320000000000004
+    ],
+    [
+     1,
+     1.7160000000000002
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.0,
+    0.2,
+    -15.5
+   ],
+   "to": [
+    0.5127593448529684,
+    13,
+    -14.978361505790105
+   ],
+   "curve": [
+    -0.3768897638733836,
+    0,
+    -1.4518795080472295
+   ],
+   "t0": 2.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_2_mid",
+    "thunder_strip_v2_3_mid",
+    "thunder_strip_v2_4_mid",
+    "thunder_strip_v2_1_mid"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#6fe0ff",
+   "lightEmission": 0.1,
+   "brightness": 1.15,
+   "width": [
+    [
+     0,
+     2.8080000000000003
+    ],
+    [
+     1,
+     1.4040000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
+  },
+  {
+   "type": "beam",
+   "from": [
+    1.0,
+    0.2,
+    -15.5
+   ],
+   "to": [
+    0.5127593448529684,
+    13,
+    -14.978361505790105
+   ],
+   "curve": [
+    -0.3768897638733836,
+    0,
+    -1.4518795080472295
+   ],
+   "t0": 2.6,
+   "life": 0.06,
+   "textures": [
+    "thunder_strip_v2_2_core",
+    "thunder_strip_v2_3_core",
+    "thunder_strip_v2_4_core",
+    "thunder_strip_v2_1_core"
+   ],
+   "swap": 0.034,
+   "textureLength": 3.5,
+   "segments": 10,
+   "color": "#ffffff",
+   "lightEmission": 0.35,
+   "brightness": 1.4,
+   "width": [
+    [
+     0,
+     1.4040000000000001
+    ],
+    [
+     1,
+     0.7020000000000001
+    ]
+   ],
+   "transparency": [
+    [
+     0,
+     0
+    ],
+    [
+     0.45,
+     0
+    ],
+    [
+     0.5,
+     0.7
+    ],
+    [
+     0.62,
+     0
+    ],
+    [
+     1,
+     0.3
+    ]
+   ]
   },
   {
    "type": "emitter",
    "at": [
     1.0,
-    7.5,
+    8.5,
     -15.5
    ],
    "props": {
@@ -25702,16 +35125,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -25739,7 +35162,7 @@
    "type": "emitter",
    "at": [
     1.0,
-    7.5,
+    8.5,
     -15.5
    ],
    "props": {
@@ -25763,16 +35186,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -25800,7 +35223,7 @@
    "type": "emitter",
    "at": [
     1.0,
-    7.5,
+    8.5,
     -15.5
    ],
    "props": {
@@ -25828,16 +35251,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -25865,7 +35288,7 @@
    "type": "emitter",
    "at": [
     1.0,
-    7.5,
+    8.5,
     -15.5
    ],
    "props": {
@@ -25893,16 +35316,16 @@
     "Size": [
      [
       0,
-      15
+      18
      ],
      [
       1,
-      15
+      18
      ]
     ],
     "Lifetime": [
-     0.3,
-     0.3
+     0.32,
+     0.32
     ],
     "Speed": [
      0.01,
@@ -25919,6 +35342,274 @@
     "Transparency": 0
    },
    "seed": 635,
+   "emits": [
+    [
+     2.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.0,
+    0.35,
+    -15.5
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_glow",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#3040d0"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 1,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": 0
+   },
+   "seed": 695,
+   "emits": [
+    [
+     2.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.0,
+    0.35,
+    -15.5
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_rim",
+    "Color": [
+     [
+      0,
+      "#3a5cff"
+     ],
+     [
+      0.4,
+      "#2a1a9a"
+     ],
+     [
+      1,
+      "#2a3350"
+     ]
+    ],
+    "LightEmission": 0,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": 0
+   },
+   "seed": 695,
+   "emits": [
+    [
+     2.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.0,
+    0.35,
+    -15.5
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_mid",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.12,
+      "#6fe0ff"
+     ],
+     [
+      0.5,
+      "#3a5cff"
+     ],
+     [
+      1,
+      "#2a1a9a"
+     ]
+    ],
+    "LightEmission": 0.1,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": 0
+   },
+   "seed": 695,
+   "emits": [
+    [
+     2.5,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.0,
+    0.35,
+    -15.5
+   ],
+   "props": {
+    "Texture": "thunder_burst_v2_core",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.3,
+      "#bff3ff"
+     ],
+     [
+      0.6,
+      "#6fe0ff"
+     ],
+     [
+      1,
+      "#3a5cff"
+     ]
+    ],
+    "LightEmission": 0.35,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      0.2,
+      9
+     ],
+     [
+      1,
+      9.5
+     ]
+    ],
+    "Lifetime": [
+     0.3,
+     0.3
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": 0
+   },
+   "seed": 695,
    "emits": [
     [
      2.5,
@@ -26621,8 +36312,8 @@
      ]
     ],
     "Lifetime": [
-     2.0,
-     2.0
+     2.4,
+     2.4
     ],
     "Speed": [
      0.01,
@@ -26636,11 +36327,15 @@
     "Transparency": [
      [
       0,
-      0.15
+      1
      ],
      [
-      0.7,
-      0.3
+      0.25,
+      0.2
+     ],
+     [
+      0.8,
+      0.35
      ],
      [
       1,
@@ -28761,7 +38456,7 @@
     -9.0
    ],
    "color": "#6fe0ff",
-   "range": 16,
+   "range": 18,
    "brightness": [
     [
      0.2,
@@ -28770,6 +38465,130 @@
     [
      0.4,
      0.9
+    ],
+    [
+     0.45,
+     1.44
+    ],
+    [
+     0.53,
+     0.54
+    ],
+    [
+     0.61,
+     1.08
+    ],
+    [
+     0.69,
+     1.44
+    ],
+    [
+     0.77,
+     0.54
+    ],
+    [
+     0.85,
+     1.08
+    ],
+    [
+     0.93,
+     1.44
+    ],
+    [
+     1.01,
+     0.54
+    ],
+    [
+     1.09,
+     1.08
+    ],
+    [
+     1.17,
+     1.44
+    ],
+    [
+     1.25,
+     0.54
+    ],
+    [
+     1.33,
+     1.08
+    ],
+    [
+     1.41,
+     1.44
+    ],
+    [
+     1.49,
+     0.54
+    ],
+    [
+     1.57,
+     1.08
+    ],
+    [
+     1.65,
+     1.44
+    ],
+    [
+     1.73,
+     0.54
+    ],
+    [
+     1.81,
+     1.08
+    ],
+    [
+     1.89,
+     1.44
+    ],
+    [
+     1.97,
+     0.54
+    ],
+    [
+     2.05,
+     1.08
+    ],
+    [
+     2.13,
+     1.44
+    ],
+    [
+     2.21,
+     0.54
+    ],
+    [
+     2.29,
+     1.08
+    ],
+    [
+     2.37,
+     1.44
+    ],
+    [
+     2.45,
+     0.54
+    ],
+    [
+     2.53,
+     1.08
+    ],
+    [
+     2.61,
+     1.44
+    ],
+    [
+     2.69,
+     0.54
+    ],
+    [
+     2.77,
+     1.08
+    ],
+    [
+     2.85,
+     1.44
     ],
     [
      3.0,
@@ -28911,17 +38730,17 @@
   ],
   [
    0.12,
-   -0.06,
-   0.12,
    -0.03,
-   "#e2eaff"
+   0.12,
+   0.04,
+   "#e6eeff"
   ],
   [
    3.0,
-   -0.06,
-   0.12,
    -0.03,
-   "#e2eaff"
+   0.12,
+   0.04,
+   "#e6eeff"
   ],
   [
    3.6,
@@ -29083,42 +38902,42 @@
    [
     0,
     [
-     14,
-     10,
-     6
+     11,
+     8,
+     4
     ]
    ],
    [
     0.03,
     [
-     14.5,
-     10.3,
-     5.5
+     11.4,
+     8.2,
+     3.6
     ]
    ],
    [
     0.04,
     [
-     18,
-     15,
-     7
+     13.5,
+     11,
+     3
     ],
     "outExpo"
    ],
    [
     0.75,
     [
-     16,
-     15,
-     9
+     12.5,
+     10.6,
+     4
     ]
    ],
    [
     1,
     [
-     15.5,
-     14.5,
-     9.5
+     12.2,
+     10.4,
+     4.2
     ]
    ]
   ],
@@ -29135,7 +38954,7 @@
     0.04,
     [
      0,
-     1,
+     1.6,
      -8.5
     ],
     "outExpo"
@@ -29144,7 +38963,7 @@
     1,
     [
      0,
-     1,
+     1.6,
      -9
     ]
    ]
@@ -29152,20 +38971,20 @@
   "fov": [
    [
     0,
-    55
+    56
    ],
    [
     0.03,
-    54
+    55
    ],
    [
     0.04,
-    52,
+    58,
     "out"
    ],
    [
     1,
-    52
+    58
    ]
   ]
  },

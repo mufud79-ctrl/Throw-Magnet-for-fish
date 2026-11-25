@@ -143,3 +143,10 @@ segments (54 Beams) races out to 9 studs, overshoots, holds with segments blinki
 Inside: crawling flat ground arcs (+ indigo outline), floating static, pooled navy haze, big scar. Every 0.5 s a bolt jumps
 UP out of the ground (neon bolt + thunder_bolt_v2 sprite rotated 180 so it draws bottom-up), two land on the enemies
 inside (hit-stop 0.05 each), mini scar under each; the enemy outside the fence is untouched.
+Polish pass ("needs polish, not reading as lightning"): the black soot under the field read as cracked ground, nothing
+arced through the air, the up-strikes were thin neon sticks and nothing strobed. Fixes: scar(soot_in=) delays the soot
+until the glow cools (big scar glows for the whole field); the fence is a WALL of dancing arcs (Cylinder-surface
+emitters: cel body, white core, indigo outline); arc_jump() (new kit block) leaps a curved cel arc fence->ground,
+ground->ground or into an enemy every 0.06-0.1 s; up-strikes are cel columns + re-strike + flat ground burst + bigger
+sprite; strobing field light, brighter floating static, closer camera, lighter grade.
+Lesson: electricity has to JUMP between things in the air; flat ground decorations alone read as cracks.

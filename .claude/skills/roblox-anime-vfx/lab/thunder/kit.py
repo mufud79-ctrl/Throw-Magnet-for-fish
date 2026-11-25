@@ -83,14 +83,16 @@ def emit_stack(tex, at, t, *, size, life, layout="Grid4x4", mode="OneShot", coun
     return out
 
 
-def scar(at, t, size=10, rot=0, glow_life=0.9, soot_life=3.2):
+def scar(at, t, size=10, rot=0, glow_life=0.9, soot_life=3.2, soot_in=None):
     """Calling card: a Lichtenberg burn flat on the ground that flashes hot, cools through the colour script to
-    indigo, and leaves the soot scar under it fading last."""
+    indigo, and leaves the soot scar under it fading last. soot_in (seconds): the soot only fades in as the glow
+    cools (use it wherever the scar sits under a long-lived effect, so it reads as glowing lightning, not cracks)."""
     g = [at[0], 0.1, at[2]]   # ground decals: never a negative ZOffset (it pushes the quad into the ground and hides it)
     soot = {"type": "emitter", "at": [at[0], 0.06, at[2]], "emits": [[t, 1]], "props": {
         "Texture": "scorch_burn", "Color": SOOT, "LightEmission": 0, "Brightness": 1, "Size": [[0, size * 0.9], [0.05, size * 1.05], [1, size * 1.05]],
         "Lifetime": [soot_life, soot_life], "Speed": [0.01, 0.01], "Rotation": [rot, rot], "Orientation": "VelocityPerpendicular",
-        "Transparency": [[0, 0.15], [0.7, 0.3], [1, 1]], "ZOffset": 0.02}}
+        "Transparency": ([[0, 1], [min(0.9, soot_in / soot_life), 0.2], [0.8, 0.35], [1, 1]] if soot_in else [[0, 0.15], [0.7, 0.3], [1, 1]]),
+        "ZOffset": 0.02}}
     glow = emit_stack("lichtenberg", g, t, size=[[0, size * 0.85], [0.06, size], [1, size]], life=glow_life, layout="None",
                       colors=COOL, rot=rot, orient="VelocityPerpendicular", z=0.05,
                       transparency=[[0, 0], [0.1, 0], [0.14, 0.5], [0.2, 0.05], [0.5, 0.35], [1, 1]])
@@ -168,3 +170,15 @@ def smoke_burst(at, t, n=6, seed=63):
 def light(at, keys, color=CYAN, rng=14):
     # Roblox PointLight brightness ~1-8; anything hotter floods the sand white
     return {"at": at, "color": color, "range": rng, "brightness": [[t, round(v * 0.18, 2)] + k[2:] for t, v, *k in [list(x) for x in keys]]}
+
+
+def arc_jump(a, b, t, life=0.09, bow=(0, 2.5, 0), width=1.0, seed=0, layers=("rim", "mid", "core")):
+    """A curved cel arc that leaps between two points for a couple of frames (electricity jumping a gap)."""
+    out = []
+    strips = STRIPS[seed % 4:] + STRIPS[:seed % 4]
+    for lay, w in zip(layers, (2.2, 1.8, 0.9)):
+        out.append({"type": "beam", "from": a, "to": b, "curve": list(bow), "t0": t, "life": life,
+                    "textures": [f"{st}_{lay}" for st in strips], "swap": 0.034, "textureLength": 3.5, "segments": 10,
+                    "color": HOT[lay], "lightEmission": LE[lay], "brightness": BR[lay], "width": [[0, w * width * 1.2], [1, w * width * 0.6]],
+                    "transparency": [[0, 0], [0.45, 0], [0.5, 0.7], [0.62, 0], [1, 0.3]]})
+    return out
