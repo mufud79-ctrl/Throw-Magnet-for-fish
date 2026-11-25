@@ -11,7 +11,7 @@ First run: git fetch origin claude/dragon-fruit-vfx-k354ta && git merge --no-edi
 3. `.claude/skills/roblox-anime-vfx/DRAGON_MOVES_NOTES.md`, `references/modern-vfx.md`,
    `references/move-workflow.md`, `THUNDER_MOVES_NOTES.md`, `lab/thunder/kit.py`, `scripts/rig_serpent.py`.
 
-## The dragon (concept done; read DESIGN.md "Revision v3" first, it overrides v2 and the body text)
+## The dragon (concept APPROVED; the hybrid look is hybrid_r15_v2.png)
 - Look: `assets/source_art/dragon/dragon_hero_v3.png`. Model sheet: `dragon_sheet_v3.png`. Meshy inputs:
   `v3_view_side.png`, `v3_view_top.png`, `v3_view_front.png`.
 - Design: as close to the classic wingless Eastern dragon emperor as possible while staying original. Deep azure/
@@ -29,13 +29,16 @@ First run: git fetch origin claude/dragon-fruit-vfx-k354ta && git merge --no-edi
 ## Steps (show me each one and wait for my approval; send MP4s, strips and contact sheets with SendUserFile,
 ## strips <= 8000 px; commit and push after each step on the branch this session is assigned)
 1. **Model.** Meshy multi-image-to-3D from the three v3 views (about 30 credits). Hybrid pieces: horns and tail
-   are cut from the dragon model (free). The collar, pauldron, forearm armour and claw hand come from Meshy
+   are cut from the dragon model and reshaped in Blender to match `hybrid_r15_v2.png` (hooked horn tips, spike
+   crest, tail spikes and a blade tip), which is free. Use a Meshy crop instead only if the reshaped piece doesn't
+   read. The collar, pauldron, forearm armour and claw hand come from Meshy
    image-to-3D of clean crops of `hybrid_r15_v2.png` (about 4 x 20-30). Total estimate about 130 credits, cap 170:
    estimate before each job and report the spend. The key is in the environment's secret store, injected by the proxy: send
    `Authorization: Bearer proxy-injected`. Show me a turntable of the raw model.
 2. **Rig.** Write `scripts/rig_dragon.py` based on `rig_serpent.py`: head toward -Z, about 30 studs long, about
    10k tris, the mouth cut on the lip line with a palate and fangs, `spine_00..19` + `jaw`, 4 short legs
-   (`legFL/FR/BL/BR_0/1`) and whiskers (`whiskerL/R_0..2`). Cut the hybrid horns and a 5-bone tail from the same model.
+   (`legFL/FR/BL/BR_0/1`) and whiskers (`whiskerL/R_0..2`). Cut the hybrid horns and a spiked 6-7 bone tail from the same model.
+   Rig the claw hands with `finger1..5_0/1` bones.
    Fit all hybrid pieces to the R15 rig (scale and offsets per part) and export them as separate meshes.
 3. **Rig layer v2**, in the previewer `lab/page/vfx.js` AND the Luau `templates/ReplicatedStorage/AnimeVFX/init.lua`:
    `follow: "path"|"rigid"`, generic per-bone rotation tracks (`boneTracks`, with `loop` and `mirror`),
