@@ -109,3 +109,7 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
 - Meshy audit (user asked): balance 1989 -> 1749 today = 240 spent. This session: 90 (dragon v3, hybrid v4, dragon v4).
   The other 150 (a v3 dragon multi-image + 4 image-to-3d jobs, all at 15:25 UTC) were not submitted by this session;
   the timing matches the duplicate session. Rule from now on: no Meshy job without the user's explicit OK in this chat.
+- User on dragon v4: "looks like shit", "should be longer, rn it looks like a snake with huge legs versus a Chinese
+  dragon". Free prototype (scratchpad lengthen.py): trunk x2.6, tail x2.4, cross-section x1.4, legs x0.6, S-curve.
+  Proportions read more like a Chinese dragon, but the stretched texture smears the scales and belly band. Asked the
+  user: keep the stretch (fix texture later) vs a new long-body sheet + Meshy re-run (needs explicit OK).

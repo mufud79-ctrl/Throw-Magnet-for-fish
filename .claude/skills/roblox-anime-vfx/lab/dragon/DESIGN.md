@@ -10,8 +10,8 @@ what the player looks like with the fruit and no transformation, so it stays lig
 - **Horns** (Head): the v4 dragon model's horns plus its back pair, cut from the mesh with its texture.
 - **Tail** (LowerTorso): the last part of the dragon's tail with the curl fan, scaled down, skinned (about 7 bones),
   held off the ground.
-- **Some scales:** a few azure scale patches cut from the dragon's skin (placement to confirm: sides of the head /
-  neck), rigid.
+- **Some scales:** a few azure scale patches cut from the dragon's skin on the **sides of the head** (Head) and on
+  the **torso** (UpperTorso / LowerTorso), rigid. User: "Side of head and torso".
 - Nothing on the arms, back, hands, collar or waist. No pauldrons, bracers, gauntlets, spine ridge, crown or sash.
 - No Meshy jobs: everything is kitbashed from `assets/source_art/meshy/dragon_v4.glb` (`scripts/build_hybrid.py`).
 - Hybrid moves that relied on claws or other add-ons get their reach from the VFX (fire claws etc.), not meshes.
