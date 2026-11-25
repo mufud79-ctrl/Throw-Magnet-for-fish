@@ -85,3 +85,28 @@ Fixes during review: molten_crack went white once the core was gone (pool radius
 first cracks were thin (read as lightning) then a starfish (too few fat trunks) -> 8 uneven trunks with 3 branches;
 billow too small and cooled too early; tongue tear didn't read (now an explicit pinch); impact star spikes were
 hairlines and the burst had a centre-dot artefact (inner edge at r=0).
+
+### Composition pass: "looks good individually, unpolished combined" (user, after the first Talon Rend render)
+Diagnosis from full-size frames, and the fixes (kit-level, so every move gets them):
+1. **Cooled crimson rims read as flat red paper cut-outs.** The rim kept full opacity after the gold body eroded and
+   cooled toward char. Fix: rim colour cools to ember red only (char is the ground decals' job), and `_modernize`
+   gives every one-shot rim RIM_FADE (thins out over the second half of its life). Glow halo a bit stronger (62%).
+2. **No light interaction.** The previewer's PointLights (decay 2) barely light anything, so characters and sand
+   never reacted to the fire. Fix: `glow_pool` (soft additive pool on the sand under every fire source) and
+   `glow_orb` (soft glow riding hands / throats), on new single-image `soft_glow` texture. (orb_glow_glow is a 4x4
+   flipbook: used as a single image it drew a grid of 16 dots. Never use a flipbook sheet with FlipbookLayout None.)
+3. **No connective tissue between beats.** Elements popped on and off independently. Fix: continuous flame ribbons on
+   the claws between strikes, `ambience` embers drifting through the area for the whole move.
+4. **Single-frame pile-ups.** Impact + flare + 22 random streaks + rake on the same 2 frames = noise. Fix: streaks only
+   on the big beat, fewer, aimed along the strike; the smoke enters a beat after the fire.
+5. **Black smoke as a dirty blob on the target's face.** Fix: smoke placed behind and above, translucent (tr 0.3),
+   fades in, rises, ZOffset -0.8.
+6. **Weak grade.** Saturated blue sky competed with the fire. Fix: hybrid (-0.17, +0.15, #ffd8b4), full (-0.27, +0.2,
+   #ffc4a0).
+7. **Staging.** The camera pushed in behind the caster (the avatar blocked the rakes) and the lunge overlapped the target.
+   Fix: side three-quarter camera at ~14 studs, rakes on the camera side of the target, shorter lunge.
+8. Inward "suck" embers read as polka dots -> converging spark_streak needles.
+
+## Move 1: Talon Rend (hybrid Z) - built, composition pass done
+`lab/dragon/moves/talon_rend.py` -> `dragon_01_TalonRend.json`. Stand-in: plain avatar (no hybrid pieces; claw fire
+rides the hands through `kit.hand()` FK until rig v2 `attach` exists - GAP for the rigging session).

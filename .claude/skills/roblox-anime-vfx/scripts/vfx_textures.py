@@ -2424,6 +2424,14 @@ def fire_slice(n=16, seed=991):
     return frames
 
 
+def soft_glow():
+    """Single soft round glow (not a flipbook): a smooth radial falloff with a slightly hotter centre. Fake light pools
+    on the ground and glows riding hands / throats (lab/dragon/kit.py glow_pool, glow_orb). White, alpha only."""
+    x, y = coords(S)
+    r = np.hypot(x, y)
+    return np.clip(np.exp(-(r / 0.42) ** 2) * 0.85 + np.exp(-(r / 0.16) ** 2) * 0.25, 0, 1) * ss(r, 0.98, 0.8)
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2517,6 +2525,7 @@ LIB = {
     "claw_gouge":    (claw_gouge,    "cel", 4, 0, "dragonfire"),
     "heat_ring":     (heat_ring,     "cel", 4, 0, "dragonfire"),
     "fire_slice":    (fire_slice,    "cel", 4, 0, "dragonfire"),
+    "soft_glow":     (soft_glow,     "white", 1, 0, "white"),
 }
 
 PALETTES = {
