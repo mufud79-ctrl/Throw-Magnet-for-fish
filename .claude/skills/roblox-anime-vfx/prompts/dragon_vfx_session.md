@@ -11,7 +11,7 @@ First run: git fetch origin claude/dragon-fruit-vfx-k354ta && git merge --no-edi
 3. `.claude/skills/roblox-anime-vfx/DRAGON_MOVES_NOTES.md`, `references/modern-vfx.md`,
    `references/move-workflow.md`, `THUNDER_MOVES_NOTES.md`, `lab/thunder/kit.py`, `scripts/rig_serpent.py`.
 
-## The dragon (concept APPROVED; the hybrid look is hybrid_r15_v3.png)
+## The dragon (concept APPROVED; the hybrid look is hybrid_r15_v4.png)
 - Look: `assets/source_art/dragon/dragon_hero_v3.png`. Model sheet: `dragon_sheet_v3.png`. Meshy inputs:
   `v3_view_side.png`, `v3_view_top.png`, `v3_view_front.png`.
 - Design: as close to the classic wingless Eastern dragon emperor as possible while staying original. Deep azure/
@@ -19,19 +19,23 @@ First run: git fetch origin claude/dragon-fruit-vfx-k354ta && git merge --no-edi
   mane and tail fan, long blue whiskers, yellow eyes, a broad bulbous nose, a spiral-carved brow, a scarred snout,
   a huge toothy grin. Never use names, logos or signature attacks from any existing IP.
 - VFX colours stay fire (white-gold, orange, crimson, char, with black smoke): orange fire against the blue body.
+- **Style guide for all character art and models = the thunder god sheet**
+  `assets/source_art/god_mode/C_tpose_sheet_v3.png`: a 2D anime turnaround with clean ink lines and cel shading,
+  a strict T-pose, ornate gold trim and crimson accents. Not 3D renders, not low-poly.
 - **Hybrid = add-on accessory pieces on the player's normal BLOCKY R15 body, never a replacement model.** Look:
-  `hybrid_r15_v3.png` (T-pose, DESIGN.md "Revision v3c"). Everything is hard-surface, angular and faceted to match
-  the boxy body, nothing round: faceted horns plus a back pair (Head), a jagged navy shard collar and gold spine
-  blades down the back (UpperTorso), faceted spiked pauldrons (upper arms), blocky forearm bracers with 3 straight
-  gold blade claws past the box hand (lower arms), and a segmented angular tail with spikes and a blade tip
-  (LowerTorso, skinned, about 7 bones). **NO fingers, no finger bones.** Each piece is welded to its R15 part and
-  follows the player's own animation.
+  `hybrid_r15_v4.png` (DESIGN.md "Revision v3d"). The pieces: cream-gold horns plus a back pair and a gold crown
+  band (Head); a navy curl mane collar (UpperTorso); azure dragon-head pauldrons with gold trim and crimson tassels
+  (upper arms); azure scale bracers with 3 claw blades over the box hand (lower arms); a crimson-gold sash with a
+  dragon medallion (LowerTorso); and a long azure tail with a cream belly, spines and a navy curl fan (LowerTorso,
+  skinned, about 7 bones). **NO fingers.** Each piece is welded to its R15 part and follows the player's own
+  animation.
 
 ## Steps (show me each one and wait for my approval; send MP4s, strips and contact sheets with SendUserFile,
 ## strips <= 8000 px; commit and push after each step on the branch this session is assigned)
-1. **Model.** Meshy multi-image-to-3D from the three v3 views (about 30 credits). Hybrid pieces: model them in Blender as
-   faceted low-poly hard-surface meshes from `hybrid_r15_v3.png`, sized to the R15 parts (free, no Meshy). Total
-   estimate about 30 credits, cap 60:
+1. **Model.** Meshy multi-image-to-3D from the three v3 views (about 30 credits). Hybrid pieces from `hybrid_r15_v4.png`: Meshy
+   image-to-3D of clean crops for the dragon-head pauldron, the horns+crown, the curl collar and the tail (about
+   4 x 20-30); Blender for the simple sash and bracers. Size every piece to its R15 part. Total estimate about 130
+   credits, cap 170:
    estimate before each job and report the spend. The key is in the environment's secret store, injected by the proxy: send
    `Authorization: Bearer proxy-injected`. Show me a turntable of the raw model.
 2. **Rig.** Write `scripts/rig_dragon.py` based on `rig_serpent.py`: head toward -Z, about 30 studs long, about

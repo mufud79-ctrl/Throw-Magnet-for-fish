@@ -12,7 +12,7 @@ Brief: `prompts/dragon_fruit_session.md`. Design: `lab/dragon/DESIGN.md`.
 | step | status |
 |---|---|
 | 1. research + design doc | v1 shown; user redirected: wingless Eastern dragon emperor (v2 block in DESIGN.md) |
-| 2. concept sheet | full form v3 APPROVED ("Full looks good"); hybrid v3 (blocky, angular, T-pose, no fingers) waiting for approval |
+| 2. concept sheet | full form v3 APPROVED ("Full looks good"); hybrid v4 (house cel style of the thunder god sheet, blocky R15, T-pose, no fingers) waiting for approval |
 | 3. Meshy model + rig (wings) + rig layer v2 | - |
 | 4. fire matter | - |
 | 5. hybrid Z X C V B F | - |
@@ -29,7 +29,7 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 ## Credits
 | item | estimate | spent |
 |---|---|---|
-| Figma concept image | 1-2 images | 8 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3), gpt-image-2.5-flare |
+| Figma concept image | 1-2 images | 9 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3, hybrid v4), gpt-image-2.5-flare |
 | Meshy multi-image-to-3D | 30 (cap 60) | - |
 
 ## Step 2: concept (direction change)
@@ -54,3 +54,9 @@ claw hands (skinned, finger bones), back spine ridge, spiked tail with a blade t
 User: "too round, blocky R15 won't work, should be T-posed, NO FINGERS, just cool hybrid stuff". hybrid_r15_v3.png:
 faceted low-poly hard-surface pieces (horns, shard collar, spiked pauldrons, bracers with blade claws, back blades,
 segmented angular tail). Build in Blender, no Meshy. Lesson: R15 add-ons must be boxy/faceted to match the body.
+
+## Step 2e: hybrid v4 (house style)
+User: "Wrong style completely, follow style guide from the lightning model". House style = C_tpose_sheet_v3.png: 2D
+anime turnaround, ink lines, cel shading, strict T-pose, ornate gold trim + crimson tassels. hybrid_r15_v4.png:
+horns + crown band, curl collar, dragon-head pauldrons, scale bracers with claw blades, crimson-gold sash, curl-fan
+tail. RULE: every character/model sheet uses this house style (never 3D renders or low-poly looks).
