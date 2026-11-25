@@ -3,6 +3,21 @@
 Status: **v3 (user feedback): an Eastern serpent dragon emperor, wingless, Kaido-matched colours; the hybrid is R15
 add-ons. The concept look is waiting for approval.** The v3 and v2 revision blocks OVERRIDE anything below that mentions wings, half-wings or a western build.
 
+## Revision v3c: hybrid = blocky, angular, T-posed, NO fingers (supersedes v3b)
+User: "too round, it's a blocky R15 avatar so that won't work, it should be T-posed. NO FINGERS. Just give him
+cool looking hybrid stuff." New sheet: `assets/source_art/dragon/hybrid_r15_v3.png` (front, side and back,
+T-pose). All pieces are hard-surface, faceted and low-poly with flat faces and straight edges, matching the boxy
+body:
+- angular faceted cream-gold horns plus a back pair (Head)
+- a jagged collar of navy armour shards (UpperTorso)
+- faceted azure pauldrons with straight gold spikes (UpperArm L/R)
+- blocky azure forearm bracers with 3 straight gold blade claws jutting past the box hand (LowerArm L/R, rigid;
+  the hand stays a box, with no fingers and no finger bones)
+- angular gold spine blades down the back (UpperTorso)
+- a segmented tail of stacked angular azure box plates with a cream underside, gold spikes and a big gold blade
+  tip (LowerTorso, skinned, 1 bone per segment group, about 7)
+Faceted low-poly pieces are cheap to build in Blender directly (no Meshy needed for them).
+
 ## Revision v3b: hybrid made aggressive, with fingers (supersedes the hybrid bullet below)
 User: "Full looks good" (full-form look v3 APPROVED). "Hybrid should have fingers and the look should be more
 aggressive overall." New sheet: `assets/source_art/dragon/hybrid_r15_v2.png`. It's still add-on pieces on the

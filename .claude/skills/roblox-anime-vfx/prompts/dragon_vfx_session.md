@@ -19,26 +19,25 @@ First run: git fetch origin claude/dragon-fruit-vfx-k354ta && git merge --no-edi
   mane and tail fan, long blue whiskers, yellow eyes, a broad bulbous nose, a spiral-carved brow, a scarred snout,
   a huge toothy grin. Never use names, logos or signature attacks from any existing IP.
 - VFX colours stay fire (white-gold, orange, crimson, char, with black smoke): orange fire against the blue body.
-- **Hybrid = add-on accessory pieces on the player's normal R15 body, never a replacement model.** Aggressive look,
-  `hybrid_r15_v2.png` (DESIGN.md "Revision v3b"): hooked horns, a back pair and a spike crest on Head; a navy curl
-  mane collar and a back spine ridge on UpperTorso; spiked scale pauldrons on the upper arms; bladed scale
-  forearm armour; **clawed hands with 5 jointed fingers and hooked talons** (skinned, finger bones so the claws curl
-  and rake); and a spiked skinned tail on LowerTorso. Each piece is welded to its R15 part and follows the player's
-  own animation. Model the pieces in a neutral pose (the sheet's stance is a look reference).
+- **Hybrid = add-on accessory pieces on the player's normal BLOCKY R15 body, never a replacement model.** Look:
+  `hybrid_r15_v3.png` (T-pose, DESIGN.md "Revision v3c"). Everything is hard-surface, angular and faceted to match
+  the boxy body, nothing round: faceted horns plus a back pair (Head), a jagged navy shard collar and gold spine
+  blades down the back (UpperTorso), faceted spiked pauldrons (upper arms), blocky forearm bracers with 3 straight
+  gold blade claws past the box hand (lower arms), and a segmented angular tail with spikes and a blade tip
+  (LowerTorso, skinned, about 7 bones). **NO fingers, no finger bones.** Each piece is welded to its R15 part and
+  follows the player's own animation.
 
 ## Steps (show me each one and wait for my approval; send MP4s, strips and contact sheets with SendUserFile,
 ## strips <= 8000 px; commit and push after each step on the branch this session is assigned)
-1. **Model.** Meshy multi-image-to-3D from the three v3 views (about 30 credits). Hybrid pieces: horns and tail
-   are cut from the dragon model and reshaped in Blender to match `hybrid_r15_v2.png` (hooked horn tips, spike
-   crest, tail spikes and a blade tip), which is free. Use a Meshy crop instead only if the reshaped piece doesn't
-   read. The collar, pauldron, forearm armour and claw hand come from Meshy
-   image-to-3D of clean crops of `hybrid_r15_v2.png` (about 4 x 20-30). Total estimate about 130 credits, cap 170:
+1. **Model.** Meshy multi-image-to-3D from the three v3 views (about 30 credits). Hybrid pieces: model them in Blender as
+   faceted low-poly hard-surface meshes from `hybrid_r15_v3.png`, sized to the R15 parts (free, no Meshy). Total
+   estimate about 30 credits, cap 60:
    estimate before each job and report the spend. The key is in the environment's secret store, injected by the proxy: send
    `Authorization: Bearer proxy-injected`. Show me a turntable of the raw model.
 2. **Rig.** Write `scripts/rig_dragon.py` based on `rig_serpent.py`: head toward -Z, about 30 studs long, about
    10k tris, the mouth cut on the lip line with a palate and fangs, `spine_00..19` + `jaw`, 4 short legs
-   (`legFL/FR/BL/BR_0/1`) and whiskers (`whiskerL/R_0..2`). Cut the hybrid horns and a spiked 6-7 bone tail from the same model.
-   Rig the claw hands with `finger1..5_0/1` bones.
+   (`legFL/FR/BL/BR_0/1`) and whiskers (`whiskerL/R_0..2`). Build the hybrid pieces in Blender (`scripts/build_hybrid.py`); the tail gets
+   about 7 bones.
    Fit all hybrid pieces to the R15 rig (scale and offsets per part) and export them as separate meshes.
 3. **Rig layer v2**, in the previewer `lab/page/vfx.js` AND the Luau `templates/ReplicatedStorage/AnimeVFX/init.lua`:
    `follow: "path"|"rigid"`, generic per-bone rotation tracks (`boneTracks`, with `loop` and `mirror`),

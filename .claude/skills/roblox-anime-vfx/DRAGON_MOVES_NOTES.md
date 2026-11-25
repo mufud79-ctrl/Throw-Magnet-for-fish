@@ -12,7 +12,7 @@ Brief: `prompts/dragon_fruit_session.md`. Design: `lab/dragon/DESIGN.md`.
 | step | status |
 |---|---|
 | 1. research + design doc | v1 shown; user redirected: wingless Eastern dragon emperor (v2 block in DESIGN.md) |
-| 2. concept sheet | full form v3 APPROVED ("Full looks good"); hybrid v2 (aggressive, 5-finger claws) waiting for approval |
+| 2. concept sheet | full form v3 APPROVED ("Full looks good"); hybrid v3 (blocky, angular, T-pose, no fingers) waiting for approval |
 | 3. Meshy model + rig (wings) + rig layer v2 | - |
 | 4. fire matter | - |
 | 5. hybrid Z X C V B F | - |
@@ -29,7 +29,7 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 ## Credits
 | item | estimate | spent |
 |---|---|---|
-| Figma concept image | 1-2 images | 7 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2), gpt-image-2.5-flare |
+| Figma concept image | 1-2 images | 8 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3), gpt-image-2.5-flare |
 | Meshy multi-image-to-3D | 30 (cap 60) | - |
 
 ## Step 2: concept (direction change)
@@ -49,3 +49,8 @@ forearm sleeves + talon gauntlets, tail. Pieces weld to R15 parts.
 User: "Full looks good, hybrid looks okay, hybrid should have fingers and the look should be more aggressive overall".
 hybrid_r15_v2.png: hooked horns + spike crest, flame-point curl collar, spiked pauldrons, bladed forearms, 5-finger
 claw hands (skinned, finger bones), back spine ridge, spiked tail with a blade tip. Still R15 add-ons.
+
+## Step 2d: hybrid v3
+User: "too round, blocky R15 won't work, should be T-posed, NO FINGERS, just cool hybrid stuff". hybrid_r15_v3.png:
+faceted low-poly hard-surface pieces (horns, shard collar, spiked pauldrons, bracers with blade claws, back blades,
+segmented angular tail). Build in Blender, no Meshy. Lesson: R15 add-ons must be boxy/faceted to match the body.
