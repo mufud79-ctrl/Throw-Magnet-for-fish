@@ -137,7 +137,7 @@ continues straight back from the start point = underground, hidden by the ground
 the unborn tail behind the caster). Swims a 1.25-wave S-curve with 3 braided cel chains + crawling arcs + navy smear;
 jaw opens wide and snaps on the bite (hit-stop 0.04); coils 1.2 turns around the target; roars and BURSTS (hit-stop 0.1).
 
-## Move 6: Static Field (N) - waiting for approval
+## Move 6: Static Field (N) - approved after polish ("Better good for now")
 `lab/thunder/moves/static_field.py` -> `thunder_06_StaticField.json`. Palm slam; a fence circle of 18 curved cel beam
 segments (54 Beams) races out to 9 studs, overshoots, holds with segments blinking on their own beats, collapses at 3.0.
 Inside: crawling flat ground arcs (+ indigo outline), floating static, pooled navy haze, big scar. Every 0.5 s a bolt jumps
@@ -150,3 +150,10 @@ emitters: cel body, white core, indigo outline); arc_jump() (new kit block) leap
 ground->ground or into an enemy every 0.06-0.1 s; up-strikes are cel columns + re-strike + flat ground burst + bigger
 sprite; strobing field light, brighter floating static, closer camera, lighter grade.
 Lesson: electricity has to JUMP between things in the air; flat ground decorations alone read as cracks.
+
+## Move 7: Plasma Bomb (M) - waiting for approval
+`lab/thunder/moves/plasma_bomb.py` -> `thunder_07_PlasmaBomb.json`. Hold: plasma_orb stack + glow ball LockedToPart riding a
+`path` (hand, then a parabola), arcs, inward sparks, god_rays pulses = the anime charge star; pinch before release.
+Lob: cel ribbon trail + dripping arcs. Detonation at A (hit-stop 0.08). Signature: chain lightning A -> B -> C, 3 curved cel
+arc_jump strands per hop that linger, flicker and cool (hit-stop 0.04 each); static on all three; scars with delayed soot.
+Camera: over the shoulder on the charge, then high behind the caster so A (centre), B (left), C (right) spread out.
