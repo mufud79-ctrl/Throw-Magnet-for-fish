@@ -62,6 +62,16 @@ This is the first fruit built to the "design first, user approves everything, th
   Laplacian smoothing. `--preview DIR` writes test-pose GLBs; `--export` writes `thunder_god.fbx`.
 - Base moves (Z..M) are being built in a sub-session on branch `claude/thunder-moves-950cm0` (notes in
   `THUNDER_MOVES_NOTES.md` there). God-mode moves stay here.
+- **Animations v1 (waiting on user review)**: `scripts/god_anim.py all` bakes idle, transform, drum_barrage,
+  heavens_palm, thunder_gods_wrath, cast -> `assets/meshes/thunder_god/anim/*.glb` (god + ring, one clip each).
+  Framework: idle as a pose function, per-bone key tracks with eases, arm/leg/torso/head/hand-shape helpers
+  (armature-space axes; arms rest along X so Y = raise, Z = fore/aft, X = roll), springs on cape/mane/sash
+  driven by root velocity + chest lean speed (per-bone gains small: offsets compound down chains), drum hit
+  recoil, drum overrides for the cutscene forge/assembly. Previews bake hit-stops as holds; export for Roblox with
+  `--no-hitstop` (the runtime adds them). Renders: `lab/anim_render.mjs` (`--target/--dist` close-ups,
+  `--frame-at` framing, `--period` closed loops) -> `assets/previews/god_mode/anim/`. Rig now has 86 bones (15
+  finger bones per hand; hands rebuilt at higher detail in god_cleanup `--hands`), max 4 influences per vertex.
+  Reel page (all clips): https://claude.ai/artifact/FuXt8488k2xTbEQxbibkrf
 - `lab/model_views.mjs` takes an optional `WxH` viewport; materials named `XRAY*` draw on top (skeleton overlays).
 
 ## Waiting on the user (original list)

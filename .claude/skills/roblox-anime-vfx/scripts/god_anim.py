@@ -251,9 +251,9 @@ class Spring:
 
 
 CHAINS = {   # group: (bones by depth, spring hz, damping, pitch gain fwd, pitch gain down, roll gain side, clamp)
-    "Cape": ([[f"Cape_{c}_{i}" for c in "LCR"] for i in range(1, 5)], 1.5, 0.42, 40.0, 28.0, 30.0, (-20, 70)),
-    "Mane": ([[f"Mane_{l}_{k}" for l in range(1, 7)] for k in range(1, 4)], 2.1, 0.40, 30.0, 24.0, 22.0, (-25, 55)),
-    "Sash": ([[f"Sash_{s}_1" for s in "LR"], [f"Sash_{s}_2" for s in "LR"], [f"Sash_{s}_Tassel" for s in "LR"]], 2.6, 0.32, -35.0, 20.0, 25.0, (-50, 40)),
+    "Cape": ([[f"Cape_{c}_{i}" for c in "LCR"] for i in range(1, 5)], 1.5, 0.42, 30.0, 22.0, 20.0, (-10, 22)),
+    "Mane": ([[f"Mane_{l}_{k}" for l in range(1, 7)] for k in range(1, 4)], 2.1, 0.40, 26.0, 20.0, 16.0, (-18, 38)),
+    "Sash": ([[f"Sash_{s}_1" for s in "LR"], [f"Sash_{s}_2" for s in "LR"], [f"Sash_{s}_Tassel" for s in "LR"]], 2.6, 0.32, -30.0, 16.0, 18.0, (-35, 25)),
 }
 
 
@@ -317,10 +317,11 @@ def bake(god, ring, spec, hitstop=True):
             for depth, row in enumerate(bones):
                 lag = min(len(hist[g]) - 1, depth * 2)            # deeper bones follow 2 frames later each
                 p, r = hist[g][-1 - lag]
-                gain = 0.45 + 0.3 * depth
+                # offsets compound down the chain, so per-bone gains stay small (4 cape bones sum to ~1.8x)
+                gain = 0.32 + 0.08 * depth
                 for bn in row:
                     x0, y0, z0 = gr[bn]
-                    gr[bn] = (x0 + p * gain + add[0] * (0.6 + 0.25 * depth), y0 + r * gain + add[1], z0)
+                    gr[bn] = (x0 + p * gain + add[0] * 0.3, y0 + r * gain + add[1] * 0.3, z0)
         # drums: idle bob + hit recoil (+ overrides)
         kr2, kl2 = rtr.eval(t) if (rtr.r or rtr.l) else ({}, {})
         rr.update(kr2)
@@ -463,10 +464,10 @@ def heavens_palm():
     for i, tt in enumerate((0.60, 0.63, 0.66, 0.69, 0.72)):
         tr.key(tt, arm("Right", -82 + 4 * (i % 2), 10 + 2 * (i % 2), elbow=5, wflex=-10), root(0, 0.02, 0.125 + 0.004 * (i % 2)), "lin")
     tr.key(0.74, merge(hand("Right", "claw"), torso(-15, 8, -12, -4)), None, "inout")
-    tr.key(0.84, merge(torso(22, -4, 12, 6), head(12, 0, 4), arm("Right", 40, 80, elbow=0, wflex=-75),
+    tr.key(0.84, merge(torso(14, -4, 12, 3), head(-6, 0, 4), arm("Right", 40, 80, elbow=0, wflex=-75),
                        arm("Left", 70, -30, elbow=20), hand("Right", "spread"),
                        leg("Left", 30, 60, 15, 3), leg("Right", -15, 15, 30, 3)), root(0, -0.06, -0.05), "in")
-    tr.key(1.0, merge(torso(26, -4, 14, 7), arm("Right", 48, 78, elbow=0, wflex=-78)), root(0, -0.07, -0.07), "out")
+    tr.key(1.0, merge(torso(17, -4, 14, 4), head(-4, 0, 4), arm("Right", 48, 78, elbow=0, wflex=-78)), root(0, -0.07, -0.07), "out")
     tr.key(1.35, merge(torso(8, 0, 4, 2), arm("Right", 55, 50, elbow=25, wflex=-20), hand("Right", "open")), root(0, -0.02, 0), "inout")
     finish(tr, 1.85)
     return {"T": 1.85, "tracks": tr, "hitstops": [(0.84, 0.15)], "hits": [(0.84, d, 0.5) for d in range(1, 9)]}
@@ -504,10 +505,10 @@ def thunder_gods_wrath():
         hits += [(tp, (2 * i) % 8 + 1, 0.8), (tp, (2 * i + 4) % 8 + 1, 0.8)]
     tr.key(3.12, merge(arm("Left", -85, 10, elbow=15), arm("Right", -85, 10, elbow=15), hand("Left", "fist"), hand("Right", "fist"),
                        torso(-20), head(-25), leg("Left", 35, 80, 25), leg("Right", 35, 80, 25)), root(0, 0.02, 0.7), "out")
-    tr.key(3.25, merge(arm("Left", 45, 80, elbow=0), arm("Right", 45, 80, elbow=0), torso(30, 0, 0, 8), head(15),
+    tr.key(3.25, merge(arm("Left", 45, 80, elbow=0), arm("Right", 45, 80, elbow=0), torso(18, 0, 0, 4), head(-4),
                        leg("Left", -20, 20, 30), leg("Right", -20, 20, 30)), root(0, -0.05, 0.35), "in")
     hits += [(3.25, d, 1.5) for d in range(1, 9)]
-    tr.key(3.45, merge(torso(34, 0, 0, 9), arm("Left", 55, 78, elbow=5), arm("Right", 55, 78, elbow=5)), root(0, -0.06, 0.32), "out")
+    tr.key(3.45, merge(torso(21, 0, 0, 5), head(-2), arm("Left", 55, 78, elbow=5), arm("Right", 55, 78, elbow=5)), root(0, -0.06, 0.32), "out")
     tr.key(3.6, merge(hand("Left", "relaxed"), hand("Right", "relaxed")))
     finish(tr, 4.3)
     return {"T": 4.3, "tracks": tr, "hitstops": [(3.25, 0.18)], "hits": hits, "life": 0.25}
@@ -517,8 +518,8 @@ def transform():
     """Raijin Ascension (god side of the approved beat sheet). 0-0.96 curled low inside the strike (hidden by
     VFX); 0.96-1.85 the pour: curled body spins once and rises; 1.40 drum forge: 8 drums appear on the ground
     ring 0.06 s apart; 1.85 squeeze (anticipation); 1.95 BURST: unfurls, chest out, arms flung wide, fingers
-    spread; slow-mo float while cape and mane billow up and the frame rises in; 2.36 drums fly up on arcs and
-    lock into the arch 0.07 s apart (clang); 2.8 FIRST BEAT: arms thrust down-out, every drum strikes,
+    spread; slow-mo float while cape and mane billow up and the frame rises in (2.06); 2.20 drums fly up on arcs
+    (over his head for the ones in front) and lock into the arch 0.05 s apart (clang), all in by 2.75; 2.8 FIRST BEAT: arms thrust down-out, every drum strikes,
     hit-stop; 3.4 settles into the idle."""
     import drum_ring as dr
     tr = Tracks()
@@ -542,23 +543,24 @@ def transform():
     finish(tr, 3.5)
     ctr = Tracks()
     ctr.key(1.95, {"@Cape": (0, 0, 0), "@Mane": (0, 0, 0)})
-    ctr.key(2.3, {"@Cape": (30, 0, 0), "@Mane": (26, 0, 0)}, None, "out")
-    ctr.key(2.75, {"@Cape": (26, 0, 0), "@Mane": (22, 0, 0)}, None, "inout")
+    ctr.key(2.3, {"@Cape": (34, 0, 0), "@Mane": (30, 0, 0)}, None, "out")
+    ctr.key(2.75, {"@Cape": (30, 0, 0), "@Mane": (26, 0, 0)}, None, "inout")
     ctr.key(3.1, {"@Cape": (0, 0, 0), "@Mane": (0, 0, 0)}, None, "inout")
     rtr = Tracks()
     rtr.key(0.0, None, {"Root": (0, 0, -25)})
-    rtr.key(2.199, None, {"Root": (0, 0, -25)}, "hold")
-    rtr.key(2.2, None, {"Root": (0, 0, -1.4)}, "lin")
-    rtr.key(2.36, None, {"Root": (0, 0, 0)}, "out")
+    rtr.key(2.059, None, {"Root": (0, 0, -25)}, "hold")
+    rtr.key(2.06, None, {"Root": (0, 0, -1.4)}, "lin")
+    rtr.key(2.2, None, {"Root": (0, 0, 0)}, "out")
     rtr.key(2.8, None, {"Root": (0, 0, 0)}, "lin")
     rtr.key(3.5, None, {"Root": STANCE[3]["Root"]}, "inout")
     hits = [(2.8, d, 1.3) for d in range(1, 9)]
     slots = {d: Vector(dr.arch_pt(dr.DRUM_ANG[d - 1], dr.R, dr.DRUM_Y)) for d in range(1, 9)}
+    TA, GAP, FL = 2.20, 0.05, 0.20           # assembly: first launch, stagger, flight time (all locked by 2.75)
     for d in range(1, 9):
-        hits.append((2.36 + 0.07 * (d - 1) + 0.30, d, 0.7))
+        hits.append((TA + GAP * (d - 1) + FL, d, 0.7))
 
     def drum_fn(d, t, root_loc, ring_root):
-        tf, ta, fl = 1.40 + 0.06 * (d - 1), 2.36 + 0.07 * (d - 1), 0.30
+        tf, ta, fl = 1.40 + 0.06 * (d - 1), TA + GAP * (d - 1), FL
         th = math.radians(-90 + (d - 1) * 45)
         ground = Vector((2.0 * math.cos(th), 2.0 * math.sin(th), -0.95 + 0.19))
         spin = 0.0
@@ -570,7 +572,8 @@ def transform():
         elif t < ta + fl:
             u = (t - ta) / fl
             e = 1 - (1 - u) ** 2
-            world = ground.lerp(slots[d], e) + Vector((0, 0, 0.9 * math.sin(math.pi * u)))
+            arc = 0.9 + 0.9 * max(0.0, -math.sin(th))       # drums forged in front arc over his head
+            world = ground.lerp(slots[d], e) + Vector((0, 0, arc * math.sin(math.pi * u)))
             spin = 360 * (1 - e)
         else:
             return None
