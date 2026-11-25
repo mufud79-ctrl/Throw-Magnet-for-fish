@@ -173,8 +173,9 @@ curved arc_jumps flickering across the sphere surface, 3 per tick, bowing outwar
 arcs bursting out of the implode. RULE: one visual language across the fruit - cel strokes; a move's identity comes
 from its shape and mechanic, never from a different rendering style (no glassy textured shells for energy).
 
-### Plasma Bomb v4 (anime stylized)
-- New cel textures `anime_plasma` (loop: spiky indigo outline, flat cyan body, white core, rotating spiral streaks, surface bolts) and `anime_blast` (one-shot: flash star -> spiky banded sphere with radial bolts -> hollow ring -> triangular shards).
-- Orb = one locked anime_plasma particle per layer whose Size sequence carries the charge/pinch/swell/implode radius keys (`anime_ball`). Bead and encasing use the same ball; bloom and pops use anime_blast.
-- Lesson: start the blast flipbook AFTER the hit-stop. Freezing on its flash frame reads as a flat grey star. Keep the blast ~15 studs; at 24 it swallows the frame.
+### Plasma Bomb v5 (house cel strokes)
+- v4's flat-filled anime textures were rejected as "a completely different style". Lesson: the fruit's style is thin cel lightning STROKES (white core / cyan body / indigo outline / glow) with no filled shapes. Anime shapes are fine only if they are drawn with those strokes.
+- New textures `plasma_ball_v2` (loop: 3 broken lightning rings + 4 spiral lightning arms + rim tongues + small star core) and `plasma_blast_v2` (star flash -> expanding jagged lightning ring, brief radial strikes, ring breaks up and cools). anime_plasma/anime_blast were deleted.
+- Orb = two counter-rotated cages (HOT + COOL) whose Size sequence carries the radius keys, plus a small neon core. Bead, encasing and pops reuse the ball and blast.
+- Start the blast flipbook AFTER the hit-stop; keep it ~15 studs.
 - Status: awaiting approval.

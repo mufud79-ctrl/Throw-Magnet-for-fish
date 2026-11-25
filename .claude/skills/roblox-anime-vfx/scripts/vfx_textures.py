@@ -1654,112 +1654,88 @@ def _thunder_strip_v2(seed):
     return fn
 
 
-# ================================================================ ANIME PLASMA (cel energy ball + cel blast, hard edges)
-def _jag_edge(a, n, amp, phase, seed, sharp=1.0):
-    """Angular spiky edge offset: n triangle spikes of random height around the circle (rotating with phase)."""
-    rng = np.random.default_rng(seed)
-    hs = rng.uniform(0.35, 1.0, n)
-    u = ((a + phase) % TAU) / TAU * n
-    i = np.floor(u).astype(int) % n
-    f = u - np.floor(u)
-    tri = 1 - np.abs(f * 2 - 1) ** sharp
-    return amp * hs[i] * tri
+# ================================================================ PLASMA v2 (house cel strokes only - no filled shapes)
+def _ring_bolts(rng, c, R, start, span, nseg, w, rjit=0.06, hooks=0.35, tip=0.75):
+    """A jagged arc of cel bolt strokes around c (radius R px) from angle start over span, as chained segments."""
+    out = []
+    pts = []
+    for k in range(nseg + 1):
+        th = start + span * k / nseg
+        rr = R * (1 + rng.uniform(-rjit, rjit))
+        pts.append(c + np.array([math.cos(th), math.sin(th)]) * rr)
+    for k in range(nseg):
+        out += _cel_tree(rng, pts[k], pts[k + 1], w * rng.uniform(0.8, 1.15), forks=0, hooks=hooks, depth=0, seg=(0.2, 0.35), tip=tip)
+    return out
 
 
-def anime_plasma():
-    """Anime energy ball (loop, 16 frames): flat cel bands - spiky indigo outline (rim), flat cyan body (mid), white
-    core with an offset highlight and 3 spiral streaks rotating one full period (seamless), small surface bolts
-    re-striking every 2 frames; tight halo (glow). Explicit hard-edged layers like the v2 lightning."""
+def _star_extra(r, ang, size, i0=0.0):
+    spikes = np.abs(np.cos(ang * 3.5 + 0.4 + i0)) ** 6 * 0.6 + np.abs(np.cos(ang * 2.5 + 1.3 - i0)) ** 10 * 0.4
+    sr = (0.35 + spikes) * size
+    return {"core": ss(r, sr * 0.55 + 0.003, sr * 0.55 - 0.003), "mid": ss(r, sr + 0.004, sr - 0.004),
+            "rim": ss(r, sr * 1.25 + 0.006, sr * 1.25 - 0.006)}
+
+
+def plasma_ball_v2():
+    """Plasma ball in the house cel style (loop, 16 frames): a cage of jagged cel bolt strokes - 3 broken lightning
+    rings wrapping the ball, 4 lightning arms spiralling out from a small white star core (rotating 1/4 turn per loop,
+    seamless), short tongues jumping off the rim. Re-struck every 2 frames with flicker. Strokes only, like every move."""
     x, y = coords(S)
-    r, a = polar_of(x, y)
-    R = 0.52
-    aa = 0.006
+    r, ang = polar_of(x, y)
+    c = np.array([S / 2, S / 2])
+    R = S * 0.33
     frames = []
     for i in range(16):
-        ph = i / 16 * TAU / 3                                   # 3 arms -> a third of a turn loops seamlessly
-        edge = R * (0.92 + _jag_edge(a, 14, 0.30, ph * 1.5, 77, 0.55) + 0.02 * np.sin(a * 5 - ph * 4))
-        rim = ss(r, edge * 1.1 + aa, edge * 1.1 - aa)
-        body = ss(r, edge + aa, edge - aa)
-        # core: offset bright blob + spiral streaks
-        cx, cy = -0.12 * R, -0.14 * R
-        core = ss(np.hypot(x - cx, y - cy), R * 0.42 + aa, R * 0.42 - aa)
-        spiral = np.zeros_like(r)
-        for k in range(3):
-            th = a - ph - k * TAU / 3 - np.log(np.maximum(r, 1e-3) / R) * 1.9
-            band = np.abs(((th + np.pi) % TAU) - np.pi)
-            w = 0.16 * (1 - r / R)
-            spiral = np.maximum(spiral, ss(band, w + 0.02, w) * ss(r, R * 0.92, R * 0.86) * ss(r, R * 0.12, R * 0.2))
-        fr = np.random.default_rng(4310 + i // 2)
+        rng = np.random.default_rng(5100 + i // 2)
+        ph = i / 16 * TAU / 4
         bolts = []
-        for _ in range(3):
-            t0 = fr.uniform(0, TAU)
-            p0 = (S / 2 + math.cos(t0) * S / 2 * R * 0.2, S / 2 + math.sin(t0) * S / 2 * R * 0.2)
-            t1 = t0 + fr.uniform(-0.8, 0.8)
-            p1 = (S / 2 + math.cos(t1) * S / 2 * R * 1.15, S / 2 + math.sin(t1) * S / 2 * R * 1.15)
-            bolts += _cel_tree(fr, p0, p1, S * 0.008, forks=0, hooks=0.4, depth=0, seg=(0.15, 0.3))
-        bl = _cel_draw(bolts, S, S, 1.0)
-        out = {"rim": np.maximum(rim, _cel_draw(bolts, S, S, 3.2)), "mid": np.maximum(body, _cel_draw(bolts, S, S, 2.2)),
-               "core": np.clip(np.maximum.reduce([core * 0.9, spiral, bl]), 0, 1)}
-        out["glow"] = np.clip(ndi.gaussian_filter(rim, S * 0.03) * 1.3, 0, 1) * 0.7
-        frames.append(out)
+        for k in range(3):                                         # wrapping rings (broken, offset)
+            bolts += _ring_bolts(rng, c, R * (1 - 0.06 * k), rng.uniform(0, TAU), rng.uniform(3.6, 5.0), 7, S * 0.0085)
+        for k in range(4):                                         # spiral arms core -> rim
+            pts = []
+            for u in np.linspace(0.12, 1.0, 5):
+                th = ph + k * TAU / 4 + u * 1.9
+                pts.append(c + np.array([math.cos(th), math.sin(th)]) * R * u * rng.uniform(0.92, 1.05))
+            for j in range(4):
+                bolts += _cel_tree(rng, pts[j], pts[j + 1], S * 0.009 * (1 - j * 0.15), forks=0, hooks=0.3, depth=0, seg=(0.2, 0.35), tip=0.8)
+        for k in range(5):                                         # tongues jumping off the rim
+            th = rng.uniform(0, TAU)
+            p0 = c + np.array([math.cos(th), math.sin(th)]) * R * 0.95
+            p1 = c + np.array([math.cos(th + rng.uniform(-0.3, 0.3)), math.sin(th + rng.uniform(-0.3, 0.3))]) * R * rng.uniform(1.25, 1.42)
+            bolts += _cel_tree(rng, p0, p1, S * 0.0075, forks=1, hooks=0.5, depth=1, seg=(0.15, 0.3))
+        br = (1.0, 0.8)[i % 2]
+        frames.append(_cel_layers(bolts, S, S, br, 1.0, 0, None, 0.0, extra=_star_extra(r, ang, 0.075, i * 0.4)))
     return frames
 
 
-def anime_blast():
-    """Anime plasma explosion (one-shot, 16 frames): white flash disc with star spikes (f0-1) -> expanding flat-banded
-    sphere with a spiky edge and radial cel bolts (f1-6) -> hollows into a ring (f6-11) that breaks into flying
-    triangular shards (f9-15) and thins out. Hard-edged cel layers."""
+def plasma_blast_v2():
+    """Plasma burst in the house cel style (one-shot, 16 frames): white star flash, then a jagged RING of cel lightning
+    expands with radial bolts striking out to it; the ring breaks into fewer, shorter arcs and cools like every other
+    strike (core thins first, indigo outline lingers). Strokes only."""
     x, y = coords(S)
-    r, a = polar_of(x, y)
-    aa = 0.006
-    rng = np.random.default_rng(4410)
-    shards = [(rng.uniform(0, TAU), rng.uniform(0.6, 1.0), rng.uniform(0.05, 0.09), rng.uniform(0, TAU)) for _ in range(16)]
+    r, ang = polar_of(x, y)
+    c = np.array([S / 2, S / 2])
+    radial_rng = np.random.default_rng(5200)
+    dirs = [k / 9 * TAU + radial_rng.uniform(-0.2, 0.2) for k in range(9)]
     frames = []
-    for i in range(16):
+    for i, (keep, br, jit, cool) in enumerate(CEL_STRIKE):
         t = i / 15
-        ro = 0.16 + 0.66 * (1 - (1 - min(1, t / 0.45)) ** 2.2)              # outer radius
-        ri = 0.0 if t < 0.35 else ro * min(0.94, (t - 0.35) / 0.4) ** 0.8    # hollow grows
-        edge = ro * (0.92 + _jag_edge(a, 16, 0.26 * (1 - t * 0.5), 0.3 * i, 88, 0.55))
-        outer = ss(r, edge * 1.08 + aa, edge * 1.08 - aa)
-        body = ss(r, edge + aa, edge - aa)
-        hole = ss(r, ri - aa, ri + aa) if ri > 0 else np.ones_like(r)
-        rim = outer * (ss(r, ri * 0.93 - aa, ri * 0.93 + aa) if ri > 0 else 1)
-        mid = body * hole
-        inner_lip = (ss(r, ri + 0.05 + aa, ri + 0.05 - aa) * hole) if ri > 0 else ss(r, ro * 0.55 + aa, ro * 0.55 - aa)
-        flash = ss(r, 0.5 * (1 - t / 0.15) + aa, 0.5 * (1 - t / 0.15) - aa) if t < 0.15 else np.zeros_like(r)
-        star = np.zeros_like(r)
-        if i < 3:
-            sp = (0.25 + 0.55 * np.abs(np.cos(a * 4 + 0.3)) ** 8) * (1 - i / 3)
-            star = ss(r, sp + aa, sp - aa)
-        core = np.maximum.reduce([inner_lip * (1 - t) ** 0.6, flash, star])
-        # radial cel bolts while it swells
+        rng = np.random.default_rng(5210 + i // 2)
+        R = S * (0.08 + 0.37 * (1 - (1 - min(1, t / 0.5)) ** 2.2))
         bolts = []
-        if 1 <= i <= 7:
-            fr = np.random.default_rng(4420 + i // 2)
-            for k in range(7):
-                th = k / 7 * TAU + fr.uniform(-0.2, 0.2)
-                p0 = (S / 2 + math.cos(th) * S / 2 * ro * 0.3, S / 2 + math.sin(th) * S / 2 * ro * 0.3)
-                p1 = (S / 2 + math.cos(th) * S / 2 * min(0.98, ro * 1.25), S / 2 + math.sin(th) * S / 2 * min(0.98, ro * 1.25))
-                bolts += _cel_tree(fr, p0, p1, S * 0.007, forks=0, hooks=0.4, depth=0, seg=(0.15, 0.3))
-        shard = np.zeros_like(r)
-        if i >= 9:
-            for (th, rr, sz, rot) in shards:
-                d = ro * rr + (t - 0.6) * 0.5
-                if d > 0.97:
-                    continue
-                cxs, cys = math.cos(th) * d, math.sin(th) * d
-                lx, ly = x - cxs, y - cys
-                c_, s_ = math.cos(rot + i * 0.5), math.sin(rot + i * 0.5)
-                u_, v_ = lx * c_ + ly * s_, -lx * s_ + ly * c_
-                sz2 = sz * (1 - (t - 0.6) * 1.2)
-                tri = (v_ > -sz2) & (np.abs(u_) < (sz2 - v_) * 0.6) & (v_ < sz2 * 1.4)
-                shard = np.maximum(shard, tri.astype(np.float32))
-        fade = 1.0 if t < 0.6 else max(0.0, 1 - (t - 0.6) / 0.4)
-        out = {"rim": np.clip(np.maximum(rim, _cel_draw(bolts, S, S, 3.2) if bolts else 0) * fade + shard, 0, 1),
-               "mid": np.clip(np.maximum(mid, _cel_draw(bolts, S, S, 2.2) if bolts else 0) * fade + shard * 0.8, 0, 1),
-               "core": np.clip(np.maximum(core, _cel_draw(bolts, S, S, 1.0) if bolts else 0) * fade, 0, 1)}
-        out["glow"] = np.clip(ndi.gaussian_filter(out["rim"], S * 0.03) * 1.3, 0, 1) * 0.7
-        frames.append(out)
+        nring = 3 if i < 6 else 2 if i < 11 else 1
+        frac = 1.0 if i < 5 else max(0.25, 1 - (i - 5) / 9)       # ring breaks up
+        for k in range(nring):
+            nseg = 10
+            span_each = TAU / 4 * frac
+            for q in range(4):
+                bolts += _ring_bolts(rng, c, R * (1 - 0.05 * k), q * TAU / 4 + k * 0.7 + rng.uniform(-0.3, 0.3), span_each, max(2, int(nseg * frac / 2)),
+                                     S * 0.009 * (1 - 0.3 * t))
+        if i <= 4:                                                 # radial strikes out to the ring (brief: no wagon wheel)
+            for d in dirs:
+                p1 = c + np.array([math.cos(d), math.sin(d)]) * R * 1.02
+                bolts += _cel_tree(rng, c + (p1 - c) * 0.12, p1, S * 0.009, forks=1, hooks=0.45, depth=1, seg=(0.12, 0.25))
+        extra = _star_extra(r, ang, 0.16 * max(0.0, 1 - i / 4) ** 1.2) if i < 4 else None
+        frames.append(_cel_layers(bolts, S, S, br, min(1.0, (i + 1) / 2.0), S * 0.0025 * jit, 11 + jit, cool, extra=extra))
     return frames
 
 
@@ -1831,8 +1807,8 @@ LIB = {
     "thunder_strip_v2_2": (_thunder_strip_v2(2482), "cel", 0, 0, "thunder"),
     "thunder_strip_v2_3": (_thunder_strip_v2(2483), "cel", 0, 0, "thunder"),
     "thunder_strip_v2_4": (_thunder_strip_v2(2484), "cel", 0, 0, "thunder"),
-    "anime_plasma": (anime_plasma, "cel", 4, 0, "thunder"),
-    "anime_blast":  (anime_blast,  "cel", 4, 0, "thunder"),
+    "plasma_ball_v2": (plasma_ball_v2, "cel", 4, 0, "thunder"),
+    "plasma_blast_v2": (plasma_blast_v2, "cel", 4, 0, "thunder"),
 }
 
 PALETTES = {

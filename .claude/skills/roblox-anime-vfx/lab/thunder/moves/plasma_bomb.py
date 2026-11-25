@@ -54,10 +54,10 @@ def _keys_at(keys, k):
     return keys[-1][1]
 
 
-def anime_ball(where, t0, life, radius_keys, *, tex="anime_plasma", mode="Loop", fps=24, rot=0, z=0.3, colors=None, fade=None):
-    """ONE flat-shaded anime energy ball (new anime_plasma cel flipbook): one locked particle per cel layer spanning the
+def anime_ball(where, t0, life, radius_keys, *, tex="plasma_ball_v2", mode="Loop", fps=24, rot=0, z=0.3, colors=None, fade=None):
+    """ONE cage of cel lightning (plasma_ball_v2 flipbook, house strokes): one locked particle per cel layer spanning the
     whole life, its Size sequence carrying the radius keys (charge, pinch, swell, implode). where: point or path."""
-    S = 4.0                                              # quad size per stud of visual radius (texture ball r ~0.27 of quad)
+    S = 3.0                                              # quad size per stud of visual radius (texture cage r ~0.33 of quad)
     ks = []
     for k in [i / 24 for i in range(25)]:
         ks.append([round(k, 4), round(max(0.05, _keys_at([[a, b] for a, b, *_ in radius_keys], k)) * S, 3)])
@@ -137,6 +137,9 @@ def build():
     R = [[0, 0.25], [kk(0.6), 1.7, "out"], [kk(0.74), 1.95], [kk(0.79), 1.35, "in"], [kk(TR), 2.1, "outBack"], [kk(TI), 2.0],
          [kk(TB - 0.01), 0.15, "in"], [1, 0.05]]
     L += anime_ball(P, 0.0, TB, R)
+    L += anime_ball(P, 0.0, TB, [[k, r * 0.82] + e for k, r, *e in R], fps=30, rot=100, z=0.2, colors=COOL)      # counter cage -> 3D
+    L.append({"type": "shell", "mesh": "sphere", "material": "Neon", "path": P, "at": ORB, "t0": 0.0, "life": TB,
+              "scale": [[k, round(r * 0.2, 3)] + e for k, r, *e in R], "color": [[0, WHITE], [1, ICE]], "transparency": 0.2})
     # tendrils leaping off the orb surface while it charges
     t = 0.15
     while t < TR:
@@ -182,7 +185,7 @@ def build():
     # ---- bloom: the implode releases radial waves of cel arcs bursting out over A (house matter, this move's shape)
     L.append({"type": "shell", "mesh": "sphere", "material": "Neon", "at": [IMPACT[0], 2.5, IMPACT[2]], "t0": TB, "life": 0.14,
               "scale": [[0, 0.4], [0.3, 2.4, "out"], [1, 0.2, "in"]], "color": WHITE, "transparency": [[0, 0], [0.6, 0.2], [1, 1]]})
-    L += emit_stack("anime_blast", [IMPACT[0], 3.2, IMPACT[2]], TB + 0.11, size=15, life=0.5, z=0.6)
+    L += emit_stack("plasma_blast_v2", [IMPACT[0], 3.2, IMPACT[2]], TB + 0.11, size=15, life=0.5, z=0.6)
     for w, (dtw, n, rad, hgt, wd) in enumerate([(0.02, 9, 8.0, 5.5, 1.6)]):
         for i in range(n):
             a, e = i / n * math.tau + w * 0.4 + rnd.uniform(-0.15, 0.15), rnd.uniform(0.1, 1.0)
@@ -218,7 +221,7 @@ def build():
     for j, (d, te) in enumerate(encase):                # each target: encased in a plasma sphere that pops
         c = chest(d)
         L += anime_ball(c, te, 0.3, [[0, 0.6], [0.2, 2.7], [0.8, 2.4], [1, 1.6]], fps=32, rot=40 * j, z=0.4)
-        L += emit_stack("anime_blast", c, te + 0.29, size=10, life=0.4, z=0.5, rot=30 * j)
+        L += emit_stack("plasma_blast_v2", c, te + 0.29, size=10, life=0.4, z=0.5, rot=30 * j)
         L.append(sparks(c, te + 0.29, 18, speed=(10, 24), seed=820 + j))
         L += emit_stack("thunder_arc_v2", c, te, size=[[0, 3.8], [1, 4.4]], life=0.14, mode="Loop", rate=[[te + 0.3, te + 1.0, 8]],
                         seed=830 + j, colors=COOL, transparency=[[0, 0], [0.6, 0.3], [1, 1]])
