@@ -76,7 +76,7 @@ Camera: wide side-on for the throw, glides in on the impaled target after the st
 Lessons: the strike bolt must end before the shaft snaps (else a disjoint white noodle); a lingering full-length line
 just reads as a beam, so the signature has to change shape; spear needs width ~2-5 studs to read at game distance.
 
-## Move 2: Thunderclap (X) - waiting for approval
+## Move 2: Thunderclap (X) - approved ("Okay")
 `lab/thunder/moves/thunderclap.py` -> `thunder_02_Thunderclap.json`. Mechanic: AoE stun around the caster.
 Signature: a geodesic dome cage (25 curved crackling edges = 75 camera-facing Beams) bursts out on the clap,
 overshoots 10 studs, edges blink individually, shrinks back as it cools; arcs crawl on the 3 stunned targets.
@@ -84,3 +84,12 @@ Wind-up: hands spread overhead with an arc between the palms that tightens as th
 wind-up, snaps wide on the clap to reveal the cage.
 Runtime upgrades for it: beam `from` keys, `curve` (keys) in Luau via CurveSize Bezier, beam texture swapping.
 Perf note: 75 Beams for the cage; on low Quality drop the rim layer (50 Beams).
+
+## Move 3: Judgment Pillar (C) - waiting for approval
+`lab/thunder/moves/judgment_pillar.py` -> `thunder_03_JudgmentPillar.json`. Mechanic: placed delayed strike (1.0 s warning).
+Telegraph: storm_cloud billows 38 studs up (+ smoke_puff fringe), inner flashes = storm_flash played in 0.13 s behind
+the cloud (ZOffset -3) so they rim-light it instead of punching a disc; cloud shadow + a ring of crawling flat ground
+arcs mark the zone; world grade darkens; stepped leaders (beams with flickering reach) + ground streamers.
+Strike: vbeam column (4-plane cel stack + navy set), 5 braided curved strand beams, giant thunder_bolt_v2 sprite,
+ONE inverted impact frame, hit-stop 0.15, crater slabs + fling, giant ground starburst, dust, smoke columns, 2 re-strikes.
+Camera: back and up (cloud, column, ring and caster in one frame).
