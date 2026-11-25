@@ -85,7 +85,7 @@ wind-up, snaps wide on the clap to reveal the cage.
 Runtime upgrades for it: beam `from` keys, `curve` (keys) in Luau via CurveSize Bezier, beam texture swapping.
 Perf note: 75 Beams for the cage; on low Quality drop the rim layer (50 Beams).
 
-## Move 3: Judgment Pillar (C) - waiting for approval
+## Move 3: Judgment Pillar (C) - approved ("That one looked amazing")
 `lab/thunder/moves/judgment_pillar.py` -> `thunder_03_JudgmentPillar.json`. Mechanic: placed delayed strike (1.0 s warning).
 Telegraph: storm_cloud billows 38 studs up (+ smoke_puff fringe), inner flashes = storm_flash played in 0.13 s behind
 the cloud (ZOffset -3) so they rim-light it instead of punching a disc; cloud shadow + a ring of crawling flat ground
@@ -93,3 +93,13 @@ arcs mark the zone; world grade darkens; stepped leaders (beams with flickering 
 Strike: vbeam column (4-plane cel stack + navy set), 5 braided curved strand beams, giant thunder_bolt_v2 sprite,
 ONE inverted impact frame, hit-stop 0.15, crater slabs + fling, giant ground starburst, dust, smoke columns, 2 re-strikes.
 Camera: back and up (cloud, column, ring and caster in one frame).
+
+## Fix: burn scars were invisible in every render
+scar() used a negative ZOffset on flat ground decals: ZOffset moves a particle along the view ray, so negative pushes
+the quad into the ground and the ground hides it (Roblox does the same). Ground decals now sit at y 0.06-0.1 with
+ZOffset >= 0. Moves 1-3 re-rendered (only change: their scars now show).
+
+## Move 4: Flash Step (V) - waiting for approval
+`lab/thunder/moves/flash_step.py` -> `thunder_04_FlashStep.json`. Approved timing (0.08 dissolve, 0.12 s zig-zag, 0.20 re-form).
+Signature: 4-leg angular cel ribbon (leg_trails) + a 1-frame silhouette flash at each corner + a dotted chain of burn
+scars along the route (start, 3 corners, end) - the route stays written on the ground after the ribbon fades.

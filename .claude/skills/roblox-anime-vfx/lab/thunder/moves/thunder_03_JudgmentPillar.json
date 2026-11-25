@@ -5948,7 +5948,7 @@
    "type": "emitter",
    "at": [
     0.0,
-    0.04,
+    0.06,
     -22.0
    ],
    "emits": [
@@ -6003,14 +6003,14 @@
       1
      ]
     ],
-    "ZOffset": -0.5
+    "ZOffset": 0.02
    }
   },
   {
    "type": "emitter",
    "at": [
     0.0,
-    0.06,
+    0.1,
     -22.0
    ],
    "props": {
@@ -6060,7 +6060,7 @@
     "Orientation": "VelocityPerpendicular",
     "FlipbookLayout": "None",
     "FlipbookMode": "OneShot",
-    "ZOffset": -0.4,
+    "ZOffset": 0.05,
     "Transparency": [
      [
       0,
@@ -6100,7 +6100,7 @@
    "type": "emitter",
    "at": [
     0.0,
-    0.06,
+    0.1,
     -22.0
    ],
    "props": {
@@ -6150,7 +6150,7 @@
     "Orientation": "VelocityPerpendicular",
     "FlipbookLayout": "None",
     "FlipbookMode": "OneShot",
-    "ZOffset": -0.35,
+    "ZOffset": 0.1,
     "Transparency": [
      [
       0,
@@ -6190,7 +6190,7 @@
    "type": "emitter",
    "at": [
     0.0,
-    0.06,
+    0.1,
     -22.0
    ],
    "props": {
@@ -6244,7 +6244,7 @@
     "Orientation": "VelocityPerpendicular",
     "FlipbookLayout": "None",
     "FlipbookMode": "OneShot",
-    "ZOffset": -0.3,
+    "ZOffset": 0.15,
     "Transparency": [
      [
       0,
@@ -6284,7 +6284,7 @@
    "type": "emitter",
    "at": [
     0.0,
-    0.06,
+    0.1,
     -22.0
    ],
    "props": {
@@ -6338,7 +6338,7 @@
     "Orientation": "VelocityPerpendicular",
     "FlipbookLayout": "None",
     "FlipbookMode": "OneShot",
-    "ZOffset": -0.25,
+    "ZOffset": 0.2,
     "Transparency": [
      [
       0,

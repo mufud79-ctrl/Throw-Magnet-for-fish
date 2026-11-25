@@ -86,13 +86,13 @@ def emit_stack(tex, at, t, *, size, life, layout="Grid4x4", mode="OneShot", coun
 def scar(at, t, size=10, rot=0, glow_life=0.9, soot_life=3.2):
     """Calling card: a Lichtenberg burn flat on the ground that flashes hot, cools through the colour script to
     indigo, and leaves the soot scar under it fading last."""
-    g = [at[0], 0.06, at[2]]
-    soot = {"type": "emitter", "at": [at[0], 0.04, at[2]], "emits": [[t, 1]], "props": {
+    g = [at[0], 0.1, at[2]]   # ground decals: never a negative ZOffset (it pushes the quad into the ground and hides it)
+    soot = {"type": "emitter", "at": [at[0], 0.06, at[2]], "emits": [[t, 1]], "props": {
         "Texture": "scorch_burn", "Color": SOOT, "LightEmission": 0, "Brightness": 1, "Size": [[0, size * 0.9], [0.05, size * 1.05], [1, size * 1.05]],
         "Lifetime": [soot_life, soot_life], "Speed": [0.01, 0.01], "Rotation": [rot, rot], "Orientation": "VelocityPerpendicular",
-        "Transparency": [[0, 0.15], [0.7, 0.3], [1, 1]], "ZOffset": -0.5}}
+        "Transparency": [[0, 0.15], [0.7, 0.3], [1, 1]], "ZOffset": 0.02}}
     glow = emit_stack("lichtenberg", g, t, size=[[0, size * 0.85], [0.06, size], [1, size]], life=glow_life, layout="None",
-                      colors=COOL, rot=rot, orient="VelocityPerpendicular", z=-0.4,
+                      colors=COOL, rot=rot, orient="VelocityPerpendicular", z=0.05,
                       transparency=[[0, 0], [0.1, 0], [0.14, 0.5], [0.2, 0.05], [0.5, 0.35], [1, 1]])
     return [soot] + glow
 
