@@ -30,7 +30,8 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 | item | estimate | spent |
 |---|---|---|
 | Figma concept image | 1-2 images | 7 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2), gpt-image-2.5-flare |
-| Meshy multi-image-to-3D | 30 (cap 60) | - |
+| Meshy multi-image-to-3D (dragon v3) | 30 | 30 (1989 -> 1959) |
+| Meshy image-to-3D hybrid pieces x4 | ~100 (step cap 170 total) | - |
 
 ## Step 2: concept (direction change)
 User: "as close to Kaido as possible while still being original enough", "should look more like Kaido". Pulled 24
@@ -49,3 +50,11 @@ forearm sleeves + talon gauntlets, tail. Pieces weld to R15 parts.
 User: "Full looks good, hybrid looks okay, hybrid should have fingers and the look should be more aggressive overall".
 hybrid_r15_v2.png: hooked horns + spike crest, flame-point curl collar, spiked pauldrons, bladed forearms, 5-finger
 claw hands (skinned, finger bones), back spine ridge, spiked tail with a blade tip. Still R15 add-ons.
+
+## Step 1: model (waiting for approval)
+Session prompt: prompts/dragon_vfx_session.md (branch claude/dragon-vfx-rigging-animation-5h3r0p).
+- Dragon: Meshy multi-image-to-3D from v3_view_side/top/front (padded to 1024 squares), 30 credits.
+  Raw: assets/source_art/meshy/dragon_v3.glb. Views: assets/source_art/dragon/meshy_raw/raw_head.jpg, raw_body.jpg.
+  Head, horns, curl mane, whiskers, grin, legs and tail fan all read. Issues to fix in the rig script: the tail thins to
+  a stalk before the fan (thicken), a stray cream lump on the back above the rear legs (delete).
+- Hybrid piece crops (masked out of hybrid_r15_v2.png) prepared, not yet submitted.
