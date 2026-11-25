@@ -130,3 +130,12 @@ flame_billow, flame_tongue, flame_strip_1-4, claw_rake, fire_crescent, fire_ring
 sheets (cracks, gouges, slice, wisps, swirl, sprays) were already crisp. New `anime_glint` (4-point star) + kit.glint.
 Comparison: assets/previews/dragon/cel_compare.jpg. Wide glow trails against the sky read as pale haze blocks: keep
 glow ribbons slim (<= 1.6) and translucent.
+
+## Move 2: Horn Rush (hybrid X) - built
+`lab/dragon/moves/horn_rush.py` -> `dragon_02_HornRush.json`. The wall = a wide fire_crescent laid flat on the ground
+(bowing forward) + 11 standing tongues riding it (tallest in the middle, following the arc) + billows dropped behind +
+a tapered flame wash; gust needles / embers / wisps / smoke stream with it. Lessons: a single camera-facing arch reads
+as a vector hoop from behind; white gust_lines sprites read as vertical bars when the motion is into the screen (use
+VelocityParallel needles); the camera must FOLLOW the caster (`kit.follow_cam`) - gameplay cameras track the player.
+Bug fixed: `scorch()` and the calling-card char decals sampled 4x4 sheets with FlipbookLayout None (grid of 16
+asterisks). New single-image `fire_scorch`; char decals play their sheet (hidden until the glow cools).

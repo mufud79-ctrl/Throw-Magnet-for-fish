@@ -347,7 +347,8 @@ def _mark(tex, at, t, size, rot, glow_life, char_life, pal, seed):
     char = {"type": "emitter", "at": R([at[0], 0.06, at[2]]), "emits": [[t, 1]], "seed": seed, "props": {
         "Texture": f"{tex}_rim", "Color": CHAR, "LightEmission": 0, "Brightness": 1, "Size": [[0, size], [1, size]],
         "Lifetime": [char_life, char_life], "Speed": [0.01, 0.01], "Rotation": [rot, rot], "Orientation": "VelocityPerpendicular",
-        "FlipbookLayout": "None", "Transparency": [[0, 1], [min(0.9, glow_life * 0.55 / char_life), 0.15], [0.8, 0.3], [1, 1]], "ZOffset": 0.0}}
+        "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot", "FlipbookFramerate": [16 / glow_life, 16 / glow_life],
+        "Transparency": [[0, 1], [min(0.9, glow_life * 0.55 / char_life), 0.15], [0.8, 0.3], [1, 1]], "ZOffset": 0.0}}
     glow = emit_stack(tex, g, t, size=size, life=glow_life, pal=pal, rot=rot, orient="VelocityPerpendicular", z=0.02, seed=seed + 1,
                       transparency=[[0, 0], [0.75, 0.1], [1, 1]])
     return [char] + glow
@@ -381,7 +382,7 @@ def slice_mark(at, t, length=14, rot=0, glow_life=1.2, char_life=3.0, pal="fire"
     return out
 
 
-def scorch(at, t, size=8, life=3.0, seed=61, tex="molten_crack_rim", rot=0):
+def scorch(at, t, size=8, life=3.0, seed=61, tex="fire_scorch", rot=0):
     """A plain char scorch decal (dark anchor on the ground)."""
     return {"type": "emitter", "at": R([at[0], 0.05, at[2]]), "emits": [[t, 1]], "seed": seed, "props": {
         "Texture": tex, "Color": CHAR, "LightEmission": 0, "Brightness": 1, "Size": [[0, size * 0.85], [0.08, size], [1, size]],
@@ -673,3 +674,18 @@ def ash(at, t0, t1, rate, part=(20, 2, 20), seed=89, fall=-2.5):
 def glint(at, t, size=4, life=0.22, pal="fire", seed=90, rot=0):
     """Anime star glint (anime_glint): the sharp 4-point sparkle on a strike's hot point."""
     return emit_stack("anime_glint", at, t, size=size, life=life, pal=pal, cool=False, rot=rot, seed=seed, z=0.9)
+
+
+
+def follow_cam(pose, dur, base=None, step=0.05):
+    """The gameplay camera follows the player (no cinematic moves): base framing + the caster's pose offset."""
+    base = base or GAMEPLAY_CAM
+    P0, L0 = base["pos"][0][1], base["look"][0][1]
+    pos, look = [], []
+    n = max(2, int(dur / step))
+    for i in range(n + 1):
+        t = dur * i / n
+        o = _keys(pose.get("offset"), t, [0, 0, 0])
+        pos.append([round(i / n, 4), R([P0[0] + o[0], P0[1], P0[2] + o[2]])])
+        look.append([round(i / n, 4), R([L0[0] + o[0], L0[1], L0[2] + o[2]])])
+    return {"pos": pos, "look": look, "fov": base["fov"]}

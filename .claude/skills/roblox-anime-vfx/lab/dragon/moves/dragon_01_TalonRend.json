@@ -32838,7 +32838,12 @@
      90
     ],
     "Orientation": "VelocityPerpendicular",
-    "FlipbookLayout": "None",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "FlipbookFramerate": [
+     12.8,
+     12.8
+    ],
     "Transparency": [
      [
       0,

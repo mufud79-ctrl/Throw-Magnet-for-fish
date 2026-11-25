@@ -2717,6 +2717,21 @@ def anime_glint(n=16, seed=1091):
     return frames
 
 
+def fire_scorch(seed=1101):
+    """Fire scorch on the sand (single image, shaded): an irregular charred blotch, darkest in the middle, with short
+    burnt streaks radiating out and a ragged soft edge. Tint near-black; ground decal under burnt things."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    n1 = noise(S, S, 50, 50, seed + 1, 4)
+    n2 = noise(S, S, 14, 14, seed + 2, 3)
+    rays = _ang_noise(a, 90, seed + 3, 0.6)
+    edge = 0.55 + 0.25 * (n1 - 0.5) + 0.22 * ss(rays, 0.55, 1.0)
+    alpha = ss(r, edge, edge - 0.18) * (0.75 + 0.25 * n2)
+    val = 0.25 + 0.35 * ss(r, 0.1, edge) + 0.15 * (n2 - 0.5)
+    return [np.clip(alpha, 0, 1)], [np.clip(val, 0, 1)]
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2822,6 +2837,7 @@ LIB = {
     "smoke_wisp":    (smoke_wisp,    "shaded", 4, 0, "charsmoke"),
     "ash_flakes":    (ash_flakes,    "shaded", 4, 0, "smoke"),
     "anime_glint":   (anime_glint,   "cel", 4, 0, "dragonfire"),
+    "fire_scorch":   (fire_scorch,   "shaded", 1, 0, "soot"),
 }
 
 PALETTES = {
