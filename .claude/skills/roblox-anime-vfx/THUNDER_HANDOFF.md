@@ -86,6 +86,12 @@ This is the first fruit built to the "design first, user approves everything, th
   `IDLE_ARM=62,16,32` / swing `6,8` (tunable via env vars). Eases: `snap` is quadratic, `strike` = u^1.7. Hand
   shapes keep a curl cascade; head leads (overlap -0.03 s), a head spring reacts to root motion, and keyed bones get
   a non-repeating "moving hold" drift (`ALIVE` amplitudes).
+- **Right hand fixed + flight/combat clips (waiting on user review)**: Meshy's right hand was malformed, so
+  god_cleanup mirrors the left hand onto the right; god_rig fits finger lines per hand (`fit_fingers`). Overlap
+  delays are skipped on the way into strike/snap/lin keys so arms are extended when the hit-stop freezes.
+  Bent-elbow guards need the upper arm rolled about -80 deg so the forearm folds up (not across the chest). New
+  clips: `fly_walk` (1.2 s loop) and `fly_run` (0.8 s loop) from `flight_pose()` (in place; the drum ring is
+  rotated rigidly about the hips with the body lean), and `punch` (3-hit flying combo: jab, cross, uppercut).
 - `lab/model_views.mjs` takes an optional `WxH` viewport; materials named `XRAY*` draw on top (skeleton overlays).
 
 ## Waiting on the user (original list)
