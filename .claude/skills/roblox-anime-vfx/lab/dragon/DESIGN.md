@@ -3,6 +3,38 @@
 Status: **v3 (user feedback): an Eastern serpent dragon emperor, wingless, Kaido-matched colours; the hybrid is R15
 add-ons. The concept look is waiting for approval.** The v3 and v2 revision blocks OVERRIDE anything below that mentions wings, half-wings or a western build.
 
+## Revision v3d: hybrid in the house style of the thunder god sheet (supersedes v3c)
+User: "Wrong style completely, follow style guide from the lightning model." The house style for character sheets
+is `assets/source_art/god_mode/C_tpose_sheet_v3.png`: a 2D anime turnaround with clean ink lines and crisp cel
+shading, a strict T-pose, front/side/back views on plain grey, ornate armour with gold trim and crimson tassels.
+New sheet: `assets/source_art/dragon/hybrid_r15_v4.png`. It's still add-ons on the blocky R15 with no fingers:
+- **Head:** cream-gold ridged horns plus a back pair, and a gold crown band with a blue gem.
+- **Collar:** a navy spiral-curl mane collar (UpperTorso).
+- **Pauldrons:** **dragon-head pauldrons**, azure snarling heads with cream horns, gold trim and crimson tassels
+  (UpperArm L/R).
+- **Bracers:** azure scale bracers with gold trim and 3 cream claw blades over the back of the box hand
+  (LowerArm L/R, rigid).
+- **Sash:** a crimson-and-gold sash belt with a gold dragon medallion, rope tassels and a front panel (LowerTorso).
+- **Tail:** a long azure tail with a cream belly, cream spines and a navy curl fan (LowerTorso, skinned, about 7
+  bones).
+Source for the meshes: Meshy image-to-3D of clean crops of the pieces (estimate first), or Blender for the simple
+ones (crown band, sash, bracers).
+
+## Revision v3c: hybrid = blocky, angular, T-posed, NO fingers (supersedes v3b)
+User: "too round, it's a blocky R15 avatar so that won't work, it should be T-posed. NO FINGERS. Just give him
+cool looking hybrid stuff." New sheet: `assets/source_art/dragon/hybrid_r15_v3.png` (front, side and back,
+T-pose). All pieces are hard-surface, faceted and low-poly with flat faces and straight edges, matching the boxy
+body:
+- angular faceted cream-gold horns plus a back pair (Head)
+- a jagged collar of navy armour shards (UpperTorso)
+- faceted azure pauldrons with straight gold spikes (UpperArm L/R)
+- blocky azure forearm bracers with 3 straight gold blade claws jutting past the box hand (LowerArm L/R, rigid;
+  the hand stays a box, with no fingers and no finger bones)
+- angular gold spine blades down the back (UpperTorso)
+- a segmented tail of stacked angular azure box plates with a cream underside, gold spikes and a big gold blade
+  tip (LowerTorso, skinned, 1 bone per segment group, about 7)
+Faceted low-poly pieces are cheap to build in Blender directly (no Meshy needed for them).
+
 ## Revision v3b: hybrid made aggressive, with fingers (supersedes the hybrid bullet below)
 User: "Full looks good" (full-form look v3 APPROVED). "Hybrid should have fingers and the look should be more
 aggressive overall." New sheet: `assets/source_art/dragon/hybrid_r15_v2.png`. It's still add-on pieces on the

@@ -12,7 +12,7 @@ Brief: `prompts/dragon_fruit_session.md`. Design: `lab/dragon/DESIGN.md`.
 | step | status |
 |---|---|
 | 1. research + design doc | v1 shown; user redirected: wingless Eastern dragon emperor (v2 block in DESIGN.md) |
-| 2. concept sheet | full form v3 APPROVED ("Full looks good"); hybrid v2 (aggressive, 5-finger claws) waiting for approval |
+| 2. concept sheet | full form v3 APPROVED ("Full looks good"); hybrid v4 (house cel style of the thunder god sheet, blocky R15, T-pose, no fingers) waiting for approval |
 | 3. Meshy model + rig (wings) + rig layer v2 | - |
 | 4. fire matter | - |
 | 5. hybrid Z X C V B F | - |
@@ -29,9 +29,9 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 ## Credits
 | item | estimate | spent |
 |---|---|---|
-| Figma concept image | 1-2 images | 7 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2), gpt-image-2.5-flare |
+| Figma concept image | 1-2 images | 9 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3, hybrid v4), gpt-image-2.5-flare |
 | Meshy multi-image-to-3D (dragon v3) | 30 | 30 (1989 -> 1959) |
-| Meshy image-to-3D hybrid pieces x4 | ~100 (step cap 170 total) | - |
+| Meshy image-to-3D hybrid v4 pieces x4 (pauldron, horns+crown, collar, tail) | ~100 (step cap 170 total) | - |
 
 ## Step 2: concept (direction change)
 User: "as close to Kaido as possible while still being original enough", "should look more like Kaido". Pulled 24
@@ -51,10 +51,23 @@ User: "Full looks good, hybrid looks okay, hybrid should have fingers and the lo
 hybrid_r15_v2.png: hooked horns + spike crest, flame-point curl collar, spiked pauldrons, bladed forearms, 5-finger
 claw hands (skinned, finger bones), back spine ridge, spiked tail with a blade tip. Still R15 add-ons.
 
+## Step 2d: hybrid v3
+User: "too round, blocky R15 won't work, should be T-posed, NO FINGERS, just cool hybrid stuff". hybrid_r15_v3.png:
+faceted low-poly hard-surface pieces (horns, shard collar, spiked pauldrons, bracers with blade claws, back blades,
+segmented angular tail). Build in Blender, no Meshy. Lesson: R15 add-ons must be boxy/faceted to match the body.
+
+## Step 2e: hybrid v4 (house style)
+User: "Wrong style completely, follow style guide from the lightning model". House style = C_tpose_sheet_v3.png: 2D
+anime turnaround, ink lines, cel shading, strict T-pose, ornate gold trim + crimson tassels. hybrid_r15_v4.png:
+horns + crown band, curl collar, dragon-head pauldrons, scale bracers with claw blades, crimson-gold sash, curl-fan
+tail. RULE: every character/model sheet uses this house style (never 3D renders or low-poly looks).
+
 ## Step 1: model (waiting for approval)
-Session prompt: prompts/dragon_vfx_session.md (branch claude/dragon-vfx-rigging-animation-5h3r0p).
+Session prompt: prompts/dragon_vfx_session.md (branch claude/dragon-vfx-rigging-animation-5h3r0p). Scope of this
+session (relayed user update): steps 1-3 only (model, hybrid pieces, rig, rig layer v2 + exports). Moves are done by
+the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
 - Dragon: Meshy multi-image-to-3D from v3_view_side/top/front (padded to 1024 squares), 30 credits.
   Raw: assets/source_art/meshy/dragon_v3.glb. Views: assets/source_art/dragon/meshy_raw/raw_head.jpg, raw_body.jpg.
   Head, horns, curl mane, whiskers, grin, legs and tail fan all read. Issues to fix in the rig script: the tail thins to
   a stalk before the fan (thicken), a stray cream lump on the back above the rear legs (delete).
-- Hybrid piece crops (masked out of hybrid_r15_v2.png) prepared, not yet submitted.
+- Hybrid crops from hybrid_r15_v2.png were made but never submitted: obsolete (v2 rejected). v4 crops next.
