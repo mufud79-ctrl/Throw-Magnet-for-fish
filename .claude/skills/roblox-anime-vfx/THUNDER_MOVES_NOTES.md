@@ -151,7 +151,7 @@ ground->ground or into an enemy every 0.06-0.1 s; up-strikes are cel columns + r
 sprite; strobing field light, brighter floating static, closer camera, lighter grade.
 Lesson: electricity has to JUMP between things in the air; flat ground decorations alone read as cracks.
 
-## Move 7: Plasma Bomb (M) - REWORK v2, waiting for approval
+## Move 7: Plasma Bomb (M) - REWORK v2 + style pass, waiting for approval
 v1 was rejected hard ("looks like shit, never make something this ass again"). What was wrong with v1: flat plasma_orb
 sprite read as a cheap donut and was blocked by the arm; generic thin "rays"; the detonation REUSED the same
 burst + crackle + ground ring + dust + smoke used on four other moves (exactly the banned shared impact recipe);
@@ -165,3 +165,10 @@ hit-stop 0.1; CHAIN: braided 3-strand plasma tethers lash A -> B -> C, a plasma 
 encased in a small plasma sphere that pops. Camera drops low behind A for the chain so B and C spread left/right.
 Lessons: indigo shells must stay translucent (>= 0.55) or they read as dirty purple flakes; keep the dome small
 enough (7.5 studs) not to swallow the chain targets.
+Style pass ("better, now adjust it so it fits the style - why is this in a different style?"): v2's orb, dome, beads and
+encasing spheres were textured 3D sphere/dome SHELLS (glossy glassy bubbles, smeared bands, lavender tint) while every
+other move is made of cel lightning STROKES. Rebuilt in house matter: plasma_sphere() is now a ball of cel arcs (short
+curved arc_jumps flickering across the sphere surface, 3 per tick, bowing outward) + a radius-scaled crackle bush
+(cel body / white core / indigo outline) around a small neon core; the dome is replaced by three radial waves of cel
+arcs bursting out of the implode. RULE: one visual language across the fruit - cel strokes; a move's identity comes
+from its shape and mechanic, never from a different rendering style (no glassy textured shells for energy).

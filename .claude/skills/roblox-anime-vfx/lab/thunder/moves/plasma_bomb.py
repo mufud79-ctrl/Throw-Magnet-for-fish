@@ -1,14 +1,14 @@
 """Plasma Bomb (M) - hold-charge lob. Signature: a 3D plasma orb that drinks lightning out of the ground, implodes and
-blooms into a plasma dome, then plasma beads race down braided tethers to encase each chained target.
+bursts into radial waves of cel arcs, then plasma beads race down braided tethers to encase each chained target.
 
 Beat sheet (rework v2: nothing here is shared with the other moves' impacts)
-  0.00-0.74  CHARGE overhead: a plasma orb grows above the raised palm (white-hot core, sphere of crawling lightning
-             bands spinning, counter-spinning indigo shell, tendrils leaping off it); arcs leap UP out of the sand
+  0.00-0.74  CHARGE overhead: a plasma orb grows above the raised palm (neon core inside a ball of cel arcs flickering
+             across its surface, crackle bush, tendrils leaping off it); arcs leap UP out of the sand
              into it; dust is dragged inward; a burn spreads under the caster                    (anticipation)
   0.74-0.82  the orb pinches, then swells; the caster coils back                                (squash)
   0.82       overhand LOB: the orb flies a high arc trailing plasma and dripping static          (arcs, follow-through)
   1.32       IMPLODE: the orb collapses to a point, arcs sucked in, a beat of darkness            (anticipation)
-  1.40       BLOOM: a plasma dome blooms over enemy A (lightning bands + indigo shell + lightning web inside),
+  1.40       BLOOM: three radial waves of cel arcs burst out over enemy A from a neon flash,
              white flash frame, hit-stop 0.1; scorched plasma pool, dark smoke at the rim          (timing)
   1.47-1.80  CHAIN: braided plasma tethers lash A -> B -> C; a bright plasma bead races down each tether and
              ENCASES the target in a small plasma sphere that pops (hit-stop 0.05 each)
@@ -43,25 +43,66 @@ def orb_path():
     return P
 
 
-def plasma_sphere(where, t0, life, radius_keys, spin=240, core=True, bright=1.5, fade=None):
-    """The plasma body: neon core + sphere of crawling cel lightning bands + counter-spinning indigo shell.
-    where: a fixed point [x, y, z] or a time-keyed path [[t, [x, y, z]], ...]."""
+def _keys_at(keys, k):
+    """Linear read of [[k, value, ease?], ...] (python side, for placing short-lived arcs)."""
+    if k <= keys[0][0]:
+        return keys[0][1]
+    for (k0, v0, *_), (k1, v1, *_) in zip(keys[:-1], keys[1:]):
+        if k <= k1:
+            u = (k - k0) / ((k1 - k0) or 1)
+            return [a + (b - a) * u for a, b in zip(v0, v1)] if isinstance(v0, list) else v0 + (v1 - v0) * u
+    return keys[-1][1]
+
+
+def plasma_sphere(where, t0, life, radius_keys, spin=240, core=True, bright=1.5, fade=None, dt=0.028, seed=0):
+    """The plasma body in the house style: a small neon core inside a BALL OF CEL ARCS - short curved arcs flicker
+    across the sphere surface (bowing outward) two at a time, plus a cel crackle bush at the centre. Same cel strokes
+    as every other move; only the shape (a dense ball) is this move's own. where: point or time-keyed path."""
     out = []
-    pos = {"path": where} if isinstance(where[0], list) else {"at": where}
-    tr = fade or 0
-    sc = lambda f: [[k, round(r * f, 3)] + rest for k, r, *rest in radius_keys]
+    is_path = isinstance(where[0], list)
+    pos = {"path": where} if is_path else {"at": where}
+    rk = [[k, r] + rest for k, r, *rest in radius_keys]
     if core:
-        out.append(dict(pos, type="shell", mesh="sphere", material="Neon", t0=t0, life=life, scale=sc(0.42), color=[[0, WHITE], [1, ICE]], transparency=tr))
-    for j, (tex, col, f, tile, sp, rot) in enumerate([
-            ("thunder_strip_v2_1_mid", [[0, CYAN], [1, BLUE]], 1.0, [3, 3], spin, [20, 0, 0]),
-            ("thunder_strip_v2_3_core", WHITE, 0.98, [2, 2], -spin * 1.3, [-35, 40, 0]),
-            ("thunder_strip_v2_2_rim", INDIGO, 1.12, [3, 2], -spin * 0.6, [60, 0, 30])]):
-        trj = tr
-        if j == 2:                                    # the indigo shell is a faint dark rim, never the main read
-            trj = [[k, max(0.55, v)] for k, v, *_ in tr] if isinstance(tr, list) else max(0.55, tr)
-        out.append(dict(pos, type="shell", mesh="sphere", material="Textured", texture=tex, t0=t0, life=life, scale=sc(f), color=col,
-                        tile=tile, scroll=[0.9 if j != 1 else -1.4, 0], spin=sp, spinAxis=[0, 1, 0], rot=rot, brightness=(bright * 1.15) if j < 2 else 1,
-                        transparency=trj))
+        out.append(dict(pos, type="shell", mesh="sphere", material="Neon", t0=t0, life=life,
+                        scale=[[k, round(r * 0.38, 3)] + rest for k, r, *rest in radius_keys], color=[[0, WHITE], [1, ICE]], transparency=fade or 0))
+    r_ = random.Random(seed * 31 + int(t0 * 1000))
+    t = t0
+    while t < t0 + life - 0.02:
+        k = (t - t0) / life
+        rad = _keys_at(rk, k)
+        if fade and _keys_at(fade, k) > 0.8:
+            t += dt
+            continue
+        c = _keys_at(where, t) if is_path else where
+        if rad > 0.25:
+            for _ in range(3):
+                pts = []
+                for _ in range(2):
+                    z_, a_ = r_.uniform(-1, 1), r_.uniform(0, math.tau)
+                    q = math.sqrt(1 - z_ * z_)
+                    pts.append([math.cos(a_) * q, z_, math.sin(a_) * q])
+                m = [(pts[0][i] + pts[1][i]) / 2 for i in range(3)]
+                ml = math.sqrt(sum(v * v for v in m)) or 1
+                bow = [round(m[i] / ml * rad * 0.45, 3) for i in range(3)]
+                p0 = [round(c[i] + pts[0][i] * rad, 3) for i in range(3)]
+                p1 = [round(c[i] + pts[1][i] * rad, 3) for i in range(3)]
+                out += arc_jump(p0, p1, round(t, 3), life=dt * 2.1, bow=bow, width=max(0.7, min(1.9, rad * 0.8)), seed=r_.randint(0, 99))
+        t += dt
+    # crackle bush at the centre, sized with the orb: cel body + white core + indigo outline (independent spawns)
+    n_win = 6
+    for w in range(n_win):
+        w0, w1 = t0 + life * w / n_win, t0 + life * (w + 1) / n_win
+        rad = _keys_at(rk, (w + 0.5) / n_win)
+        if fade and _keys_at(fade, (w + 0.5) / n_win) > 0.8 or rad < 0.3:
+            continue
+        for tex, col, le, rate, f in (("thunder_arc_v2_mid", [[0, WHITE], [0.4, CYAN], [1, BLUE]], 0.35, 40, 2.4),
+                                      ("thunder_arc_v2_core", WHITE, 0.35, 22, 2.0), ("thunder_arc_v2_rim", INDIGO, 0, 18, 2.7)):
+            e = dict(pos, type="emitter", rate=[[round(w0, 3), round(w1, 3), rate]], seed=900 + seed * 7 + w * 3 + len(out) % 5, props={
+                "Texture": tex, "Color": col, "LightEmission": le, "Brightness": 1.4 if le else 1, "LockedToPart": True,
+                "Size": [[0, round(rad * f * 0.85, 2)], [1, round(rad * f, 2)]], "Lifetime": [0.06, 0.1], "Speed": [0.01, 0.01], "Rotation": [0, 360],
+                "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random", "FlipbookFramerate": [24, 24], "FlipbookStartRandom": True,
+                "ZOffset": 0.35 if le else 0.25})
+            out.append(e)
     return out
 
 
@@ -115,21 +156,15 @@ def build():
         "ShapeStyle": "Surface", "Size": [[0, 0.8], [1, 1.6]], "Lifetime": [0.07, 0.08], "Speed": [80, 90], "Orientation": "VelocityParallel",
         "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random", "FlipbookFramerate": [25, 25], "FlipbookStartRandom": True, "ZOffset": 0.4}})
 
-    # ---- bloom: the plasma dome over A (bands + indigo shell + neon flash) and a lightning web inside
-    dome_life = 0.42
-    for j, (tex, col, f, tile, sp, tr) in enumerate([
-            ("thunder_strip_v2_1_mid", [[0, WHITE], [0.25, CYAN], [1, BLUE]], 1.0, [4, 2], 120, [[0, 0], [0.5, 0.25], [1, 1]]),
-            ("thunder_strip_v2_4_core", WHITE, 0.96, [3, 2], -160, [[0, 0], [0.35, 0.3], [1, 1]]),
-            ("thunder_strip_v2_2_rim", INDIGO, 1.06, [4, 1], 70, [[0, 0.55], [0.6, 0.7], [1, 1]])]):
-        L.append({"type": "shell", "mesh": "dome", "material": "Textured", "texture": tex, "at": [IMPACT[0], 0.05, IMPACT[2]], "t0": TB, "life": dome_life,
-                  "scale": [[0, [0.6, 0.4, 0.6]], [0.14, [7.5 * f, 5.5 * f, 7.5 * f], "outExpo"], [0.35, [7 * f, 6.2 * f, 7 * f]], [1, [8.5 * f, 6.5 * f, 8.5 * f], "out"]],
-                  "color": col, "tile": tile, "scroll": [0.8 * (1 if j != 1 else -1), 0], "spin": sp, "brightness": 1.5 if j < 2 else 1, "transparency": tr})
-    L.append({"type": "shell", "mesh": "sphere", "material": "Neon", "at": [IMPACT[0], 2.5, IMPACT[2]], "t0": TB, "life": 0.16,
-              "scale": [[0, 0.5], [0.3, 3.2, "out"], [1, 0.2, "in"]], "color": WHITE, "transparency": [[0, 0], [0.6, 0.2], [1, 1]]})
-    for i in range(9):
-        a, e = i / 9 * math.tau + 0.2, rnd.uniform(0.25, 1.1)
-        tip = [round(IMPACT[0] + math.cos(a) * math.cos(e) * 6.5, 2), round(math.sin(e) * 5.5, 2), round(IMPACT[2] + math.sin(a) * math.cos(e) * 6.5, 2)]
-        L += arc_jump([IMPACT[0], 2.5, IMPACT[2]], tip, TB + 0.005 + 0.02 * (i % 3), life=0.12, bow=[0, 1.2, 0], width=1.4, seed=40 + i)
+    # ---- bloom: the implode releases radial waves of cel arcs bursting out over A (house matter, this move's shape)
+    L.append({"type": "shell", "mesh": "sphere", "material": "Neon", "at": [IMPACT[0], 2.5, IMPACT[2]], "t0": TB, "life": 0.14,
+              "scale": [[0, 0.4], [0.3, 2.4, "out"], [1, 0.2, "in"]], "color": WHITE, "transparency": [[0, 0], [0.6, 0.2], [1, 1]]})
+    for w, (dtw, n, rad, hgt, wd) in enumerate([(0.0, 12, 5.5, 4.5, 1.8), (0.06, 10, 7.5, 5.5, 1.5), (0.12, 8, 9.0, 6.0, 1.2)]):
+        for i in range(n):
+            a, e = i / n * math.tau + w * 0.4 + rnd.uniform(-0.15, 0.15), rnd.uniform(0.1, 1.0)
+            tip = [round(IMPACT[0] + math.cos(a) * math.cos(e) * rad, 2), round(0.3 + math.sin(e) * hgt, 2), round(IMPACT[2] + math.sin(a) * math.cos(e) * rad, 2)]
+            L += arc_jump([IMPACT[0], 2.2, IMPACT[2]], tip, round(TB + 0.005 + dtw, 3), life=0.1 + 0.03 * w, bow=[0, round(1.0 + 0.4 * w, 2), 0],
+                          width=wd, seed=60 + w * 20 + i)
     L += scar([IMPACT[0], 0, IMPACT[2]], TB, size=16, rot=-15, glow_life=1.2, soot_life=3.2, soot_in=1.0)
 
     # ---- chain: braided tethers lash out, a plasma bead races down each, the target is encased and it pops
