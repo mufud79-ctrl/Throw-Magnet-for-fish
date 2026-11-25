@@ -129,10 +129,17 @@ Beat sheet (from the approved design): 0.00 arm sweep / 0.25 serpent born from t
   Luau side still to do (skinned MeshPart, Bone.WorldCFrame).
 - lab/model_views.mjs: --wide and yaw:pitch:zoom:fz views for long models.
 
-## Move 5: Thunder Serpent (B) - waiting for approval
+## Move 5: Thunder Serpent (B) - approved ("Great")
 `lab/thunder/moves/thunder_serpent.py` -> `thunder_05_ThunderSerpent.json`. Uses the `rig` layer (now in the Luau runtime
 too: model cloned from AnimeVFX.Models, Bone.WorldCFrame per frame; rig_models listed in the upload manifest).
 Summon: upward arm swing; the serpent ERUPTS out of a cracking ground portal in front of the caster (its unborn body
 continues straight back from the start point = underground, hidden by the ground in Roblox too; a palm birth showed
 the unborn tail behind the caster). Swims a 1.25-wave S-curve with 3 braided cel chains + crawling arcs + navy smear;
 jaw opens wide and snaps on the bite (hit-stop 0.04); coils 1.2 turns around the target; roars and BURSTS (hit-stop 0.1).
+
+## Move 6: Static Field (N) - waiting for approval
+`lab/thunder/moves/static_field.py` -> `thunder_06_StaticField.json`. Palm slam; a fence circle of 18 curved cel beam
+segments (54 Beams) races out to 9 studs, overshoots, holds with segments blinking on their own beats, collapses at 3.0.
+Inside: crawling flat ground arcs (+ indigo outline), floating static, pooled navy haze, big scar. Every 0.5 s a bolt jumps
+UP out of the ground (neon bolt + thunder_bolt_v2 sprite rotated 180 so it draws bottom-up), two land on the enemies
+inside (hit-stop 0.05 each), mini scar under each; the enemy outside the fence is untouched.
