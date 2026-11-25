@@ -113,6 +113,29 @@ def decimate(ob, tris):
         bpy.ops.object.modifier_apply(modifier="Dec")
 
 
+def mirror_left_hand(hands):
+    """Meshy modelled the right hand differently from the left (longer, flatter fingers drooping at the tips,
+    lumpy knuckles); with the same curl it read as a claw. Replace it with a mirror of the left hand."""
+    bm = bmesh.new()
+    bm.from_mesh(hands.data)
+    mw = hands.matrix_world
+    right = [f for f in bm.faces if (mw @ f.calc_center_median()).x < 0]
+    bmesh.ops.delete(bm, geom=right, context="FACES")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    dup = bmesh.ops.duplicate(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:])
+    new_v = [g for g in dup["geom"] if isinstance(g, bmesh.types.BMVert)]
+    new_f = [g for g in dup["geom"] if isinstance(g, bmesh.types.BMFace)]
+    inv = mw.inverted()
+    for v in new_v:
+        w = mw @ v.co
+        w.x = -w.x
+        v.co = inv @ w
+    bmesh.ops.reverse_faces(bm, faces=new_f)          # mirroring flips the winding
+    bm.normal_update()
+    bm.to_mesh(hands.data)
+    bm.free()
+
+
 def replace_hands(src, lab, body, hand_tris):
     """Rebuild the body as (body minus hands, decimated to budget - hand_tris) + (hands from the full-detail
     source, decimated to hand_tris), so the fingers keep enough geometry to bend."""
@@ -122,6 +145,7 @@ def replace_hands(src, lab, body, hand_tris):
     hands = keep_faces(src, lambda c, i: lab[i] == 0 and abs(c.x) > HAND_CUT - HAND_OVERLAP, "Hands")
     decimate(rest, total - hand_tris)
     decimate(hands, hand_tris)
+    mirror_left_hand(hands)
     with bpy.context.temp_override(active_object=rest, selected_editable_objects=[rest, hands]):
         bpy.ops.object.join()
     for p in rest.data.polygons:

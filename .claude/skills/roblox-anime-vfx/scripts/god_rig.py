@@ -74,6 +74,50 @@ for side, sgn in (("Left", 1), ("Right", -1)):
             R15.append((f"{side}{fn}{k + 1}", f"{side}{fn}{k}", f"{side}{fn}{k + 1}", f"{side}Hand" if k == 0 else f"{side}{fn}{k}"))
 
 
+FINGER_LINES = {side: {fn: [(x * sgn, y, z) for x, y, z in pts] for fn, pts in FINGERS.items()}
+                for side, sgn in (("Left", 1), ("Right", -1))}
+
+
+def fit_fingers(PB):
+    """Refit each hand's finger lines from its own vertices. The Meshy hands are not mirror images (the right
+    fingers are ~3 cm longer and splayed differently), so mirrored left-hand lines left the right fingertips
+    outside their bones: tips stayed on the palm while the middle joints bent."""
+    for side, sgn in (("Left", 1), ("Right", -1)):
+        H = PB[PB[:, 0] * sgn > 0.6]
+        guess = {fn: np.array(pts, float) for fn, pts in FINGER_LINES[side].items()}
+        dist = {}
+        for fn, A in guess.items():
+            a0, ab = A[0], A[-1] - A[0]
+            t = np.clip(((H - a0) @ ab) / (ab @ ab), -0.3, 1.7)
+            dist[fn] = np.linalg.norm(H - (a0 + t[:, None] * ab), axis=1)
+        names = list(guess)
+        D = np.stack([dist[fn] for fn in names], 1)
+        own = D.argmin(1)
+        for k, fn in enumerate(names):
+            C = H[(own == k) & (D[:, k] < 0.018)]
+            A = guess[fn]
+            if len(C) < 12:
+                continue
+            axis = A[-1] - A[0]
+            axis /= np.linalg.norm(axis)
+            u, sv, vt = np.linalg.svd(C - C.mean(0), full_matrices=False)
+            d = vt[0] * np.sign(vt[0] @ axis)
+            pr = (C - A[0]) @ d
+            p0, p1 = 0.0, np.percentile(pr, 97)
+            pts = []
+            for f in (0.0, 0.38, 0.70, 1.0):
+                pc = p0 + (p1 - p0) * f
+                m = np.abs(pr - pc) < 0.007
+                q = C[m].mean(0) if m.sum() >= 3 else A[0] + d * pc
+                if f == 0.0:
+                    q = 0.5 * (q + A[0])               # keep the knuckle close to the measured palm line
+                pts.append(tuple(float(v) for v in q))
+            FINGER_LINES[side][fn] = pts
+        for fn, pts in FINGER_LINES[side].items():
+            for k in range(4):
+                J[f"{side}{fn}{k}"] = pts[k]
+
+
 def jp(key):
     if isinstance(key, tuple):
         k, s = key
@@ -131,6 +175,8 @@ def build(src):
     bpy.ops.wm.open_mainfile(filepath=src)
     body, cape, mane = (bpy.data.objects[n] for n in ("Body", "Cape", "Mane"))
     PB, PC, PM = verts(body), verts(cape), verts(mane)
+    fit_fingers(PB)
+    print("finger tips L/R:", {fn: (round(FINGER_LINES["Left"][fn][3][0], 3), round(FINGER_LINES["Right"][fn][3][0], 3)) for fn in FINGERS})
     chains = {}            # chain name -> dict(bones=[names], joints=[Vector], parent=root bone)
 
     # ---- cape: 3 columns by angle round the body axis (0 = straight back, + = character's left)
@@ -272,8 +318,8 @@ def split_fingers(g, side, P):
     hand = g[f"{side}Hand"]
     best = np.full(len(P), np.inf)
     dists, params = {}, {}
-    for fn, pts in FINGERS.items():
-        A = np.array(pts, float) * np.array([sgn, 1, 1])
+    for fn, pts in FINGER_LINES[side].items():
+        A = np.array(pts, float)
         a0, a1 = A[0], A[-1]
         ab = a1 - a0
         t = np.clip(((P - a0) @ ab) / (ab @ ab), -0.5, 1.0)
