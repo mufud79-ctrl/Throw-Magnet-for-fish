@@ -113,3 +113,9 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
   dragon". Free prototype (scratchpad lengthen.py): trunk x2.6, tail x2.4, cross-section x1.4, legs x0.6, S-curve.
   Proportions read more like a Chinese dragon, but the stretched texture smears the scales and belly band. Asked the
   user: keep the stretch (fix texture later) vs a new long-body sheet + Meshy re-run (needs explicit OK).
+- User: "New model, rn the head and smaller details look like shit, keep that in mind for new image gen, it needs hella
+  polish". Cause: in a 1536-px strip the head is ~250 px, so Meshy gets mush. New plan: two sheets, two Meshy jobs,
+  joined in Blender. dragon_sheet_v5_long.png (long serpentine body, small legs, straight side + top) and
+  dragon_head_sheet_v5.png (head only, full frame, side/front/top, bold simple shapes, mouth open, 2 whiskers, 8 big
+  mane curls). Figma gpt-image-2.5-flare, 2 images. Polish in Blender: clean 2-strand whiskers, symmetrize, bigger
+  talons, emissive eyes, teeth/horn cleanup. Waiting for the user's OK on the sheets + ~60 Meshy credits.
