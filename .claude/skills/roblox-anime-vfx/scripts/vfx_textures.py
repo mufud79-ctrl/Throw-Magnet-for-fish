@@ -1926,6 +1926,504 @@ def flare_v3():
     return frames
 
 
+# ================================================================ DRAGON FIRE MATTER (explicit layers, painted)
+# The dragon fruit's own fire. Every sheet ships as _glow/_rim/_mid/_core with these roles (lab/dragon/kit.py):
+#   rim   the whole silhouette           crimson, LE 0.2: covers the sand, cools to ember red then char
+#   mid   the gold body (heat > threshold), alpha shaded by the painted volume, so lobe shadows show crimson
+#   core  only the hottest pockets and leading edges (white-gold). Kept THIN on purpose: white-out is failure #3
+#   glow  tight + wide soft halo of the silhouette (orange, ~70% transparent)
+# `cool` (0..1) raises the thresholds: the core dies first, the body shrinks into the rim, the rim lingers as char.
+def _blurw(a, s, wrap=False):
+    return ndi.gaussian_filter(a, s, mode="wrap" if wrap else "constant") if s > 0 else a
+
+
+def _depth(F, scale, wrap=False):
+    """0 at the silhouette edge -> 1 deep inside (painted falloff), from the distance transform of F > 0."""
+    m = F > 0
+    if wrap:
+        W = m.shape[1]
+        d = ndi.distance_transform_edt(np.tile(m, (1, 3)))[:, W:2 * W]
+    else:
+        d = ndi.distance_transform_edt(m)
+    return 1 - np.exp(-d / max(1e-6, scale))
+
+
+def _fire_layers(F, heat, cool=0.0, e=0.02, mid_th=0.3, core_th=0.8, vol=None, glow=(0.012, 0.04), gk=0.85, wrap=False,
+                 core_extra=None):
+    sil = ss(F, 0.0, e)
+    mt = mid_th + (0.98 - mid_th) * cool ** 0.8
+    ct = core_th + 0.35 * cool
+    mid = sil * ss(heat, mt, mt + 0.07)
+    if vol is not None:
+        mid = mid * (0.5 + 0.5 * vol)
+    core = sil * ss(heat, ct, ct + 0.05)
+    if core_extra is not None:
+        core = np.maximum(core, core_extra * sil)
+    n = min(F.shape)
+    tight = _blurw(sil, n * glow[0], wrap) * 1.3
+    wide = _blurw(sil, n * glow[1], wrap) * 1.9
+    g = np.clip(np.maximum(tight, wide), 0, 1) * gk
+    return {"glow": g, "rim": np.clip(sil, 0, 1), "mid": np.clip(mid, 0, 1), "core": np.clip(core, 0, 1)}
+
+
+def _fade(lay, k):
+    return {L: np.clip(f * k, 0, 1) for L, f in lay.items()}
+
+
+def flame_billow(n=16, seed=901):
+    """Billowing flame (one-shot 16f): a cluster of lobes blooms out fast with a small white-gold heart, rolls upward
+    with painted volume (lit top-left, crimson in the crevices), the top tears into tongues, then the mass burns down
+    into torn crimson flakes (which the emitter cools to char). Bodies, impacts, the cocoon, the breath head."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    base = [(0.0, -0.12, 0.46), (-0.16, 0.02, 0.34), (0.18, 0.0, 0.35)]
+    for _ in range(11):
+        a = rng.uniform(0, TAU)
+        d = rng.uniform(0.22, 0.5)
+        base.append((math.cos(a) * d, math.sin(a) * d * 0.78 + 0.0, rng.uniform(0.18, 0.31)))
+    w1, w2 = noise(S * 2, S, 150, 150, seed + 1, 3), noise(S * 2, S, 150, 150, seed + 2, 3)
+    det = noise(S * 2, S, 30, 30, seed + 3, 4)
+    tong = noise(S * 2, S, 130, 16, seed + 4, 3)
+    hole = noise(S, S, 36, 36, seed + 5, 4)
+    streak = noise(S * 2, S, 60, 14, seed + 6, 3)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        g = 0.3 + 0.7 * ease_out(t / 0.38)
+        rise = 0.2 * t ** 1.15
+        cs = [(cx * g, cy * g + rise * (1 + 0.5 * cy), r * (0.5 + 0.5 * g) * (1 - 0.3 * t)) for cx, cy, r in base]
+        xw = x + (scroll(w1, i, n, frac=0.5) - 0.5) * 0.26
+        yw = y + (scroll(w2, i, n, frac=0.5) - 0.5) * 0.26
+        Fl = lobes(xw, yw, cs, 1.2)
+        d = scroll(det, i, n, frac=0.8)
+        tg = scroll(tong, i, n, frac=1.0)
+        upper = ss(y - rise, -0.15, 0.45)
+        near = ss(Fl, 0.04, 0.4)
+        er = max(0.0, (t - 0.5) / 0.5)
+        F = (Fl + (d - 0.5) * (0.28 + 0.35 * t) * near + (tg - 0.5) * (0.7 + 0.8 * t) * upper * near
+             - (0.12 + 0.36 * t ** 1.4) - er * (0.15 + 0.75 * hole) * (1 - 0.5 * ss(Fl, 0.5, 1.5)))
+        Fs = blur(Fl, 5)
+        vol = shade(Fs, light=(-0.45, 0.85, 0.45), strength=70) * (0.75 + 0.25 * ss(Fs, 0.2, 0.9))
+        st = scroll(streak, i, n, frac=0.9)
+        heat = _depth(F, S * (0.06 - 0.02 * t)) * (0.75 + 0.35 * ss(Fl, 0.5, 1.6)) * (0.85 + 0.3 * (st - 0.5))
+        heat = heat * (1 - 0.15 * upper)
+        lay = _fire_layers(F, heat, cool=min(1.0, max(0.0, (t - 0.2) / 0.8) ** 1.2), mid_th=0.2, core_th=0.86 + 0.1 * min(1, i / 3), vol=vol)
+        frames.append(lay)
+    return frames
+
+
+def flame_tongue(n=16, seed=911):
+    """One torn flame tongue (one-shot 16f): it licks up out of a hot base with an S-sway, a neck pinches at two
+    thirds of its height and the top tears off and flies up shrinking, then the base burns down. Burning ground,
+    pillars, fire riding claws and horns. Anchor: the base sits at the bottom centre of the cell."""
+    x, y = coords(S)
+    wob = noise(S * 2, S, 170, 170, seed, 3)
+    edge = noise(S * 2, S, 36, 22, seed + 1, 4)
+    edge2 = noise(S * 2, S, 90, 30, seed + 2, 3)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        base_y = -0.9
+        top = base_y + 1.62 * ease_out(min(1.0, (i + 1) / 6), 2.2)
+        top -= 0.55 * max(0.0, (t - 0.65) / 0.35) ** 1.3                 # the base burns down at the end
+        hn = 0.62
+        tear = ss(t, 0.33, 0.62)                                           # 0 joined -> 1 torn off
+        lift = 0.55 * max(0.0, t - 0.4) ** 1.1                             # the torn piece flies up
+        hraw = (y - base_y) / max(0.05, top - base_y)
+        lifted = ss(hraw, hn - 0.05, hn + 0.12)
+        yl = y - lift * lifted * (top - base_y)
+        h = (yl - base_y) / max(0.05, top - base_y)
+        hc = np.clip(h, 0, 1)
+        sw = (scroll(wob, i, n, frac=0.7) - 0.5) * 0.55 * hc ** 1.4 + 0.1 * math.sin(1.0 + t * 5.5) * hc ** 2
+        en = scroll(edge, i, n, frac=1.0)
+        e2 = scroll(edge2, i, n, frac=0.8)
+        wdt = 0.36 * (1 - 0.3 * t) * (hc ** 0.45) * (1 - hc) ** 0.95 * 1.75 + 0.002
+        wdt = wdt * (1 - 0.92 * tear * np.exp(-((h - hn) / 0.075) ** 2))
+        wdt = wdt * (1 - 0.45 * lifted * tear * ss(t, 0.45, 1.0))         # the torn piece shrinks as it flies
+        F = 1 - np.abs(x - sw) / np.maximum(wdt, 1e-3) + (en - 0.5) * 0.9 * (0.4 + hc) + (e2 - 0.5) * 0.5
+        F = F * 0.25 - 0.6 * tear * np.exp(-((h - hn) / 0.06) ** 2)
+        F = np.where((h < -0.02) | (h > 1.02), -1, F)
+        er = max(0.0, (t - 0.7) / 0.3)
+        F = F - er * 0.12 * (en + 0.4)
+        heat = _depth(F, S * 0.035) * (1.05 - 0.55 * hc) * (1 - 0.4 * lifted * tear)
+        vol = shade(blur(np.clip(F, 0, None), 6), light=(-0.6, 0.6, 0.5), strength=160)
+        lay = _fire_layers(F, heat, cool=min(1.0, max(0.0, (t - 0.15) / 0.85)), mid_th=0.2, core_th=0.9, vol=vol, e=0.012)
+        frames.append(lay)
+    return frames
+
+
+def _flame_strip(seed):
+    """Flame torrent strip (u along, tileable in u; v across): rolling lobes along both edges, torn tongues leaning
+    back (toward -u, so scroll the texture toward +u), streaky gold body, a thin wavering white-gold line down the
+    middle. 1024x256. Swap the 4 variants every ~0.06 s and scroll for a torrent."""
+    def fn():
+        W, H = 1024 * SS, 256 * SS
+        rng = np.random.default_rng(seed)
+        u = (np.arange(W) + 0.5) / W
+        v = (np.arange(H) + 0.5) / H * 2 - 1
+        U, V = np.meshgrid(u, v)
+        cl = sum(rng.uniform(0.01, 0.05) / k * np.sin(TAU * k * U + rng.uniform(0, TAU)) for k in (1, 2, 3, 5))
+        bump = np.zeros_like(U)
+        for side in (-1, 1):                                         # rolling lobes along each edge (periodic in u)
+            for _ in range(9):
+                uc, r = rng.uniform(0, 1), rng.uniform(0.04, 0.09)
+                du = (U - uc + 0.5) % 1.0 - 0.5
+                b = np.clip(1 - (du / r) ** 2, 0, 1) ** 0.6 * rng.uniform(0.12, 0.24)
+                bump = np.where(np.sign(V - cl) == side, np.maximum(bump, b), bump)
+        hw = 0.42 + bump
+        dv = np.abs(V - cl)
+        tn = tnoise(H, W, 26, 120, seed + 1, 3)
+        rows = np.arange(H)
+        shear = (np.abs(v) * W * 0.06).astype(int)                   # tongues lean back toward -u
+        tn = np.stack([np.roll(tn[r], -shear[r]) for r in rows])
+        det = tnoise(H, W, 30, 40, seed + 2, 4)
+        outer = ss(dv / hw, 0.45, 1.0)
+        F = (hw - dv) * 2.2 + (tn - 0.5) * 1.5 * outer + (det - 0.5) * 0.35
+        F = F * ss(np.abs(V), 0.98, 0.86)
+        lobeh = np.clip(hw - dv, 0, None)
+        vol = shade(_blurw(lobeh, 6 * SS, True), light=(-0.3, 0.9, 0.4), strength=90)
+        streak = tnoise(H, W, 12, 260, seed + 3, 3)
+        heat = _depth(F, H * 0.09, wrap=True) * (0.8 + 0.45 * (streak - 0.5)) * (1.05 - 0.45 * ss(dv / hw, 0.2, 1.0))
+        wav = tnoise(1, W, 1, 90, seed + 4, 2)[0] - 0.5
+        line = ss(np.abs(V - cl - wav * 0.12), 0.07, 0.025) * ss(streak, 0.25, 0.55)
+        return _fire_layers(F, heat, mid_th=0.3, core_th=0.95, vol=vol, glow=(0.05, 0.14), wrap=True, core_extra=line)
+    return fn
+
+
+def _rake_strip(i, n, bands, H, W, seed, tongue_k=1.0, thick0=0.2, draw=4.0, erode_from=0.3):
+    """Burning crescent band(s) in strip space (u 0 = head/end of the swing, 1 = swing start; v 0 = outer edge).
+    bands: [(v centre, half-thickness scale, lead)] - lead shifts that band's head forward."""
+    t = i / (n - 1)
+    u = np.linspace(0, 1, W)[None, :] * np.ones((H, 1))
+    v = np.linspace(0, 1, H)[:, None] * np.ones((1, W))
+    tng = noise(H, W, 12, 70, seed + 1, 3)
+    sh = (np.linspace(0, 1, H) * W * 0.05).astype(int)
+    det = noise(H, W, 20, 60, seed + 2, 4)
+    dis = noise(H, W, 28, 64, seed + 3, 4)
+    streak = noise(H, W, 8, 220, seed + 4, 3)
+    drift = int(W * 0.12 * t)
+    tng = np.stack([np.roll(tng[r], drift + sh[r]) for r in range(H)])      # torn tongues drift back along the swing
+    front0 = 1 - ease_out((i + 1) / draw, 2.2)
+    erode = max(0.0, (t - erode_from) / (1 - erode_from)) ** 1.1
+    F = np.full((H, W), -1.0, np.float32)
+    heat = np.zeros((H, W), np.float32)
+    for vc, sc, lead in bands:
+        front = max(0.0, front0 - lead)
+        back = 1 - erode * (1 - front + 0.02)
+        q = np.clip((u - front) / max(1e-3, back - front), 0, 1)
+        inside = (u >= front - 0.002) & (u <= back)
+        half = thick0 * sc * ss(u - front, 0.0, 0.06) * (1 - q) ** 1.05 * (1 - 0.25 * t) + 1e-4
+        dv = v - vc                                                          # negative = toward the outer edge
+        torn = (tng - 0.45) * 1.6 * ss(-dv / half, 0.3, 1.1) * tongue_k      # tongues stand off the outer side
+        Fb = (1 - np.abs(dv) / half) + torn * (1 - q) ** 0.5 + (det - 0.5) * 0.4
+        Fb = np.where(inside, Fb, -1)
+        Fb = Fb * ss(u + (dis - 0.5) * 0.2 * (erode > 0), back + 0.03, back - 0.05) - (1 - ss(u + (dis - 0.5) * 0.2 * (erode > 0), back + 0.03, back - 0.05))
+        hb = np.clip(1 - np.abs(dv) / half, 0, 1) ** 0.7 * (1 - q) ** 0.9 * (0.85 + 0.3 * (streak - 0.5))
+        hb = hb * (1 + 0.35 * ss(u - front, 0.08, 0.0))                     # the hot leading edge
+        F = np.maximum(F, Fb)
+        heat = np.maximum(heat, np.where(inside, hb, 0))
+    return F, heat, t
+
+
+def _bend(lay, size, r_out, r_in, a0, sweep, cx=0.0, cy=0.0, flip=True):
+    out = {}
+    for L in ("rim", "mid", "core"):
+        b = pc.polar_strip(lay[L], size, r_out, r_in, a0, sweep, cx=cx, cy=cy)[::-1, :]
+        out[L] = b[:, ::-1] if flip else b
+    sil = out["rim"]
+    out["glow"] = np.clip(np.maximum(blur(sil, size * 0.012) * 1.3, blur(sil, size * 0.04) * 1.9), 0, 1) * 0.85
+    return out
+
+
+def claw_rake(n=16, seed=921):
+    """Claw rake (one-shot 16f): three parallel burning crescents draw on in 3 frames with a white-gold leading edge
+    (the middle claw leads), torn tongues stand off their outer side and drift back along the swing, the tails cool
+    first (body -> crimson rim only) and erode from the swing start toward the head. Head at the right."""
+    H, W = 420, 1400
+    frames = []
+    for i in range(n):
+        F, heat, t = _rake_strip(i, n, [(0.17, 0.62, 0.0), (0.5, 0.7, 0.035), (0.83, 0.62, 0.0)], H, W, seed,
+                                 tongue_k=0.8, thick0=0.26, draw=3.5)
+        lay = _fire_layers(F, heat, cool=min(1.0, t * 1.25), mid_th=0.26, core_th=0.8, e=0.04, glow=(0, 0))
+        frames.append(_bend(lay, S, 1.98, 1.22, math.radians(124), math.radians(68), cy=-1.12))
+    return frames
+
+
+def fire_crescent(n=16, seed=931):
+    """One thick fire crescent (one-shot 16f): sweeps on in 2-3 frames, a fat gold body with a torn crimson outer
+    edge whose tongues tear off and fly back along the arc, a thin white-gold line on the leading edge, then it
+    thins, cools and breaks up from the tail. Head at the right."""
+    H, W = 340, 1400
+    frames = []
+    for i in range(n):
+        F, heat, t = _rake_strip(i, n, [(0.52, 1.0, 0.0)], H, W, seed, tongue_k=1.35, thick0=0.46, draw=3.0, erode_from=0.25)
+        lay = _fire_layers(F, heat, cool=min(1.0, t * 1.15), mid_th=0.24, core_th=0.82, e=0.04, glow=(0, 0))
+        frames.append(_bend(lay, S, 0.94, 0.42, math.radians(205), math.radians(215)))
+    return frames
+
+
+def fire_ring(n=16, seed=941):
+    """Flat fire ring wave (one-shot 16f, lay it on the ground): races out on ease-out with a hot white-gold leading
+    edge, torn flame tongues flaring off the outer edge, a gold body trailing inward that thins, then the ring breaks
+    up into crimson pieces."""
+    x, y = coords(S)
+    wx, wy = noise(S, S, 50, 50, seed, 3), noise(S, S, 50, 50, seed + 1, 3)
+    r, a = polar_of(x + (wx - 0.5) * 0.035, y + (wy - 0.5) * 0.035)
+    frames = []
+    nt = _ang_noise(a, 110, seed + 2, 0.7)
+    nt2 = _ang_noise(a, 40, seed + 3, 1.2)
+    nb = _ang_noise(a, 70, seed + 4, 1.0)
+    det = noise(S, S, 18, 18, seed + 5, 4)
+    for i in range(n):
+        t = i / (n - 1)
+        R = 0.14 + 0.72 * ease_out(t, 3)
+        w = 0.2 * (1 - t) ** 0.65 + 0.035
+        tl = (0.025 + 0.15 * ss(nt, 0.35, 0.95) ** 1.5 * (0.6 + 0.6 * nt2)) * (1 - 0.5 * t)
+        rot = (a + t * 0.25)                                                    # tongues lean along the travel
+        d_out = (R + tl * ss(r, R - 0.02, R + 0.1) - r) / 0.05
+        d_in = (r - (R - w * (0.55 + 0.6 * nb))) / 0.05
+        F = np.minimum(d_out, d_in) + (det - 0.5) * 0.8
+        brk = ss(nb * 0.6 + nt2 * 0.4, t * 0.85 - 0.1, t * 0.85 + 0.05)
+        F = np.where(brk > 0.5, F, F - (1 - brk) * 3) * ss(r, 0.99, 0.94)
+        lead = np.clip(1 - (R - r) / w, 0, 1)
+        heat = lead ** 1.2 * (0.95 - 0.1 * (det - 0.5)) * _depth(F, S * 0.012) * (1 - 0.2 * t)
+        frames.append(_fire_layers(F, heat, cool=min(1.0, t ** 1.1 * 1.1), mid_th=0.25, core_th=0.8, e=0.06,
+                                   glow=(0.01, 0.03)))
+    return frames
+
+
+def fire_impact(n=16, seed=951):
+    """Fire hit (one-shot 16f): a sharp white-gold star pinches (f0-1), a gold burst blooms (f2-6), the centre burns
+    out into a torn crimson ring (f6-11) that breaks into flakes (f11-15) for the emitter to cool to char."""
+    x, y = coords(S)
+    wx, wy = noise(S, S, 60, 60, seed, 3), noise(S, S, 60, 60, seed + 1, 3)
+    xw, yw = x + (wx - 0.5) * 0.12, y + (wy - 0.5) * 0.12
+    r, a = polar_of(xw, yw)
+    rng = np.random.default_rng(seed)
+    spikes = [(k / 8 * TAU + rng.uniform(-0.2, 0.2), rng.uniform(0.55, 1.0)) for k in range(8)]
+    torn = _ang_noise(a, 90, seed + 2, 0.8)
+    torn2 = _ang_noise(a, 30, seed + 3, 1.0)
+    det = noise(S, S, 22, 22, seed + 4, 4)
+    flake = noise(S, S, 26, 26, seed + 5, 4)
+    lob = noise(S, S, 70, 70, seed + 6, 3)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        if i < 2:
+            rs = (0.5, 0.36)[i]
+            sp = np.zeros_like(r)
+            for th, ln in spikes:
+                dth = np.angle(np.exp(1j * (a - th)))
+                sp = np.maximum(sp, np.exp(-(dth / 0.16) ** 2) * ln)
+            reach = rs * (0.3 + 0.7 * sp)
+            F = (reach - r) / 0.02
+            heat = np.clip(1 - r / reach, 0, 1) ** 0.6 * 1.2
+            lay = _fire_layers(F, heat, mid_th=0.15, core_th=0.6, e=0.08, glow=(0.015, 0.05))
+            frames.append(lay)
+            continue
+        tb = (i - 2) / (n - 3)
+        Ro = 0.24 + 0.62 * ease_out(tb / 0.55, 2.5)
+        Rh = Ro * 0.86 * ss(tb, 0.18, 0.7)
+        out_edge = Ro * (1 + 0.22 * (torn - 0.5) + 0.12 * ss(torn2, 0.6, 1.0)) + (lob - 0.5) * 0.12
+        d_out = (out_edge - r) / 0.06
+        d_in = (r - Rh * (0.85 + 0.35 * lob)) / 0.06 + (1 - ss(tb, 0.12, 0.3)) * 20
+        F = np.minimum(d_out, d_in) + (det - 0.5) * 0.9
+        er = max(0.0, (tb - 0.55) / 0.45)
+        F = F - er * (0.4 + 3.2 * flake) * 1.2
+        F = F * ss(r, 0.99, 0.93)
+        Fl = np.clip(out_edge - r, 0, None) + (lob - 0.5) * 0.25
+        vol = shade(blur(Fl, 8), light=(-0.4, 0.8, 0.5), strength=45)
+        heat = _depth(F, S * 0.05) * (1.15 - 0.6 * tb) * (0.85 + 0.3 * (det - 0.5)) + 0.35 * ss(r, 0.3 * (1 - tb), 0.0) * (1 - tb) ** 2
+        frames.append(_fire_layers(F, heat, cool=min(1.0, tb ** 1.1 * 1.2), mid_th=0.22, core_th=0.82 + 0.15 * min(1, tb * 4), vol=vol))
+    return frames
+
+
+def _crack_tree(rng, c, trunks, L, w0, turn=0.28, seg=10, depth=2):
+    """Thick irregular molten cracks: smooth-ish wandering trunks (not lightning zig-zags) that taper, with branches.
+    Returns [(pts, widths, t0)] for _cel_draw."""
+    out = []
+
+    def grow(p, h, length, w, t0, d, nseg):
+        pts, ws = [np.array(p, float)], [w]
+        step = length / nseg
+        for j in range(nseg):
+            h += rng.normal(0, turn)
+            p = pts[-1] + np.array([math.cos(h), math.sin(h)]) * step * rng.uniform(0.75, 1.25)
+            pts.append(p)
+            ws.append(w * (1 - (j + 1) / nseg * 0.82) * rng.uniform(0.8, 1.2))
+        ws[-1] = 0.0
+        out.append((pts, np.array(ws), t0))
+        if d > 0:
+            for _ in range(3 if d > 1 else 1):
+                j = int(rng.uniform(0.2, 0.7) * nseg)
+                hb = h + rng.choice([-1, 1]) * rng.uniform(0.5, 1.0)
+                grow(pts[j], hb, length * rng.uniform(0.3, 0.5) * (1 - j / nseg), ws[j] * 0.62,
+                     t0 + (1 - t0) * j / nseg, d - 1, max(4, nseg // 2))
+    for k in range(trunks):
+        h = k / trunks * TAU + rng.uniform(-0.3, 0.3)
+        grow(c, h, L * rng.uniform(0.55, 1.1), w0 * rng.uniform(0.7, 1.2), 0.0, depth, seg)
+    return out
+
+
+def _warp_layers(lay, dx, dy, wrap=False):
+    return {k: np.clip(pc.warp(v, dx, dy), 0, 1) for k, v in lay.items()}
+
+
+def molten_crack(n=16, seed=961):
+    """Calling card for slams (one-shot 16f, flat): thick branching molten cracks rip out of a molten pool in 5 frames,
+    glow white-gold down the middle, then cool - the core thins away first, the gold body narrows, the crimson crust
+    (wider than the crack: the scorched border) lingers for the emitter to cool to charcoal."""
+    rng = np.random.default_rng(seed)
+    c = np.array([S / 2, S / 2])
+    tree = _crack_tree(rng, c, 8, S * 0.44, S * 0.062, turn=0.24, seg=11)
+    dx = (noise(S, S, 22, 22, seed + 1, 3) - 0.5) * S * 0.022
+    dy = (noise(S, S, 22, 22, seed + 2, 3) - 0.5) * S * 0.022
+    gran = noise(S, S, 10, 10, seed + 3, 3)
+    x, y = coords(S)
+    r = np.hypot(x, y)
+    pool = noise(S, S, 30, 30, seed + 4, 3)
+    frames = []
+    for i in range(n):
+        keep = ease_out(min(1.0, (i + 1) / 5.0), 1.6)
+        ck = max(0.0, 1 - max(0, i - 4) / 5.0)                     # core gone by f9
+        mk = max(0.22, 1 - max(0, i - 6) / 9.0)                    # body narrows to a thread by f15
+        rk = 1 - 0.15 * max(0, i - 8) / 7
+        lay = {}
+        for L, k in (("rim", 1.75 * rk), ("mid", 0.95 * mk), ("core", 0.22 * ck)):
+            f = _cel_draw(tree, S, S, k, keep) if k > 0.02 else np.zeros((S, S), np.float32)
+            f = blur(pc.warp(f, dx, dy), SS * 0.8)
+            pr = {"rim": 0.1, "mid": 0.065, "core": 0.03}[L] * min(1, (i + 1) / 2) * (k / {"rim": 1.75, "mid": 0.95, "core": 0.22}[L])
+            if pr > 1e-3:
+                f = np.maximum(f, ss(r + (pool - 0.5) * 0.05, pr, pr * 0.75))
+            if L != "rim":
+                f = f * (0.8 + 0.4 * gran) if L == "mid" else f
+            lay[L] = np.clip(f, 0, 1)
+        lay["glow"] = np.clip(np.maximum(blur(lay["rim"], S * 0.01) * 1.2, blur(lay["mid"], S * 0.035) * 2.4), 0, 1) * 0.9
+        frames.append(lay)
+    return frames
+
+
+def claw_gouge(n=16, seed=971):
+    """Calling card for claw moves (one-shot 16f, flat): three parallel scorched gouges rip across the sand in 3
+    frames (deepest where the claws bit in), a white-gold seam down each glows and cools, the crimson crust (wider
+    than the cut) lingers for the emitter to cool to charcoal; molten spatter flecks sit along the edges."""
+    rng = np.random.default_rng(seed)
+    gouges = []
+    for k, off in enumerate((-0.27, 0.0, 0.27)):
+        pts, ws = [], []
+        L = 1.45 - 0.18 * abs(off) / 0.27
+        nseg = 16
+        for j in range(nseg + 1):
+            s = j / nseg
+            xx = -L / 2 + L * s
+            yy = off + 0.16 * (s - 0.5) ** 2 * 2 - 0.08 + rng.normal(0, 0.006)
+            pts.append(np.array([(xx + 1) / 2 * S, (1 - yy) / 2 * S]))
+            prof = math.sin(math.pi * s ** 0.8) ** 0.8
+            ws.append(S * 0.095 * prof * rng.uniform(0.85, 1.15) * (1.08 if off == 0 else 1.0))
+        ws[0] = ws[-1] = 0
+        gouges.append((pts, np.array(ws), 0.0))
+    dx = (noise(S, S, 20, 40, seed + 1, 3) - 0.5) * S * 0.012
+    dy = (noise(S, S, 20, 40, seed + 2, 3) - 0.5) * S * 0.012
+    x, y = coords(S)
+    flecks = np.zeros((S, S), np.float32)
+    for _ in range(26):
+        g = gouges[rng.integers(3)]
+        j = rng.integers(3, 14)
+        p = g[0][j] + rng.normal(0, S * 0.035, 2)
+        rr = rng.uniform(0.005, 0.013)
+        px, py = p[0] / S * 2 - 1, 1 - p[1] / S * 2
+        flecks = np.maximum(flecks, ss(np.hypot(x - px, y - py), rr, rr * 0.4))
+    frames = []
+    for i in range(n):
+        keep = ease_out(min(1.0, (i + 1) / 3.0), 1.5)
+        ck = max(0.0, 1 - max(0, i - 3) / 5.0)
+        mk = max(0.2, 1 - max(0, i - 5) / 9.0)
+        lay = {}
+        for L, k in (("rim", 1.55), ("mid", 0.8 * mk), ("core", 0.26 * ck)):
+            f = _cel_draw(gouges, S, S, k, keep) if k > 0.02 else np.zeros((S, S), np.float32)
+            f = blur(pc.warp(f, dx, dy), SS * 0.7)
+            if L == "rim":
+                f = np.maximum(f, flecks * min(1, i / 2))
+            elif L == "mid":
+                f = np.maximum(f, flecks * 0.8 * max(0, 1 - i / 8) * min(1, i / 2))
+            lay[L] = np.clip(f, 0, 1)
+        lay["glow"] = np.clip(np.maximum(blur(lay["rim"], S * 0.01) * 1.2, blur(lay["mid"], S * 0.035) * 2.4), 0, 1) * 0.9
+        frames.append(lay)
+    return frames
+
+
+def heat_ring(n=16, seed=981):
+    """Roar heat ring (one-shot 16f, face the camera or lay flat): a wavering ring races out with a thin hot edge,
+    two faint shimmer bands ripple inside it, then it thins and breaks up."""
+    x, y = coords(S)
+    wx, wy = noise(S, S, 40, 40, seed, 3), noise(S, S, 40, 40, seed + 1, 3)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        xx = x + (wx - 0.5) * 0.04 * (1 + t)
+        yy = y + (wy - 0.5) * 0.04 * (1 + t)
+        r, a = polar_of(xx, yy)
+        R = 0.16 + 0.76 * ease_out(t, 2.5)
+        wob = 1 + 0.025 * np.sin(5 * a + t * 7) + 0.03 * (_ang_noise(a + t * 0.6, 64, seed + 2, 1.0) - 0.5)
+        rw = r / wob
+        brk = ss(_ang_noise(a, 80, seed + 3, 0.9), t * 0.8, t * 0.8 + 0.2)
+        fade = (1 - t ** 1.6)
+        core = ss(np.abs(rw - R), 0.006 * (1 - 0.5 * t) + 0.002, 0.0015) * brk
+        mid = ss(np.abs(rw - R + 0.01), 0.03 * (1 - 0.4 * t) + 0.006, 0.01) * brk
+        band = ss(rw, R + 0.012, R - 0.002) * ss(rw, R - 0.09 * (1 - 0.3 * t), R - 0.01) ** 1.4
+        shim = 0
+        for k, (f, aa) in enumerate(((0.8, 0.45), (0.62, 0.28))):
+            ripple = 1 + 0.03 * np.sin(7 * a - t * 9 + k * 2)
+            shim = np.maximum(shim, ss(np.abs(rw - R * f * ripple), 0.012, 0.003) * aa * ss(_ang_noise(a, 50, seed + 5 + k, 1.0), 0.25 + t * 0.6, 0.45 + t * 0.6))
+        rim = np.clip(np.maximum(band * 1.0 * brk, shim * 1.4), 0, 1) * fade
+        lay = {"core": np.clip(core * (1 - t) ** 1.2 * (1 if i < 10 else 0.6), 0, 1), "mid": np.clip(mid * fade, 0, 1), "rim": rim}
+        lay["glow"] = np.clip(np.maximum(blur(rim, S * 0.01) * 1.3, blur(mid, S * 0.03) * 2.0), 0, 1) * 0.8
+        frames.append({k: v * ss(r, 0.99, 0.94) for k, v in lay.items()})
+    return frames
+
+
+def fire_slice(n=16, seed=991):
+    """Calling card for wind-blade cuts (one-shot 16f, flat): ONE long thin burning cut rips across the sand left to
+    right in 2 frames (a hairline that swells, pointed at both ends), a white-gold seam glows and cools, the crimson
+    crust lingers for the emitter to cool to charcoal; a few molten flecks spit off the sides."""
+    rng = np.random.default_rng(seed)
+    pts, ws = [], []
+    nseg = 24
+    for j in range(nseg + 1):
+        s_ = j / nseg
+        xx = -0.94 + 1.88 * s_
+        yy = 0.03 * math.sin(s_ * 3.1 + 0.4) + rng.normal(0, 0.004)
+        pts.append(np.array([(xx + 1) / 2 * S, (1 - yy) / 2 * S]))
+        ws.append(S * 0.05 * math.sin(math.pi * s_) ** 0.6 * rng.uniform(0.85, 1.15))
+    ws[0] = ws[-1] = 0
+    cut = [(pts, np.array(ws), 0.0)]
+    dx = (noise(S, S, 18, 50, seed + 1, 3) - 0.5) * S * 0.01
+    dy = (noise(S, S, 18, 50, seed + 2, 3) - 0.5) * S * 0.01
+    x, y = coords(S)
+    flecks = np.zeros((S, S), np.float32)
+    for _ in range(16):
+        j = rng.integers(3, nseg - 3)
+        p = pts[j] + np.array([rng.normal(0, S * 0.01), rng.choice([-1, 1]) * rng.uniform(S * 0.03, S * 0.07)])
+        rr = rng.uniform(0.004, 0.01)
+        px, py = p[0] / S * 2 - 1, 1 - p[1] / S * 2
+        flecks = np.maximum(flecks, ss(np.hypot(x - px, y - py), rr, rr * 0.4))
+    frames = []
+    for i in range(n):
+        keep = ease_out(min(1.0, (i + 1) / 2.0), 1.5)
+        ck = max(0.0, 1 - max(0, i - 3) / 5.0)
+        mk = max(0.2, 1 - max(0, i - 5) / 9.0)
+        lay = {}
+        for L, k in (("rim", 1.6), ("mid", 0.8 * mk), ("core", 0.24 * ck)):
+            f = _cel_draw(cut, S, S, k, keep) if k > 0.02 else np.zeros((S, S), np.float32)
+            f = blur(pc.warp(f, dx, dy), SS * 0.7)
+            if L == "rim":
+                f = np.maximum(f, flecks * min(1, i / 2))
+            lay[L] = np.clip(f, 0, 1)
+        lay["glow"] = np.clip(np.maximum(blur(lay["rim"], S * 0.01) * 1.2, blur(lay["mid"], S * 0.035) * 2.4), 0, 1) * 0.9
+        frames.append(lay)
+    return frames
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2004,6 +2502,21 @@ LIB = {
     "thunder_strip_v2_4": (_thunder_strip_v2(2484), "cel", 0, 0, "thunder"),
     "plasma_ball_v2": (plasma_ball_v2, "cel", 4, 0, "thunder"),
     "plasma_blast_v2": (plasma_blast_v2, "cel", 4, 0, "thunder"),
+    # dragon fire matter (explicit layers: rim crimson LE0.2 / mid gold / thin white-gold core / orange glow)
+    "flame_billow":  (flame_billow,  "cel", 4, 0, "dragonfire"),
+    "flame_tongue":  (flame_tongue,  "cel", 4, 0, "dragonfire"),
+    "flame_strip_1": (_flame_strip(2901), "cel", 0, 0, "dragonfire"),
+    "flame_strip_2": (_flame_strip(2902), "cel", 0, 0, "dragonfire"),
+    "flame_strip_3": (_flame_strip(2903), "cel", 0, 0, "dragonfire"),
+    "flame_strip_4": (_flame_strip(2904), "cel", 0, 0, "dragonfire"),
+    "claw_rake":     (claw_rake,     "cel", 4, 0, "dragonfire"),
+    "fire_crescent": (fire_crescent, "cel", 4, 0, "dragonfire"),
+    "fire_ring":     (fire_ring,     "cel", 4, 0, "dragonfire"),
+    "fire_impact":   (fire_impact,   "cel", 4, 0, "dragonfire"),
+    "molten_crack":  (molten_crack,  "cel", 4, 0, "dragonfire"),
+    "claw_gouge":    (claw_gouge,    "cel", 4, 0, "dragonfire"),
+    "heat_ring":     (heat_ring,     "cel", 4, 0, "dragonfire"),
+    "fire_slice":    (fire_slice,    "cel", 4, 0, "dragonfire"),
 }
 
 PALETTES = {
@@ -2029,6 +2542,8 @@ PALETTES = {
     "mist": {"mid": "#e6f6ff"},
     "icechip": {"mid": "#bfe8ff", "additive": True},
     "spray": {"mid": "#e8f6ff"},
+    "dragonfire": {"glow": "#ff7a1a", "rim": "#d4202a", "mid": "#ffc23a", "core": "#fff4c8", "glow_k": 0.35},
+    "charsmoke": {"mid": "#2a2226"},
 }
 
 

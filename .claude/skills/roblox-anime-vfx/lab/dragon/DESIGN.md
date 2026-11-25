@@ -3,6 +3,31 @@
 Status: **v3 (user feedback): an Eastern serpent dragon emperor, wingless, Kaido-matched colours; the hybrid is R15
 add-ons. The concept look is waiting for approval.** The v3 and v2 revision blocks OVERRIDE anything below that mentions wings, half-wings or a western build.
 
+## Revision v4: three full-form moves take the anime's mechanics (supersedes section 4 for these moves)
+User: "you can rip moves straight from the anime as well" / "Sounds good, no club tho". We take the reference
+dragon's signature *mechanics and staging*, keep our own move names (lower takedown risk), and use no club anywhere.
+The hybrid moveset is unchanged.
+- **Full Z Inferno Torrent -> a detonating blast breath** (the reference's explosive fire breath). 0.00-0.70 hover,
+  rear back, the throat and chest swell with light, flame swirls pull into the jaw. 0.70 release: a THICK torrent
+  (flame_strip vbeam: crimson rim, gold body, thin white-gold core, billow lobes rolling down it, ember spray, black
+  smoke on top) shoots in a straight line at a ground point about 24 studs ahead. It doesn't sweep. 0.85 the head
+  of the torrent hits and **DETONATES**: a flame_billow dome mushrooms up (14 studs), a fire_ring races out to 12,
+  hit-stop 0.16, one mono frame, a black smoke wall, a crater with molten cracks, rocks. 0.85-1.6 the torrent keeps
+  pouring into the blast and then cuts. Signature: a beam that ends in a mushrooming fire dome.
+- **Full V Dragon Roar -> Rending Gale** (the reference's exhaled wind blades). 0.00-0.45 the dragon rears up and
+  inhales, heat shimmer is drawn into the jaw, the whiskers whip back. 0.45 exhale: a fan of **5 spinning
+  crescent blades of superheated wind** (fire_crescent with a heat_ring shimmer, crimson edge, pale gold body) fly
+  out over 0.45-1.2, each cutting a **long burning slice line** (fire_slice) into the sand as it passes. Targets
+  are slashed (hit-stop 0.06 each) and knocked back. The blades fly past and tear into tongues. No inverted frame.
+  Signature: radiating straight burning slice lines.
+- **Full C Firestorm Coil -> closer to the reference's coiling twister.** The dragon coils fast around the zone
+  and spins up a **wind** twister first (sand-dust spiral bands, pale wind strips, debris pulled in, 0.4-1.2). At
+  1.2 it breathes into it and the twister **ignites from the bottom up** into the banded fire tornado (flame_strip
+  bands), pumps on each coil pass, lifts the enemies, and bursts out at 2.4 (fire_ring, hit-stop 0.10).
+  Signature: wind tornado -> ignites into fire.
+- New matter for these: `fire_slice` (one long burning cut, the calling card of the blades). The blast dome uses
+  flame_billow + fire_impact + fire_ring.
+
 ## Revision v3d: hybrid in the house style of the thunder god sheet (supersedes v3c)
 User: "Wrong style completely, follow style guide from the lightning model." The house style for character sheets
 is `assets/source_art/god_mode/C_tpose_sheet_v3.png`: a 2D anime turnaround with clean ink lines and crisp cel
