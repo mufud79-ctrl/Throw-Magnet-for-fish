@@ -1,6 +1,6 @@
 """Dragon v5: join the Meshy long body and the separate full-res head into one mesh with one texture.
 
-    /tmp/bpyenv/bin/python scripts/build_dragon.py [--head-scale 0.28] [--cut -0.62]
+    /tmp/bpyenv/bin/python scripts/build_dragon.py [--head-scale 0.18] [--cut -0.66] [--leg-shift 0.10]
 
 Inputs (Meshy multi-image-to-3D, Blender coords after glTF import: length along Y, head toward -Y, Z up)
   assets/source_art/meshy/dragon_v5_body.glb   long serpentine body from dragon_sheet_v5_long.png (its head is a
@@ -45,18 +45,16 @@ def tex_of(o):
     return next(n.image for m in o.data.materials for n in m.node_tree.nodes if n.type == "TEX_IMAGE" and n.image)
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--head-scale", type=float, default=0.15)
-    ap.add_argument("--cut", type=float, default=-0.66)
-    ap.add_argument("--overlap", type=float, default=0.07)
-    ap.add_argument("--leg-shift", type=float, default=0.10)
-    ap.add_argument("--out", default=os.path.join(M, "dragon_v5_assembled.glb"))
-    a = ap.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:])
-
-    bpy.ops.wm.read_factory_settings(use_empty=True)
+def assemble(head_scale=0.18, cut=-0.66, overlap=0.07, leg_shift=0.10, head_hook=None, body_hook=None):
+    """Build the joined mesh in the current (empty) scene. head_hook(head_obj) runs in the head's own coordinates
+    before it is scaled and seated (rig_dragon.py uses it for the jaw, whiskers and vertex groups). Returns
+    (object, info) where info["head_matrix"] maps head-space points into the joined mesh."""
+    from types import SimpleNamespace
+    a = SimpleNamespace(head_scale=head_scale, cut=cut, overlap=overlap, leg_shift=leg_shift)
     body = load(os.path.join(M, "dragon_v5_body.glb"))
     head = load(os.path.join(M, "dragon_v5_head.glb"))
+    if head_hook:
+        head_hook(head)
 
     # 0. the front legs sit right under the mane on the sheet: slide them back to open a short neck (falloff on |x| so
     # the shoulder blends into the body instead of tearing)
@@ -95,6 +93,8 @@ def main():
     bmesh.ops.delete(bm, geom=small, context="VERTS")
     bm.to_mesh(body.data)
     bm.free()
+    if body_hook:
+        body_hook(body)
     B = np.array([v.co[:] for v in body.data.vertices])
     trunk = (B[:, 1] > a.cut + 0.12) & (B[:, 1] < a.cut + 0.3)
     body_zc = float((B[trunk, 2].min() + B[trunk, 2].max()) / 2)
@@ -105,7 +105,8 @@ def main():
     head_back = H[:, 1].max() * s
     neck_z = -0.15 * s                                  # neck centre in the head bust (behind the jaw, inside the mane)
     off = (0.0, a.cut + a.overlap * s / 0.25 - head_back, body_zc - neck_z)
-    head.data.transform(Matrix.Translation(off) @ Matrix.Scale(s, 4))
+    head_matrix = Matrix.Translation(off) @ Matrix.Scale(s, 4)
+    head.data.transform(head_matrix)
 
     # 3. one atlas: body -> left half, head -> right half
     tb, th = tex_of(body), tex_of(head)
@@ -140,6 +141,19 @@ def main():
     bpy.ops.object.join()
     body.name = body.data.name = "Dragon"
     img.pack()
+    return body, {"head_matrix": head_matrix, "body_zc": body_zc, "atlas": img}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--head-scale", type=float, default=0.18)
+    ap.add_argument("--cut", type=float, default=-0.66)
+    ap.add_argument("--overlap", type=float, default=0.07)
+    ap.add_argument("--leg-shift", type=float, default=0.10)
+    ap.add_argument("--out", default=os.path.join(M, "dragon_v5_assembled.glb"))
+    a = ap.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:])
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    body, _ = assemble(a.head_scale, a.cut, a.overlap, a.leg_shift)
     out = a.out
     bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_image_format="AUTO")
     V = np.array([v.co[:] for v in body.data.vertices])

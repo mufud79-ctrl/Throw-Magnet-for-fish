@@ -567,6 +567,19 @@ class Rig {
     scene.add(root);
     root.updateMatrixWorld(true);
     const pre = (L.bones && L.bones.prefix) || 'spine_';
+    this.byName = byName;
+    // rig layer v2: every bone's rest local transform (reset each frame, then follow + bone tracks layer on top)
+    this.restLocal = {};
+    for (const [n, b] of Object.entries(byName)) this.restLocal[n] = { p: b.position.clone(), q: b.quaternion.clone() };
+    this.tracks = [];
+    for (const [n, tr] of Object.entries(L.boneTracks || {})) {
+      if (byName[n]) this.tracks.push({ bone: byName[n], tr, sign: [1, 1, 1] });
+      if (tr.mirror) {
+        const m = Array.isArray(tr.mirror) ? tr.mirror : [n.includes('L') ? 'L' : 'R', n.includes('L') ? 'R' : 'L'];
+        const n2 = n.replace(m[0], m[1]);
+        if (byName[n2] && n2 !== n) this.tracks.push({ bone: byName[n2], tr, sign: [1, -1, -1] });
+      }
+    }
     this.spine = Object.keys(byName).filter((n) => n.startsWith(pre)).sort().map((n) => byName[n]);
     this.jaw = L.jawBone ? byName[L.jawBone] : null;
     this.jawRest = this.jaw ? this.jaw.quaternion.clone() : null;
@@ -611,7 +624,38 @@ class Rig {
     const L = this.L, age = t - (L.t0 || 0), life = L.life || 1;
     if (age < 0 || age >= life) { this.root.visible = false; return; }
     this.root.visible = true;
-    const k = age / life, fr = this.trace(t), roll = evalKeys(L.roll, k, 0) * DEG;
+    const k = age / life;
+    for (const [n, r] of Object.entries(this.restLocal)) { this.byName[n].position.copy(r.p); this.byName[n].quaternion.copy(r.q); }
+    if (L.follow === 'rigid') this.drawRigid(t, k, age);
+    else { this.root.position.set(0, 0, 0); this.root.quaternion.identity(); this.drawPath(t, k); }
+    this.applyTracks(age);
+    if (this.jaw && L.jaw) this.jaw.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), evalKeys(L.jaw, k, 0) * DEG));
+    this.root.updateMatrixWorld(true);
+    const c = L.color === undefined ? [1, 1, 1] : typeof L.color === 'string' ? hex(L.color) : evalCol(L.color, k), br = L.brightness || 1;
+    const al = Math.max(0, 1 - evalKeys(L.transparency, k, 0));
+    for (const m of this.mats) { m.color.setRGB(c[0] * br, c[1] * br, c[2] * br); m.opacity = al; }
+  }
+  // follow: "rigid": the skeleton keeps its rest shape and the model root rides path / move / wave, turned by `orient`
+  // keys ([[t, [x, y, z] deg, ease]], t in seconds from t0, Euler YXZ). Hover, roar, bite: path-follow would collapse
+  // the body when the head stops moving.
+  drawRigid(t, k, age) {
+    const L = this.L, p = attachPos(L, t), o = evalKeys(L.orient, age, [0, 0, 0]);
+    this.root.position.set(p[0], p[1], p[2]);
+    this.root.quaternion.setFromEuler(new THREE.Euler(o[0] * DEG, o[1] * DEG, o[2] * DEG, 'YXZ'));
+  }
+  // boneTracks: {"<bone>": {"rot": [[t, [x, y, z] deg, ease], ...], "loop": period_s, "offset": s, "mirror": ["L", "R"]}}
+  // local Euler (XYZ) added on top of the follow pose; t in seconds from t0 (wrapped by `loop`); `mirror` also drives
+  // the bone named with the first string replaced by the second, with Y and Z negated.
+  applyTracks(age) {
+    for (const { bone, tr, sign } of this.tracks) {
+      let tl = age + (tr.offset || 0);
+      if (tr.loop) tl = ((tl % tr.loop) + tr.loop) % tr.loop;
+      const r = evalKeys(tr.rot, tl, [0, 0, 0]);
+      bone.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(r[0] * DEG * sign[0], r[1] * DEG * sign[1], r[2] * DEG * sign[2], 'XYZ')));
+    }
+  }
+  drawPath(t, k) {
+    const L = this.L, fr = this.trace(t), roll = evalKeys(L.roll, k, 0) * DEG;
     const fwd = new THREE.Vector3(0, 0, -1), desired = [];
     for (let i = 0; i < this.spine.length; i++) {
       const { p, dir } = fr[i];
@@ -636,11 +680,6 @@ class Rig {
       const loc = new THREE.Matrix4().copy(parentW).invert().multiply(desired[i]);
       loc.decompose(b.position, b.quaternion, b.scale);
     }
-    if (this.jaw) this.jaw.quaternion.copy(this.jawRest).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), evalKeys(L.jaw, k, 0) * DEG));
-    this.root.updateMatrixWorld(true);
-    const c = L.color === undefined ? [1, 1, 1] : typeof L.color === 'string' ? hex(L.color) : evalCol(L.color, k), br = L.brightness || 1;
-    const al = Math.max(0, 1 - evalKeys(L.transparency, k, 0));
-    for (const m of this.mats) { m.color.setRGB(c[0] * br, c[1] * br, c[2] * br); m.opacity = al; }
   }
 }
 

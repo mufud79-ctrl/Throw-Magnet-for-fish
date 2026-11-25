@@ -128,3 +128,23 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
   Out: meshy/dragon_v5_assembled.glb, view meshy_raw/v5_assembled.jpg. Polish still to do: shoulder smear from the leg
   slide, tail fan is flatter than the sheet, talons small.
 - User: "Head is wayyyy too big" (0.25). build_dragon.py: --head-scale default 0.15, placeholder remnants above the neck removed (cut + z>0.07 band + loose islands found on position-welded connectivity, since glTF splits verts on UV seams). Sizes compared in meshy_raw/v5_head_sizes.jpg (A 0.18, B 0.15, C 0.12).
+
+## Step 2: rig + base animations (waiting for approval)
+User: "0.18 good, start rigging; idle animation, movement animation, M1 animation".
+- scripts/rig_dragon.py (on build_dragon.assemble, head 0.18): in head space the Meshy whiskers are cut (below the chin,
+  in front of the jaw, strands crossing the mouth, any saturated whisker-blue below the nose) and replaced by 2 clean
+  procedural tapered whiskers (1 per side); the modelled OPEN jaw (split on the bisector of the lips, hinge falloff)
+  is rotated shut 46 deg and baked, so rest = closed and `jaw` keys open it (same as the serpent). Head 9.5k + body
+  8.5k tris (11k looked shard-like) -> 18.7k tris, smooth shaded, 30 studs, head along glTF -Z.
+  Bones (35): spine_00 (head) .. spine_19, jaw, legFL/FR/BL/BR_0/1 (L = -X), whiskerL/R_0..2.
+  Out: assets/models/dragon.glb + dragon.json, assets/meshes/dragon.fbx.
+- Rig layer v2 in the previewer (lab/page/vfx.js): `follow: "rigid"` (root rides path/move/wave, `orient` keys
+  [[t, [x,y,z] deg]] seconds, Euler YXZ) or path (as before); `boneTracks` {bone: {rot: [[t,[x,y,z]]], loop, offset,
+  mirror: ["L","R"]}} local Euler XYZ added on top of the follow pose; every bone resets to rest each frame.
+  Bone axes: spine local Z = yaw, +X bends the body behind the bone down; orient +X = head up.
+- lab/dragon/anims/ (anim_kit.py, idle.py, movement.py, m1.py) -> dragon_idle (4 s loop, rigid hover, travelling S
+  ripple, breathing jaw, whisker drift, leg paddle), dragon_movement (path-follow fly-by, S-weave + vertical
+  undulation, banking roll, legs tucked, whiskers streaming), dragon_m1 (bite lunge: rear + gape, lunge, snap at 0.42
+  with hit-stop 0.06 + shake, tail ripple, settle). Renders: assets/renders/dragon/dragon_{idle,movement,m1}.mp4.
+- Not done yet: Luau side of rig layer v2 (task 4), hybrid pieces (horns + tail + scales), small whisker wisps left
+  beside the jaw.
