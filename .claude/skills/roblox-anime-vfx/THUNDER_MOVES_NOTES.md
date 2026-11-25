@@ -99,7 +99,18 @@ scar() used a negative ZOffset on flat ground decals: ZOffset moves a particle a
 the quad into the ground and the ground hides it (Roblox does the same). Ground decals now sit at y 0.06-0.1 with
 ZOffset >= 0. Moves 1-3 re-rendered (only change: their scars now show).
 
-## Move 4: Flash Step (V) - waiting for approval
+## Move 4: Flash Step (V) - approved ("Yes")
 `lab/thunder/moves/flash_step.py` -> `thunder_04_FlashStep.json`. Approved timing (0.08 dissolve, 0.12 s zig-zag, 0.20 re-form).
 Signature: 4-leg angular cel ribbon (leg_trails) + a 1-frame silhouette flash at each corner + a dotted chain of burn
 scars along the route (start, 3 corners, end) - the route stays written on the ground after the ribbon fades.
+
+## Move 5: Thunder Serpent (B) - concept stage
+User: "You might need a rigged model for that too, u can use meshy if needed". Plan (each step shown for approval):
+1. concept sheet (Figma image gen, file "Anime VFX source art", gpt-image-2.5-flare): assets/source_art/thunder_serpent/serpent_sheet_v1.png
+   (side view straight body, top view, head front with jaw open; original design, not Enel)
+2. Meshy multi-image-to-3D (~30 credits, check balance first) -> cleanup ~6k tris
+3. Blender rig: 14-bone spine chain + jaw bone
+4. new `rig` layer (previewer three.js SkinnedMesh + Luau skinned MeshPart, Bone CFrames driven so the spine follows the path)
+5. the move: glowing cel serpent + braided chained lightning ribbons, S-curve swim, coil around the target, burst.
+Beat sheet (from the approved design): 0.00 arm sweep / 0.25 serpent born from the hand / 0.25-0.85 swims an S-curve /
+0.85 coils around the target and bursts / 1.3 afterglow.
