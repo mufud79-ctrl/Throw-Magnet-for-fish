@@ -124,7 +124,9 @@ def build():
                         orient="VelocityPerpendicular", colors=COOL)
         L += crackle([x, 1.2, z], ts, size=4.5, life=0.16, seed=641 + i)
         L += ground_ring([x, 0, z], ts, size=7, life=0.35, seed=651 + i)
-        L.append(sparks([x, 1, z], ts, 12, speed=(8, 20), seed=661 + i))
+        L.append(sparks([x, 1, z], ts, 6, speed=(8, 20), seed=661 + i))
+        L.append(spark_burst([x, 1.5, z], ts, size=7, life=0.24, seed=671 + i, rot=40 * i))
+        L.append(streaks([x, 0.8, z], ts + 0.01, 8, speed=(50, 90), length=(2, 4), spread=50, seed=676 + i))
         L += scar([x, 0, z], ts, size=5, rot=37 * i, glow_life=0.7, soot_life=2.4, soot_in=0.6)
         hit = [d for d in (D1, D2) if d[0] == x and d[2] == z]
         if hit:
@@ -139,6 +141,9 @@ def build():
 
     # ---- collapse
     L += crackle([CX, 1.5, CZ], TC + 0.28, size=9, life=0.22, seed=681)
+    L.append(flare([CX, 2, CZ], TC + 0.28, size=20, life=0.3, seed=686))
+    L += impact_v3([CX, 2, CZ], TC + 0.28, size=12, life=0.45, seed=687)
+    L.append(streaks([CX, 1.5, CZ], TC + 0.29, 30, speed=(60, 120), length=(3, 7), spread=80, seed=688))
     L += emit_stack("thunder_burst_v2", [CX, 2, CZ], TC + 0.28, size=[[0, 6], [0.2, 11], [1, 12]], life=0.4, seed=682)
     L += ground_ring([CX, 0, CZ], TC + 0.28, size=16, life=0.5, seed=683)
     L.append(dust([CX, 0, CZ], TC + 0.28, n=10, size=(4, 10), seed=684))

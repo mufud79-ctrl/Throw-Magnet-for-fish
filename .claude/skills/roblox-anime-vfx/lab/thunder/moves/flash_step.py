@@ -49,7 +49,9 @@ def build():
     ghosts = [{"t": T0 - 0.005, "at": [0, 0, 0], "color": CYAN, "life": 0.22, "lean": 18}]
     for i, (t, p) in enumerate(P[1:-1]):
         L += crackle(p, t, size=4.8, life=0.15, seed=410 + i)
-        L.append(sparks(p, t, 10, seed=420 + i))
+        L.append(sparks(p, t, 6, seed=420 + i))
+        L.append(spark_burst(p, t, size=6, life=0.22, seed=425 + i, rot=50 * i))
+        L.append(flare(p, t, size=9, life=0.16, seed=428 + i))
         L += scar([p[0], 0, p[2]], t, size=8, rot=40 * i, glow_life=0.9, soot_life=2.6)
         ghosts.append({"t": t, "at": [p[0], 0, p[2]], "color": "#9fe8ff", "life": 0.07, "lean": 28})
 
@@ -62,7 +64,11 @@ def build():
     L += ground_ring(END, T1, size=15, life=0.5, seed=433)
     L += scar([0, 0, -26], T1, size=12, rot=-35, glow_life=1.0, soot_life=2.8)
     L.append(dust([0, 0, -26], T1, n=8, size=(4, 9), seed=434))
-    L.append(sparks([0, 2.5, -26], T1, 24, speed=(12, 28), seed=435))
+    L.append(sparks([0, 2.5, -26], T1, 14, speed=(12, 28), seed=435))
+    L.append(flare([0, 3, -26], T1, size=16, life=0.26, seed=440))
+    L += impact_v3([0, 3, -26], T1, size=9, life=0.4, seed=441)
+    L.append(streaks([0, 2.5, -26], T1 + 0.01, 22, speed=(60, 110), length=(3, 6), seed=442))
+    L += crack([0, 0, -26], T1 + 0.01, size=13, life=1.4, rot=-35, seed=443)
     L.append(smoke_burst([0, 1.2, -26], T1 + 0.01, n=4, seed=436))
     # residual charge on the re-formed body
     L += emit_stack("thunder_arc_v2", [0, 3, -26], T1 + 0.02, size=[[0, 4.5], [1, 5]], life=0.15, mode="Loop", rate=[[T1 + 0.02, T1 + 0.75, 10]],

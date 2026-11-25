@@ -70,9 +70,7 @@ def build():
     wid = {k: [[0, [a * 1.25, b * 1.25]], [0.05, [a, b], "out"], [0.6, [a * 0.75, b * 0.7]], [1, [a * 0.2, b * 0.2]]] for k, (a, b) in shaft_w.items()}
     L.append({"type": "vbeam", "from": tail, "to": head_to, "t0": T, "life": life, "reach": 1,
               "core": {"radius": [[0, 0.12], [0.1, 0.1], [0.4, 0.07], [0.6, 0]], "color": [[0, WHITE], [0.4, ICE]], "material": "Neon"},
-              "planes": [{"count": 2, "width": [[0, [3.2, 2.8]], [1, [4.2, 3.6]]], "texture": "thunder_strip_v2_3_glow", "color": NAVY,
-                          "lightEmission": 0, "brightness": 1, "transparency": [[0, 0.4], [0.6, 0.55], [1, 1]], "angle": 45, "textureLength": 12}]
-                        + plane_stack(wid, count=3, twist={"mid": 90, "core": -120, "glow": 30, "rim": 90}, speed={"mid": 1.5, "core": 2.5},
+              "planes": plane_stack(wid, count=3, twist={"mid": 90, "core": -120, "glow": 30, "rim": 90}, speed={"mid": 1.5, "core": 2.5},
                                       tlen={"glow": 9, "rim": 8, "mid": 8, "core": 6}, bright={"glow": 0.6},
                                       transparency={"glow": [[0, 0.3], [0.5, 0.5], [1, 1]], "rim": [[0, 0], [0.6, 0.3], [1, 1]], "mid": fl, "core": fl})})
     # head: a crackling arrowhead (pointed vbeam) around a solid neon spike, out the far side of the target
@@ -102,10 +100,18 @@ def build():
 
     # ---- release + impact (instant)
     L += crackle(HAND, T, size=3.2, seed=141)
-    L += crackle(CHEST, T, size=7.5, life=0.2, seed=142)
-    L += ground_ring([0, 0, -26], T, size=11, seed=143)
-    L.append(sparks(CHEST, T, 22, speed=(14, 30), seed=144))
-    L.append(smoke_burst([0, 3, -26.5], T + 0.02, n=5, seed=145))
+    # ---- MODERN layering: big shapes -> medium -> small, then mass
+    L += swirl(HAND_UP, 0.03, [[0, 1.5], [1, 3.4]], T - 0.03, seed=148, rot=30)          # charge swirl in the raised hand
+    L.append(flare(HAND, T, size=12, life=0.22, seed=149))                                # release glint
+    L.append(flare(CHEST, T + 0.005, size=14, life=0.28, seed=151))
+    L += impact_v3(CHEST, T, size=8.5, life=0.42, seed=152)
+    L += shockwave([0, 0, -26], T + 0.02, 7, life=0.45, seed=154)                         # ground shockwave under the target
+    L.append(spark_burst(CHEST, T + 0.01, size=12, life=0.32, seed=155))
+    L.append(streaks(CHEST, T + 0.01, 26, speed=(70, 120), length=(3, 7), spread=28, direction=[-90, 0, 0], seed=156))   # spray out the back
+    L.append(streaks(CHEST, T + 0.01, 14, speed=(40, 80), length=(2, 4), seed=157))
+    L += crack([0, 0, -26], T + 0.01, size=13, life=1.5, rot=-20, seed=158)
+    L.append(smoke3([0, 2.0, -26.8], T + 0.04, n=5, size=(2.5, 5.5), speed=(3, 7), spread=80, seed=159, tr0=0.15))
+    L.append(dust_ring([0, 0, -26], T + 0.02, n=14, speed=(20, 30), size=(2.5, 5), seed=160))
     L.append(haze([0, 1, -26], T + 0.05, T + 0.8, 18, size=(3, 8), rise=3, part=[3, 1, 3], seed=146))
     L += emit_stack("thunder_arc_v2", [0, 3.5, -25.6], T, size=[[0, 4], [1, 4.6]], life=0.16, mode="Loop", rate=[[T + 0.02, T + 0.5, 10]],
                     seed=147, colors=COOL, transparency=[[0, 0], [0.6, 0.3], [1, 1]])
@@ -119,7 +125,7 @@ def build():
         "hits": [{"t": T, "dummy": 0, "dir": [0, 0, -1], "power": KB / 3.5}],
         "numbers": [{"t": T + 0.02, "at": [0.6, 6.4, -26], "text": "88", "color": CYAN, "vel": [3, 15, 0], "size": 2.2}],
         "shakes": [{"t": T, "amp": 0.45, "dur": 0.28, "freq": 26}],
-        "debris": [{"kind": "fling", "at": [0, 0, -26], "t": T, "count": 5, "size": 0.9, "speed": 20, "life": 1.1, "seed": 15}],
+        "debris": rocks([0, 0, -26], T, radius=3.2, count=6, size=0.6, speed=24, crater=False, seed=15),
         "lights": [light(HAND_UP, [[0, 0], [0.12, 7], [T - 0.005, 9], [T, 0]], rng=9),
                    light(HAND, [[T - 0.005, 0], [T, 16], [T + 0.15, 2], [T + 0.3, 0]], rng=9),
                    light(CHEST, [[T - 0.005, 0], [T, 22], [T + 0.35, 4], [T + 0.9, 0]], rng=11)],

@@ -129,7 +129,7 @@ def _cloud_height(x, y, spheres):
     return h
 
 
-def _cloud_frames(n, seed, layout, flatten=None, spread=(1.0, 1.0)):
+def _cloud_frames(n, seed, layout, flatten=None, spread=(1.0, 1.0), vlo=0.6, bands=3, gain=1.25):
     rng = np.random.default_rng(seed)
     x, y = coords(S)
     spheres = layout(rng)
@@ -147,8 +147,8 @@ def _cloud_frames(n, seed, layout, flatten=None, spread=(1.0, 1.0)):
             h *= ss(y, flatten - 0.02, flatten + 0.06)
         lam = shade(blur(h, 3.5), light=(-0.45, 0.65, 0.75), strength=150)
         occl = ss(h, 0.0, 0.16)                       # crevices between lobes go darker
-        tone = pc.soft_posterize(np.clip(lam * 1.25 * (0.8 + 0.2 * occl), 0, 1), 3, softness=0.06)
-        val = 0.6 + 0.4 * tone
+        tone = pc.soft_posterize(np.clip(lam * gain * (0.8 + 0.2 * occl), 0, 1), bands, softness=0.06)
+        val = vlo + (1 - vlo) * tone
         # thin warm-white rim on the lit side, bluish core shadow stays mid-grey
         rim = ss(h, 0.0, 0.03) * (1 - ss(h, 0.03, 0.08)) * ss(lam, 0.5, 0.8)
         val = np.clip(val + rim * 0.15, 0, 1)
@@ -171,6 +171,32 @@ def smoke_puff(n=16, seed=31):
             sp.append((math.cos(a) * d, math.sin(a) * d * 0.82, rng.uniform(0.12, 0.22)))
         return sp
     return _cloud_frames(n, seed, layout)
+
+
+def spark_streak():
+    """Modern spark streak: one long needle (vertical), hot thin core + soft falloff, tapering to sharp points at both
+    ends with the head end fatter. Played VelocityParallel with high speed + drag -> the straight light streaks that
+    fly out of every TSB / JJS impact."""
+    x, y = coords(S)
+    v = (y + 1) / 2                                           # 0 top (head) .. 1 tail
+    prof = np.clip(np.sin(np.pi * np.clip(v, 0, 1) ** 0.6), 0, 1)
+    w = 0.018 * prof + 1e-4
+    core = np.exp(-(x / (w * 0.45)) ** 2) * prof
+    halo = np.exp(-(x / (w * 2.2)) ** 2) * prof * 0.45
+    return np.clip(np.maximum(core, halo), 0, 1)
+
+
+def smoke_cel_v3(n=16, seed=37):
+    """Modern cel smoke: billowy lobes with HARD 3-band shading at high contrast (shadow 0.3 -> lit 1.0, so a grey
+    colour reads as a lit volume, not a flat sticker), noise-eroded dissolve from the thin edges inward."""
+    def layout(rng):
+        sp = [(0, 0.0, 0.34), (-0.15, 0.08, 0.27), (0.16, 0.05, 0.28), (0.02, -0.14, 0.25)]
+        for _ in range(14):
+            a = rng.uniform(0, TAU)
+            d = rng.uniform(0.26, 0.44)
+            sp.append((math.cos(a) * d, math.sin(a) * d * 0.85, rng.uniform(0.11, 0.2)))
+        return sp
+    return _cloud_frames(n, seed, layout, vlo=0.32, bands=3, gain=0.72)
 
 
 def dust_burst(n=16, seed=41):
@@ -1467,7 +1493,7 @@ def _jag_path(rng, a, b, seg=(0.07, 0.16), dev=(16, 31), run_p=0.25):
     return pts
 
 
-def _micro(rng, pts, k=0.045, sub=(2, 4)):
+def _micro(rng, pts, k=0.018, sub=(2, 3)):
     """Fine jagged detail inside each straight run: split it into 2-4 pieces with small perpendicular kicks, so a
     run still reads straight from afar but crackles up close (the anime bolt texture)."""
     out = [np.array(pts[0], float)]
@@ -1494,7 +1520,7 @@ def _cel_tree(rng, a, b, w0, forks=2, hooks=0.55, depth=1, seg=(0.07, 0.16), t0=
     out = [(main, widths, t0)]
     L = np.linalg.norm(np.array(b, float) - np.array(a, float))
     for j in range(2, n - 1):                                      # hooks: short pointed barbs
-        if rng.random() < hooks * 0.5:
+        if rng.random() < hooks * 0.18:
             d = main[j] - main[j - 1]
             h = math.atan2(d[1], d[0]) + rng.choice([-1, 1]) * math.radians(rng.uniform(35, 75))
             ln = L * rng.uniform(0.02, 0.05)
@@ -1558,7 +1584,7 @@ def _cel_draw(bolts, W, H, k=1.0, keep=1.0, jitter=0.0, rng=None, wrap=False):
     return np.asarray(img, np.float32) / 255
 
 
-CEL_K = {"core": 1.0, "mid": 2.5, "rim": 3.7}
+CEL_K = {"core": 1.4, "mid": 3.0, "rim": 3.6}
 
 
 def _cel_layers(bolts, W, H, br=1.0, keep=1.0, jitter=0.0, rng=None, cool=0.0, wrap=False, extra=None):
@@ -1572,7 +1598,10 @@ def _cel_layers(bolts, W, H, br=1.0, keep=1.0, jitter=0.0, rng=None, cool=0.0, w
         for L, f in extra.items():
             out[L] = np.maximum(out[L], f)
     sig = H * 0.012 if wrap else W * 0.012
-    out["glow"] = np.clip(ndi.gaussian_filter(out["rim"], sig, mode="wrap" if wrap else "constant") * 1.3, 0, 1) * 0.75
+    md = "wrap" if wrap else "constant"
+    tight = ndi.gaussian_filter(out["rim"], sig, mode=md) * 1.4             # modern: tight halo + wide soft bloom
+    wide = ndi.gaussian_filter(out["rim"], sig * 3.2, mode=md) * 2.2
+    out["glow"] = np.clip(np.maximum(tight, wide), 0, 1) * 0.85
     a = br
     return {L: np.clip(f * a, 0, 1) for L, f in out.items()}
 
@@ -1739,6 +1768,164 @@ def plasma_blast_v2():
     return frames
 
 
+# ================================================================ MODERN v3 flipbooks (additive, bloomy, no outlines)
+def _ang_noise(a, n, seed, smooth=2.0):
+    """Smooth random function of angle (seamless), values 0..1."""
+    rng = np.random.default_rng(seed)
+    v = ndi.gaussian_filter1d(rng.random(n), smooth, mode="wrap")
+    v = (v - v.min()) / (np.ptp(v) + 1e-9)
+    idx = ((a % TAU) / TAU * n).astype(int) % n
+    return v[idx]
+
+
+def _needle(x, y, p0, p1, w0, w1=0.0):
+    """Tapered straight needle from p0 (width w0) to p1 (width w1) in normalised coords (soft-edged)."""
+    d = np.array(p1) - np.array(p0)
+    L = np.linalg.norm(d) + 1e-9
+    u = ((x - p0[0]) * d[0] + (y - p0[1]) * d[1]) / L ** 2
+    px, py = p0[0] + d[0] * np.clip(u, 0, 1), p0[1] + d[1] * np.clip(u, 0, 1)
+    dist = np.hypot(x - px, y - py)
+    w = (w0 + (w1 - w0) * np.clip(u, 0, 1)) * (1 - np.clip((u - 0.85) / 0.15, 0, 1) * 0.0)
+    inside = (u >= 0) & (u <= 1)
+    return np.where(inside, ss(dist, w + 0.004, w * 0.4), 0.0)
+
+
+def elec_impact_v3():
+    """Electric impact (one-shot 16f, cel layers, no outline): white flash disc + star (f0-2), 12 straight light rays
+    shoot out and retract, a jagged lightning ring expands and breaks up, short arcs crackle, then everything cools."""
+    x, y = coords(S)
+    r, ang = polar_of(x, y)
+    c = np.array([S / 2, S / 2])
+    rr = np.random.default_rng(6100)
+    rays = [(k / 12 * TAU + rr.uniform(-0.15, 0.15), rr.uniform(0.6, 1.0)) for k in range(12)]
+    frames = []
+    for i, (keep, br, jit, cool) in enumerate(CEL_STRIKE):
+        t = i / 15
+        rng = np.random.default_rng(6110 + i // 2)
+        R = S * (0.06 + 0.36 * (1 - (1 - min(1, t / 0.45)) ** 2.5))
+        bolts = []
+        frac = 1.0 if i < 4 else max(0.2, 1 - (i - 4) / 10)
+        for q in range(5):
+            bolts += _ring_bolts(rng, c, R, q * TAU / 5 + rng.uniform(-0.3, 0.3), TAU / 5 * frac, max(2, int(5 * frac)), S * 0.008 * (1 - 0.4 * t), rjit=0.08, tip=0.5)
+        if i <= 6:
+            for k in range(6):
+                th = rng.uniform(0, TAU)
+                p0 = c + np.array([math.cos(th), math.sin(th)]) * R * 0.25
+                p1 = c + np.array([math.cos(th + rng.uniform(-0.4, 0.4)), math.sin(th + rng.uniform(-0.4, 0.4))]) * R * 0.95
+                bolts += _cel_tree(rng, p0, p1, S * 0.007, forks=1, hooks=0.3, depth=1, seg=(0.15, 0.3))
+        lay = _cel_layers(bolts, S, S, br, min(1.0, (i + 1) / 2.0), S * 0.002 * jit, 13 + jit, cool)
+        # light rays (straight needles) out then retract
+        ray = np.zeros_like(r)
+        if i <= 7:
+            ext = min(1, (i + 1) / 2.5) * (1 - max(0, (i - 3) / 5))
+            for th, ln in rays:
+                tip = 0.15 + 0.8 * ln * ext
+                ray = np.maximum(ray, _needle(x, y, (math.cos(th) * 0.06, math.sin(th) * 0.06), (math.cos(th) * tip, math.sin(th) * tip), 0.012 * (1 - i / 9)))
+        flash = ss(r, 0.11 * (1 - i / 3) + 0.004, 0.11 * (1 - i / 3) - 0.004) if i < 3 else np.zeros_like(r)
+        star = _star_extra(r, ang, 0.07 * max(0, 1 - i / 3)) if i < 3 else {"core": 0, "mid": 0, "rim": 0}
+        lay["core"] = np.clip(np.maximum.reduce([lay["core"], ray, flash, star["core"] if i < 3 else lay["core"] * 0]), 0, 1)
+        lay["mid"] = np.clip(np.maximum.reduce([lay["mid"], ndi.gaussian_filter(ray, 2) * 1.5, flash, star["mid"] if i < 3 else lay["mid"] * 0]), 0, 1)
+        lay["rim"] = np.clip(np.maximum(lay["rim"], ndi.gaussian_filter(np.maximum(ray, flash), 5) * 1.6), 0, 1)
+        lay["glow"] = np.clip(np.maximum(lay["glow"], ndi.gaussian_filter(np.maximum(ray, flash), S * 0.03) * 1.2), 0, 1)
+        frames.append(lay)
+    return frames
+
+
+def shockwave_v3():
+    """Shockwave (one-shot 16f, white): a ring races out (ease-out); hot sharp leading edge, soft energy trailing
+    inward, broken by angular streak noise that grows as it thins and fades. Lay flat on the ground or face camera."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    frames = []
+    n1, n2 = _ang_noise(a, 96, 6201, 1.5), _ang_noise(a, 48, 6202, 1.0)
+    for i in range(16):
+        t = i / 15
+        R = 0.12 + 0.8 * (1 - (1 - t) ** 3)
+        w = 0.16 * (1 - t) ** 0.7 + 0.015
+        edge = ss(r, R + 0.008, R - 0.004) * ss(r, R - 0.035, R - 0.012)
+        trail = ss(r, R, R - 0.006) * ss(r, R - w, R) ** 1.6
+        brk = ss(n1 * 0.7 + n2 * 0.3, t * 0.75, t * 0.75 + 0.18)
+        I = np.clip(edge * (1 - t * 0.5) + trail * 0.55, 0, 1) * brk * (1 - t ** 2)
+        frames.append(I * ss(r, 0.99, 0.95))
+    return frames
+
+
+def spark_burst_v3():
+    """Spark burst (one-shot 16f, white): 22 needle streaks shoot out radially at different speeds, stretch then
+    shorten and thin to nothing - the straight light streaks of a modern impact."""
+    x, y = coords(S)
+    rng = np.random.default_rng(6300)
+    sp = [(rng.uniform(0, TAU), rng.uniform(0.55, 1.0), rng.uniform(0.25, 0.6), rng.uniform(0.006, 0.013)) for _ in range(22)]
+    frames = []
+    for i in range(16):
+        t = i / 15
+        I = np.zeros_like(x)
+        for th, v, ln, w in sp:
+            head = 0.08 + 0.85 * v * (1 - (1 - t) ** 2.2)
+            L = ln * (1 - t) ** 1.3 * min(1, (i + 1) / 2)
+            if L < 0.01 or head > 0.97:
+                continue
+            tail = max(0.04, head - L)
+            I = np.maximum(I, _needle(x, y, (math.cos(th) * head, math.sin(th) * head), (math.cos(th) * tail, math.sin(th) * tail), w * (1 - t * 0.7), 0.0))
+        frames.append(np.clip(I, 0, 1))
+    return frames
+
+
+def ground_crack_v3():
+    """Animated calling card (one-shot 16f, cel layers): a Lichtenberg burn grows out from the strike point over 5
+    frames (draw-in follows each trunk), flickers hot, then cools - the core thins first, the blue body lingers."""
+    rng = np.random.default_rng(6400)
+    c = np.array([S / 2, S / 2])
+    bolts = []
+    for k in range(8):
+        th = k / 8 * TAU + rng.uniform(-0.25, 0.25)
+        L = S * rng.uniform(0.3, 0.45)
+        bolts += _cel_tree(rng, c, c + np.array([math.cos(th), math.sin(th)]) * L, S * 0.0075, forks=3, hooks=0.4, depth=2, seg=(0.08, 0.16))
+    frames = []
+    for i in range(16):
+        keep = min(1.0, (i + 1) / 5.0)
+        br = [1, 1, 1, 1, 1, 0.7, 1, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.26, 0.18, 0.1][i]
+        cool = max(0.0, (i - 5) / 10)
+        frames.append(_cel_layers(bolts, S, S, br, keep, 0, None, cool))
+    return frames
+
+
+def elec_swirl_v3():
+    """Charge swirl (loop 16f, cel layers): three lightning arcs orbit a circle (1/3 turn per loop -> seamless), with
+    short arcs jumping inward; re-struck every 2 frames."""
+    c = np.array([S / 2, S / 2])
+    frames = []
+    for i in range(16):
+        rng = np.random.default_rng(6500 + i // 2)
+        ph = i / 16 * TAU / 3
+        bolts = []
+        for k in range(3):
+            bolts += _ring_bolts(rng, c, S * 0.36, ph + k * TAU / 3, 1.5, 5, S * 0.009, rjit=0.07, tip=0.2)
+            bolts += _ring_bolts(rng, c, S * 0.26, -ph * 1.5 + k * TAU / 3 + 1.0, 0.9, 3, S * 0.006, rjit=0.06, tip=0.2)
+        for k in range(2):
+            th = rng.uniform(0, TAU)
+            bolts += _cel_tree(rng, c + np.array([math.cos(th), math.sin(th)]) * S * 0.37, c + np.array([math.cos(th + 0.5), math.sin(th + 0.5)]) * S * 0.12,
+                               S * 0.006, forks=0, hooks=0.3, depth=0, seg=(0.2, 0.35))
+        frames.append(_cel_layers(bolts, S, S, (1.0, 0.8)[i % 2]))
+    return frames
+
+
+def flare_v3():
+    """Anamorphic strike glint (one-shot 16f, white): long horizontal streak + short vertical + tight hot core,
+    flashing on in 1 frame, then shrinking and fading."""
+    x, y = coords(S)
+    frames = []
+    for i in range(16):
+        t = i / 15
+        k = (1.0 if i < 2 else (1 - t) ** 1.6)
+        h = np.exp(-(y / (0.012 * (0.5 + k))) ** 2) * np.clip(1 - np.abs(x) / (0.98 * (0.4 + 0.6 * k)), 0, 1) ** 1.5
+        v = np.exp(-(x / (0.01 * (0.5 + k))) ** 2) * np.clip(1 - np.abs(y) / (0.45 * (0.3 + 0.7 * k)), 0, 1) ** 1.5
+        core = np.exp(-(x ** 2 + y ** 2) / (0.03 * (0.3 + k)) ** 2)
+        halo = np.exp(-(x ** 2 + y ** 2) / (0.14 * (0.3 + k)) ** 2) * 0.35
+        frames.append(np.clip((np.maximum.reduce([h, v * 0.8, core, halo])) * k, 0, 1))
+    return frames
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -1747,6 +1934,14 @@ LIB = {
     "flame_lick":    (flame_lick,    "layered", 4, 6, "fire"),
     "aura_wisp":     (aura_wisp,     "layered", 4, 6, "haki"),
     "smoke_puff":    (smoke_puff,    "shaded",  4, 0, "smoke"),
+    "smoke_cel_v3":  (smoke_cel_v3,  "shaded",  4, 0, "smoke"),
+    "spark_streak":  (spark_streak,  "white",   1, 0, "thunder"),
+    "elec_impact_v3": (elec_impact_v3, "cel",   4, 0, "thunder"),
+    "shockwave_v3":  (shockwave_v3,  "white",   4, 0, "thunder"),
+    "spark_burst_v3": (spark_burst_v3, "white", 4, 0, "thunder"),
+    "ground_crack_v3": (ground_crack_v3, "cel", 4, 0, "thunder"),
+    "elec_swirl_v3": (elec_swirl_v3, "cel",     4, 0, "thunder"),
+    "flare_v3":      (flare_v3,      "white",   4, 0, "thunder"),
     "dust_burst":    (dust_burst,    "shaded",  4, 0, "dust"),
     "star_flash":    (star_flash,    "layered", 4, 6, "light"),
     "god_rays":      (god_rays,      "layered", 4, 5, "white"),

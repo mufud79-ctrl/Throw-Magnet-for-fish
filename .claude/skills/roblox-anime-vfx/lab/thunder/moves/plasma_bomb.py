@@ -138,8 +138,10 @@ def build():
          [kk(TB - 0.01), 0.15, "in"], [1, 0.05]]
     L += anime_ball(P, 0.0, TB, R)
     L += anime_ball(P, 0.0, TB, [[k, r * 0.82] + e for k, r, *e in R], fps=30, rot=100, z=0.2, colors=COOL)      # counter cage -> 3D
+    # MODERN: a dim fresnel volume holds the cage together + an orbiting swirl
+    L += swirl(ORB, 0.1, [[0, 4], [1, 7.5]], TR - 0.1, seed=891, rot=20)
     L.append({"type": "shell", "mesh": "sphere", "material": "Neon", "path": P, "at": ORB, "t0": 0.0, "life": TB,
-              "scale": [[k, round(r * 0.2, 3)] + e for k, r, *e in R], "color": [[0, WHITE], [1, ICE]], "transparency": 0.2})
+              "scale": [[k, round(r * 0.12, 3)] + e for k, r, *e in R], "color": [[0, WHITE], [1, ICE]], "transparency": 0.3})
     # tendrils leaping off the orb surface while it charges
     t = 0.15
     while t < TR:
@@ -183,9 +185,14 @@ def build():
         "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random", "FlipbookFramerate": [25, 25], "FlipbookStartRandom": True, "ZOffset": 0.4}})
 
     # ---- bloom: the implode releases radial waves of cel arcs bursting out over A (house matter, this move's shape)
-    L.append({"type": "shell", "mesh": "sphere", "material": "Neon", "at": [IMPACT[0], 2.5, IMPACT[2]], "t0": TB, "life": 0.14,
-              "scale": [[0, 0.4], [0.3, 2.4, "out"], [1, 0.2, "in"]], "color": WHITE, "transparency": [[0, 0], [0.6, 0.2], [1, 1]]})
-    L += emit_stack("plasma_blast_v2", [IMPACT[0], 3.2, IMPACT[2]], TB + 0.11, size=15, life=0.5, z=0.6)
+    L += emit_stack("plasma_blast_v2", [IMPACT[0], 3.2, IMPACT[2]], TB + 0.11, size=12, life=0.5, z=0.6)
+    L.append(flare([IMPACT[0], 3, IMPACT[2]], TB, size=16, life=0.26, seed=892))
+    L += impact_v3([IMPACT[0], 3, IMPACT[2]], TB + 0.005, size=9, life=0.45, seed=893)
+    L += shockwave([IMPACT[0], 0, IMPACT[2]], TB + 0.02, 15, life=0.55, seed=894)
+    L.append(streaks([IMPACT[0], 2.5, IMPACT[2]], TB + 0.02, 34, speed=(70, 130), length=(3, 8), spread=75, seed=895))
+    L.append(dust_ring([IMPACT[0], 0, IMPACT[2]], TB + 0.02, n=22, speed=(40, 55), size=(4.5, 10), seed=896))
+    L.append(smoke3([IMPACT[0], 2, IMPACT[2]], TB + 0.06, n=7, size=(5, 10), speed=(5, 11), seed=897))
+    L += crack([IMPACT[0], 0, IMPACT[2]], TB + 0.01, size=22, life=1.6, rot=-15, seed=898)
     for w, (dtw, n, rad, hgt, wd) in enumerate([(0.02, 9, 8.0, 5.5, 1.6)]):
         for i in range(n):
             a, e = i / n * math.tau + w * 0.4 + rnd.uniform(-0.15, 0.15), rnd.uniform(0.1, 1.0)
@@ -222,7 +229,9 @@ def build():
         c = chest(d)
         L += anime_ball(c, te, 0.3, [[0, 0.6], [0.2, 2.7], [0.8, 2.4], [1, 1.6]], fps=32, rot=40 * j, z=0.4)
         L += emit_stack("plasma_blast_v2", c, te + 0.29, size=10, life=0.4, z=0.5, rot=30 * j)
-        L.append(sparks(c, te + 0.29, 18, speed=(10, 24), seed=820 + j))
+        L.append(sparks(c, te + 0.29, 8, speed=(10, 24), seed=820 + j))
+        L.append(streaks(c, te + 0.29, 14, speed=(50, 90), length=(2, 5), seed=840 + j))
+        L.append(flare(c, te + 0.29, size=10, life=0.2, seed=850 + j))
         L += emit_stack("thunder_arc_v2", c, te, size=[[0, 3.8], [1, 4.4]], life=0.14, mode="Loop", rate=[[te + 0.3, te + 1.0, 8]],
                         seed=830 + j, colors=COOL, transparency=[[0, 0], [0.6, 0.3], [1, 1]])
         if j:

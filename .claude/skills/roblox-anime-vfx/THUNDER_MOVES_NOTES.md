@@ -179,3 +179,18 @@ from its shape and mechanic, never from a different rendering style (no glassy t
 - Orb = two counter-rotated cages (HOT + COOL) whose Size sequence carries the radius keys, plus a small neon core. Bead, encasing and pops reuse the ball and blast.
 - Start the blast flipbook AFTER the hit-stop; keep it ~15 studs.
 - Status: awaiting approval.
+
+## MODERN PASS (user: "all the moves look lame and dated, like 2015")
+Research: real frames from TSB / JJS / Type Soul showcases (YouTube storyboard frames) + VFX style guides (League of Legends style guide, VFX Apprentice anime guide, 80.lv shape/colour/motion). What modern looks like:
+- glowing lines are ADDITIVE + SATURATED with bloom; NO crisp dark outlines (our indigo LE0 rim was the dated Flash-cartoon look)
+- the world dims / goes cooler during the move so the effect owns the frame
+- clear hierarchy: BIG shapes (shockwave rings, impact sheets) > medium (flares, spark bursts) > small (streaks, sparks)
+- MASS: shaded grey cel smoke, radial dust ring hugging the ground, rocks/craters
+- straight light streaks flying out of impacts; a 1-2 frame big flash, never a long white-out
+What changed:
+- kit layer conventions: glow = soft blue halo LE0.75 @68% transparent, rim = electric blue LE0.3 (covers sand -> stays saturated), mid LE0.45, core LE1; `_modernize()` in write() applies it to every layered texture use; bloom 0.5; write() adds a world-dim/cool grade.
+- lightning textures restyled bolder (thicker trunk, 1/3 the barbs, less micro-jag, wide soft bloom halo).
+- NEW sprite sheets: elec_impact_v3, shockwave_v3, spark_burst_v3, ground_crack_v3 (animated calling card), elec_swirl_v3 (loop), flare_v3, spark_streak, smoke_cel_v3 (3-band shaded smoke).
+- NEW kit helpers: impact_v3, shockwave, streaks, spark_burst, flare, swirl, crack, smoke3, dust_ring, rocks, energy_sphere. Legacy ground_ring/dust/smoke_burst now route to the modern ones.
+Lessons: (1) additive on bright sand -> white; keep body LE low so colour covers the sand. (2) every white source stacks under bloom - one flash per beat. (3) ParticleEmitter Disc shape emits along its normal (UP) - radial ground rings need Cylinder/Surface/Outward. (4) ForceField spheres flood white over sand - only as a 0.2 s dim rim flash. (5) mesh rings read as vector hoops; flipbook rings with breakup read modern.
+Status: pass 1 + pass 2 done on all 7, awaiting the user's review.

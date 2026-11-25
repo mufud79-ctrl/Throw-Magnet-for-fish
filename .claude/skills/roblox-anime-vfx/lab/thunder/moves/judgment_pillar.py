@@ -119,14 +119,17 @@ def build():
                   "jitter": 1.2, "segments": 18, "flicker": 0.034, "branch": 0.15, "seed": 351 + j, "brightness": 2.2})
 
     # ---- impact on the ground (instant): starburst, crack flash, dust ring, smoke columns, sparks
-    L += ground_ring(GROUND, T, size=30, life=0.6, seed=361)
-    L += crackle([X, 2.5, Z], T, size=12, life=0.24, seed=362)
-    L.append(dust(GROUND, T, n=14, size=(7, 15), seed=363))
-    for i in range(3):
-        a = i / 3 * math.tau + 0.5
-        L.append(smoke_burst([X + math.cos(a) * 3, 2, Z + math.sin(a) * 3], T + 0.04 + 0.03 * i, n=4, seed=364 + i))
-    L.append(sparks([X, 2, Z], T, 40, speed=(18, 40), life=(0.3, 0.6), seed=368, grav=-45))
-    L.append(haze([X, 1, Z], T + 0.1, T + 1.4, 24, size=(6, 14), rise=4, part=[8, 1, 8], seed=369))
+    # MODERN layering: big -> medium -> small, then mass
+    L.append(flare([X, 3, Z], T, size=26, life=0.32, seed=370))
+    L += impact_v3([X, 3, Z], T, size=18, life=0.55, seed=362)
+    L += shockwave(GROUND, T + 0.01, 18, life=0.55, seed=371)
+    L += shockwave(GROUND, T + 0.12, 26, life=0.7, seed=372)                    # a second, wider wave on the re-strike
+    L.append(energy_sphere([X, 0, Z], T, 0.25, [[0, 2.0], [0.5, 9.0, "outExpo"], [1, 10.0]], color=CYAN, bright=0.45, tr=[[0, 0.2], [0.5, 0.5], [1, 1]]))
+    L.append(spark_burst([X, 4, Z], T + 0.01, size=22, life=0.4, seed=373))
+    L.append(streaks([X, 1.5, Z], T + 0.01, 40, speed=(80, 150), length=(4, 9), spread=70, seed=368))
+    L.append(dust_ring(GROUND, T + 0.01, n=26, speed=(45, 62), size=(6, 14), seed=363, life=(0.9, 1.3)))
+    L.append(smoke3([X, 2, Z], T + 0.05, n=9, size=(6, 13), speed=(6, 14), spread=60, rise=2.5, seed=364, life=(1.2, 1.8)))
+    L += crack(GROUND, T + 0.01, size=26, life=2.0, rot=25, seed=369)
     L += scar(GROUND, T, size=20, rot=25, glow_life=1.3, soot_life=3.4)
 
     dur = 3.0
@@ -154,7 +157,7 @@ def build():
         "camera": {"pos": [[0, [34, 13, 16]], [k(0.95), [32, 13.5, 13]], [k(T) + 0.004, [30.5, 13, 11], "outExpo"], [1, [29.5, 12.6, 9.5]]],
                    "look": [[0, [0, 17, -16]], [k(0.95), [0, 18.5, -18]], [k(T) + 0.004, [0, 18, -19], "outExpo"], [1, [0, 16.5, -19]]],
                    "fov": [[0, 64], [k(0.97), 62], [k(T) + 0.004, 56, "out"], [k(T + 0.5), 62], [1, 63]]},
-        "poster": T + 0.05, "bloom": 0.5,
+        "poster": T + 0.05,
     }
 
 

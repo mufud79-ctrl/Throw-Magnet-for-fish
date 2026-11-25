@@ -105,20 +105,24 @@ def build():
     # ---- the bite (small), the burst (big)
     chest = [C[0], 3.6, C[1]]
     L += crackle([0, 3.6, C[1] + 1.2], TBITE, size=4.5, life=0.14, seed=521)
-    L.append(sparks([0, 3.6, C[1] + 1.2], TBITE, 12, seed=522))
-    L += emit_stack("thunder_burst_v2", [0, 4.5, C[1]], TBURST, size=[[0, 9], [0.2, 15], [1, 16]], life=0.45, seed=531,
-                    squash=[[0, -0.4], [0.15, 0.3], [0.4, 0]])
-    L += crackle([0, 4.5, C[1]], TBURST, size=11, life=0.24, seed=532)
+    L.append(sparks([0, 3.6, C[1] + 1.2], TBITE, 8, seed=522))
+    L += impact_v3([0, 3.6, C[1] + 1.2], TBITE, size=7, life=0.34, seed=523)
+    L.append(streaks([0, 3.6, C[1] + 1.2], TBITE + 0.01, 14, speed=(50, 90), length=(2, 5), seed=524))
+    L.append(flare([0, 4.5, C[1]], TBURST, size=16, life=0.3, seed=537))
+    L += impact_v3([0, 4.5, C[1]], TBURST, size=11, life=0.5, seed=538)
+    L.append(streaks([0, 4, C[1]], TBURST + 0.01, 36, speed=(70, 130), length=(4, 8), seed=539))
+    L.append(spark_burst([0, 4.5, C[1]], TBURST + 0.01, size=12, life=0.36, seed=540))
+    L += crack(TARGET, TBURST + 0.01, size=18, life=1.6, rot=30, seed=541)
     L += ground_ring(TARGET, TBURST, size=22, life=0.55, seed=533)
-    L.append(sparks([0, 4.5, C[1]], TBURST, 36, speed=(16, 36), life=(0.3, 0.6), seed=534, grav=-40))
+    L.append(sparks([0, 4.5, C[1]], TBURST, 12, speed=(16, 36), life=(0.3, 0.6), seed=534, grav=-40))
     L.append(dust(TARGET, TBURST, n=10, size=(5, 11), seed=535))
     L.append(smoke_burst([0, 4, C[1]], TBURST + 0.02, n=6, seed=536))
     # the serpent's body scatters into bolts flung outward from the coil
     for j in range(6):
         a = j / 6 * math.tau + 0.3
         tip = [round(math.sin(a) * 9, 2), round(4.5 + 3 * math.sin(a * 2), 2), round(C[1] + math.cos(a) * 9, 2)]
-        L.append({"type": "bolt", "from": [0, 4.5, C[1]], "to": tip, "t0": TBURST + 0.005, "life": 0.07, "color": CYAN, "thickness": 0.16,
-                  "jitter": 0.9, "segments": 9, "flicker": 0.034, "branch": 0.2, "seed": 541 + j, "brightness": 2.2})
+        L.append({"type": "bolt", "from": [0, 4.5, C[1]], "to": tip, "t0": TBURST + 0.005, "life": 0.07, "color": CYAN, "thickness": 0.12,
+                  "jitter": 0.9, "segments": 9, "flicker": 0.034, "branch": 0.2, "seed": 541 + j, "brightness": 1.4})
     L += emit_stack("thunder_arc_v2", chest, TBURST, size=[[0, 4.4], [1, 5]], life=0.15, mode="Loop", rate=[[TBURST + 0.03, TBURST + 0.9, 11]],
                     seed=551, colors=COOL, transparency=[[0, 0], [0.6, 0.3], [1, 1]])
     L.append(haze([0, 1, C[1]], TBURST + 0.05, TBURST + 0.9, 22, size=(5, 11), rise=3, part=[6, 1, 6], seed=552))

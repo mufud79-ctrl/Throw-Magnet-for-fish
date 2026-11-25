@@ -69,9 +69,13 @@ def build():
     # ---- the clap (instant)
     L += emit_stack("thunder_burst_v2", CLAP, T, size=[[0, 6], [0.2, 8], [1, 8.5]], life=0.32, seed=211, squash=[[0, 0.35], [0.12, -0.2], [0.4, 0]])
     L += crackle(CLAP, T, size=5, life=0.18, seed=212)
-    L += ground_ring([0, 0, 0], T, size=20, life=0.5, seed=213)
-    L.append(dust([0, 0, 0], T, n=6, size=(3.5, 7), seed=214))
-    L.append(sparks(CLAP, T, 26, speed=(14, 30), seed=215))
+    # MODERN layering: flash glint, fresnel dome volume riding the cage, ground shockwave, dust ring, streaks
+    L.append(flare(CLAP, T, size=16, life=0.26, seed=217))
+    L.append(spark_burst(CLAP, T, size=10, life=0.3, seed=218))
+    L += shockwave([0, 0, 0], T + 0.01, 13, life=0.5, seed=219)
+    L.append(dust_ring([0, 0, 0], T + 0.01, n=20, speed=(34, 46), size=(3.5, 8), seed=214))
+    L.append(streaks(CLAP, T + 0.01, 24, speed=(60, 110), length=(3, 7), seed=215))
+    L.append(sparks(CLAP, T, 18, speed=(14, 30), seed=220))
 
     # ---- signature: the cage. 25 curved crackling arcs, 3 stacked beams each, keyed by the cage radius
     life = 1.0
@@ -97,8 +101,8 @@ def build():
     for i, p in enumerate(TARGETS):
         th = T + 0.05
         chest = [p[0], 3.6, p[2]]
-        L += crackle(chest, th, size=4.5, life=0.18, seed=221 + i)
-        L.append(sparks(chest, th, 12, speed=(8, 18), seed=231 + i))
+        L += impact_v3(chest, th, size=6, life=0.36, seed=221 + i, rot=40 * i)
+        L.append(streaks(chest, th, 10, speed=(40, 80), length=(2, 4), seed=231 + i))
         L += emit_stack("thunder_arc_v2", chest, th, size=[[0, 3.6], [1, 4.4]], life=0.14, mode="Loop", rate=[[th + 0.02, th + 0.95, 12]],
                         seed=241 + i, colors=COOL, transparency=[[0, 0], [0.6, 0.25], [1, 1]])
         L.append({"type": "emitter", "at": [p[0], 3, p[2]], "part": [2, 4, 1], "rate": [[th, th + 1.0, 12]], "seed": 251 + i, "props": {
@@ -111,7 +115,7 @@ def build():
 
     # ---- ground memory + dark anchor
     L += scar([0, 0, 0], T, size=15, rot=15, glow_life=1.1, soot_life=3.0)
-    L.append(haze([0, 0.8, 0], T + 0.03, T + 1.0, 30, size=(4, 9), rise=1.2, part=[14, 0.6, 14], seed=261))
+    L += crack([0, 0, 0], T + 0.01, size=17, life=1.5, rot=15, seed=262)
 
     dur = 1.8
     k = lambda t: round(t / dur, 4)
