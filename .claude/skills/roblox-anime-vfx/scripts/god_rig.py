@@ -56,6 +56,24 @@ for side, s in (("Left", 1), ("Right", -1)):
     ]
 
 
+# fingers (left hand; the right mirrors x). Measured from the rebuilt hand (god_cleanup --hands): palm down,
+# fingers along +X, thumb on the front (-Y) side and lower. Each finger: base (knuckle), two inner joints, tip.
+FINGERS = {
+    "Thumb":  [(0.618, -0.183, 0.447), (0.636, -0.193, 0.443), (0.652, -0.200, 0.439), (0.668, -0.205, 0.436)],
+    "Index":  [(0.664, -0.168, 0.450), (0.684, -0.168, 0.448), (0.701, -0.168, 0.446), (0.717, -0.168, 0.444)],
+    "Middle": [(0.666, -0.146, 0.455), (0.689, -0.146, 0.453), (0.711, -0.146, 0.450), (0.731, -0.146, 0.447)],
+    "Ring":   [(0.664, -0.125, 0.453), (0.685, -0.125, 0.450), (0.706, -0.125, 0.447), (0.725, -0.125, 0.444)],
+    "Pinky":  [(0.660, -0.105, 0.447), (0.675, -0.105, 0.445), (0.690, -0.105, 0.442), (0.704, -0.105, 0.440)],
+}
+for side, sgn in (("Left", 1), ("Right", -1)):
+    for fn, pts in FINGERS.items():
+        for k in range(3):
+            J[f"{side}{fn}{k}"] = (pts[k][0] * sgn, pts[k][1], pts[k][2])
+            J[f"{side}{fn}{k + 1}"] = (pts[k + 1][0] * sgn, pts[k + 1][1], pts[k + 1][2])
+        for k in range(3):
+            R15.append((f"{side}{fn}{k + 1}", f"{side}{fn}{k}", f"{side}{fn}{k + 1}", f"{side}Hand" if k == 0 else f"{side}{fn}{k}"))
+
+
 def jp(key):
     if isinstance(key, tuple):
         k, s = key
@@ -215,6 +233,7 @@ def build(src):
         add_chain(extra, idx, c["bones"], hat_weights(s_[idx], 2) * w[idx, None])
     apply_weights(body, W, names_r15, extra)
     smooth_groups(body, iterations=3)
+    limit_influences(body)
 
     # ---- cape and mane: procedural chain weights
     for ob, P, prefix, top, bot, nb, root in ((cape, PC, "Cape", cz_top, cz_bot, 4, "UpperTorso"), (mane, PM, "Mane", mz_top, mz_bot, 3, "Head")):
@@ -237,12 +256,42 @@ def build(src):
             for bi, bn in enumerate(col_names):
                 groups[bn] = cw[:, ci] * hw[:, bi] * (1 - root_w)
         set_groups(ob, groups, arm)
+        limit_influences(ob)
     return arm, chains
 
 
 def smoothstep(e0, e1, x):
     t = np.clip((x - e0) / (e1 - e0), 0, 1)
     return t * t * (3 - 2 * t)
+
+
+def split_fingers(g, side, P):
+    """Move hand weight onto the finger bones: each vertex past the palm goes to its nearest finger line
+    (soft across the gaps), split along the finger with hat functions, blended into the palm at the knuckle."""
+    sgn = 1 if side == "Left" else -1
+    hand = g[f"{side}Hand"]
+    best = np.full(len(P), np.inf)
+    dists, params = {}, {}
+    for fn, pts in FINGERS.items():
+        A = np.array(pts, float) * np.array([sgn, 1, 1])
+        a0, a1 = A[0], A[-1]
+        ab = a1 - a0
+        t = np.clip(((P - a0) @ ab) / (ab @ ab), -0.5, 1.0)
+        d = np.linalg.norm(P - (a0 + t[:, None] * ab), axis=1)
+        dists[fn], params[fn] = d, t
+        best = np.minimum(best, d)
+    soft = {fn: np.exp(-(dists[fn] - best) / 0.003) for fn in FINGERS}
+    tot = sum(soft.values())
+    # how much of the hand weight goes to fingers: only near a finger line and past its knuckle
+    for fn in FINGERS:
+        t = params[fn]
+        near = 1 - smoothstep(0.012, 0.02, dists[fn])
+        past = smoothstep(-0.12, 0.08, t)
+        share = hand * (soft[fn] / tot) * near * past
+        hw = hat_weights(np.clip(t, 0, 1) * 3, 3)
+        for k in range(3):
+            g[f"{side}{fn}{k + 1}"] = share * hw[:, k]
+        g[f"{side}Hand"] = g[f"{side}Hand"] - share
 
 
 def analytic_body_weights(P):
@@ -270,11 +319,27 @@ def analytic_body_weights(P):
         g[f"{side}UpperArm"] = a * (1 - up_lo)
         g[f"{side}LowerArm"] = a * up_lo * (1 - lo_hd)
         g[f"{side}Hand"] = a * up_lo * lo_hd
+        split_fingers(g, side, P)
         l = lt_legs * legw * sw_leg
         g[f"{side}UpperLeg"] = l * ul_ll
         g[f"{side}LowerLeg"] = l * (1 - ul_ll) * ll_ft
         g[f"{side}Foot"] = l * (1 - ul_ll) * (1 - ll_ft)
     return g
+
+
+def limit_influences(ob, limit=4):
+    """Roblox skinning (and glTF) keep 4 bone influences per vertex: drop the smallest, renormalise."""
+    names = [vg.name for vg in ob.vertex_groups]
+    W = weight_matrix(ob, names)
+    if W.shape[1] > limit:
+        keep = np.argsort(-W, 1)[:, :limit]           # exactly the top `limit` by rank (ties can't sneak in)
+        M = np.zeros_like(W, bool)
+        np.put_along_axis(M, keep, True, 1)
+        W = np.where(M, W, 0)
+    W /= np.maximum(W.sum(1, keepdims=True), 1e-9)
+    for vg in list(ob.vertex_groups):
+        ob.vertex_groups.remove(vg)
+    set_groups(ob, {nm: W[:, k] for k, nm in enumerate(names)}, None)
 
 
 def smooth_groups(ob, iterations=3, keep=0.5):

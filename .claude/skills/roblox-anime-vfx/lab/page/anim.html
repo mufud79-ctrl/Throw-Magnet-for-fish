@@ -33,11 +33,11 @@ window.ANIM = {
     this.center = box.getCenter(new THREE.Vector3()); this.size = box.getSize(new THREE.Vector3());
     return { clips: gl.animations.map((c) => [c.name, c.duration, c.tracks.length]), size: this.size.toArray() };
   },
-  frame(t, yawDeg, pitchDeg = 6, zoom = 1) {
+  frame(t, yawDeg, pitchDeg = 6, zoom = 1, target = null, dist = 0) {
     this.mixer.setTime(t);
     const h = this.size.y, w = Math.max(this.size.x, this.size.z);
-    const d = Math.max(h, w / cam.aspect) / 2 / Math.tan(cam.fov * Math.PI / 360) * 1.12 / zoom;
-    const a = yawDeg * Math.PI / 180, p = pitchDeg * Math.PI / 180, c = this.center;
+    const d = dist || Math.max(h, w / cam.aspect) / 2 / Math.tan(cam.fov * Math.PI / 360) * 1.12 / zoom;
+    const a = yawDeg * Math.PI / 180, p = pitchDeg * Math.PI / 180, c = target ? new THREE.Vector3(...target) : this.center;
     cam.position.set(c.x + Math.sin(a) * Math.cos(p) * d, c.y + Math.sin(p) * d, c.z + Math.cos(a) * Math.cos(p) * d);
     cam.lookAt(c); r.render(scene, cam); return cv.toDataURL('image/jpeg', 0.92);
   },

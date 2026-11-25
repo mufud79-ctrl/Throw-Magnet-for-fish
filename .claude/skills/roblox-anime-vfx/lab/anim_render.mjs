@@ -1,4 +1,4 @@
-// node anim_render.mjs <anim.glb> <out_basename> [--fps 30] [--size 720x900] [--yaw 25] [--orbit 360] [--loops 1] [--period S]
+// node anim_render.mjs <anim.glb> <out_basename> [--fps 30] [--size 720x900] [--yaw 25] [--orbit 360] [--loops 1] [--period S] [--target x,y,z --dist D]
 //   --period: loop length when the clip's last key repeats its first (closed loops), so loops don't hitch
 //   -> <out>.mp4 (H.264) and <out>.gif (palette, 15 fps, 480 px wide). --orbit spins the camera by that many
 //   degrees over the whole render (loops x clip duration); otherwise the camera is fixed at --yaw.
@@ -10,6 +10,7 @@ const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf(k); if (i < 0) return d; const v = args[i + 1]; args.splice(i, 2); return v; };
 const fps = +opt('--fps', 30), size = opt('--size', '720x900'), yaw = +opt('--yaw', 25), orbit = +opt('--orbit', 0), loops = +opt('--loops', 1), pitch = +opt('--pitch', 6), zoom = +opt('--zoom', 1);
 const period = +opt('--period', 0);
+const target = opt('--target', null), dist = +opt('--dist', 0);   // close-ups: three.js world coords (Y up), camera distance
 const [glb, out] = args; const [W, H] = size.split('x').map(Number);
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
@@ -29,7 +30,7 @@ const n = Math.round(dur * loops * fps);
 const tmp = fs.mkdtempSync('/tmp/anim_');
 for (let i = 0; i < n; i++) {
   const t = (i / fps) % dur, y = yaw + (orbit ? orbit * i / n : 0);
-  const u = await page.evaluate(([t, y, p, z]) => window.ANIM.frame(t, y, p, z), [t, y, pitch, zoom]);
+  const u = await page.evaluate(([t, y, p, z, tg, ds]) => window.ANIM.frame(t, y, p, z, tg, ds), [t, y, pitch, zoom, target ? target.split(',').map(Number) : null, dist]);
   fs.writeFileSync(path.join(tmp, `f${String(i).padStart(4, '0')}.jpg`), Buffer.from(u.split(',')[1], 'base64'));
 }
 await browser.close();

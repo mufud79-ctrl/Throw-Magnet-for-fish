@@ -83,6 +83,53 @@ def classify(cent, tri, col, nv):
     return lab
 
 
+HAND_CUT = 0.60       # |x| where the hands are cut off (inside the wrist cuffs)
+HAND_OVERLAP = 0.012  # the hand piece starts this much before the cut, hidden in the cuff
+
+
+def keep_faces(src, keep_fn, name):
+    me = src.data.copy()
+    me.name = name
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    mw = src.matrix_world
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if not keep_fn(mw @ f.calc_center_median(), f.index)], context="FACES")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    bm.to_mesh(me)
+    bm.free()
+    ob = bpy.data.objects.new(name, me)
+    bpy.context.collection.objects.link(ob)
+    ob.matrix_world = src.matrix_world
+    return ob
+
+
+def decimate(ob, tris):
+    mod = ob.modifiers.new("Dec", "DECIMATE")
+    mod.decimate_type = "COLLAPSE"
+    mod.ratio = min(1.0, tris / max(len(ob.data.polygons), 1))
+    mod.use_symmetry = True
+    mod.symmetry_axis = "X"
+    with bpy.context.temp_override(object=ob, active_object=ob):
+        bpy.ops.object.modifier_apply(modifier="Dec")
+
+
+def replace_hands(src, lab, body, hand_tris):
+    """Rebuild the body as (body minus hands, decimated to budget - hand_tris) + (hands from the full-detail
+    source, decimated to hand_tris), so the fingers keep enough geometry to bend."""
+    total = len(body.data.polygons)
+    bpy.data.objects.remove(body)
+    rest = keep_faces(src, lambda c, i: lab[i] == 0 and abs(c.x) < HAND_CUT, "Body")
+    hands = keep_faces(src, lambda c, i: lab[i] == 0 and abs(c.x) > HAND_CUT - HAND_OVERLAP, "Hands")
+    decimate(rest, total - hand_tris)
+    decimate(hands, hand_tris)
+    with bpy.context.temp_override(active_object=rest, selected_editable_objects=[rest, hands]):
+        bpy.ops.object.join()
+    for p in rest.data.polygons:
+        p.use_smooth = True
+    hand = sum(1 for p in rest.data.polygons if abs((rest.matrix_world @ p.center).x) > HAND_CUT)
+    print("Body (hands rebuilt) tris", len(rest.data.polygons), "hand tris (both)", hand)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default=os.path.join(ROOT, "assets", "source_art", "meshy", "thunder_god.glb"))
@@ -90,6 +137,7 @@ def main():
     ap.add_argument("--body", type=int, default=18000)
     ap.add_argument("--cape", type=int, default=4000)
     ap.add_argument("--mane", type=int, default=6000)
+    ap.add_argument("--hands", type=int, default=2000, help="tris for both hands, decimated separately (0 = off)")
     a = ap.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:])
     target = {"Body": a.body, "Cape": a.cape, "Mane": a.mane}
     assert all(v <= ROBLOX_TRI_CAP for v in target.values())
@@ -129,7 +177,10 @@ def main():
             bpy.ops.object.modifier_apply(modifier="Dec")
         for p in ob.data.polygons:
             p.use_smooth = True
-        print(name, "tris", len(ob.data.polygons))
+        hand = sum(1 for p in ob.data.polygons if abs((ob.matrix_world @ p.center).x) > 0.585)
+        print(name, "tris", len(ob.data.polygons), "hand tris (both)", hand)
+    if a.hands:
+        replace_hands(src, lab, bpy.data.objects["Body"], a.hands)
     bpy.data.objects.remove(src)
     for o in bpy.context.scene.objects:          # bake the import transform so the parts sit in clean space
         o.select_set(True)

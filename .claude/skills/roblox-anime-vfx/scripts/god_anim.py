@@ -92,15 +92,30 @@ def idle(god, ring, T=3.2):
         rot(god, "LowerTorso", 1.0 * b_lag)
         rot(god, "UpperTorso", -2.0 - 1.4 * b, 0, 0)
         rot(god, "Head", 3.0 + 1.0 * b_lag, 0, 0.8 * wave(t, T, 1, 0, 0, 1.3))
-        # arms: powerful floating stance (down, slightly out and forward, elbows soft). They drift weightlessly:
-        # shoulder swings fore/aft and in/out, the elbow follows later, the hand last (follow-through); the two
-        # arms are out of step so the pose never looks mirrored
+        # arms: floating stance, down and a little out, elbows bent. Arms rest along X in the T-pose, so in
+        # armature space: Y = raise / lower, Z = swing fore / aft round the vertical, X = roll along the arm.
+        # Mirror: X keeps its sign, Y and Z flip (the s factor). Shoulder leads, elbow trails, wrist trails last;
+        # the two arms are out of step so the pose never looks mirrored.
         for side, s, ph in (("Left", 1, 0.0), ("Right", -1, 2.1)):
-            sw = wave(t, T, 1, 0, 0, ph - 0.9)
-            sw2 = wave(t, T, 2, 0, 0, ph * 0.7 - 0.5)
-            rot(god, f"{side}UpperArm", -8 - 8.0 * sw - 2.0 * sw2, s * (50 + 6.0 * wave(t, T, 1, 0, 0, ph - 0.3)), s * (-10 - 4.0 * sw))
-            rot(god, f"{side}LowerArm", 0, 0, s * -(26 + 12.0 * wave(t, T, 1, 0, 0, ph - 1.8) + 3.0 * sw2))
-            rot(god, f"{side}Hand", 6.0 * wave(t, T, 1, 0, 0, ph - 2.6), s * (8 + 5.0 * wave(t, T, 2, 0, 0, ph - 2.0)), s * -(8 + 10.0 * wave(t, T, 1, 0, 0, ph - 2.7)))
+            fore = wave(t, T, 1, 0, 0, ph - 0.9) + 0.3 * wave(t, T, 2, 0, 0, ph * 0.7 - 0.5)
+            rot(god, f"{side}UpperArm", 10.0 * wave(t, T, 1, 0, 0, ph - 1.2),
+                s * (36 + 6.0 * wave(t, T, 1, 0, 0, ph - 0.3)),        # out from the hips so the hands clear the sash
+                s * -(20 + 10.0 * fore))                               # always in front of the cape flaps
+            rot(god, f"{side}LowerArm", 15.0 * wave(t, T, 1, 0, 0, ph - 2.0), 0,
+                s * -(30 + 22.0 * wave(t, T, 1, 0, 0, ph - 1.7)))
+            rot(god, f"{side}Hand", 0, s * (10 + 14.0 * wave(t, T, 1, 0, 0, ph - 2.5)),
+                s * -(8 + 10.0 * wave(t, T, 1, 0, 0, ph - 2.8)))
+        # fingers: relaxed curl, deeper from index to pinky; a slow ripple runs pinky -> index with each joint
+        # lagging the one before (overlap); the thumb drifts on its own. Palm faces down and fingers point along
+        # the arm, so curl = Y (toward the palm), spread = Z; mirrored with s.
+        for side, s, ph in (("Left", 1, 0.0), ("Right", -1, 2.1)):
+            for fi, (fn, base, spread) in enumerate((("Index", 12, -3), ("Middle", 16, 0), ("Ring", 20, 2), ("Pinky", 24, 5))):
+                for k in (1, 2, 3):
+                    curl = base * (1.0 if k == 1 else 0.9) + (7 + 3 * k) * wave(t, T, 1, 0.45, k, ph - 2.4 + 0.35 * (3 - fi))
+                    rot(god, f"{side}{fn}{k}", 0, s * curl, s * (spread + 1.5 * wave(t, T, 1, 0, 0, ph + fi)) if k == 1 else 0)
+            for k in (1, 2, 3):
+                c = 8 + 6 * wave(t, T, 1, 0.5, k, ph - 1.9)
+                rot(god, f"{side}Thumb{k}", 0, s * c * 0.6, s * (10 + c * 0.6) if k == 1 else s * c * 0.4)
         # legs dangling: a slow, gentle tread. Each leg swings from the hip, the knee bends as the thigh comes
         # forward and trails behind it, the toes point last; left and right alternate
         for side, sgn, ph, knee0, foot0, splay in (("Left", 1, 0.0, 30, 22, 3), ("Right", -1, math.pi * 0.85, 16, 26, -3)):
