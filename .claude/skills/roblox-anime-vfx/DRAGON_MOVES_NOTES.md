@@ -32,7 +32,7 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 | Figma concept image | 1-2 images | 11 images (+ sheet v4, hybrid v5) (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3, hybrid v4), gpt-image-2.5-flare |
 | Meshy multi-image-to-3D (dragon v3, superseded by v4 sheet) | 30 | 30 (1989 -> 1959) |
 | Meshy multi-image-to-3D hybrid v4 (one job, avatar masked out; superseded by hybrid v5 kitbash) | 30 | 30 (total 60) |
-| Meshy multi-image-to-3D (dragon v4 open-mouth re-run) | 30 | - (awaiting user OK) |
+| Meshy multi-image-to-3D (dragon v4 open-mouth re-run, user OK'd) | 30 | 30 (total 90) |
 
 ## Step 2: concept (direction change)
 User: "as close to Kaido as possible while still being original enough", "should look more like Kaido". Pulled 24
@@ -91,3 +91,12 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
   Views: meshy_raw/hybrid_raw.jpg, hybrid_closeups.jpg. Pieces come out as separate islands: horns+crown, collar +
   dragon-head pauldrons + bracers with claw blades (one band, to split per R15 part), sash with medallion/tassels, tail
   with spines and curl fan. The horns read lumpy from the side.
+
+## Step 1b: dragon v4 re-run (waiting for approval)
+- User: hybrid v5 "needs full redesign" -> chose "Becoming the dragon" (partial transformation: scale plates creep up
+  from the hands, talon gauntlets, horns breaking out, short thick tail, fire in the skin-to-scale seams). Sheet next.
+- Dragon v4: Meshy multi-image-to-3D from v4_view_side/top/front, 30 credits (total 90). Raw:
+  assets/source_art/meshy/dragon_v4.glb. Views: meshy_raw/v4_body.jpg, v4_head.jpg, v4_feet.jpg.
+  Open mouth with red interior, fangs and tongue modelled (rig the jaw to close). Body much thicker; strong jointed
+  legs. Weak spots: talons are small; the tail still narrows into a thin neck right before the curl fan (thicken in
+  rig_dragon.py); whiskers come out as 3-4 strands per side (pick 2 per side or merge).
