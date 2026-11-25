@@ -151,9 +151,17 @@ ground->ground or into an enemy every 0.06-0.1 s; up-strikes are cel columns + r
 sprite; strobing field light, brighter floating static, closer camera, lighter grade.
 Lesson: electricity has to JUMP between things in the air; flat ground decorations alone read as cracks.
 
-## Move 7: Plasma Bomb (M) - waiting for approval
-`lab/thunder/moves/plasma_bomb.py` -> `thunder_07_PlasmaBomb.json`. Hold: plasma_orb stack + glow ball LockedToPart riding a
-`path` (hand, then a parabola), arcs, inward sparks, god_rays pulses = the anime charge star; pinch before release.
-Lob: cel ribbon trail + dripping arcs. Detonation at A (hit-stop 0.08). Signature: chain lightning A -> B -> C, 3 curved cel
-arc_jump strands per hop that linger, flicker and cool (hit-stop 0.04 each); static on all three; scars with delayed soot.
-Camera: over the shoulder on the charge, then high behind the caster so A (centre), B (left), C (right) spread out.
+## Move 7: Plasma Bomb (M) - REWORK v2, waiting for approval
+v1 was rejected hard ("looks like shit, never make something this ass again"). What was wrong with v1: flat plasma_orb
+sprite read as a cheap donut and was blocked by the arm; generic thin "rays"; the detonation REUSED the same
+burst + crackle + ground ring + dust + smoke used on four other moves (exactly the banned shared impact recipe);
+thin chain arcs under big numbers. RULE from now on: every move's impact must be built from its own matter and shape.
+v2 (`lab/thunder/moves/plasma_bomb.py`): a 3D plasma orb held OVERHEAD (neon core + sphere shells wrapped in crawling
+cel lightning bands spinning on different axes + a faint counter-spinning indigo shell; tendrils leaping off it);
+arcs leap UP out of the sand into the orb while dust is dragged inward and a burn spreads (the charge drinks from the
+ground); pinch + overhand lob with plasma trail and dripping static; IMPLODE (collapse to a point, sparks sucked in,
+grade dims) then BLOOM: a translucent plasma dome (dome mesh shells) with a lightning web inside, white flash frame,
+hit-stop 0.1; CHAIN: braided 3-strand plasma tethers lash A -> B -> C, a plasma bead races down each, and each target is
+encased in a small plasma sphere that pops. Camera drops low behind A for the chain so B and C spread left/right.
+Lessons: indigo shells must stay translucent (>= 0.55) or they read as dirty purple flakes; keep the dome small
+enough (7.5 studs) not to swallow the chain targets.
