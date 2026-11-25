@@ -1,6 +1,45 @@
 # Dragon Fruit (hybrid + full form): design doc
 
-Status: **draft v1, waiting for approval.** Nothing below is built yet.
+Status: **v2 direction (user feedback): an Eastern serpent dragon emperor, wingless. The concept look is waiting for
+approval.** This revision block OVERRIDES anything below that mentions wings, half-wings or a western build.
+
+## Revision v2: Eastern serpent dragon emperor (wingless)
+User: "The dragon forms should look as close to [a certain wingless Eastern dragon emperor] as possible while still
+being original enough." Studied about 24 reference videos of that dragon (style only, not committed). What carries
+its read, and what we took:
+- **Kept (genre traits):** a very long, thick, wingless serpent body that coils through the sky in big S-curves;
+  four short powerful legs with huge talons; a massive broad head with a **wide bulbous nose**, a **heavy furrowed
+  brow carved with spiral curls**, a **huge toothy grin**, **two long whiskers**, a **mane of spiral curls**, and
+  **enormous helmet-like horns**; a **segmented light belly band** along the whole body. Its fire mode shows a dark
+  silhouette in orange light with glowing eyes and sparks, which is exactly our palette.
+- **Changed for originality:** obsidian-black scales with molten ember seams (not blue), a gold belly band, a crimson
+  flame-curl mane, crimson whiskers and spines, gold horns with a small back pair, gold eyes, a crimson flame-shaped
+  tail fin. It has no name, logo, cloud-riding or signature attacks from that IP.
+- Concept art: `assets/source_art/dragon/dragon_hero_v2.png` (look) and `dragon_sheet_v2.png` (model sheet:
+  straight side, top and open-jaw front views; crops `v2_view_side/top/front.png` are the Meshy inputs). v1
+  (`dragon_sheet_v1.png`) was the first wingless pass and has been superseded.
+
+**Rig impact.** It's a serpent, so the approved `rig_serpent.py` path-follow pipeline is the base: `spine_00..19`
+(longer body) plus `jaw`, plus **4 short legs** (`legFL/FR/BL/BR_0/1`, bone tracks: tuck in flight, swipe, grip)
+and **whiskers** (`whiskerL/R_0..2`, sway tracks). No wing bones. Rig layer v2 still adds: `follow: "rigid"`
+(roar, hover), generic per-bone tracks, bone-riding emitters, and the avatar `attach` layer for hybrid pieces.
+**Hybrid pieces:** horns (rigid, on Head), claw gauntlets (rigid, on hands), a mane collar (rigid, on UpperTorso),
+and a skinned 5-bone tail (on LowerTorso). No half-wings.
+
+**Moveset changes (wings removed):**
+- Hybrid X **Wing Buffet -> Horn Rush**: a short charge horns-first. The same mechanic (a forward shove) and the
+  same signature (a wall of flame-wind with gust lines), now driven by the head charge and a mane flare.
+- Hybrid C **Sky Drop**: the leap rides a spiral of flame (two flame bursts under the feet) instead of wing beats.
+- Transform: the cocoon bursts and the serpent **pours out of it spiralling upward** (path-follow birth from inside
+  the cocoon, the serpent's portal trick), coils once and roars. The body's unborn part stays inside the fire, so
+  nothing pops.
+- Full form: hovering means the body **undulates in a slow S** (path plus wave) while the head holds aim.
+- Full C **Firestorm Wings -> Firestorm Coil**: the dragon spirals up a helix around the zone, and its body whips
+  the fire tornado (the tornado follows the coil).
+- Full X **Comet Dive**: it climbs in a coil, tightens into a ball of coils, then dives head-first as the comet.
+- Full F **Revert**: the body coils around the player and collapses into flame.
+- All other moves keep their mechanic and signature. Use legs and whiskers where wings were used for anticipation
+  and follow-through (talons flex, whiskers whip).
 
 An original dragon with a hybrid moveset (horns, claws, half-wings and a tail on the player), a transformation, and
 a full-form moveset where the player *is* a rigged, flying, wing-flapping dragon. The quality bar is the same as the

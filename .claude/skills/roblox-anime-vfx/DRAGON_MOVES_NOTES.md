@@ -11,8 +11,8 @@ Brief: `prompts/dragon_fruit_session.md`. Design: `lab/dragon/DESIGN.md`.
 ## Status
 | step | status |
 |---|---|
-| 1. research + design doc | shown, waiting for approval |
-| 2. concept sheet | - |
+| 1. research + design doc | v1 shown; user redirected: wingless Eastern dragon emperor (v2 block in DESIGN.md) |
+| 2. concept sheet | v2 hero + model sheet generated, waiting for approval |
 | 3. Meshy model + rig (wings) + rig layer v2 | - |
 | 4. fire matter | - |
 | 5. hybrid Z X C V B F | - |
@@ -29,5 +29,12 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 ## Credits
 | item | estimate | spent |
 |---|---|---|
-| Figma concept image | 1-2 images | - |
+| Figma concept image | 1-2 images | 3 images (sheet v1, hero v2, sheet v2), gpt-image-2.5-flare |
 | Meshy multi-image-to-3D | 30 (cap 60) | - |
+
+## Step 2: concept (direction change)
+User: "as close to Kaido as possible while still being original enough", "should look more like Kaido". Pulled 24
+reference videos (scratchpad only). v1 sheet = generic wingless lizard-serpent (superseded). v2 hero = broad bulbous
+nose, spiral-carved brow, toothy grin, long whiskers, curl mane, helmet horns, belly band, S-coil body, in
+obsidian/ember/crimson/gold. No IP names in prompts or files. v2 sheet's side-view head is narrower than the hero's:
+push it toward the hero when modelling. Next-session prompt: prompts/dragon_vfx_session.md.
