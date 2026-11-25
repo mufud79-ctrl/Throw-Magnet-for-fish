@@ -29,9 +29,10 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 ## Credits
 | item | estimate | spent |
 |---|---|---|
-| Figma concept image | 1-2 images | 9 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3, hybrid v4), gpt-image-2.5-flare |
-| Meshy multi-image-to-3D (dragon v3) | 30 | 30 (1989 -> 1959) |
-| Meshy multi-image-to-3D hybrid v4 (all pieces in one job, avatar masked out) | 30 (was ~120 for 4 crops) | 30 (total 60) |
+| Figma concept image | 1-2 images | 11 images (+ sheet v4, hybrid v5) (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3, hybrid v4), gpt-image-2.5-flare |
+| Meshy multi-image-to-3D (dragon v3, superseded by v4 sheet) | 30 | 30 (1989 -> 1959) |
+| Meshy multi-image-to-3D hybrid v4 (one job, avatar masked out; superseded by hybrid v5 kitbash) | 30 | 30 (total 60) |
+| Meshy multi-image-to-3D (dragon v4 open-mouth re-run) | 30 | - (awaiting user OK) |
 
 ## Step 2: concept (direction change)
 User: "as close to Kaido as possible while still being original enough", "should look more like Kaido". Pulled 24
@@ -62,7 +63,20 @@ anime turnaround, ink lines, cel shading, strict T-pose, ornate gold trim + crim
 horns + crown band, curl collar, dragon-head pauldrons, scale bracers with claw blades, crimson-gold sash, curl-fan
 tail. RULE: every character/model sheet uses this house style (never 3D renders or low-poly looks).
 
-## Step 1: model (waiting for approval)
+## Step 2f: model sheet v4 (open mouth, feet, thicker body)
+User on the raw Meshy dragon (from v3): "feet look really off", and "should have the image with an open mouth so you
+can rig it easier". dragon_sheet_v4_openmouth.png: jaw dropped ~40 deg in side + front views (teeth, red interior,
+tongue modelled, so the jaw bone only has to close it), a THICK body tapering into a tail that stays thick into the
+curl fan, strong legs with clear joints, clean feet (3 forward toes + 1 back toe, one big ivory talon each) + a foot
+close-up. Meshy inputs: v4_view_side/top/front.png (+ v4_view_foot.png for reference). Re-run ~30 credits.
+
+## Step 2g: hybrid v5 from dragon pieces
+User: "Looks good (sheet v4), make sure the hybrid matches the new references and uses pieces of that dragon model".
+hybrid_r15_v5.png: horns, mane-curl collar, mini open-mouthed dragon-head pauldrons, body-sleeve bracers with
+talons, spine ridge, tail with curl fan. All kitbashed from the one dragon mesh and texture, with no Meshy jobs for
+the hybrid. The crown and sash are dropped.
+
+## Step 1: model (v3 raw + hybrid v4 raw both superseded; v4 dragon re-run next)
 Session prompt: prompts/dragon_vfx_session.md (branch claude/dragon-vfx-rigging-animation-5h3r0p). Scope of this
 session (relayed user update): steps 1-3 only (model, hybrid pieces, rig, rig layer v2 + exports). Moves are done by
 the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).

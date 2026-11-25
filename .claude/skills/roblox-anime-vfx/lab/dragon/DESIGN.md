@@ -3,6 +3,26 @@
 Status: **v3 (user feedback): an Eastern serpent dragon emperor, wingless, Kaido-matched colours; the hybrid is R15
 add-ons. The concept look is waiting for approval.** The v3 and v2 revision blocks OVERRIDE anything below that mentions wings, half-wings or a western build.
 
+## Revision v4: dragon sheet v4 + hybrid v5 built FROM the dragon model (supersedes v3d hybrid)
+- Dragon model sheet: `dragon_sheet_v4_openmouth.png`. The mouth is open for rigging (the jaw closes from rest),
+  with clean 3+1-toe feet, a thick body, and a tail that stays thick into the curl fan. User: "Looks good."
+- Hybrid: `hybrid_r15_v5.png`. Blocky R15, strict T-pose, house cel style, no fingers. Every piece comes FROM the
+  dragon model, so the hybrid matches the full form exactly (user: "make sure the hybrid matches the new
+  references and uses pieces of that dragon model"):
+  - **Horns:** the dragon's horns plus its back pair, cut from the model and scaled onto the sides of Head. Use the
+    model's real horn shape (it sweeps back, then forward); the sheet draws them a bit more upright.
+  - **Mane collar:** a ring of the dragon's mane curls, cut and arranged around the neck (UpperTorso).
+  - **Dragon-head pauldrons:** the dragon's head, cut at the neck and scaled down about 0.15x, with its mouth open
+    (the open-mouth model gives this for free), one per shoulder (UpperArm L/R). The jaw bone can snap on hits.
+  - **Bracers:** a length of the dragon's body cut and reshaped into a sleeve (azure scales plus a cream belly
+    strip), plus 3 of the dragon's own talons curving over the box hand (LowerArm L/R, rigid).
+  - **Back spines:** a strip of the dragon's back-spine ridge (UpperTorso).
+  - **Tail:** the dragon's last ~35% of tail with the curl fan, scaled about 0.4x (LowerTorso, skinned, about 7
+    bones).
+  - The crown band and sash from v3d are dropped.
+- Cost: the hybrid pieces are kitbashed in Blender from the one dragon mesh and texture, so there are no Meshy jobs
+  for them. Only the dragon re-run is needed (about 30 credits).
+
 ## Revision v3d: hybrid in the house style of the thunder god sheet (supersedes v3c)
 User: "Wrong style completely, follow style guide from the lightning model." The house style for character sheets
 is `assets/source_art/god_mode/C_tpose_sheet_v3.png`: a 2D anime turnaround with clean ink lines and crisp cel
