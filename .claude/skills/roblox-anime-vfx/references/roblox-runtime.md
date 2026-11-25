@@ -16,6 +16,12 @@
 4. Mesh calibration: kit meshes fit a 2-stud box. Insert one as a MeshPart and check MeshSize; if it isn't ~2
    studs, set `MESH_SCALE[name]` so SpecialMesh.Scale 1 = 2 studs.
 
+## Rig models (skinned)
+Rigged creatures (e.g. `thunder_serpent`) can't be built from a MeshId at runtime. Import the FBX listed under
+`rig_models` in the upload manifest with the 3D Importer (keep the rig/bones), name the MeshPart (or Model) after the
+spec's `model`, and put it in `ReplicatedStorage/AnimeVFX/Models`. The runtime clones it per cast and sets each
+Bone.WorldCFrame every frame. Check the import scale: the serpent is authored 18 studs long.
+
 ## Playing
 ```lua
 local AnimeVFX = require(game.ReplicatedStorage.AnimeVFX)

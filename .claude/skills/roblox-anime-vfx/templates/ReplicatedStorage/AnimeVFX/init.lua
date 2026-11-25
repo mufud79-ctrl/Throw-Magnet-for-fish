@@ -669,6 +669,133 @@ local function makeVBeam(play, L)
 	return item
 end
 
+-- Rigged model: a skinned MeshPart (imported FBX with Bones, kept in AnimeVFX.Models; scripts can't set MeshId, so
+-- the runtime clones it). The head bone rides path / move / wave; every other spine bone sits a fixed arc length
+-- behind the head along the head's own past trajectory (same maths as the previewer, a pure function of t), so the
+-- body traces the path and can coil. Bones face along the path tangent, kept upright; `jaw` keys open the mouth.
+-- Bone.WorldCFrame is set every frame (not verified in Studio from this environment).
+local function makeRig(play, L)
+	local item = {}
+	local models = script:FindFirstChild("Models")
+	local src = models and models:FindFirstChild(L.model)
+	if not src then
+		warn("AnimeVFX: rig model missing from AnimeVFX.Models: " .. tostring(L.model))
+		function item:step() end
+		function item:destroy() end
+		return item
+	end
+	local inst = src:Clone()
+	local part = inst:IsA("BasePart") and inst or inst:FindFirstChildWhichIsA("BasePart", true)
+	for _, d in ipairs(inst:GetDescendants()) do
+		if d:IsA("BasePart") then
+			d.Anchored, d.CanCollide, d.CanQuery, d.CanTouch, d.CastShadow = true, false, false, false, false
+		end
+	end
+	if inst:IsA("BasePart") then
+		inst.Anchored, inst.CanCollide, inst.CanQuery, inst.CanTouch, inst.CastShadow = true, false, false, false, false
+	end
+	part.CFrame = play.origin
+	local prefix = (L.bones and L.bones.prefix) or "spine_"
+	local spine = {}
+	for _, d in ipairs(inst:GetDescendants()) do
+		if d:IsA("Bone") and d.Name:sub(1, #prefix) == prefix then
+			table.insert(spine, d)
+		end
+	end
+	table.sort(spine, function(a, b)
+		return a.Name < b.Name
+	end)
+	local jaw = L.jawBone and inst:FindFirstChild(L.jawBone, true)
+	local jawRest = jaw and jaw.CFrame
+	-- rest pose in cast space; the body axis maps at the head bone's rest height (bones keep their natural heights)
+	local rest, restZ, offs = {}, {}, { 0 }
+	for i, b in ipairs(spine) do
+		rest[i] = play.origin:ToObjectSpace(b.WorldCFrame)
+		restZ[i] = rest[i].Position.Z
+		if i > 1 then
+			offs[i] = offs[i - 1] + math.abs(restZ[i] - restZ[i - 1])
+		end
+	end
+	local axisY = rest[1] and rest[1].Position.Y or 0
+	local t0 = L.t0 or 0
+	local life = L.life or 1
+	inst.Parent = nil
+
+	local function trace(t)
+		local h = 1 / 120
+		local maxD = offs[#offs] + 0.5
+		local pts, ds = { attachPos(L, t) }, { 0 }
+		local tau = t
+		while ds[#ds] < maxD and tau > t0 do
+			tau = math.max(t0, tau - h)
+			local q = attachPos(L, tau)
+			table.insert(ds, ds[#ds] + (q - pts[#pts]).Magnitude)
+			table.insert(pts, q)
+		end
+		local s0b, s1b = attachPos(L, t0), attachPos(L, t0 + 0.02)
+		local bdir = (s1b - s0b).Magnitude > 1e-4 and (s1b - s0b).Unit or Vector3.new(0, 0, -1)
+		local function at(d)
+			if d >= ds[#ds] then
+				return pts[#pts] - bdir * (d - ds[#ds]) -- unborn body: straight back from the start, never folded
+			end
+			local j = 2
+			while ds[j] < d do
+				j += 1
+			end
+			local span = ds[j] - ds[j - 1]
+			return pts[j - 1]:Lerp(pts[j], span > 0 and (d - ds[j - 1]) / span or 0)
+		end
+		local s0, s1 = attachPos(L, t0), attachPos(L, t0 + 0.02)
+		local birth = (s1 - s0).Magnitude > 1e-4 and (s1 - s0).Unit or Vector3.new(0, 0, -1)
+		local out = {}
+		for i, d in ipairs(offs) do
+			local p = at(d)
+			local dv = at(math.max(0, d - 0.35)) - at(d + 0.35)
+			out[i] = { p = p, dir = dv.Magnitude > 1e-4 and dv.Unit or birth }
+		end
+		return out
+	end
+
+	function item:step(t)
+		local age = t - t0
+		if age < 0 or age >= life then
+			if inst.Parent then
+				inst.Parent = nil
+			end
+			return
+		end
+		local k = age / life
+		local fr = trace(t)
+		local roll = evalKeys(L.roll, k, 0) * RAD
+		part.CFrame = play.origin * CFrame.new(fr[1].p) -- keep the part near the body for culling
+		for i, b in ipairs(spine) do
+			local p, dir = fr[i].p, fr[i].dir
+			local rot = CFrame.lookAt(Vector3.zero, dir, math.abs(dir.Y) > 0.98 and Vector3.zAxis or Vector3.yAxis) * CFrame.Angles(0, 0, roll)
+			local desired = CFrame.new(p) * rot * CFrame.new(0, -axisY, -restZ[i]) * rest[i]
+			b.WorldCFrame = play.origin * desired
+		end
+		if jaw then
+			jaw.CFrame = jawRest * CFrame.Angles(evalKeys(L.jaw, k, 0) * RAD, 0, 0)
+		end
+		local tr = math.clamp(evalKeys(L.transparency, k, 0), 0, 1)
+		for _, d in ipairs(inst:GetDescendants()) do
+			if d:IsA("BasePart") then
+				d.Transparency = tr
+			end
+		end
+		if inst:IsA("BasePart") then
+			inst.Transparency = tr
+		end
+		if not inst.Parent then
+			inst.Parent = play.folder
+		end
+	end
+	function item:destroy()
+		inst:Destroy()
+	end
+	return item
+end
+
 -- Neon zig-zag lightning made of thin parts, rebuilt every `flicker` seconds.
 local function makeBolt(play, L)
 	local item = {}
@@ -1148,6 +1275,8 @@ function AnimeVFX.Play(effect, origin, opts)
 			it = makeTrail(play, L)
 		elseif L.type == "vbeam" then
 			it = makeVBeam(play, L)
+		elseif L.type == "rig" then
+			it = makeRig(play, L)
 		end
 		if it then
 			table.insert(items, it)

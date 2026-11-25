@@ -589,8 +589,11 @@ class Rig {
       const q = attachPos(L, tau), p = pts[pts.length - 1];
       ds.push(ds[ds.length - 1] + Math.hypot(q[0] - p[0], q[1] - p[1], q[2] - p[2])); pts.push(q);
     }
+    // unborn part of the body: continue straight back from the start point (never fold the mesh into a blob)
+    const s0b = attachPos(L, t0), s1b = attachPos(L, t0 + 0.02);
+    const bdir = norm([s1b[0] - s0b[0], s1b[1] - s0b[1], s1b[2] - s0b[2]], [0, 0, -1]);
     const at = (d) => {
-      if (d >= ds[ds.length - 1]) return pts[pts.length - 1].slice();
+      if (d >= ds[ds.length - 1]) { const e = d - ds[ds.length - 1], q = pts[pts.length - 1]; return [q[0] - bdir[0] * e, q[1] - bdir[1] * e, q[2] - bdir[2] * e]; }
       let j = 1; while (ds[j] < d) j++;
       const k = (d - ds[j - 1]) / ((ds[j] - ds[j - 1]) || 1), a = pts[j - 1], b = pts[j];
       return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];

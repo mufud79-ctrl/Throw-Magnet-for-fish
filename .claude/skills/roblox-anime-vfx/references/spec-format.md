@@ -9,7 +9,7 @@ the item's life; for `pose`, `lights.brightness` and `camera` it is seconds/norm
 {
   "name": "000_FireFist", "title": "Fire Fist", "element": "Flame", "archetype": "projectile",
   "duration": 2.2,
-  "layers": [ /* emitter | shell | beam | bolt | trail | vbeam */ ],
+  "layers": [ /* emitter | shell | beam | bolt | trail | vbeam | rig */ ],
   "hitstop": [{"t": 0.74, "dur": 0.08}],          // rule 4
   "hits":    [{"t": 0.74, "dummy": 0, "dir": [0,0,-1], "power": 1.0}],
   "numbers": [{"t": 0.74, "at": [0,6.2,-24], "text": "115", "color": "#ffb02a", "vel": [3,17,0], "size": 2.6}],
@@ -53,6 +53,15 @@ the item's life; for `pose`, `lights.brightness` and `camera` it is seconds/norm
   transparency, textureLength, textureSpeed, twist (deg/s), angle (deg offset), lightEmission, brightness}`.
   Typical stack: a navy alpha-blended set (dark anchor), a blue glow set, a white-hot core set twisting the
   other way. Keep the Neon core thin (radius <= 0.2) and the sheath dim: both bloom white on sand.
+
+- **rig** (skinned model following a path): `model` (previewer `assets/models/<model>.glb`, Roblox a skinned
+  MeshPart named `<model>` in `AnimeVFX.Models`), `t0`, `life`, `path` / `move` / `wave` for the head,
+  `bones.prefix` (default `spine_`, `00` = head .. tail), `jawBone` + `jaw` keys (deg, over life), `roll` keys,
+  `transparency` keys, `color` / `brightness` (previewer tint). Each spine bone sits a fixed arc length behind the
+  head along the head's past trajectory, so the body traces the path (S-curves, real coils); before the head has
+  travelled a body length, the unborn part continues straight back from the start point (hide it behind a
+  portal effect or the caster; the creature pours out of it without folding). Models are
+  built straight along -Z (head at -Z); see `scripts/rig_serpent.py`.
 
 ## Paths (any layer with an attachment: emitter, shell, trail, light)
 - `path`: `[[t, [x,y,z], ease?], ...]` polyline keyed on absolute effect time (zig-zag dashes, multi-leg routes).
