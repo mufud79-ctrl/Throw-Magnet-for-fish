@@ -1,7 +1,48 @@
 # Dragon Fruit (hybrid + full form): design doc
 
-Status: **v2 direction (user feedback): an Eastern serpent dragon emperor, wingless. The concept look is waiting for
-approval.** This revision block OVERRIDES anything below that mentions wings, half-wings or a western build.
+Status: **v3 (user feedback): an Eastern serpent dragon emperor, wingless, Kaido-matched colours; the hybrid is R15
+add-ons. The concept look is waiting for approval.** The v3 and v2 revision blocks OVERRIDE anything below that mentions wings, half-wings or a western build.
+
+## Revision v3b: hybrid made aggressive, with fingers (supersedes the hybrid bullet below)
+User: "Full looks good" (full-form look v3 APPROVED). "Hybrid should have fingers and the look should be more
+aggressive overall." New sheet: `assets/source_art/dragon/hybrid_r15_v2.png`. It's still add-on pieces on the
+normal R15 body:
+- **Head:** huge hooked cream-gold horns, a jagged back pair and a crest of spikes (rigid, Head).
+- **Collar:** a wild navy curl mane with flame-like points (rigid, UpperTorso).
+- **Pauldrons:** jagged azure scale pauldrons with curved gold spikes (rigid, UpperArm L/R).
+- **Forearms:** azure scale armour with fin blades (rigid, LowerArm L/R).
+- **Claw hands:** scaly azure hands with **5 jointed fingers** and long hooked ivory-gold talons, a skinned mesh per
+  hand on Hand L/R. Bones `finger1..5_0/1` let the claws curl, flex and rake (bone tracks: open on wind-up,
+  snap shut on the strike).
+- **Back:** a ridge of jagged cream-gold spines down the back (rigid, UpperTorso).
+- **Tail:** a long spiked azure tail with a cream belly and a navy curl fan with a gold blade tip, skinned, 6-7
+  bones (LowerTorso).
+The stance on the sheet is a look reference. Model the pieces from it in a neutral pose. The player's own face
+stays.
+
+## Revision v3: Kaido-matched colours, cooler design, hybrid = R15 add-ons (supersedes v2 colours)
+User: "Change colors to match Kaido, and make design cooler. Also a hybrid form image (additions to the normal R15
+model, not a different model)."
+- **Dragon colours:** deep azure/teal-blue armoured scales with navy shading, a pale cream segmented belly band,
+  cream-gold ridged horns and talons, a dark navy spiral-curl mane and tail fan, long blue whiskers, narrow yellow
+  eyes. Cooler: a bigger, broader head, a scarred snout, a second pair of horns, a jagged spine ridge, fire
+  glowing in the throat. Look: `assets/source_art/dragon/dragon_hero_v3.png`. Model sheet: `dragon_sheet_v3.png`
+  (Meshy inputs `v3_view_side/top/front.png`). The v1 and v2 sheets are superseded.
+- **The VFX palette stays fire** (white-gold, orange, crimson, char, with black smoke). Orange fire against the
+  blue body is the colour contrast that makes the dragon pop. The calling card, the matter and the layer
+  conventions in sections 2-4 are unchanged; only the dragon's own colours changed. Drop the "ember seams" glow
+  on the body; use embers and fire in the throat instead.
+- **Originality guardrails:** no name, logo, title, clouds-as-a-vehicle, club or signature attack from the
+  reference IP. Keep the unique details (scar, the second horn pair, the curl tail fan, the fire-in-throat
+  staging). The closer the likeness, the higher the takedown risk on Roblox; that's the user's call.
+- **Hybrid form = add-on pieces on the player's normal R15 body** (not a replacement model):
+  `hybrid_r15_v1.png` (front, side and back views: `hybrid_front/side/back.png`). The pieces are cream-gold horns
+  (with a back pair) on Head; a navy curl mane collar on UpperTorso; azure scale shoulder plates on the upper arms;
+  azure scale forearm sleeves with ivory-gold talon gauntlets on LowerArm and Hand (x2); and a long azure tail
+  with a cream belly and a navy curl tip on LowerTorso (skinned, 5 bones). Each piece is a separate accessory mesh
+  welded to its R15 part, so it follows the player's own animation. Horns and tail can be cut from the dragon
+  model. The collar, shoulder plates and sleeves/gauntlets come from Meshy image-to-3D of clean crops of the
+  hybrid sheet (estimate first).
 
 ## Revision v2: Eastern serpent dragon emperor (wingless)
 User: "The dragon forms should look as close to [a certain wingless Eastern dragon emperor] as possible while still
