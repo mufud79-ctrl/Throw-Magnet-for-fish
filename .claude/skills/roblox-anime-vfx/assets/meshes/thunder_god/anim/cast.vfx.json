@@ -1,0 +1,362 @@
+{
+"clip": "cast",
+"ground": -0.95,
+"holds": [
+[
+0.43,
+0.07
+]
+],
+"events": [
+{
+"type": "grade",
+"t": 0.0,
+"keys": [
+[
+0.0,
+0.0,
+1.0,
+"#000000"
+],
+[
+0.3,
+0.25,
+0.8,
+"#2a3350"
+],
+[
+0.9,
+0.15,
+0.9,
+"#2a3350"
+],
+[
+1.35,
+0.0,
+1.0,
+"#000000"
+]
+]
+},
+{
+"type": "arcs",
+"t": 0.1,
+"bones": [
+"RightUpperArm",
+"RightLowerArm",
+"RightHand"
+],
+"life": 0.33,
+"count": 3,
+"radius": 0.07,
+"width": 0.012,
+"seed": 11
+},
+{
+"type": "sprite",
+"t": 0.12,
+"at": {
+"bone": "RightMiddle1",
+"off": [
+0.0,
+-0.04,
+0.0
+]
+},
+"tex": "plasma_orb",
+"life": 0.31,
+"size": [
+[
+0,
+0.05
+],
+[
+0.7,
+0.32
+],
+[
+0.88,
+0.18
+],
+[
+1,
+0.26
+]
+],
+"alpha": [
+[
+0,
+0.2
+],
+[
+0.3,
+1
+],
+[
+1,
+1
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 0.12,
+"at": {
+"bone": "RightMiddle1",
+"off": [
+0.0,
+-0.04,
+0.0
+]
+},
+"life": 0.31,
+"intensity": [
+[
+0,
+0
+],
+[
+1,
+4
+]
+],
+"color": "#6fe0ff",
+"range": 6.0
+},
+{
+"type": "sprite",
+"t": 0.43,
+"at": {
+"bone": "RightMiddle1",
+"off": [
+0.0,
+-0.04,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.32,
+"size": [
+[
+0,
+0.4
+],
+[
+1,
+1.1
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "sprite",
+"t": 0.43,
+"at": {
+"bone": "RightMiddle1",
+"off": [
+0.0,
+-0.04,
+0.0
+]
+},
+"tex": "star_flash",
+"life": 0.16,
+"size": [
+[
+0,
+0.5
+],
+[
+1,
+1.2
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "bolt",
+"t": 0.43,
+"life": 0.38,
+"from": {
+"bone": "RightMiddle1",
+"off": [
+0.0,
+-0.04,
+0.0
+]
+},
+"to": [
+0.3,
+-5.6,
+0.1
+],
+"width": 0.07,
+"seg": 11,
+"kink": 0.2,
+"branches": 3,
+"seed": 21,
+"strands": 2,
+"palette": "thunder"
+},
+{
+"type": "light",
+"t": 0.43,
+"at": {
+"bone": "RightMiddle1",
+"off": [
+0.0,
+-0.04,
+0.0
+]
+},
+"life": 0.3,
+"intensity": [
+[
+0,
+10
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 6.0
+},
+{
+"type": "sprite",
+"t": 0.43,
+"at": [
+0.3,
+-5.6,
+0.1
+],
+"tex": "thunder_burst",
+"life": 0.4,
+"size": [
+[
+0,
+0.6
+],
+[
+1,
+1.8
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "decal",
+"t": 0.44,
+"at": [
+0.3,
+-5.6,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 2.2,
+"size": 2.2,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "light",
+"t": 0.43,
+"at": [
+0.3,
+-5.6,
+0.1
+],
+"life": 0.45,
+"intensity": [
+[
+0,
+8
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 7
+},
+{
+"type": "shake",
+"t": 0.43,
+"amp": 0.12,
+"dur": 0.25
+}
+]
+}

@@ -1,0 +1,312 @@
+{
+"clip": "idle",
+"ground": -0.95,
+"holds": [],
+"events": [
+{
+"type": "grade",
+"t": 0.0,
+"keys": [
+[
+0.0,
+0.25,
+0.85,
+"#2a3350"
+],
+[
+3.2,
+0.25,
+0.85,
+"#2a3350"
+]
+]
+},
+{
+"type": "arcs",
+"t": 0.25,
+"bones": [
+"LeftUpperArm",
+"LeftLowerArm",
+"LeftHand"
+],
+"life": 0.28,
+"count": 2,
+"radius": 0.07,
+"width": 0.012,
+"seed": 1
+},
+{
+"type": "arcs",
+"t": 1.15,
+"bones": [
+"RightUpperArm",
+"RightLowerArm",
+"RightHand"
+],
+"life": 0.24,
+"count": 2,
+"radius": 0.07,
+"width": 0.012,
+"seed": 2
+},
+{
+"type": "arcs",
+"t": 1.9,
+"bones": [
+"UpperTorso"
+],
+"life": 0.2,
+"count": 2,
+"radius": 0.12,
+"width": 0.012,
+"seed": 3
+},
+{
+"type": "arcs",
+"t": 2.55,
+"bones": [
+"LeftUpperArm",
+"LeftLowerArm",
+"LeftHand",
+"RightUpperArm",
+"RightLowerArm",
+"RightHand"
+],
+"life": 0.3,
+"count": 3,
+"radius": 0.07,
+"width": 0.012,
+"seed": 4
+},
+{
+"type": "sprite",
+"t": 0.7,
+"at": {
+"bone": "RightMiddle1",
+"off": [
+0.0,
+0.0,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.3,
+"size": [
+[
+0,
+0.15
+],
+[
+1,
+0.35
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "sprite",
+"t": 2.2,
+"at": {
+"bone": "LeftMiddle1",
+"off": [
+0.0,
+0.0,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.3,
+"size": [
+[
+0,
+0.15
+],
+[
+1,
+0.35
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "sprite",
+"t": 0.5,
+"at": {
+"bone": "Drum_2",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.25,
+"size": [
+[
+0,
+0.15
+],
+[
+1,
+0.4
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "sprite",
+"t": 1.6,
+"at": {
+"bone": "Drum_7",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.25,
+"size": [
+[
+0,
+0.15
+],
+[
+1,
+0.4
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "sprite",
+"t": 2.8,
+"at": {
+"bone": "Drum_4",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "static_sparks",
+"life": 0.25,
+"size": [
+[
+0,
+0.15
+],
+[
+1,
+0.4
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": false,
+"palette": "spark",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+}
+]
+}

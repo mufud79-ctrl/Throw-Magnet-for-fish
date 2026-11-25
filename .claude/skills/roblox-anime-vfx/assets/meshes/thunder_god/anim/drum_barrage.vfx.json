@@ -1,0 +1,1851 @@
+{
+"clip": "drum_barrage",
+"ground": -0.95,
+"holds": [
+[
+1.14,
+0.08
+]
+],
+"events": [
+{
+"type": "grade",
+"t": 0.0,
+"keys": [
+[
+0.0,
+0.0,
+1.0,
+"#000000"
+],
+[
+0.25,
+0.35,
+0.75,
+"#2a3350"
+],
+[
+1.5,
+0.3,
+0.8,
+"#2a3350"
+],
+[
+1.8,
+0.0,
+1.0,
+"#000000"
+]
+]
+},
+{
+"type": "arcs",
+"t": 0.26,
+"bones": [
+"RightHand",
+"LeftHand",
+"RightLowerArm",
+"LeftLowerArm"
+],
+"life": 1.0,
+"count": 3,
+"radius": 0.08,
+"width": 0.012,
+"seed": 5
+},
+{
+"type": "sprite",
+"t": 0.3,
+"at": {
+"bone": "Drum_1",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.22,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.75
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 0.3,
+"at": {
+"bone": "Drum_1",
+"off": [
+0.0,
+-0.14,
+0.0
+]
+},
+"size": [
+[
+0,
+0.2
+],
+[
+1,
+0.9
+]
+],
+"life": 0.25,
+"orient": "face",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 0.3,
+"life": 0.26,
+"from": {
+"bone": "Drum_1",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+-2.1,
+-3.6,
+-0.95
+],
+"width": 0.045,
+"seg": 10,
+"kink": 0.22,
+"branches": 2,
+"seed": 40,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 0.31,
+"at": [
+-2.1,
+-3.6,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 1.5,
+"size": 1.1,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "sprite",
+"t": 0.3,
+"at": [
+-2.1,
+-3.6,
+-0.75
+],
+"tex": "thunder_burst",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.9
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 0.3,
+"at": [
+-2.1,
+-3.6,
+-0.44999999999999996
+],
+"life": 0.25,
+"intensity": [
+[
+0,
+4
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 4
+},
+{
+"type": "sprite",
+"t": 0.42,
+"at": {
+"bone": "Drum_2",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.22,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.75
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 0.42,
+"at": {
+"bone": "Drum_2",
+"off": [
+0.0,
+-0.14,
+0.0
+]
+},
+"size": [
+[
+0,
+0.2
+],
+[
+1,
+0.9
+]
+],
+"life": 0.25,
+"orient": "face",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 0.42,
+"life": 0.26,
+"from": {
+"bone": "Drum_2",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+-1.5,
+-4.1,
+-0.95
+],
+"width": 0.045,
+"seg": 10,
+"kink": 0.22,
+"branches": 2,
+"seed": 41,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 0.43,
+"at": [
+-1.5,
+-4.1,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 1.5,
+"size": 1.1,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "sprite",
+"t": 0.42,
+"at": [
+-1.5,
+-4.1,
+-0.75
+],
+"tex": "thunder_burst",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.9
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 0.42,
+"at": [
+-1.5,
+-4.1,
+-0.44999999999999996
+],
+"life": 0.25,
+"intensity": [
+[
+0,
+4
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 4
+},
+{
+"type": "sprite",
+"t": 0.54,
+"at": {
+"bone": "Drum_3",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.22,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.75
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 0.54,
+"at": {
+"bone": "Drum_3",
+"off": [
+0.0,
+-0.14,
+0.0
+]
+},
+"size": [
+[
+0,
+0.2
+],
+[
+1,
+0.9
+]
+],
+"life": 0.25,
+"orient": "face",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 0.54,
+"life": 0.26,
+"from": {
+"bone": "Drum_3",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+-0.9000000000000001,
+-3.6,
+-0.95
+],
+"width": 0.045,
+"seg": 10,
+"kink": 0.22,
+"branches": 2,
+"seed": 42,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 0.55,
+"at": [
+-0.9000000000000001,
+-3.6,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 1.5,
+"size": 1.1,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "sprite",
+"t": 0.54,
+"at": [
+-0.9000000000000001,
+-3.6,
+-0.75
+],
+"tex": "thunder_burst",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.9
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 0.54,
+"at": [
+-0.9000000000000001,
+-3.6,
+-0.44999999999999996
+],
+"life": 0.25,
+"intensity": [
+[
+0,
+4
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 4
+},
+{
+"type": "sprite",
+"t": 0.6599999999999999,
+"at": {
+"bone": "Drum_4",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.22,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.75
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 0.6599999999999999,
+"at": {
+"bone": "Drum_4",
+"off": [
+0.0,
+-0.14,
+0.0
+]
+},
+"size": [
+[
+0,
+0.2
+],
+[
+1,
+0.9
+]
+],
+"life": 0.25,
+"orient": "face",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 0.6599999999999999,
+"life": 0.26,
+"from": {
+"bone": "Drum_4",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+-0.30000000000000027,
+-4.1,
+-0.95
+],
+"width": 0.045,
+"seg": 10,
+"kink": 0.22,
+"branches": 2,
+"seed": 43,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 0.6699999999999999,
+"at": [
+-0.30000000000000027,
+-4.1,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 1.5,
+"size": 1.1,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "sprite",
+"t": 0.6599999999999999,
+"at": [
+-0.30000000000000027,
+-4.1,
+-0.75
+],
+"tex": "thunder_burst",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.9
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 0.6599999999999999,
+"at": [
+-0.30000000000000027,
+-4.1,
+-0.44999999999999996
+],
+"life": 0.25,
+"intensity": [
+[
+0,
+4
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 4
+},
+{
+"type": "sprite",
+"t": 0.78,
+"at": {
+"bone": "Drum_5",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.22,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.75
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 0.78,
+"at": {
+"bone": "Drum_5",
+"off": [
+0.0,
+-0.14,
+0.0
+]
+},
+"size": [
+[
+0,
+0.2
+],
+[
+1,
+0.9
+]
+],
+"life": 0.25,
+"orient": "face",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 0.78,
+"life": 0.26,
+"from": {
+"bone": "Drum_5",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.2999999999999998,
+-3.6,
+-0.95
+],
+"width": 0.045,
+"seg": 10,
+"kink": 0.22,
+"branches": 2,
+"seed": 44,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 0.79,
+"at": [
+0.2999999999999998,
+-3.6,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 1.5,
+"size": 1.1,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "sprite",
+"t": 0.78,
+"at": [
+0.2999999999999998,
+-3.6,
+-0.75
+],
+"tex": "thunder_burst",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.9
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 0.78,
+"at": [
+0.2999999999999998,
+-3.6,
+-0.44999999999999996
+],
+"life": 0.25,
+"intensity": [
+[
+0,
+4
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 4
+},
+{
+"type": "sprite",
+"t": 0.8999999999999999,
+"at": {
+"bone": "Drum_6",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.22,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.75
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 0.8999999999999999,
+"at": {
+"bone": "Drum_6",
+"off": [
+0.0,
+-0.14,
+0.0
+]
+},
+"size": [
+[
+0,
+0.2
+],
+[
+1,
+0.9
+]
+],
+"life": 0.25,
+"orient": "face",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 0.8999999999999999,
+"life": 0.26,
+"from": {
+"bone": "Drum_6",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.8999999999999999,
+-4.1,
+-0.95
+],
+"width": 0.045,
+"seg": 10,
+"kink": 0.22,
+"branches": 2,
+"seed": 45,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 0.9099999999999999,
+"at": [
+0.8999999999999999,
+-4.1,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 1.5,
+"size": 1.1,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "sprite",
+"t": 0.8999999999999999,
+"at": [
+0.8999999999999999,
+-4.1,
+-0.75
+],
+"tex": "thunder_burst",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.9
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 0.8999999999999999,
+"at": [
+0.8999999999999999,
+-4.1,
+-0.44999999999999996
+],
+"life": 0.25,
+"intensity": [
+[
+0,
+4
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 4
+},
+{
+"type": "sprite",
+"t": 1.02,
+"at": {
+"bone": "Drum_7",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.22,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.75
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 1.02,
+"at": {
+"bone": "Drum_7",
+"off": [
+0.0,
+-0.14,
+0.0
+]
+},
+"size": [
+[
+0,
+0.2
+],
+[
+1,
+0.9
+]
+],
+"life": 0.25,
+"orient": "face",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 1.02,
+"life": 0.26,
+"from": {
+"bone": "Drum_7",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+1.4999999999999996,
+-3.6,
+-0.95
+],
+"width": 0.045,
+"seg": 10,
+"kink": 0.22,
+"branches": 2,
+"seed": 46,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 1.03,
+"at": [
+1.4999999999999996,
+-3.6,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 1.5,
+"size": 1.1,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "sprite",
+"t": 1.02,
+"at": [
+1.4999999999999996,
+-3.6,
+-0.75
+],
+"tex": "thunder_burst",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.9
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 1.02,
+"at": [
+1.4999999999999996,
+-3.6,
+-0.44999999999999996
+],
+"life": 0.25,
+"intensity": [
+[
+0,
+4
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 4
+},
+{
+"type": "sprite",
+"t": 1.14,
+"at": {
+"bone": "Drum_8",
+"off": [
+0.0,
+-0.15,
+0.0
+]
+},
+"tex": "thunder_burst",
+"life": 0.22,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.75
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 1.14,
+"at": {
+"bone": "Drum_8",
+"off": [
+0.0,
+-0.14,
+0.0
+]
+},
+"size": [
+[
+0,
+0.2
+],
+[
+1,
+0.9
+]
+],
+"life": 0.25,
+"orient": "face",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 1.14,
+"life": 0.26,
+"from": {
+"bone": "Drum_8",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+2.1,
+-4.1,
+-0.95
+],
+"width": 0.045,
+"seg": 10,
+"kink": 0.22,
+"branches": 2,
+"seed": 47,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 1.15,
+"at": [
+2.1,
+-4.1,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 1.5,
+"size": 1.1,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "sprite",
+"t": 1.14,
+"at": [
+2.1,
+-4.1,
+-0.75
+],
+"tex": "thunder_burst",
+"life": 0.25,
+"size": [
+[
+0,
+0.3
+],
+[
+1,
+0.9
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "light",
+"t": 1.14,
+"at": [
+2.1,
+-4.1,
+-0.44999999999999996
+],
+"life": 0.25,
+"intensity": [
+[
+0,
+4
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 4
+},
+{
+"type": "bolt",
+"t": 1.14,
+"life": 0.35,
+"from": {
+"bone": "Drum_1",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.0,
+-4.2,
+-0.95
+],
+"width": 0.03,
+"seg": 9,
+"kink": 0.22,
+"branches": 2,
+"seed": 81,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 1.14,
+"life": 0.35,
+"from": {
+"bone": "Drum_2",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.0,
+-4.2,
+-0.95
+],
+"width": 0.03,
+"seg": 9,
+"kink": 0.22,
+"branches": 2,
+"seed": 82,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 1.14,
+"life": 0.35,
+"from": {
+"bone": "Drum_3",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.0,
+-4.2,
+-0.95
+],
+"width": 0.03,
+"seg": 9,
+"kink": 0.22,
+"branches": 2,
+"seed": 83,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 1.14,
+"life": 0.35,
+"from": {
+"bone": "Drum_4",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.0,
+-4.2,
+-0.95
+],
+"width": 0.03,
+"seg": 9,
+"kink": 0.22,
+"branches": 2,
+"seed": 84,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 1.14,
+"life": 0.35,
+"from": {
+"bone": "Drum_5",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.0,
+-4.2,
+-0.95
+],
+"width": 0.03,
+"seg": 9,
+"kink": 0.22,
+"branches": 2,
+"seed": 85,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 1.14,
+"life": 0.35,
+"from": {
+"bone": "Drum_6",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.0,
+-4.2,
+-0.95
+],
+"width": 0.03,
+"seg": 9,
+"kink": 0.22,
+"branches": 2,
+"seed": 86,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "bolt",
+"t": 1.14,
+"life": 0.35,
+"from": {
+"bone": "Drum_7",
+"off": [
+0.0,
+-0.16,
+0.0
+]
+},
+"to": [
+0.0,
+-4.2,
+-0.95
+],
+"width": 0.03,
+"seg": 9,
+"kink": 0.22,
+"branches": 2,
+"seed": 87,
+"strands": 1,
+"palette": "thunder"
+},
+{
+"type": "sprite",
+"t": 1.14,
+"at": [
+0.0,
+-4.2,
+-0.5499999999999999
+],
+"tex": "thunder_burst",
+"life": 0.45,
+"size": [
+[
+0,
+1.0
+],
+[
+1,
+3.2
+]
+],
+"alpha": [
+[
+0,
+1
+],
+[
+0.6,
+1
+],
+[
+1,
+0
+]
+],
+"grid": 4,
+"layered": true,
+"palette": "thunder",
+"rot": 0.0,
+"spin": 0.0,
+"move": null,
+"blend": "add",
+"inner": 1.0
+},
+{
+"type": "ring",
+"t": 1.14,
+"at": [
+0.0,
+-4.2,
+-0.9299999999999999
+],
+"size": [
+[
+0,
+0.4
+],
+[
+1,
+5.0
+]
+],
+"life": 0.55,
+"orient": "ground",
+"alpha": [
+[
+0,
+1
+],
+[
+1,
+0
+]
+],
+"palette": "thunder"
+},
+{
+"type": "decal",
+"t": 1.14,
+"at": [
+0.0,
+-4.2,
+-0.95
+],
+"tex": "lichtenberg",
+"life": 2.4,
+"size": 4.0,
+"grow": 0.12,
+"scorch": true
+},
+{
+"type": "impact",
+"t": 1.14,
+"frames": 2,
+"mode": "invert"
+},
+{
+"type": "shake",
+"t": 1.14,
+"amp": 0.45,
+"dur": 0.4
+},
+{
+"type": "flash",
+"t": 1.14,
+"life": 0.18,
+"alpha": [
+[
+0,
+0.45
+],
+[
+1,
+0
+]
+],
+"color": "#ffffff"
+},
+{
+"type": "light",
+"t": 1.14,
+"at": [
+0.0,
+-4.2,
+-0.1499999999999999
+],
+"life": 0.5,
+"intensity": [
+[
+0,
+16
+],
+[
+1,
+0
+]
+],
+"color": "#6fe0ff",
+"range": 10
+}
+]
+}

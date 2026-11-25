@@ -71,7 +71,15 @@ This is the first fruit built to the "design first, user approves everything, th
   `--no-hitstop` (the runtime adds them). Renders: `lab/anim_render.mjs` (`--target/--dist` close-ups,
   `--frame-at` framing, `--period` closed loops) -> `assets/previews/god_mode/anim/`. Rig now has 86 bones (15
   finger bones per hand; hands rebuilt at higher detail in god_cleanup `--hands`), max 4 influences per vertex.
-  Reel page (all clips): https://claude.ai/artifact/FuXt8488k2xTbEQxbibkrf
+  Reel page (all clips, Effects on/off toggle): https://claude.ai/artifact/FuXt8488k2xTbEQxbibkrf
+- **Animation polish pass + VFX layer (waiting on user review)**: idle arms hang ~74 deg (no T/A pose); all moves
+  re-posed (anticipation dips, arc breakdowns, overshoot/recoil, chest twist/side-bend/lean, asymmetric arms).
+  Each clip also writes `<clip>.vfx.json` (events authored in god_anim.py: bolt, sprite, decal, ring, beam, arcs,
+  light, flash, impact, shake, grade, letterbox, sky, eye; bone-anchored; hit-stop aware), played by
+  `lab/page/anim_vfx.js` in the previewer (`anim_render.mjs --vfx`). Layered stacks: glow/rim normal-blended,
+  mid/core additive (all-additive whited out). Impact frames are inverted on capture. `lab/render_reel.sh` renders
+  every clip plain + `_vfx`. These previews are not the Roblox runtime: the moves still need porting to the
+  JSON spec / Luau runtime (export_luau.py) once approved.
 - `lab/model_views.mjs` takes an optional `WxH` viewport; materials named `XRAY*` draw on top (skeleton overlays).
 
 ## Waiting on the user (original list)

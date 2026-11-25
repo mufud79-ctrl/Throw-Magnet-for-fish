@@ -5,18 +5,36 @@
 // Animated model previewer: plays every clip in a GLB with AnimationMixer and renders frames at exact times.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { VFX } from './anim_vfx.js';
 const cv = document.getElementById('vp');
 const r = new THREE.WebGLRenderer({ canvas: cv, antialias: true, preserveDrawingBuffer: true });
 r.outputEncoding = THREE.sRGBEncoding;
 const scene = new THREE.Scene();
 // storm-navy backdrop: vertical gradient
 const g = document.createElement('canvas'); g.width = 2; g.height = 256; const gx = g.getContext('2d');
-const grd = gx.createLinearGradient(0, 0, 0, 256); grd.addColorStop(0, '#3a4566'); grd.addColorStop(1, '#151927'); gx.fillStyle = grd; gx.fillRect(0, 0, 2, 256);
 const bg = new THREE.CanvasTexture(g); bg.encoding = THREE.sRGBEncoding; scene.background = bg;
-scene.add(new THREE.HemisphereLight('#dfe8ff', '#4a4e66', 0.85));
+const mix = (a, b, f) => '#' + new THREE.Color(a).lerp(new THREE.Color(b), f).getHexString();
+function setBg(dark = 0, tint = '#000000') {      // storm grade: darken toward night, lean toward the tint
+  const top = mix(mix('#3a4566', '#0d1120', dark), tint, 0.35 * dark), bot = mix(mix('#151927', '#05070d', dark), tint, 0.2 * dark);
+  const grd = gx.createLinearGradient(0, 0, 0, 256); grd.addColorStop(0, top); grd.addColorStop(1, bot); gx.fillStyle = grd; gx.fillRect(0, 0, 2, 256); bg.needsUpdate = true;
+}
+setBg();
+const hemi = new THREE.HemisphereLight('#dfe8ff', '#4a4e66', 0.85); scene.add(hemi);
+// ground: dark stone that fades into the backdrop, plus a soft contact shadow that follows the god
+const gc = document.createElement('canvas'); gc.width = gc.height = 256; const gg = gc.getContext('2d');
+let rg = gg.createRadialGradient(128, 128, 10, 128, 128, 128); rg.addColorStop(0, 'rgba(70,78,104,1)'); rg.addColorStop(0.55, 'rgba(48,54,76,0.85)'); rg.addColorStop(1, 'rgba(30,34,50,0)');
+gg.fillStyle = rg; gg.fillRect(0, 0, 256, 256);
+const groundTex = new THREE.CanvasTexture(gc); groundTex.encoding = THREE.sRGBEncoding;
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), new THREE.MeshBasicMaterial({ map: groundTex, transparent: true, depthWrite: false }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.95; ground.renderOrder = 0; scene.add(ground);
+const sc = document.createElement('canvas'); sc.width = sc.height = 128; const sg = sc.getContext('2d');
+rg = sg.createRadialGradient(64, 64, 2, 64, 64, 64); rg.addColorStop(0, 'rgba(0,0,0,0.55)'); rg.addColorStop(1, 'rgba(0,0,0,0)'); sg.fillStyle = rg; sg.fillRect(0, 0, 128, 128);
+const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 1.0), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
+shadow.rotation.x = -Math.PI / 2; shadow.position.y = -0.947; shadow.renderOrder = 1; scene.add(shadow);
 const key = new THREE.DirectionalLight('#ffffff', 0.85); key.position.set(2, 4, 5); scene.add(key);
 const rim = new THREE.DirectionalLight('#6fe0ff', 0.55); rim.position.set(-3, 2, -4); scene.add(rim);
-const cam = new THREE.PerspectiveCamera(30, 720 / 900, 0.01, 100);
+const cam = new THREE.PerspectiveCamera(30, 720 / 900, 0.01, 100); scene.add(cam);
+let vfx = null;
 window.ANIM = {
   resize(w, h) { cv.width = w; cv.height = h; r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); },
   async load(url, frameAt = 0) {
@@ -31,15 +49,28 @@ window.ANIM = {
     this.obj.traverse((o) => { if (o.isSkinnedMesh) { o.skeleton.update(); o.geometry.computeBoundingBox(); } });
     box.setFromObject(this.obj);
     this.center = box.getCenter(new THREE.Vector3()); this.size = box.getSize(new THREE.Vector3());
+    vfx = new VFX(scene, cam, this.obj, '/assets/textures');
     return { clips: gl.animations.map((c) => [c.name, c.duration, c.tracks.length]), size: this.size.toArray() };
   },
+  async loadVfx(data) { await vfx.load(data); return data.events.length; },
+  setVfx(on) { if (vfx) vfx.enabled = on; },
   frame(t, yawDeg, pitchDeg = 6, zoom = 1, target = null, dist = 0) {
     this.mixer.setTime(t);
     const h = this.size.y, w = Math.max(this.size.x, this.size.z);
     const d = dist || Math.max(h, w / cam.aspect) / 2 / Math.tan(cam.fov * Math.PI / 360) * 1.12 / zoom;
     const a = yawDeg * Math.PI / 180, p = pitchDeg * Math.PI / 180, c = target ? new THREE.Vector3(...target) : this.center;
     cam.position.set(c.x + Math.sin(a) * Math.cos(p) * d, c.y + Math.sin(p) * d, c.z + Math.cos(a) * Math.cos(p) * d);
-    cam.lookAt(c); r.render(scene, cam); return cv.toDataURL('image/jpeg', 0.92);
+    cam.lookAt(c);
+    const rp = this.obj.getObjectByName('HumanoidRootPart');
+    if (rp) { const v = new THREE.Vector3(); rp.getWorldPosition(v); shadow.position.x = v.x; shadow.position.z = v.z;
+      const hgt = Math.max(0, v.y + 0.95); shadow.scale.setScalar(1 + hgt * 0.6); shadow.material.opacity = Math.max(0.15, 1 - hgt * 0.9); }
+    if (vfx && vfx.data) vfx.update(t, setBg, hemi); else setBg();
+    r.render(scene, cam);
+    if (vfx && vfx.enabled && vfx.invertNow) {               // anime impact frame: invert the whole image
+      const c2 = document.createElement('canvas'); c2.width = cv.width; c2.height = cv.height;
+      const x = c2.getContext('2d'); x.filter = 'invert(1)'; x.drawImage(cv, 0, 0); return c2.toDataURL('image/jpeg', 0.92);
+    }
+    return cv.toDataURL('image/jpeg', 0.92);
   },
 };
 window.ANIM_READY = true;
