@@ -33,6 +33,7 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 | Meshy multi-image-to-3D (dragon v3, superseded by v4 sheet) | 30 | 30 (1989 -> 1959) |
 | Meshy multi-image-to-3D hybrid v4 (one job, avatar masked out; superseded by hybrid v5 kitbash) | 30 | 30 (total 60) |
 | Meshy multi-image-to-3D (dragon v4 open-mouth re-run, user OK'd) | 30 | 30 (total 90) |
+| Meshy multi-image-to-3D dragon v5 body + head (2 jobs, user OK'd "Yes") | 60 | 60 (total 150 this session) |
 
 ## Step 2: concept (direction change)
 User: "as close to Kaido as possible while still being original enough", "should look more like Kaido". Pulled 24
@@ -119,3 +120,10 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
   dragon_head_sheet_v5.png (head only, full frame, side/front/top, bold simple shapes, mouth open, 2 whiskers, 8 big
   mane curls). Figma gpt-image-2.5-flare, 2 images. Polish in Blender: clean 2-strand whiskers, symmetrize, bigger
   talons, emissive eyes, teeth/horn cleanup. Waiting for the user's OK on the sheets + ~60 Meshy credits.
+- Dragon v5 (user OK'd): body job (b5 side+top crops) + head job (h5 side/front/top, segmented clean, target 50k)
+  = 60 credits. Raw: meshy/dragon_v5_body.glb, dragon_v5_head.glb; views meshy_raw/v5_head_raw.jpg, v5_body_raw.jpg.
+  Head is a big step up (clean curls, brow spirals, eyes, fangs, 2 whiskers). scripts/build_dragon.py joins them:
+  front legs slid back 0.10 (they sat under the mane), placeholder head cut at y -0.66, new head x0.25 seated so the
+  mane swallows the neck stub, both textures packed into one 2048 atlas (one TextureID).
+  Out: meshy/dragon_v5_assembled.glb, view meshy_raw/v5_assembled.jpg. Polish still to do: shoulder smear from the leg
+  slide, tail fan is flatter than the sheet, talons small.
