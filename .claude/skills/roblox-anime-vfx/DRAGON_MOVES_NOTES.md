@@ -127,3 +127,4 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
   mane swallows the neck stub, both textures packed into one 2048 atlas (one TextureID).
   Out: meshy/dragon_v5_assembled.glb, view meshy_raw/v5_assembled.jpg. Polish still to do: shoulder smear from the leg
   slide, tail fan is flatter than the sheet, talons small.
+- User: "Head is wayyyy too big" (0.25). build_dragon.py: --head-scale default 0.15, placeholder remnants above the neck removed (cut + z>0.07 band + loose islands found on position-welded connectivity, since glTF splits verts on UV seams). Sizes compared in meshy_raw/v5_head_sizes.jpg (A 0.18, B 0.15, C 0.12).

@@ -47,10 +47,11 @@ def tex_of(o):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--head-scale", type=float, default=0.25)
+    ap.add_argument("--head-scale", type=float, default=0.15)
     ap.add_argument("--cut", type=float, default=-0.66)
     ap.add_argument("--overlap", type=float, default=0.07)
     ap.add_argument("--leg-shift", type=float, default=0.10)
+    ap.add_argument("--out", default=os.path.join(M, "dragon_v5_assembled.glb"))
     a = ap.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:])
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -71,7 +72,27 @@ def main():
     import bmesh
     bm = bmesh.new()
     bm.from_mesh(body.data)
-    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y < a.cut], context="VERTS")
+    # cut, plus the placeholder's mane/horn remnants that stick up above the neck just behind the cut
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y < a.cut or (v.co.y < a.cut + 0.14 and v.co.z > 0.07)], context="VERTS")
+    # drop loose islands (horn tips, mane curls left floating by the cut). glTF import splits vertices on UV seams, so
+    # islands are found on edges PLUS links between vertices at the same position
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.csgraph import connected_components
+    bm.verts.index_update()
+    bm.verts.ensure_lookup_table()
+    P = np.array([v.co[:] for v in bm.verts])
+    E = [(e.verts[0].index, e.verts[1].index) for e in bm.edges]
+    key = np.round(P / 1e-5).astype(np.int64)
+    _, inv = np.unique(key, axis=0, return_inverse=True)
+    inv = inv.ravel()
+    order = np.argsort(inv)
+    same = [(order[i], order[i + 1]) for i in range(len(order) - 1) if inv[order[i]] == inv[order[i + 1]]]
+    pairs = np.array(E + same) if (E or same) else np.zeros((0, 2), int)
+    g = coo_matrix((np.ones(len(pairs)), (pairs[:, 0], pairs[:, 1])), shape=(len(P), len(P)))
+    nc, lab = connected_components(g, directed=False)
+    sizes = np.bincount(lab)
+    small = [bm.verts[i] for i in np.where(sizes[lab] < 400)[0]]
+    bmesh.ops.delete(bm, geom=small, context="VERTS")
     bm.to_mesh(body.data)
     bm.free()
     B = np.array([v.co[:] for v in body.data.vertices])
@@ -83,7 +104,7 @@ def main():
     s = a.head_scale
     head_back = H[:, 1].max() * s
     neck_z = -0.15 * s                                  # neck centre in the head bust (behind the jaw, inside the mane)
-    off = (0.0, a.cut + a.overlap - head_back, body_zc - neck_z)
+    off = (0.0, a.cut + a.overlap * s / 0.25 - head_back, body_zc - neck_z)
     head.data.transform(Matrix.Translation(off) @ Matrix.Scale(s, 4))
 
     # 3. one atlas: body -> left half, head -> right half
@@ -119,7 +140,7 @@ def main():
     bpy.ops.object.join()
     body.name = body.data.name = "Dragon"
     img.pack()
-    out = os.path.join(M, "dragon_v5_assembled.glb")
+    out = a.out
     bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_image_format="AUTO")
     V = np.array([v.co[:] for v in body.data.vertices])
     print("assembled", out, "verts", len(V), "size", (V.max(0) - V.min(0)).round(3), "tris",
