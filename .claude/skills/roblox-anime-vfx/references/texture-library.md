@@ -53,3 +53,17 @@ FlipbookFramerate ~0.01.
 | `thunder_burst_v2` | cel | Grid4x4 | Cel impact: uneven anime star flash + 8 jagged barbed bolts out in 2 frames, re-strike, cool from the tips. No shock ring. Lay it flat (VelocityPerpendicular) for a ground starburst. |
 | `thunder_arc_v2` | cel | Grid4x4 | Cel crackle bush (loop): 4 short barbed arcs around the centre, new paths every 2 frames. |
 | `thunder_strip_v2_1..4` | cel | strip | Tileable cel ribbons (u wraps, no width seam): jagged barbed trunk + short fishbone forks, all inside v 0.1..0.9 (nothing chopped at the ribbon edge). Swap every 0.05 s. |
+| `plasma_ball_v2` | cel | Grid4x4 | Plasma cage (loop): 3 broken lightning rings + 4 spiral lightning arms + rim tongues + small star core, re-struck every 2 frames. Size sequence carries charge keys. |
+| `plasma_blast_v2` | cel | Grid4x4 | Plasma burst: star flash -> expanding jagged lightning ring with brief radial strikes -> ring breaks up and cools. |
+
+### Modern v3 sheets (generic; re-tint per element, see modern-vfx.md)
+| name | kind | layout | what |
+|---|---|---|---|
+| `elec_impact_v3` | cel | Grid4x4 | Impact: small white flash + star (f0-2), 12 light rays out and back, jagged ring expands and breaks, short arcs, cools. |
+| `shockwave_v3` | white | Grid4x4 | Ring races out on ease-out: hot sharp leading edge, soft trail inward, angular noise breakup growing as it fades. Flat (VelocityPerpendicular) or camera-facing. |
+| `spark_burst_v3` | white | Grid4x4 | 22 radial needle streaks shoot out at different speeds, stretch, shorten, thin out. |
+| `ground_crack_v3` | cel | Grid4x4 | Animated calling card: Lichtenberg burn grows over 5 frames along each trunk, flickers hot, cools (core thins first). Lay flat. |
+| `elec_swirl_v3` | cel | Grid4x4 | Charge swirl (loop): 3 orbiting arcs + inner counter arcs + inward jumps; seamless. |
+| `flare_v3` | white | Grid4x4 | Anamorphic glint: long horizontal + short vertical streak + hot core; flashes on, shrinks, fades. |
+| `spark_streak` | white | single | One tapered needle (vertical) for VelocityParallel streak emitters. |
+| `smoke_cel_v3` | shaded | Grid4x4 | Modern cel smoke: billowy lobes, hard 3-band shading at high contrast (0.32 -> 1.0), noise-eroded dissolve. Tint grey/sand. |

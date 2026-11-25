@@ -11,8 +11,13 @@ JSON, so what you show is what ships.
 
 ## Quality bar (read first)
 
-The target is "you can't tell it from RELL Seas". Before showing anything, compare against
-`references/rell-look.md`. Most common failures, in order:
+The target is "you can't tell it from RELL Seas" **and** it must look *modern* (TSB / Jujutsu Shenanigans /
+Type Soul tier). Read `references/modern-vfx.md` before building anything: additive saturated glow without dark
+outlines, a world-dim grade, a BIG/medium/small hierarchy, mass (shaded smoke, ground dust ring, debris, an
+animated mark), straight light streaks, and one flash per beat. Study real frames first with the
+`vfx-reference-frames` skill. For a hero fruit, follow `references/move-workflow.md` (design doc -> matter ->
+one move at a time with user approval -> two passes -> export). Also compare against `references/rell-look.md`.
+Most common failures, in order:
 
 1. **Generic textures forced onto every element.** Each element needs its own painted matter (fire billows, molten
    jets, faceted ice, inky void tendrils, electric arcs, water jets). Paint what the move needs.
@@ -47,8 +52,9 @@ Details and the Roblox implementation of each: `references/animation-rules.md`.
    `scripts/vfx_textures.py` (layered = 4 white layers, or shaded = greyscale value + alpha), preview it
    (`texture_preview.py`), and **show the user the texture gallery before building moves on it**
    (`gallery.py` -> publish as an artifact). Colour comes from the emitter, never the PNG.
-3. **Author** the move in `scripts/effects.py` (kits + archetypes + building blocks), or hand-write a spec
-   (`references/spec-format.md`).
+3. **Author** the move. Hero fruits are hand-written one script per move with a per-fruit kit
+   (`lab/thunder/kit.py` is the template; see `references/move-workflow.md`). `scripts/effects.py` is the legacy
+   100-move generator: fine for bulk placeholders, never for a hero fruit. Spec format: `references/spec-format.md`.
 4. **Render**: `node lab/render.mjs lab/effects/<name>.json --out lab/out` -> mp4, contact sheet, poster.
    Pull dense frame strips with ffmpeg around the beats and review them critically against the quality bar.
 5. **Show the user** the rendered videos (publish a gallery artifact; they can't open local files by clicking).
@@ -69,7 +75,9 @@ Python with numpy/scipy/Pillow/bpy lives in `/tmp/bpyenv` (create: `python3 -m v
 | Meshy hero -> quads | `/tmp/bpyenv/bin/python scripts/retopo_hero.py [name] --polys 3500` |
 | Generate move specs | `python3 scripts/effects.py [--only Flame,Ice]` |
 | Render moves | `node lab/render.mjs lab/effects [--out lab/out]` |
-| Export to Roblox | `python3 scripts/export_luau.py` |
+| Render HD | `node lab/render.mjs lab/<fruit>/moves/<spec>.json --hd --out lab/out/<fruit>` |
+| Frame strip | `scripts/strip.sh <mp4> <start> <end> <out.jpg> [cols] [width]` (keep <= 8000 px) |
+| Export to Roblox | `python3 scripts/export_luau.py [--effects lab/<fruit>/moves]` |
 
 ## Hard rules
 
@@ -89,7 +97,11 @@ Python with numpy/scipy/Pillow/bpy lives in `/tmp/bpyenv` (create: `python3 -m v
 
 ```
 SKILL.md                     this file
-references/                  rell-look, animation-rules, spec-format, texture-library, assets-pipeline, roblox-runtime
+references/                  modern-vfx, move-workflow, rell-look, animation-rules, spec-format, texture-library,
+                             assets-pipeline, roblox-runtime
+lab/thunder/                 reference hero fruit: kit.py (modern toolkit template), moves/*.py, tests/
+THUNDER_MOVES_NOTES.md       thunder lessons log (read it: every rejected attempt and why)
+prompts/                     ready-to-paste prompts for follow-up sessions
 scripts/photocraft.py        headless painting kit (noise, domain warp, heightfield shading, polar warp, layer split)
 scripts/vfx_textures.py      the texture library (recipes + registry)
 scripts/texture_preview.py   tinted composites, flipbook GIFs, board
