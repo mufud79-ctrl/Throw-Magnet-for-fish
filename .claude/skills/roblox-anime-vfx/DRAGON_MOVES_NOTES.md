@@ -31,7 +31,7 @@ splash/scorch, never a clean cylinder; tornado = spiral bands.
 |---|---|---|
 | Figma concept image | 1-2 images | 9 images (sheet v1, hero v2, sheet v2, hero v3, sheet v3, hybrid v1, hybrid v2, hybrid v3, hybrid v4), gpt-image-2.5-flare |
 | Meshy multi-image-to-3D (dragon v3) | 30 | 30 (1989 -> 1959) |
-| Meshy image-to-3D hybrid v4 pieces x4 (pauldron, horns+crown, collar, tail) | ~100 (step cap 170 total) | - |
+| Meshy multi-image-to-3D hybrid v4 (all pieces in one job, avatar masked out) | 30 (was ~120 for 4 crops) | 30 (total 60) |
 
 ## Step 2: concept (direction change)
 User: "as close to Kaido as possible while still being original enough", "should look more like Kaido". Pulled 24
@@ -70,4 +70,10 @@ the "Dragon fruit VFX moves" session (prompts/dragon_vfx_moves_session.md).
   Raw: assets/source_art/meshy/dragon_v3.glb. Views: assets/source_art/dragon/meshy_raw/raw_head.jpg, raw_body.jpg.
   Head, horns, curl mane, whiskers, grin, legs and tail fan all read. Issues to fix in the rig script: the tail thins to
   a stalk before the fan (thicken), a stray cream lump on the back above the rear legs (delete).
-- Hybrid crops from hybrid_r15_v2.png were made but never submitted: obsolete (v2 rejected). v4 crops next.
+- Hybrid crops from hybrid_r15_v2.png were made but never submitted: obsolete (v2 rejected).
+- Hybrid v4 (user idea: mask the avatar out of the sheet, ONE job, split the pieces in Blender): the front/side/back
+  views of hybrid_r15_v4.png with the shirt/pants/face box/box hands masked out (meshy_raw/make_hybrid_inputs.py ->
+  meshy_raw/hybrid_v4_inputs.png), Meshy multi-image-to-3D, 30 credits. Raw: assets/source_art/meshy/dragon_hybrid_v4.glb.
+  Views: meshy_raw/hybrid_raw.jpg, hybrid_closeups.jpg. Pieces come out as separate islands: horns+crown, collar +
+  dragon-head pauldrons + bracers with claw blades (one band, to split per R15 part), sash with medallion/tassels, tail
+  with spines and curl fan. The horns read lumpy from the side.
