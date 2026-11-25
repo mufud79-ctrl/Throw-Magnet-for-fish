@@ -60,3 +60,10 @@ User: "Wrong style completely, follow style guide from the lightning model". Hou
 anime turnaround, ink lines, cel shading, strict T-pose, ornate gold trim + crimson tassels. hybrid_r15_v4.png:
 horns + crown band, curl collar, dragon-head pauldrons, scale bracers with claw blades, crimson-gold sash, curl-fan
 tail. RULE: every character/model sheet uses this house style (never 3D renders or low-poly looks).
+
+## Step 2f: model sheet v4 (open mouth, feet, thicker body)
+User on the raw Meshy dragon (from v3): "feet look really off", and "should have the image with an open mouth so you
+can rig it easier". dragon_sheet_v4_openmouth.png: jaw dropped ~40 deg in side + front views (teeth, red interior,
+tongue modelled, so the jaw bone only has to close it), a THICK body tapering into a tail that stays thick into the
+curl fan, strong legs with clear joints, clean feet (3 forward toes + 1 back toe, one big ivory talon each) + a foot
+close-up. Meshy inputs: v4_view_side/top/front.png (+ v4_view_foot.png for reference). Re-run ~30 credits.
