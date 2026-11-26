@@ -53,7 +53,7 @@ PALS = {
 }
 HOT, COOL = PALS["fire"]["HOT"], PALS["fire"]["COOL"]
 STRIPS = [f"flame_strip_{i}" for i in range(1, 5)]
-DRAGON_MODEL = "thunder_serpent"   # swap to "dragon" once the rigging session pushes assets/models/dragon.glb
+DRAGON_MODEL = "dragon"           # rigged by the rigging session (assets/models/dragon.glb, 30 studs, 35 bones)
 
 
 def R(v, n=3):
@@ -480,17 +480,23 @@ def smooth(ctrl, dt=1 / 60):
     return out
 
 
-def dragon(path, t0, life, *, jaw=None, scale=1.3, color=AZURE, brightness=1.15, transparency=None, roll=None, model=None):
-    """The full-form dragon (rig layer, path-follow). Stand-in: thunder_serpent tinted azure. Hovering = the head keeps
-    swimming slow loops (path-follow collapses the body if the head stops; rigid follow is a rig-v2 feature)."""
+def dragon(path, t0, life, *, jaw=None, scale=1.0, color=None, brightness=1.65, transparency=None, roll=None, model=None,
+           tracks=None):
+    """The full-form dragon (rig layer v2 by the rigging session, path-follow): assets/models/dragon.glb, 30 studs,
+    spine_00 (head) .. spine_19, jaw (+ opens), whiskerL/R_0..2, legFL/FR/BL/BR_0/1. Keep the head moving (coils,
+    loops, waves): the user rejected stiff, straight poses. Give the path a pre-roll (t0 < 0) or start it inside cover
+    (cocoon, ground) so the body is formed. tracks = boneTracks (see anims/anim_kit.py)."""
     L = {"type": "rig", "model": model or DRAGON_MODEL, "t0": t0, "life": life, "path": path, "scale": scale,
-         "bones": {"prefix": "spine_"}, "jawBone": "jaw", "color": color, "brightness": brightness}
+         "bones": {"prefix": "spine_"}, "jawBone": "jaw", "brightness": brightness}
+    if color:
+        L["color"] = color
     if jaw:
         L["jaw"] = jaw
     if transparency:
         L["transparency"] = transparency
-    if roll:
-        L["roll"] = roll
+    L["roll"] = roll or [[0, 0], [1, 0]]
+    if tracks:
+        L["boneTracks"] = tracks
     return L
 
 
@@ -730,7 +736,7 @@ def wall_beam(frm, to, t0, life, height, *, pal="fire", tlen=18, swap=0.07, tr=N
     return out
 
 
-def ring_wall(centre, radius, t0, life, height, *, sweep=0.12, pal="fire", tlen=16, swap=0.07, start=0.0, reverse=False, fade=None):
+def ring_wall(centre, radius, t0, life, height, *, sweep=0.12, pal="fire", tlen=16, swap=0.07, start=0.0, reverse=False, fade=None, base=0.0):
     """A ring of fire: a vertical Trail (up = world Y) drawn around the circle in `sweep` s; the curtain it leaves IS the
     ring (one continuous fused fire, not separate tongues). The trail point rides at mid-height."""
     P = PALS[pal]
@@ -739,7 +745,7 @@ def ring_wall(centre, radius, t0, life, height, *, sweep=0.12, pal="fire", tlen=
     for i in range(n + 1):
         u = i / n
         a = start + (-1 if reverse else 1) * u * 2 * math.pi * 1.04
-        path.append([R(t0 + sweep * u, 4), R([centre[0] + math.cos(a) * radius, height / 2, centre[2] + math.sin(a) * radius])])
+        path.append([R(t0 + sweep * u, 4), R([centre[0] + math.cos(a) * radius, base + height / 2, centre[2] + math.sin(a) * radius])])
     out = []
     for L in ("rim", "mid", "core"):
         out.append({"type": "trail", "path": path, "at": path[0][1], "t0": t0, "t1": t0 + sweep, "lifetime": life, "width": height,

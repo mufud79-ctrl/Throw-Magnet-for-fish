@@ -271,3 +271,18 @@ User: "0.18 good, start rigging; idle animation, movement animation, M1 animatio
   M1 = cruise in, cobra rear-up with a hang (0-0.34), whip strike at ~120 studs/s (spline velocity scale 1.6), snap
   0.46 + hit-stop 0.07, drive past, swoop up, tail crack, coil back. anim_kit: spline() (Hermite with per-key velocity
   scale: 0 = hang, >1 = whip), ripple().
+
+## Merge: rigging session's branch (claude/dragon-vfx-rigging-animation-5h3r0p)
+Merged as agreed once it was pushed: assets/models/dragon.glb (30 studs, spine_00..19, jaw, whiskers, legs), rig
+layer v2 in vfx.js (rigid follow + orient, boneTracks), anims/ (idle, movement, M1). Only DRAGON_MOVES_NOTES.md and
+DESIGN.md conflicted (both appended): kept both. kit.DRAGON_MODEL = "dragon"; kit.dragon() takes boneTracks.
+Design change from that branch: the HYBRID is the base form (horns + tail + a few scales; no arm pieces) - the hybrid
+moves' fire claws already carry the reach in VFX, as the revision v5 block asks.
+
+## Move 6: Transform (hybrid F) - built
+`lab/dragon/moves/transform.py` -> `dragon_06_Transform.json`. Cocoon = an EGG of stacked ring_walls (wide lower ring,
+narrower ring, cap; `ring_wall(base=)`), re-wrapped by a bigger egg, spiral flame ribbons, billows; the player swells
+to 1.25x then shrinks away inside the densest fire (hidden swap) while the real dragon pours out spiralling up (its
+unborn body underground), coils, roars at the burst (inverted frame, hit-stop 0.16, billow ring, fire ring, heat
+rings, smoke wall, molten crack), then swims a slow loop. Grade into_full. Gameplay camera zooms out to
+GAMEPLAY_CAM_FULL as the dragon appears.
