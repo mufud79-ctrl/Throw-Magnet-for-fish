@@ -286,3 +286,16 @@ to 1.25x then shrinks away inside the densest fire (hidden swap) while the real 
 unborn body underground), coils, roars at the burst (inverted frame, hit-stop 0.16, billow ring, fire ring, heat
 rings, smoke wall, molten crack), then swims a slow loop. Grade into_full. Gameplay camera zooms out to
 GAMEPLAY_CAM_FULL as the dragon appears.
+
+### Polish pass (user: "these need so much polish - find why it looks bad"; diagnosis vs modern Roblox fire showcases)
+Diagnosis: fire read as opaque stickers (rim LE 0.2 was a thunder-on-sand rule), it lit nothing, shapes stood still
+(walls / columns) instead of flowing, one focal shape was missing (clutter), black smoke read as dirt, flipbooks step.
+User: no darkening ("these aren't ultimates"); the big thing is ABILITY AMBIENCE - "haze particles, dust particles,
+not tiny ones, big large pieces".
+Done (kit-level, every move): layer conventions glow 1.0 @ 40% / rim 0.35 / mid 0.55 / core 1 (LE 0.65 on the rim
+washed the fire out to pale yellow on sand - body must stay saturated, the glow comes from the halo); grades are now a
+barely-there warm tint (no darkening); glow pools 1.4x bigger; new `dust_veil` texture + `ambience()` BIG layer
+(rolling ground dust veils 9-16 studs, big heat-haze sheets, large tumbling ember pieces, a high soft smoke veil) +
+`dust_rollout()` (big dust veils rolling out of impacts). Sky Drop: dust rollouts, a flat whirling fire spiral at the
+landing (flow shape), fewer rocks. Before/after: assets/previews/dragon/skydrop_polish_before_after.jpg.
+Previewer light falloff in vfx.js left alone (no answer on touching it).

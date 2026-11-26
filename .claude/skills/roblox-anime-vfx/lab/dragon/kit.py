@@ -16,9 +16,9 @@ import math
 import os
 
 LAYERS = ("glow", "rim", "mid", "core")
-LE = {"glow": 0.75, "rim": 0.2, "mid": 0.4, "core": 1}
-BR = {"glow": 1.0, "rim": 1.15, "mid": 1.05, "core": 1.2}
-GLOW_TR = 0.62
+LE = {"glow": 1.0, "rim": 0.35, "mid": 0.55, "core": 1}   # polish pass: saturated body + a strong additive halo
+BR = {"glow": 1.4, "rim": 1.15, "mid": 1.1, "core": 1.2}
+GLOW_TR = 0.4
 
 WHITE_GOLD, GOLD, ORANGE, CRIMSON, EMBER, CHAR = "#fff4c8", "#ffc23a", "#ff7a1a", "#d4202a", "#8a1418", "#2a2226"
 SMOKE = "#3a2c2a"          # black smoke (smoke_cel_v3 is shaded 0.32..1, so this reads as a lit charcoal volume)
@@ -304,8 +304,9 @@ def glow_pool(at, t, size, life=0.5, pal="fire", peak=0.35, seed=71, rate=None, 
     """Fake light: a soft additive pool on the ground under fire (soft_glow laid flat). The previewer's PointLights
     barely light the sand; in Roblox a PointLight does, but a pool reads warmer and cheaper. Use under every fire
     source so fire and ground feel connected."""
+    size, peak = size * 1.4, min(0.7, peak * 1.15)           # polish pass: fire lights a big patch of ground
     e = {"type": "emitter", "at": R([at[0], 0.08, at[2]]), "seed": seed, "props": {
-        "Texture": "soft_glow", "Color": PALS[pal]["HOT"]["glow"], "LightEmission": 1, "Brightness": 1, "Size": [[0, size * 0.8], [hold, size], [1, size * 1.1]],
+        "Texture": "soft_glow", "Color": PALS[pal]["HOT"]["glow"], "LightEmission": 1, "Brightness": 1.2, "Size": [[0, size * 0.8], [hold, size], [1, size * 1.1]],
         "Lifetime": [life, life], "Speed": [0.01, 0.01], "Orientation": "VelocityPerpendicular", "FlipbookLayout": "None",
         "Transparency": [[0, 1 - peak], [hold, 1 - peak], [1, 1]], "ZOffset": 0.01}}
     if rate:
@@ -334,11 +335,51 @@ def glow_orb(at, t, size, life=0.3, pal="fire", tr=0.45, seed=72, rate=None, pat
     return e
 
 
-def ambience(centre, t0, t1, radius=10, rate=10, pal="fire", seed=73):
-    """Ambient embers drifting up through the whole area while the move plays: the filler that keeps the air alive
-    between beats (never let a frame be only the sand and the characters)."""
-    return embers([centre[0], 1.0, centre[2]], 0, rate=[[t0, t1, rate]], speed=(0.5, 2), life=(1.4, 2.4), size=(0.2, 0.45),
-                  rise=2.2, grav=0, drag=0.6, part=[radius * 2, 1.0, radius * 2], seed=seed, pal=pal)
+def ambience(centre, t0, t1, radius=10, rate=10, pal="fire", seed=73, big=1.0):
+    """Ability ambience for the whole move. The BIG layer is what sells an ability (user: "haze particles, dust
+    particles, not tiny ones, big large pieces"): large sand-dust veils rolling along the ground, big heat-haze sheets
+    rising, large ember pieces drifting and tumbling, a soft high smoke veil - plus the small drifting embers."""
+    c = [centre[0], 0, centre[2]]
+    span = [radius * 2, 1.0, radius * 2]
+    out = [embers([c[0], 1.0, c[2]], 0, rate=[[t0, t1, rate]], speed=(0.5, 2), life=(1.4, 2.4), size=(0.2, 0.45),
+                  rise=2.2, grav=0, drag=0.6, part=span, seed=seed, pal=pal)]
+    if big <= 0:
+        return out
+    # rolling ground dust veils
+    out.append({"type": "emitter", "at": R([c[0], 1.4, c[2]]), "rate": [[t0, t1, 2.6 * big]], "seed": seed + 1, "part": R([radius * 2.2, 0.5, radius * 2.2]), "props": {
+        "Texture": "dust_veil", "Color": SAND_DUST, "LightEmission": 0, "Brightness": 1, "Size": [[0, 9], [1, 16]],
+        "Lifetime": [2.0, 3.0], "Speed": [1.5, 3.5], "SpreadAngle": [180, 8], "Drag": 0.6, "Acceleration": [0, 0.25, 0],
+        "Rotation": [-12, 12], "RotSpeed": [-6, 6], "Transparency": [[0, 1], [0.25, 0.58], [0.7, 0.7], [1, 1]],
+        "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot", "Orientation": "FacingCameraWorldUp", "ZOffset": -1.0}})
+    # big heat-haze sheets
+    out.append({"type": "emitter", "at": R([c[0], 3.5, c[2]]), "rate": [[t0, t1, 1.6 * big]], "seed": seed + 2, "part": R([radius * 1.6, 2, radius * 1.6]), "props": {
+        "Texture": "heat_haze", "Color": "#ffd2a0", "LightEmission": 0.3, "Brightness": 1, "Size": [[0, 11], [1, 17]],
+        "Lifetime": [1.6, 2.4], "Speed": [1, 2.5], "SpreadAngle": [20, 20], "Rotation": [0, 0],
+        "Transparency": [[0, 1], [0.3, 0.8], [0.7, 0.84], [1, 1]], "FlipbookLayout": "Grid4x4", "FlipbookMode": "Loop",
+        "FlipbookFramerate": [12, 12], "ZOffset": -0.6}})
+    # large ember pieces tumbling up through the air
+    out.append({"type": "emitter", "at": R([c[0], 1.5, c[2]]), "rate": [[t0, t1, 6 * big]], "seed": seed + 3, "part": span, "props": {
+        "Texture": "embers", "Color": PALS[pal]["spark"], "LightEmission": 1, "Brightness": 1.6, "Size": [[0, 1.3], [0.7, 0.9], [1, 0.3]],
+        "Lifetime": [2.0, 3.2], "Speed": [1.5, 3.5], "SpreadAngle": [35, 35], "Acceleration": [0, 1.4, 0], "Drag": 0.4,
+        "Rotation": [0, 360], "RotSpeed": [-90, 90], "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random",
+        "FlipbookFramerate": [0.01, 0.01], "FlipbookStartRandom": True, "ZOffset": 0.3}})
+    # soft high smoke veil (warm grey, very translucent) drifting above the fight
+    out.append({"type": "emitter", "at": R([c[0], 8, c[2]]), "rate": [[t0, t1, 1.2 * big]], "seed": seed + 4, "part": R([radius * 1.8, 3, radius * 1.8]), "props": {
+        "Texture": "dust_veil", "Color": "#6a5850", "LightEmission": 0, "Brightness": 1, "Size": [[0, 14], [1, 22]],
+        "Lifetime": [2.4, 3.4], "Speed": [0.5, 1.5], "SpreadAngle": [180, 10], "Rotation": [-10, 10],
+        "Transparency": [[0, 1], [0.3, 0.72], [0.7, 0.78], [1, 1]], "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot",
+        "Orientation": "FacingCameraWorldUp", "ZOffset": -1.2}})
+    return out
+
+
+def dust_rollout(at, t, radius=3.0, n=10, size=(10, 18), speed=(12, 20), color=SAND_DUST, seed=74, life=(1.6, 2.4)):
+    """BIG dust veils rolling out along the ground from an impact (the heavy version of dust_ring)."""
+    return {"type": "emitter", "at": R([at[0], 1.6, at[2]]), "emits": [[t, n]], "seed": seed, "part": R([radius, 0.6, radius]), "props": {
+        "Texture": "dust_veil", "Color": color, "LightEmission": 0, "Brightness": 1, "Shape": "Cylinder", "ShapeInOut": "Outward",
+        "ShapeStyle": "Surface", "Size": [[0, size[0]], [1, size[1]]], "Lifetime": list(life), "Speed": list(speed), "SpreadAngle": [6, 6],
+        "Drag": 2.5, "Acceleration": [0, 0.6, 0], "Rotation": [-15, 15], "RotSpeed": [-8, 8],
+        "Transparency": [[0, 0.4], [0.6, 0.55], [1, 1]], "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot",
+        "Orientation": "FacingCameraWorldUp", "ZOffset": -0.9}}
 
 
 # ---------------------------------------------------------------- calling cards (ground marks that glow, cool, drift embers)
@@ -551,11 +592,15 @@ def write(fx, path, form="hybrid"):
     """form 'hybrid': warm dim (brightness -0.1, contrast +0.12, tint #ffe2c8). 'full': deep warm dim (-0.2, +0.18,
     #ffc9a8) that holds while the dragon exists. 'into_full' ramps from hybrid to full and holds (Transform);
     'from_full' starts full and ramps back to normal (Revert). Saturation stays 0: desaturating killed thunder's colour."""
+    flat = []
     for L in fx.get("layers", []):
+        flat.extend(L if isinstance(L, list) else [L])      # helpers may return lists (ambience)
+    fx["layers"] = flat
+    for L in flat:
         _modernize(L)
     fx.setdefault("bloom", 0.5)
     dur = fx.get("duration", 2)
-    H, F, N = (-0.17, 0.15, 0, "#ffd8b4"), (-0.27, 0.2, 0, "#ffc4a0"), (0, 0, 0, "#ffffff")
+    H, F, N = (-0.03, 0.08, 0, "#fff1e2"), (-0.06, 0.1, 0, "#ffe8d4"), (0, 0, 0, "#ffffff")   # abilities, not ultimates: never darken the sky
     if form == "hybrid":
         g = [[0, *N], [0.12, *H], [max(0.13, dur - 0.45), *H], [dur, *N]]
     elif form == "full":

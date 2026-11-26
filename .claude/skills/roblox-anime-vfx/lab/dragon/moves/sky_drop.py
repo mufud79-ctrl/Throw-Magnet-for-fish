@@ -69,7 +69,8 @@ def build():
         L += billow([f[0], f[1] + 0.8, f[2]], t, 5.0, life=0.5, seed=seed, grow=1.4)
         L += ember_spray([f[0], f[1] + 0.5, f[2]], t, size=6, life=0.45, seed=seed + 1)
         L += glint([f[0], f[1] + 0.6, f[2]], t, size=4, life=0.18, seed=seed + 2)
-    L.append(dust_ring([0, 0, 0], TL + 0.01, n=14, speed=(22, 30), size=(2.5, 5.5), seed=518))
+    L.append(dust_ring([0, 0, 0], TL + 0.01, n=10, speed=(22, 30), size=(2.5, 5.5), seed=518))
+    L.append(dust_rollout([0, 0, 0], TL + 0.01, n=6, size=(8, 13), speed=(9, 14), seed=517))
     L.append(scorch([0, 0, 0], TL, size=6, life=2.0, seed=519))
     L.append(smoke([0, 0.6, 0], TL + 0.04, n=4, size=(3, 6), speed=(2, 5), life=(0.9, 1.3), seed=520))
     for k, ph in enumerate((0.0, math.pi)):
@@ -122,7 +123,14 @@ def build():
     L.append(streaks([g[0], 1.0, g[2]], T + 0.01, 14, speed=(60, 100), length=(2.5, 5), spread=60, seed=585))
     L += fire_ring(g, T + 0.01, 9.5, life=0.7, seed=586)
     L.append(shockwave(g, T + 0.015, 12, life=0.45, seed=587))
-    L.append(dust_ring(g, T + 0.015, n=22, speed=(32, 44), size=(3.5, 8), seed=588))
+    L.append(dust_ring(g, T + 0.015, n=16, speed=(32, 44), size=(3.5, 8), seed=588))
+    L.append(dust_rollout(g, T + 0.02, radius=4, n=12, size=(12, 20), speed=(14, 22), seed=592))
+    # the flow shape: a spiral of fire whirling out on the ground from the landing (flat fire_swirl, two counter-turning)
+    for j, (sz, rot) in enumerate(((19, 0), (13, 70))):
+        for e in emit_stack("fire_swirl", [g[0], 0.3 + 0.05 * j, g[2]], T + 0.01, size=[[0, sz * 0.5], [0.25, sz], [1, sz * 1.15]], life=0.75,
+                            cool=False, mode="Loop", fps=26, seed=593 + j, rot=rot, orient="VelocityPerpendicular",
+                            transparency=[[0, 0], [0.6, 0.15], [1, 1]]):
+            L.append(e)
     L.append(glow_pool(g, T, 18, life=1.2, peak=0.5, seed=589))
     L += molten_crack(g, T + 0.01, size=17, rot=20, glow_life=1.6, char_life=3.2, seed=590)
     L.append(scorch(g, T + 0.3, size=12, life=2.2, seed=591))
@@ -138,7 +146,7 @@ def build():
     L.append(smoke_wisps([g[0], 0.4, g[2]], T + 0.4, DUR, 10, size=4, part=[16, 0.2, 16], seed=663))
     L.append(haze([g[0], 5.0, g[2]], T, DUR, size=18, seed=664))
     L.append(ash([g[0], 9, g[2]], T + 0.2, DUR, 16, part=(18, 3, 18), seed=665))
-    debris = rocks(g, T + 0.01, radius=6.0, count=14, size=0.9, speed=30, seed=666)
+    debris = rocks(g, T + 0.01, radius=6.0, count=9, size=0.9, speed=28, seed=666)
 
     hits, numbers = [], []
     for i, p in enumerate(TARGETS):

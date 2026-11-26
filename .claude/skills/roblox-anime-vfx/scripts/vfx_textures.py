@@ -2857,6 +2857,32 @@ def _flame_pillar(seed):
     return fn
 
 
+def dust_veil(n=16, seed=1111):
+    """Big ambient dust / haze veil (one-shot 16f, shaded): a wide, low, wispy cloud (domain-warped noise, horizontal
+    wisps, soft edges, two soft tone bands lit from above) that drifts, spreads and fades away gently. Played BIG
+    (8-20 studs) and slow: rolling ground dust, sand haze, heat-blown sand around an ability. Tint sand for dust, warm
+    grey for haze."""
+    x, y = coords(S)
+    w1, w2 = noise(S * 2, S, 140, 200, seed, 3), noise(S * 2, S, 120, 200, seed + 1, 3)
+    det = noise(S * 2, S, 18, 90, seed + 2, 4)
+    soft = noise(S * 2, S, 60, 80, seed + 3, 3)
+    alphas, vals = [], []
+    for i in range(n):
+        t = i / (n - 1)
+        g = 0.82 + 0.2 * ease_out(t, 2)
+        xw = x / g + (scroll(w1, i, n, frac=0.4) - 0.5) * 0.45
+        yw = y / g + (scroll(w2, i, n, frac=0.4) - 0.5) * 0.3
+        d = scroll(det, i, n, frac=0.7)
+        F = 1 - np.hypot(xw / 0.84, (yw + 0.05) / 0.48) + (d - 0.5) * 0.55 + (scroll(soft, i, n, frac=0.5) - 0.5) * 0.4
+        a = ss(F, 0.0, 0.55) * (0.55 + 0.45 * ss(d, 0.2, 0.7))
+        a = a * min(1.0, 0.35 + i / 2.5) * (1 - t ** 1.6)
+        lit = ss(blur(F, 12) + 0.3 * y, 0.2, 0.45)
+        val = 0.64 + 0.28 * lit + 0.08 * (d - 0.5)
+        alphas.append(np.clip(a * 0.85, 0, 1))
+        vals.append(np.clip(val, 0, 1))
+    return alphas, vals
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2963,6 +2989,7 @@ LIB = {
     "ash_flakes":    (ash_flakes,    "shaded", 4, 0, "smoke"),
     "anime_glint":   (anime_glint,   "cel", 4, 0, "dragonfire"),
     "fire_scorch":   (fire_scorch,   "shaded", 1, 0, "soot"),
+    "dust_veil":     (dust_veil,     "shaded", 4, 0, "dust"),
     "flame_wall_1": (_flame_wall(3101), "cel", 0, 0, "dragonfire"),
     "flame_wall_2": (_flame_wall(3102), "cel", 0, 0, "dragonfire"),
     "flame_wall_3": (_flame_wall(3103), "cel", 0, 0, "dragonfire"),
