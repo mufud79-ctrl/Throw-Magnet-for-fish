@@ -16,9 +16,9 @@ import math
 import os
 
 LAYERS = ("glow", "rim", "mid", "core")
-LE = {"glow": 1.0, "rim": 0.35, "mid": 0.55, "core": 1}   # polish pass: saturated body + a strong additive halo
+LE = {"glow": 0.35, "rim": 0.2, "mid": 0.35, "core": 0.9}  # reference pass: colour COVERS the sand (bright ground + additive = white-out)
 BR = {"glow": 1.4, "rim": 1.15, "mid": 1.1, "core": 1.2}
-GLOW_TR = 0.4
+GLOW_TR = 0.5
 
 WHITE_GOLD, GOLD, ORANGE, CRIMSON, EMBER, CHAR = "#fff4c8", "#ffc23a", "#ff7a1a", "#d4202a", "#8a1418", "#2a2226"
 SMOKE = "#3a2c2a"          # black smoke (smoke_cel_v3 is shaded 0.32..1, so this reads as a lit charcoal volume)
@@ -26,13 +26,13 @@ SAND_DUST = "#cdb48a"
 AZURE = "#7fb0ff"          # stand-in dragon tint (thunder_serpent until assets/models/dragon.glb exists)
 
 PALS = {
-    "fire": {
-        "HOT": {"glow": ORANGE, "rim": CRIMSON, "mid": GOLD, "core": WHITE_GOLD},
-        "COOL": {"glow": [[0, ORANGE], [0.6, CRIMSON], [1, EMBER]],
-                 "rim": [[0, CRIMSON], [0.6, EMBER], [1, EMBER]],
-                 "mid": [[0, GOLD], [0.4, ORANGE], [1, CRIMSON]],
-                 "core": [[0, WHITE_GOLD], [0.35, GOLD], [1, ORANGE]]},
-        "spark": [[0, WHITE_GOLD], [0.3, GOLD], [0.7, ORANGE], [1, CRIMSON]], "light": "#ff8a2a",
+    "fire": {   # reference study (TSB / Type Soul fire on sand): GOLD-YELLOW dominant body, orange, a thin red edge
+        "HOT": {"glow": "#d8301a", "rim": "#f04a12", "mid": "#ffc81e", "core": "#fff2a0"},
+        "COOL": {"glow": [[0, "#d8301a"], [0.6, "#b0200f"], [1, "#6a120a"]],
+                 "rim": [[0, "#f04a12"], [0.55, "#c8281a"], [1, "#7a1810"]],
+                 "mid": [[0, "#ffc81e"], [0.45, "#ff9a1a"], [1, "#f04a12"]],
+                 "core": [[0, "#fff2a0"], [0.35, "#ffd84a"], [1, "#ff9a1a"]]},
+        "spark": [[0, "#fff2a0"], [0.3, "#ffc81e"], [0.7, "#ff7a10"], [1, "#e0401a"]], "light": "#ff8a2a",
     },
     "violet": {
         "HOT": {"glow": "#b04cff", "rim": "#6a16d0", "mid": "#d98aff", "core": "#fbeeff"},
@@ -306,7 +306,7 @@ def glow_pool(at, t, size, life=0.5, pal="fire", peak=0.35, seed=71, rate=None, 
     source so fire and ground feel connected."""
     size, peak = size * 1.4, min(0.7, peak * 1.15)           # polish pass: fire lights a big patch of ground
     e = {"type": "emitter", "at": R([at[0], 0.08, at[2]]), "seed": seed, "props": {
-        "Texture": "soft_glow", "Color": PALS[pal]["HOT"]["glow"], "LightEmission": 1, "Brightness": 1.2, "Size": [[0, size * 0.8], [hold, size], [1, size * 1.1]],
+        "Texture": "soft_glow", "Color": "#ff6a1a", "LightEmission": 0.5, "Brightness": 1.1, "Size": [[0, size * 0.8], [hold, size], [1, size * 1.1]],
         "Lifetime": [life, life], "Speed": [0.01, 0.01], "Orientation": "VelocityPerpendicular", "FlipbookLayout": "None",
         "Transparency": [[0, 1 - peak], [hold, 1 - peak], [1, 1]], "ZOffset": 0.01}}
     if rate:
@@ -359,7 +359,8 @@ def ambience(centre, t0, t1, radius=10, rate=10, pal="fire", seed=73, big=1.0):
         "FlipbookFramerate": [12, 12], "ZOffset": -0.6}})
     # large ember pieces tumbling up through the air
     out.append({"type": "emitter", "at": R([c[0], 1.5, c[2]]), "rate": [[t0, t1, 6 * big]], "seed": seed + 3, "part": span, "props": {
-        "Texture": "embers", "Color": PALS[pal]["spark"], "LightEmission": 1, "Brightness": 1.6, "Size": [[0, 1.3], [0.7, 0.9], [1, 0.3]],
+        "Texture": "embers", "Color": [[0, "#ffb02a"], [0.4, "#ff6a14"], [1, "#b0200f"]], "LightEmission": 0.5, "Brightness": 1.3,
+        "Size": [[0, 0.85], [0.7, 0.6], [1, 0.2]],
         "Lifetime": [2.0, 3.2], "Speed": [1.5, 3.5], "SpreadAngle": [35, 35], "Acceleration": [0, 1.4, 0], "Drag": 0.4,
         "Rotation": [0, 360], "RotSpeed": [-90, 90], "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random",
         "FlipbookFramerate": [0.01, 0.01], "FlipbookStartRandom": True, "ZOffset": 0.3}})
@@ -598,7 +599,7 @@ def write(fx, path, form="hybrid"):
     fx["layers"] = flat
     for L in flat:
         _modernize(L)
-    fx.setdefault("bloom", 0.5)
+    fx.setdefault("bloom", 0.38)
     dur = fx.get("duration", 2)
     H, F, N = (-0.03, 0.08, 0, "#fff1e2"), (-0.06, 0.1, 0, "#ffe8d4"), (0, 0, 0, "#ffffff")   # abilities, not ultimates: never darken the sky
     if form == "hybrid":
@@ -814,3 +815,26 @@ def pillar(base, height, t0, life, width=4.0, pal="fire", reach=None, swap=0.07,
              "segments": 8, "color": P["HOT"][L], "lightEmission": LE[L], "brightness": BR[L], "width": [[0, [width, width]], [1, [width, width]]],
              "reach": reach or [[0, 0], [0.15, 1, "out"], [1, 1]], "transparency": [[0, 0], [0.7, 0.05], [1, 1]]}
             for L in ("rim", "mid", "core")]
+
+
+def fire_streams(centre, t0, dur, *, r0=1.5, r1=9.0, n=7, y0=0.5, rise=0.0, turns=0.9, width=1.4, life=0.4, pal="fire", seed=0,
+                 reverse=False, n_pts=40):
+    """Big swirling flame streams wrapping a point (the reference 'Fuga' look): n flame ribbons spiral outward from r0 to
+    r1 around `centre` over `dur` s, each a hot-headed Trail that cools along its length. The flowing primary shape of a
+    fire impact or a charge (make r1 < r0 for streams spiralling IN)."""
+    out = []
+    for k in range(n):
+        ph = k / n * 2 * math.pi + seed * 0.37
+        lag = (k % 3) * dur * 0.08
+        sp = []
+        for i in range(n_pts + 1):
+            u = i / n_pts
+            t = t0 + lag + dur * u
+            a = ph + (-1 if reverse else 1) * turns * 2 * math.pi * (u ** 0.8)
+            r = r0 + (r1 - r0) * (1 - (1 - u) ** 2)
+            sp.append([R(t, 4), R([centre[0] + math.cos(a) * r, y0 + rise * u + 0.35 * math.sin(k * 1.7 + u * 6), centre[2] + math.sin(a) * r])])
+        w = width * (0.75 + 0.5 * ((k * 7) % 5) / 4)
+        out += trail_stack({"path": sp, "at": sp[0][1], "t0": t0 + lag, "t1": t0 + lag + dur, "lifetime": life, "faceCamera": True,
+                            "transparency": [[0, 0], [0.5, 0.15], [1, 1]], "widthScale": [[0, 1], [0.7, 0.6], [1, 0.1]], "textureMode": "Stretch"},
+                           {"glow": w * 2.2, "rim": w, "mid": w * 0.7, "core": w * 0.22}, pal=pal)
+    return out

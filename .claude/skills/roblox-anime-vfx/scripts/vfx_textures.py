@@ -1948,7 +1948,7 @@ def _depth(F, scale, wrap=False):
     return 1 - np.exp(-d / max(1e-6, scale))
 
 
-FIRE_CEL = os.environ.get("FIRE_CEL", "1") != "0"   # anime cel tones (hard edges, flat bands); 0 = the soft painted v1
+FIRE_CEL = os.environ.get("FIRE_CEL", "0") != "0"   # 0 (default since the reference pass) = soft painted gradients; 1 = flat cel bands
 
 
 def _fire_layers(F, heat, cool=0.0, e=0.02, mid_th=0.3, core_th=0.8, vol=None, glow=(0.012, 0.04), gk=0.85, wrap=False,

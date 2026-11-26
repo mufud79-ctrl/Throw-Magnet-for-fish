@@ -71,6 +71,8 @@ def build():
     L.append(dust_ring([0, 0, 0], TS + 0.05, n=18, speed=(24, 34), size=(3, 6.5), seed=712))
     for k in range(3):
         L += smear([0, 1.6, 0], TS + 0.04 + 0.12 * k, 12, 120 * k, life=0.2, seed=713 + k)
+    L += fire_streams([0, 0, 0], TS + 0.05, TE - TS, r0=1.5, r1=RAD + 1.0, n=6, y0=0.6, rise=0.8, turns=1.0, width=1.3, life=0.4, seed=31)
+    L += fire_streams([0, 0, 0], TP, 0.45, r0=RAD - 1.0, r1=RAD + 4.0, n=8, y0=0.5, rise=1.5, turns=0.5, width=1.2, life=0.38, seed=33)
     # smoulder + pulse before the eruption
     L.append(glow_pool([0, 0, 0], TE, 15, life=0.35, peak=0.35, seed=720, hold=0.6))
     L.append(embers([0, 0.4, 0], 0, rate=[[TE, TP + 0.05, 50]], speed=(1, 3), life=(0.6, 1.0), rise=5, grav=0, part=[13, 0.3, 13], seed=721))

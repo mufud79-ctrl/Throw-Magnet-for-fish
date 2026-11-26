@@ -112,6 +112,7 @@ def build():
     L.append(dust_ring([0, 0, -8.2], th + 0.01, n=14, speed=(24, 34), size=(3, 6.5), seed=175))
     L.append(glow_pool([0.1, 0, -8.0], th, 11, life=0.9, peak=0.5, seed=176))
     L.append(smoke([0, 3.5, -10.2], th + 0.08, n=6, size=(4, 9), speed=(2, 5), life=(1.2, 1.8), seed=177, spread=50))
+    L += fire_streams([0, 0, -7.8], th, 0.4, r0=0.8, r1=6.0, n=6, y0=0.6, rise=3.0, turns=0.9, width=1.2, life=0.38, seed=11)
     L += gouge([0, 0, -9.4], th, size=8.5, rot=90, glow_life=1.25, char_life=3.0, seed=178)
     hits.append({"t": th, "dummy": 0, "dir": [0, 0, -1], "power": 1.0})
     numbers.append({"t": th + 0.03, "at": [1.4, 7.0, -8.8], "text": "164", "color": WHITE_GOLD, "vel": [0.5, 10, -1], "size": 1.8})

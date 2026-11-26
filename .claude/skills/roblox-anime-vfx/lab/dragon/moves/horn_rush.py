@@ -146,6 +146,8 @@ def build():
         L.append(glow_pool([p[0], 0, p[2]], th, 6, life=0.4, peak=0.45, seed=307 + i))
         hits.append({"t": th, "dummy": i, "dir": [0.15 * (1 if p[0] > 0 else -1), 0, -1], "power": 0.85})
         numbers.append({"t": th + 0.02, "at": [p[0] + 1.2, 6.4, p[2]], "text": str(72 + 9 * i), "color": GOLD, "vel": [0, 9, -2], "size": 1.6})
+    for i, p in enumerate(TARGETS):
+        L += fire_streams([p[0], 0, p[2]], TH + 0.01, 0.4, r0=0.8, r1=4.5, n=4, y0=1.0, rise=3.0, turns=1.0, width=1.0, life=0.35, seed=21 + i)
     # the wall tears into tongues as it dies
     for j in range(9):
         L += tongue([(j - 4) * 1.6, 0, -13.8 - 0.4 * (j % 3)], 0.84 + 0.02 * j, 3.2 + 0.5 * (j % 2), life=0.55, seed=311 + j)

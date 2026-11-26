@@ -299,3 +299,15 @@ barely-there warm tint (no darkening); glow pools 1.4x bigger; new `dust_veil` t
 `dust_rollout()` (big dust veils rolling out of impacts). Sky Drop: dust rollouts, a flat whirling fire spiral at the
 landing (flow shape), fewer rocks. Before/after: assets/previews/dragon/skydrop_polish_before_after.jpg.
 Previewer light falloff in vfx.js left alone (no answer on touching it).
+
+### Reference rebuild (user: "still looks like shit, doesn't look like your reference photos, keep rebuilding")
+Matched against full-size reference frames (TSB / Type Soul / Roblox fire showcases, incl. Type Soul fire on sand):
+1. Colour dominance flipped: GOLD-YELLOW body, orange middle, thin red edge (ours was crimson-dominant = dark, outlined).
+2. Soft painted gradients again (FIRE_CEL default 0): flat cel bands + outlines read as stickers.
+3. On bright ground the colour must COVER, not add: glow = deep red tint (LE 0.35, 50% transparent), rim 0.2,
+   mid 0.35, core 0.9, bloom 0.38. Additive gold glow on sand = white-out (tested, rejected).
+4. The flowing primary shape: `kit.fire_streams` (hot-headed flame ribbons spiralling out/in around a point, cooling
+   along their length) + thin hot yellow swirl lines over them; on every move (Sky Drop landing, Talon finisher, Horn
+   Rush contacts, Tail Cyclone spin + eruption, Ember Breath landing, Transform charge-in + burst-out).
+5. Ambience big-piece embers were pale paper rectangles at LE 1 / size 1.3 -> deep orange, LE 0.5, 0.85.
+All six hybrid moves re-rendered.

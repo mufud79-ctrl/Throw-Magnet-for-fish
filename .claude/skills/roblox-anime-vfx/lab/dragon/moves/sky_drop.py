@@ -125,6 +125,25 @@ def build():
     L.append(shockwave(g, T + 0.015, 12, life=0.45, seed=587))
     L.append(dust_ring(g, T + 0.015, n=16, speed=(32, 44), size=(3.5, 8), seed=588))
     L.append(dust_rollout(g, T + 0.02, radius=4, n=12, size=(12, 20), speed=(14, 22), seed=592))
+    # the flow shape (reference): big flame streams whirl out of the landing and wrap the crater
+    L += fire_streams(g, T + 0.01, 0.45, r0=1.0, r1=10.0, n=8, y0=0.6, rise=1.2, turns=0.85, width=1.6, life=0.42, seed=3)
+    L += fire_streams(g, T + 0.06, 0.5, r0=2.0, r1=8.0, n=5, y0=2.5, rise=2.5, turns=0.7, width=1.1, life=0.38, seed=7, reverse=True)
+    # thin hot swirl lines over the red streams (crisp yellow lines on red haze, as in the references)
+    for k in range(6):
+        ph = k / 6 * 2 * math.pi + 0.4
+        sp = []
+        for i in range(41):
+            u = i / 40
+            aa = ph + 1.1 * 2 * math.pi * u ** 0.8
+            r = 1.2 + 8.0 * (1 - (1 - u) ** 2)
+            sp.append([R(T + 0.02 + 0.4 * u, 4), R([g[0] + math.cos(aa) * r, 0.35 + 0.6 * u, g[2] + math.sin(aa) * r])])
+        for lay, w, col in (("mid", 0.32, [[0, "#fff2a0"], [0.5, "#ffc81e"], [1, "#ff7a10"]]), ("core", 0.12, [[0, "#ffffff"], [0.5, "#fff2a0"], [1, "#ffc81e"]])):
+            L.append({"type": "trail", "path": sp, "at": sp[0][1], "t0": T + 0.02, "t1": T + 0.42, "lifetime": 0.32, "faceCamera": True,
+                      "width": w, "textures": [f"{st}_{lay}" for st in STRIPS], "swap": 0.06, "color": col, "lightEmission": 1,
+                      "brightness": 1.4, "textureMode": "Stretch", "transparency": [[0, 0], [0.6, 0.2], [1, 1]], "widthScale": [[0, 1], [1, 0.2]]})
+    # a brief hot heart at the centre of the impact
+    L.append(glow_orb([g[0], 1.6, g[2]], T + 0.01, 7, life=0.45, tr=0.15, seed=596))
+    L[-1]["props"]["Color"] = "#ffe070"; L[-1]["props"]["LightEmission"] = 1
     # the flow shape: a spiral of fire whirling out on the ground from the landing (flat fire_swirl, two counter-turning)
     for j, (sz, rot) in enumerate(((19, 0), (13, 70))):
         for e in emit_stack("fire_swirl", [g[0], 0.3 + 0.05 * j, g[2]], T + 0.01, size=[[0, sz * 0.5], [0.25, sz], [1, sz * 1.15]], life=0.75,

@@ -103,6 +103,7 @@ def build():
     L.append(haze([0, 8, 0], TC0, DUR, size=16, seed=1023))
     L.append(smoke([0, 10, 0], 0, rate=[[0.7, TB, 6]], size=(4, 8), speed=(2, 4), life=(1.0, 1.4), seed=1024, part=[6, 2, 6], rise=3))
 
+    L += fire_streams(G, TC0, 0.9, r0=7.5, r1=2.8, n=7, y0=0.6, rise=3.5, turns=1.1, width=1.2, life=0.4, seed=51)
     # ---- the dragon pours out of the cocoon (the hidden swap is inside the densest fire)
     hp = head_path()
     jaw = [[0, 6], [(TB - 0.12 - 0.98) / (DUR - 0.98), 10], [(TB - 0.02 - 0.98) / (DUR - 0.98), 48], [(TB + 0.6 - 0.98) / (DUR - 0.98), 46],
@@ -126,6 +127,7 @@ def build():
         L += billow([math.cos(a) * 3.5, 3.0, math.sin(a) * 3.5], T + 0.01, 6.0, life=0.6, seed=1051 + j, grow=1.4,
                     move={"from": [math.cos(a) * 3.5, 3.0, math.sin(a) * 3.5], "to": [math.cos(a) * 10, 2.0, math.sin(a) * 10], "t0": T, "t1": T + 0.45, "ease": "out"})
     L += fire_ring(G, T + 0.01, 13, life=0.75, seed=1061)
+    L += fire_streams(G, T + 0.01, 0.5, r0=2.0, r1=15.0, n=9, y0=0.8, rise=2.0, turns=0.8, width=1.8, life=0.45, seed=53)
     L.append(shockwave(G, T + 0.015, 16, life=0.5, seed=1062))
     L.append(dust_ring(G, T + 0.015, n=26, speed=(36, 50), size=(4, 9), seed=1063, radius=4))
     L.append(smoke([0, 2.5, 0], T + 0.03, n=16, size=(5, 11), speed=(18, 28), life=(1.2, 1.8), seed=1064, spread=90, rise=2, part=[8, 2, 8]))

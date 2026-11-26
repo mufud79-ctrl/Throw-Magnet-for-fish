@@ -143,6 +143,7 @@ def build():
         numbers.append({"t": th + 0.02, "at": [q[0] + 1.0, 6.2, q[2]], "text": str(31 + 6 * i), "color": GOLD, "vel": [0, 9, 0], "size": 1.5})
         stops.append({"t": th + 0.02, "dur": 0.04})
 
+    L += fire_streams([0, 0, -9.5], TR + 0.15, TC - TR, r0=1.0, r1=5.5, n=5, y0=0.5, rise=1.0, turns=1.2, width=1.2, life=0.4, seed=41)
     # ---- after: smoke curls from the mouth, after-smoke off the wedge, shimmer
     L.append(smoke_wisps(mouth(TC + 0.1), TC, DUR, 6, size=2.2, part=[0.4, 0.3, 0.4], seed=961))
     L.append(smoke_wisps([0, 0.4, -8], TC - 0.2, DUR, 10, size=3.5, part=[12, 0.2, 4], seed=962))
