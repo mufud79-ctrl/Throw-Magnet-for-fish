@@ -11,9 +11,9 @@ First run: git fetch origin claude/dragon-fruit-vfx-k354ta && git merge --no-edi
 3. `.claude/skills/roblox-anime-vfx/DRAGON_MOVES_NOTES.md`, `references/modern-vfx.md`,
    `references/move-workflow.md`, `THUNDER_MOVES_NOTES.md`, `lab/thunder/kit.py`, `scripts/rig_serpent.py`.
 
-## The dragon (concept APPROVED; the hybrid look is hybrid_r15_v4.png)
-- Look: `assets/source_art/dragon/dragon_hero_v3.png`. Model sheet: `dragon_sheet_v3.png`. Meshy inputs:
-  `v3_view_side.png`, `v3_view_top.png`, `v3_view_front.png`.
+## The dragon (concept APPROVED; the hybrid look is hybrid_r15_v5.png)
+- Look: `assets/source_art/dragon/dragon_hero_v3.png`. Model sheet: `dragon_sheet_v4_openmouth.png` (mouth open for
+  rigging, clean feet, thick body). Meshy inputs: `v4_view_side.png`, `v4_view_top.png`, `v4_view_front.png`.
 - Design: as close to the classic wingless Eastern dragon emperor as possible while staying original. Deep azure/
   teal scales, a pale cream belly band, cream-gold ridged horns (plus a back pair) and talons, a dark navy curl
   mane and tail fan, long blue whiskers, yellow eyes, a broad bulbous nose, a spiral-carved brow, a scarred snout,
@@ -23,25 +23,24 @@ First run: git fetch origin claude/dragon-fruit-vfx-k354ta && git merge --no-edi
   `assets/source_art/god_mode/C_tpose_sheet_v3.png`: a 2D anime turnaround with clean ink lines and cel shading,
   a strict T-pose, ornate gold trim and crimson accents. Not 3D renders, not low-poly.
 - **Hybrid = add-on accessory pieces on the player's normal BLOCKY R15 body, never a replacement model.** Look:
-  `hybrid_r15_v4.png` (DESIGN.md "Revision v3d"). The pieces: cream-gold horns plus a back pair and a gold crown
-  band (Head); a navy curl mane collar (UpperTorso); azure dragon-head pauldrons with gold trim and crimson tassels
-  (upper arms); azure scale bracers with 3 claw blades over the box hand (lower arms); a crimson-gold sash with a
-  dragon medallion (LowerTorso); and a long azure tail with a cream belly, spines and a navy curl fan (LowerTorso,
-  skinned, about 7 bones). **NO fingers.** Each piece is welded to its R15 part and follows the player's own
-  animation.
+  `hybrid_r15_v5.png` (DESIGN.md "Revision v4"). EVERY piece is cut from the dragon model so the forms match: its
+  horns (Head), a ring of its mane curls (UpperTorso), mini copies of its open-mouthed head as pauldrons (upper
+  arms), sleeves cut from its body plus 3 of its talons over the box hand (lower arms), its back-spine ridge
+  (UpperTorso), and its tail with the curl fan (LowerTorso, skinned, about 7 bones). **NO fingers.** Each piece is
+  welded to its R15 part and follows the player's own animation.
 
 ## Steps (show me each one and wait for my approval; send MP4s, strips and contact sheets with SendUserFile,
 ## strips <= 8000 px; commit and push after each step on the branch this session is assigned)
-1. **Model.** Meshy multi-image-to-3D from the three v3 views (about 30 credits). Hybrid pieces from `hybrid_r15_v4.png`: Meshy
-   image-to-3D of clean crops for the dragon-head pauldron, the horns+crown, the curl collar and the tail (about
-   4 x 20-30); Blender for the simple sash and bracers. Size every piece to its R15 part. Total estimate about 130
-   credits, cap 170:
-   estimate before each job and report the spend. The key is in the environment's secret store, injected by the proxy: send
-   `Authorization: Bearer proxy-injected`. Show me a turntable of the raw model.
+1. **Model.** Meshy multi-image-to-3D from the three v4 views (about 30 credits, cap 60; report the spend). The
+   key is in the environment's secret store, injected by the proxy: send `Authorization: Bearer proxy-injected`.
+   Show me a turntable of the raw model, with close-ups of the feet and the open mouth. The hybrid pieces cost no
+   credits: they're cut from this model in step 2.
 2. **Rig.** Write `scripts/rig_dragon.py` based on `rig_serpent.py`: head toward -Z, about 30 studs long, about
-   10k tris, the mouth cut on the lip line with a palate and fangs, `spine_00..19` + `jaw`, 4 short legs
-   (`legFL/FR/BL/BR_0/1`) and whiskers (`whiskerL/R_0..2`). Build the hybrid pieces in Blender (`scripts/build_hybrid.py`); the tail gets
-   about 7 bones.
+   10k tris, `spine_00..19` + `jaw`, 4 short legs
+   (`legFL/FR/BL/BR_0/1`) and whiskers (`whiskerL/R_0..2`). The rest pose has the mouth open; the jaw bone closes it. Kitbash the hybrid
+   pieces from the same mesh and texture in `scripts/build_hybrid.py` (horns, mane-curl collar, 0.15x head
+   pauldrons, body-sleeve bracers with talons, the spine ridge, and a 0.4x tail with about 7 bones), sized to the
+   R15 parts.
    Fit all hybrid pieces to the R15 rig (scale and offsets per part) and export them as separate meshes.
 3. **Rig layer v2**, in the previewer `lab/page/vfx.js` AND the Luau `templates/ReplicatedStorage/AnimeVFX/init.lua`:
    `follow: "path"|"rigid"`, generic per-bone rotation tracks (`boneTracks`, with `loop` and `mirror`),

@@ -27,6 +27,38 @@ The hybrid moveset is unchanged.
   Signature: wind tornado -> ignites into fire.
 - New matter for these: `fire_slice` (one long burning cut, the calling card of the blades). The blast dome uses
   flame_billow + fire_impact + fire_ring.
+## Revision v5: hybrid = the BASE form, minimal (supersedes every earlier hybrid block)
+User: "Hybrid is base form btw, I think just the horns and tail would be fine, no arm stuff, no back stuff, just the
+horns and some scales." (v5 sheet: "needs full redesign"; v6 "becoming the dragon" sheet dropped.) The hybrid is
+what the player looks like with the fruit and no transformation, so it stays light:
+- **Horns** (Head): the v4 dragon model's horns plus its back pair, cut from the mesh with its texture.
+- **Tail** (LowerTorso): the last part of the dragon's tail with the curl fan, scaled down, skinned (about 7 bones),
+  held off the ground.
+- **Some scales:** a few azure scale patches cut from the dragon's skin on the **sides of the head** (Head) and on
+  the **torso** (UpperTorso / LowerTorso), rigid. User: "Side of head and torso".
+- Nothing on the arms, back, hands, collar or waist. No pauldrons, bracers, gauntlets, spine ridge, crown or sash.
+- No Meshy jobs: everything is kitbashed from `assets/source_art/meshy/dragon_v4.glb` (`scripts/build_hybrid.py`).
+- Hybrid moves that relied on claws or other add-ons get their reach from the VFX (fire claws etc.), not meshes.
+
+## Revision v4: dragon sheet v4 + hybrid v5 built FROM the dragon model (supersedes v3d hybrid)
+- Dragon model sheet: `dragon_sheet_v4_openmouth.png`. The mouth is open for rigging (the jaw closes from rest),
+  with clean 3+1-toe feet, a thick body, and a tail that stays thick into the curl fan. User: "Looks good."
+- Hybrid: `hybrid_r15_v5.png`. Blocky R15, strict T-pose, house cel style, no fingers. Every piece comes FROM the
+  dragon model, so the hybrid matches the full form exactly (user: "make sure the hybrid matches the new
+  references and uses pieces of that dragon model"):
+  - **Horns:** the dragon's horns plus its back pair, cut from the model and scaled onto the sides of Head. Use the
+    model's real horn shape (it sweeps back, then forward); the sheet draws them a bit more upright.
+  - **Mane collar:** a ring of the dragon's mane curls, cut and arranged around the neck (UpperTorso).
+  - **Dragon-head pauldrons:** the dragon's head, cut at the neck and scaled down about 0.15x, with its mouth open
+    (the open-mouth model gives this for free), one per shoulder (UpperArm L/R). The jaw bone can snap on hits.
+  - **Bracers:** a length of the dragon's body cut and reshaped into a sleeve (azure scales plus a cream belly
+    strip), plus 3 of the dragon's own talons curving over the box hand (LowerArm L/R, rigid).
+  - **Back spines:** a strip of the dragon's back-spine ridge (UpperTorso).
+  - **Tail:** the dragon's last ~35% of tail with the curl fan, scaled about 0.4x (LowerTorso, skinned, about 7
+    bones).
+  - The crown band and sash from v3d are dropped.
+- Cost: the hybrid pieces are kitbashed in Blender from the one dragon mesh and texture, so there are no Meshy jobs
+  for them. Only the dragon re-run is needed (about 30 credits).
 
 ## Revision v3d: hybrid in the house style of the thunder god sheet (supersedes v3c)
 User: "Wrong style completely, follow style guide from the lightning model." The house style for character sheets
