@@ -63,3 +63,38 @@ def write(fx, name):
     path = os.path.join(OUT, f"{name}.json")
     json.dump(fx, open(path, "w"), indent=1)
     return path
+
+
+def spline(keys, dt=1 / 60):
+    """Time-keyed smooth path for path-follow rigs. keys: [(t, (x, y, z)), (t, (x, y, z), k), ...] where k scales the
+    velocity through that key (1 = Catmull-Rom, 0 = a dead stop / hang, >1 = whips through). Returns path keys."""
+    T = [k[0] for k in keys]
+    P = [list(k[1]) for k in keys]
+    K = [k[2] if len(k) > 2 else 1.0 for k in keys]
+    n = len(keys)
+    M = []
+    for i in range(n):
+        a, b = max(0, i - 1), min(n - 1, i + 1)
+        M.append([(P[b][j] - P[a][j]) / ((T[b] - T[a]) or 1) * K[i] for j in range(3)])
+    out = []
+    t = T[0]
+    while t <= T[-1] + 1e-9:
+        i = max(0, min(n - 2, next((j for j in range(n - 1) if T[j + 1] >= t), n - 2)))
+        h = T[i + 1] - T[i]
+        u = (t - T[i]) / h
+        h00, h10, h01, h11 = 2 * u ** 3 - 3 * u ** 2 + 1, u ** 3 - 2 * u ** 2 + u, -2 * u ** 3 + 3 * u ** 2, u ** 3 - u ** 2
+        out.append([round(t, 4), [round(h00 * P[i][j] + h10 * h * M[i][j] + h01 * P[i + 1][j] + h11 * h * M[i + 1][j], 3) for j in range(3)]])
+        t += dt
+    return out
+
+
+def ripple(period, amp=4.0, waves=1.5, start=3, grow=0.6, axis=2):
+    """Secondary travelling ripple for path-follow rigs (added on top of the path pose): small per bone, it builds
+    toward the tail like a whip."""
+    tr = {}
+    for i in range(start, NB):
+        f = (i - start) / (NB - 1 - start)
+        am = [0, 0, 0]
+        am[axis] = amp * (1 + grow * f)
+        tr[f"spine_{i:02d}"] = wave(period, tuple(am), 2 * math.pi * waves * f)
+    return tr

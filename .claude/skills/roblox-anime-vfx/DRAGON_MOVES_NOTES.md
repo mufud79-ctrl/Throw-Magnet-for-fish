@@ -148,3 +148,12 @@ User: "0.18 good, start rigging; idle animation, movement animation, M1 animatio
   with hit-stop 0.06 + shake, tail ripple, settle). Renders: assets/renders/dragon/dragon_{idle,movement,m1}.mp4.
 - Not done yet: Luau side of rig layer v2 (task 4), hybrid pieces (horns + tail + scales), small whisker wisps left
   beside the jaw.
+- User on v1 anims: "so stiff, fucking zero movement, look up how [the reference dragon] moves". Reference frames
+  (vfx-reference-frames, scratchpad only): the dragon is almost never straight: it hovers in big coils/loops/figure-8s
+  with the body wrapped around itself, swims in large full-body waves, and strikes by whipping the head with the body
+  uncoiling behind. Rework (all three now path-follow, the rigid idle/M1 read as a stiff plank):
+  idle = head circles a tilted loop (r 6.5, 5 s) so the body coils around it + ripple + head bob, roll 0 (banking read
+  upside down); movement = vertical S amp 6 / wavelength 26 + lateral weave + roll into turns + 0.55 s tail whip;
+  M1 = cruise in, cobra rear-up with a hang (0-0.34), whip strike at ~120 studs/s (spline velocity scale 1.6), snap
+  0.46 + hit-stop 0.07, drive past, swoop up, tail crack, coil back. anim_kit: spline() (Hermite with per-key velocity
+  scale: 0 = hang, >1 = whip), ripple().
