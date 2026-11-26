@@ -54,7 +54,7 @@ def used_assets(spec):
             tex.add(L["props"]["Texture"])
         elif L["type"] in ("beam", "trail"):
             tex.update(L.get("textures") or [L["texture"]])
-        elif L["type"] == "rig":
+        elif L["type"] in ("rig", "attach"):
             models.add(L["model"])
         elif L["type"] == "vbeam":
             pls = L.get("planes") or []

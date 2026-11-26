@@ -136,7 +136,11 @@ end
 --   path  { {t, {x,y,z}, ease?}, ... } polyline keyed on absolute effect time (zig-zags, multi-leg routes)
 --   move  {from, to, t0, t1, ease, arc} one eased leg with a vertical arc
 --   wave  {amp, freq, axis, phase, t0} adds axis * amp * sin(2*pi*freq*(t - t0) + phase deg); amp may be keys
+local CURRENT_RIGS = nil -- the playing effect's rigs by layer id (set while that effect builds and steps)
 local function attachPos(L, t)
+	if L.bone and CURRENT_RIGS and CURRENT_RIGS[L.bone.rig] then
+		return CURRENT_RIGS[L.bone.rig]:bonePos(L.bone.name, t, L.bone.offset)
+	end
 	local at = L.at or { 0, 0, 0 }
 	local p
 	if L.path then
@@ -669,11 +673,28 @@ local function makeVBeam(play, L)
 	return item
 end
 
--- Rigged model: a skinned MeshPart (imported FBX with Bones, kept in AnimeVFX.Models; scripts can't set MeshId, so
--- the runtime clones it). The head bone rides path / move / wave; every other spine bone sits a fixed arc length
--- behind the head along the head's own past trajectory (same maths as the previewer, a pure function of t), so the
--- body traces the path and can coil. Bones face along the path tangent, kept upright; `jaw` keys open the mouth.
--- Bone.WorldCFrame is set every frame (not verified in Studio from this environment).
+-- Rigged model (rig layer v2): a skinned MeshPart (imported FBX with Bones, kept in AnimeVFX.Models; scripts can't
+-- set MeshId, so the runtime clones it). Same maths as the previewer (lab/page/vfx.js, class Rig):
+--   follow "path" (default): the head bone rides path / move / wave; every other spine bone sits a fixed arc length
+--     behind the head along the head's own past trajectory (a pure function of t), so the body traces the path and
+--     coils. Bones face along the tangent, kept upright, `roll` keys (deg, over life).
+--   follow "rigid": the skeleton keeps its rest shape; the part rides path / move / wave, turned by `orient` keys
+--     ({t, {x, y, z} deg}, seconds from t0, Euler YXZ).
+--   boneTracks: { [bone] = { rot = {{t, {x, y, z} deg, ease?}, ...}, loop = s, offset = s, mirror = {"L", "R"} } }
+--     local Euler XYZ written to Bone.Transform on top of the follow pose (mirror also drives the bone with the first
+--     string replaced by the second, Y and Z negated). `jaw` keys rotate the jaw bone (deg, over life).
+--   type "attach": the clone is welded to a part of opts.caster (head | torso | armR | armL | handR | handL | hips)
+--     with `offset` / `rot` (deg) keys over seconds, and plays its own boneTracks (hybrid pieces on the avatar).
+--   Other layers ride a bone with `bone = { rig = "<rig layer id>", name = "<bone>", offset = {x, y, z} }`.
+-- Bone.WorldCFrame / Bone.Transform are set every frame. Parse-checked only: not run in Studio from this environment.
+local ATTACH_PARTS = {
+	head = "Head", torso = "UpperTorso", armR = "RightUpperArm", armL = "LeftUpperArm",
+	handR = "RightHand", handL = "LeftHand", hips = "LowerTorso",
+}
+local function eulerXYZ(r, sx, sy, sz)
+	return CFrame.fromEulerAnglesXYZ(r[1] * RAD * sx, r[2] * RAD * sy, r[3] * RAD * sz)
+end
+
 local function makeRig(play, L)
 	local item = {}
 	local models = script:FindFirstChild("Models")
@@ -682,31 +703,61 @@ local function makeRig(play, L)
 		warn("AnimeVFX: rig model missing from AnimeVFX.Models: " .. tostring(L.model))
 		function item:step() end
 		function item:destroy() end
+		function item:bonePos()
+			return Vector3.zero
+		end
 		return item
 	end
+	local isAttach = L.type == "attach"
 	local inst = src:Clone()
 	local part = inst:IsA("BasePart") and inst or inst:FindFirstChildWhichIsA("BasePart", true)
+	local function setup(p)
+		p.CanCollide, p.CanQuery, p.CanTouch, p.CastShadow = false, false, false, false
+		if isAttach then
+			p.Anchored, p.Massless = false, true
+		else
+			p.Anchored = true
+		end
+	end
 	for _, d in ipairs(inst:GetDescendants()) do
 		if d:IsA("BasePart") then
-			d.Anchored, d.CanCollide, d.CanQuery, d.CanTouch, d.CastShadow = true, false, false, false, false
+			setup(d)
 		end
 	end
 	if inst:IsA("BasePart") then
-		inst.Anchored, inst.CanCollide, inst.CanQuery, inst.CanTouch, inst.CastShadow = true, false, false, false, false
+		setup(inst)
 	end
 	part.CFrame = play.origin
+	local bones, restLocal = {}, {}
+	for _, d in ipairs(inst:GetDescendants()) do
+		if d:IsA("Bone") then
+			bones[d.Name] = d
+			restLocal[d] = d.CFrame
+		end
+	end
 	local prefix = (L.bones and L.bones.prefix) or "spine_"
 	local spine = {}
-	for _, d in ipairs(inst:GetDescendants()) do
-		if d:IsA("Bone") and d.Name:sub(1, #prefix) == prefix then
-			table.insert(spine, d)
+	for name, b in pairs(bones) do
+		if name:sub(1, #prefix) == prefix then
+			table.insert(spine, b)
 		end
 	end
 	table.sort(spine, function(a, b)
 		return a.Name < b.Name
 	end)
-	local jaw = L.jawBone and inst:FindFirstChild(L.jawBone, true)
-	local jawRest = jaw and jaw.CFrame
+	local jaw = L.jawBone and bones[L.jawBone]
+	local tracks = {}
+	for name, tr in pairs(L.boneTracks or {}) do
+		if bones[name] then
+			table.insert(tracks, { bone = bones[name], tr = tr, s = { 1, 1, 1 } })
+		end
+		if tr.mirror then
+			local n2 = name:gsub(tr.mirror[1], tr.mirror[2], 1)
+			if n2 ~= name and bones[n2] then
+				table.insert(tracks, { bone = bones[n2], tr = tr, s = { 1, -1, -1 } })
+			end
+		end
+	end
 	-- rest pose in cast space; the body axis maps at the head bone's rest height (bones keep their natural heights)
 	local rest, restZ, offs = {}, {}, { 0 }
 	for i, b in ipairs(spine) do
@@ -719,6 +770,19 @@ local function makeRig(play, L)
 	local axisY = rest[1] and rest[1].Position.Y or 0
 	local t0 = L.t0 or 0
 	local life = L.life or 1
+	local weld
+	if isAttach then
+		local char = play.opts and play.opts.caster
+		local target = char and char:FindFirstChild(ATTACH_PARTS[L.part or "head"] or "Head")
+		if target and target:IsA("BasePart") then
+			weld = Instance.new("Weld")
+			weld.Part0, weld.Part1 = target, part
+			weld.C0 = CFrame.new(v3(evalKeys(L.offset, 0, { 0, 0, 0 }))) * eulerXYZ(evalKeys(L.rot, 0, { 0, 0, 0 }), 1, 1, 1)
+			weld.Parent = part
+		else
+			warn("AnimeVFX: attach layer needs opts.caster with part " .. tostring(ATTACH_PARTS[L.part or "head"]))
+		end
+	end
 	inst.Parent = nil
 
 	local function trace(t)
@@ -745,15 +809,64 @@ local function makeRig(play, L)
 			local span = ds[j] - ds[j - 1]
 			return pts[j - 1]:Lerp(pts[j], span > 0 and (d - ds[j - 1]) / span or 0)
 		end
-		local s0, s1 = attachPos(L, t0), attachPos(L, t0 + 0.02)
-		local birth = (s1 - s0).Magnitude > 1e-4 and (s1 - s0).Unit or Vector3.new(0, 0, -1)
 		local out = {}
 		for i, d in ipairs(offs) do
 			local p = at(d)
 			local dv = at(math.max(0, d - 0.35)) - at(d + 0.35)
-			out[i] = { p = p, dir = dv.Magnitude > 1e-4 and dv.Unit or birth }
+			out[i] = { p = p, dir = dv.Magnitude > 1e-4 and dv.Unit or bdir }
 		end
 		return out
+	end
+
+	local posedAt = nil
+	local function pose(t)
+		posedAt = t
+		local age = t - t0
+		local k = math.clamp(age / life, 0, 1)
+		for b, cf in pairs(restLocal) do
+			b.CFrame = cf
+			b.Transform = CFrame.identity
+		end
+		if isAttach then
+			if weld and (isKeys(L.offset) or isKeys(L.rot)) then
+				weld.C0 = CFrame.new(v3(evalKeys(L.offset, age, { 0, 0, 0 }))) * eulerXYZ(evalKeys(L.rot, age, { 0, 0, 0 }), 1, 1, 1)
+			end
+		elseif L.follow == "rigid" then
+			local o = evalKeys(L.orient, age, { 0, 0, 0 })
+			part.CFrame = play.origin * CFrame.new(attachPos(L, t)) * CFrame.fromEulerAnglesYXZ(o[1] * RAD, o[2] * RAD, o[3] * RAD)
+		else
+			local fr = trace(t)
+			local roll = evalKeys(L.roll, k, 0) * RAD
+			part.CFrame = play.origin * CFrame.new(fr[1].p) -- keep the part near the body for culling
+			for i, b in ipairs(spine) do
+				local p, dir = fr[i].p, fr[i].dir
+				local rot = CFrame.lookAt(Vector3.zero, dir, math.abs(dir.Y) > 0.98 and Vector3.zAxis or Vector3.yAxis) * CFrame.Angles(0, 0, roll)
+				b.WorldCFrame = play.origin * (CFrame.new(p) * rot * CFrame.new(0, -axisY, -restZ[i]) * rest[i])
+			end
+		end
+		for _, it in ipairs(tracks) do
+			local tr = it.tr
+			local tl = age + (tr.offset or 0)
+			if tr.loop then
+				tl %= tr.loop
+			end
+			it.bone.Transform = it.bone.Transform * eulerXYZ(evalKeys(tr.rot, tl, { 0, 0, 0 }), it.s[1], it.s[2], it.s[3])
+		end
+		if jaw and L.jaw then
+			jaw.CFrame = restLocal[jaw] * CFrame.Angles(evalKeys(L.jaw, k, 0) * RAD, 0, 0)
+		end
+	end
+
+	-- cast-space position of a bone (plus an offset in bone space) at effect time t, for bone-riding layers
+	function item:bonePos(name, t, off)
+		local b = bones[name]
+		if not b then
+			return Vector3.zero
+		end
+		if posedAt ~= t then
+			pose(t)
+		end
+		return play.origin:PointToObjectSpace((b.TransformedWorldCFrame * CFrame.new(v3(off or { 0, 0, 0 }))).Position)
 	end
 
 	function item:step(t)
@@ -764,20 +877,10 @@ local function makeRig(play, L)
 			end
 			return
 		end
-		local k = age / life
-		local fr = trace(t)
-		local roll = evalKeys(L.roll, k, 0) * RAD
-		part.CFrame = play.origin * CFrame.new(fr[1].p) -- keep the part near the body for culling
-		for i, b in ipairs(spine) do
-			local p, dir = fr[i].p, fr[i].dir
-			local rot = CFrame.lookAt(Vector3.zero, dir, math.abs(dir.Y) > 0.98 and Vector3.zAxis or Vector3.yAxis) * CFrame.Angles(0, 0, roll)
-			local desired = CFrame.new(p) * rot * CFrame.new(0, -axisY, -restZ[i]) * rest[i]
-			b.WorldCFrame = play.origin * desired
+		if posedAt ~= t then
+			pose(t)
 		end
-		if jaw then
-			jaw.CFrame = jawRest * CFrame.Angles(evalKeys(L.jaw, k, 0) * RAD, 0, 0)
-		end
-		local tr = math.clamp(evalKeys(L.transparency, k, 0), 0, 1)
+		local tr = math.clamp(evalKeys(L.transparency, age / life, 0), 0, 1)
 		for _, d in ipairs(inst:GetDescendants()) do
 			if d:IsA("BasePart") then
 				d.Transparency = tr
@@ -792,6 +895,9 @@ local function makeRig(play, L)
 	end
 	function item:destroy()
 		inst:Destroy()
+	end
+	if L.id then
+		play.rigs[L.id] = item
 	end
 	return item
 end
@@ -1252,6 +1358,8 @@ function AnimeVFX.Play(effect, origin, opts)
 		targets = opts.targets or {},
 		quality = math.clamp(AnimeVFX.Quality * autoQuality(), 0.3, 1),
 		folder = Instance.new("Folder"),
+		opts = opts,
+		rigs = {},
 	}
 	play.folder.Name = spec.name or "AnimeVFX"
 	play.folder.Parent = folder()
@@ -1260,7 +1368,20 @@ function AnimeVFX.Play(effect, origin, opts)
 	play.root.Parent = play.folder
 
 	local items, emitters = {}, {}
+	CURRENT_RIGS = play.rigs
+	-- rigs and attached models first: bone-riding layers read their pose
+	local ordered = {}
 	for _, L in ipairs(spec.layers or {}) do
+		if L.type == "rig" or L.type == "attach" then
+			table.insert(ordered, L)
+		end
+	end
+	for _, L in ipairs(spec.layers or {}) do
+		if L.type ~= "rig" and L.type ~= "attach" then
+			table.insert(ordered, L)
+		end
+	end
+	for _, L in ipairs(ordered) do
 		local it
 		if L.type == "emitter" then
 			it = makeEmitter(play, L)
@@ -1275,13 +1396,14 @@ function AnimeVFX.Play(effect, origin, opts)
 			it = makeTrail(play, L)
 		elseif L.type == "vbeam" then
 			it = makeVBeam(play, L)
-		elseif L.type == "rig" then
+		elseif L.type == "rig" or L.type == "attach" then
 			it = makeRig(play, L)
 		end
 		if it then
 			table.insert(items, it)
 		end
 	end
+	CURRENT_RIGS = nil
 	for _, D in ipairs(spec.debris or {}) do
 		table.insert(items, makeDebris(play, D))
 	end
@@ -1342,6 +1464,7 @@ function AnimeVFX.Play(effect, origin, opts)
 		if cc and grade then
 			cc.Brightness, cc.Contrast, cc.Saturation, cc.TintColor = 0, 0, 0, Color3.new(1, 1, 1)
 		end
+		CURRENT_RIGS = play.rigs
 		for _, it in ipairs(items) do
 			it:destroy()
 		end
@@ -1370,6 +1493,7 @@ function AnimeVFX.Play(effect, origin, opts)
 				te = newTe
 			end
 		end
+		CURRENT_RIGS = play.rigs
 		for _, it in ipairs(items) do
 			it:step(te)
 		end

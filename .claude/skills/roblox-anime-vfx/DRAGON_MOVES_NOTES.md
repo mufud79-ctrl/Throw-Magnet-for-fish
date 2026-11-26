@@ -157,3 +157,24 @@ User: "0.18 good, start rigging; idle animation, movement animation, M1 animatio
   M1 = cruise in, cobra rear-up with a hang (0-0.34), whip strike at ~120 studs/s (spline velocity scale 1.6), snap
   0.46 + hit-stop 0.07, drive past, swoop up, tail crack, coil back. anim_kit: spline() (Hermite with per-key velocity
   scale: 0 = hang, >1 = whip), ripple().
+- User approved the v2 animations ("Yes").
+
+## Step 3: rig layer v2 in Luau + hybrid pieces (waiting for approval)
+- Luau (templates/ReplicatedStorage/AnimeVFX/init.lua, makeRig): follow rigid (part CFrame from path + `orient`, Euler
+  YXZ), boneTracks -> Bone.Transform (loop / offset / mirror), jaw keys, every bone reset to rest each frame; bone
+  riding via `bone = {rig, name, offset}` (CURRENT_RIGS set while an effect builds and steps; rigs built/stepped
+  first; Bone.TransformedWorldCFrame); `attach` layer welds a cloned model to opts.caster's Head / UpperTorso /
+  RightHand / ... with offset/rot keys and its own bone tracks. Parse-checked with luaparse 0.3.1
+  (scripts/luau_parse_check.js; `npm i luaparse@0.3.1` somewhere and run with NODE_PATH pointing at it). NOT run in Studio: bone axes after FBX import into Roblox
+  are unverified (tracks were authored against the glTF axes in the previewer).
+- export_luau.py lists `attach` models in rig_models too. Spec keys documented in references/spec-format.md.
+- Previewer: bone-riding layers (RIGS registry, Rig.bonePos re-poses at the substep time; verified: smoke riding the
+  jaw traces the head's path through the M1), `attach` layers parented to the avatar (head/torso/arm/hand/hips),
+  plain (non-skinned) meshes supported.
+- scripts/build_hybrid.py (DESIGN "Revision v5"): from build_dragon.assemble() (shares the dragon atlas):
+  dragon_hybrid_head = the dragon's horns + back pair (cream verts above the brow, small islands dropped, x2.9,
+  seated on the head) + skin-scale patches on both head sides; dragon_hybrid_torso = scale patches on the front and
+  back corners of the torso (R15 arms hang over the sides, plates there never showed); dragon_hybrid_tail = the last
+  ~35% of the tail with the curl fan, 4.6 studs, back + down 32 deg from the hips, bones tail_0..6. Out:
+  assets/models/dragon_hybrid_{head,torso,tail}.glb, assets/meshes/*.fbx, assets/models/dragon_hybrid.json.
+  Render: assets/renders/dragon/dragon_hybrid_idle.mp4 (tail sway loop, orbiting camera).

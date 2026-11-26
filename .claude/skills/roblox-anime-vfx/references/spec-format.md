@@ -9,7 +9,7 @@ the item's life; for `pose`, `lights.brightness` and `camera` it is seconds/norm
 {
   "name": "000_FireFist", "title": "Fire Fist", "element": "Flame", "archetype": "projectile",
   "duration": 2.2,
-  "layers": [ /* emitter | shell | beam | bolt | trail | vbeam | rig */ ],
+  "layers": [ /* emitter | shell | beam | bolt | trail | vbeam | rig | attach */ ],
   "hitstop": [{"t": 0.74, "dur": 0.08}],          // rule 4
   "hits":    [{"t": 0.74, "dummy": 0, "dir": [0,0,-1], "power": 1.0}],
   "numbers": [{"t": 0.74, "at": [0,6.2,-24], "text": "115", "color": "#ffb02a", "vel": [3,17,0], "size": 2.6}],
@@ -62,6 +62,27 @@ the item's life; for `pose`, `lights.brightness` and `camera` it is seconds/norm
   travelled a body length, the unborn part continues straight back from the start point (hide it behind a
   portal effect or the caster; the creature pours out of it without folding). Models are
   built straight along -Z (head at -Z); see `scripts/rig_serpent.py`.
+- **rig layer v2** (previewer `lab/page/vfx.js` class Rig + Luau `makeRig`; first used by the dragon,
+  `scripts/rig_dragon.py`, `lab/dragon/anims/`):
+  - `id`: name other layers use to ride this rig's bones.
+  - `follow`: `"path"` (default, above) or `"rigid"`: the skeleton keeps its rest shape and the model root rides
+    `path` / `move` / `wave`, turned by `orient` `[[t, [x, y, z] deg, ease?]]` (t = seconds from `t0`, Euler YXZ;
+    +X pitches the head up). Path-follow is what makes a serpent flow (idle coils, swims, whip strikes); rigid suits a
+    hover or a roar where the head must not move.
+  - `boneTracks`: `{"<bone>": {"rot": [[t, [x, y, z] deg, ease?], ...], "loop": s, "offset": s, "mirror": ["L", "R"]}}`
+    local Euler XYZ added on top of the follow pose (Roblox: written to `Bone.Transform`); t = seconds from `t0`,
+    wrapped by `loop`; `mirror` also drives the bone named with the first string replaced by the second (Y and Z
+    negated). Every bone resets to rest each frame. A track on a spine bone moves everything behind it (the chain
+    runs head -> tail). Dragon axes: spine local Z = yaw, +X bends the body behind the bone down.
+  - `jawBone` + `jaw` keys (deg, over life): + opens (the dragon's rest pose is closed).
+  - **bone-riding layers**: any emitter, trail or light can set `bone: {rig: "<rig id>", name: "<bone>", offset:
+    [x, y, z]}` (offset in bone space) instead of `at` / `path`; it follows that bone every frame (breath from the
+    jaw, embers off the claws). Rigs are built and stepped before the other layers.
+- **attach** (hybrid pieces on the caster): `model` (glb / MeshPart in `AnimeVFX.Models`), `part` head | torso | armR
+  | armL | handR | handL | hips (Roblox Head / UpperTorso / RightUpperArm / LeftUpperArm / RightHand / LeftHand /
+  LowerTorso, welded; needs `opts.caster`), `offset` / `rot` (deg) keys over seconds, `t0`, `life`, `boneTracks`
+  (skinned pieces, e.g. the hybrid tail `tail_0..6`). Pieces are authored around their part's centre (offset 0):
+  `scripts/build_hybrid.py`.
 
 ## Paths (any layer with an attachment: emitter, shell, trail, light)
 - `path`: `[[t, [x,y,z], ease?], ...]` polyline keyed on absolute effect time (zig-zag dashes, multi-leg routes).

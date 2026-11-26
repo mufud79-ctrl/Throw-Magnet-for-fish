@@ -1,0 +1,28 @@
+{
+ "pieces": {
+  "dragon_hybrid_head": {
+   "part": "head",
+   "tris": 2187
+  },
+  "dragon_hybrid_torso": {
+   "part": "torso",
+   "tris": 1200
+  },
+  "dragon_hybrid_tail": {
+   "part": "hips",
+   "tris": 3000,
+   "bones": [
+    "tail_0",
+    "tail_1",
+    "tail_2",
+    "tail_3",
+    "tail_4",
+    "tail_5",
+    "tail_6"
+   ],
+   "length_studs": 4.6
+  }
+ },
+ "note": "authored around each R15 part's centre; attach offset 0. Shares the dragon atlas.",
+ "head_scale_from_dragon": 0.18000000715255737
+}

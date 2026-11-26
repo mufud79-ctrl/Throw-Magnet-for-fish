@@ -77,7 +77,10 @@ const quatOf = (R) => new THREE.Quaternion().setFromEuler(new THREE.Euler((R || 
 //   move  {from, to, t0, t1, ease, arc}  one eased leg with a vertical arc,
 //   wave  {amp, freq, axis, phase, t0}  adds axis * amp * sin(2*pi*freq*(t - t0) + phase deg); amp may be
 //         keys on absolute time (S-curves that tighten or die out).
+// rig layer v2: layers with `bone: {rig: "<rig layer id>", name: "<bone>", offset: [x, y, z] (bone space)}` ride a bone
+const RIGS = {};
 function attachPos(L, t) {
+  if (L.bone && RIGS[L.bone.rig]) return RIGS[L.bone.rig].bonePos(L.bone.name, t, L.bone.offset);
   const at = L.at || [0, 0, 0];
   let p;
   if (L.path) p = evalKeys(L.path, t, at);
@@ -546,16 +549,23 @@ async function loadRig(name) {
   if (!rigCache[name]) rigCache[name] = new Promise((res, rej) => new GLTFLoader().load(`${ASSET_BASE}/models/${name}.glb`, res, undefined, rej));
   return rigCache[name];
 }
+// `attach` layers (hybrid pieces) reuse this class: the clone is parented to a part of the caster avatar
+// (head | torso | armR | armL | handR | handL | hips) with `offset` / `rot` (deg) / `scale`, and plays its own boneTracks.
+const AVATAR_PARTS = { head: ['upper', [0, 2.6, 0]], torso: ['upper', [0, 1, 0]], armR: ['armR', [0, -0.5, 0]], armL: ['armL', [0, -0.5, 0]],
+  handR: ['armR', [0, -1.9, 0]], handL: ['armL', [0, -1.9, 0]], hips: ['root', [0, 2, 0]] };
 class Rig {
-  constructor(L, scene, gltf) {
+  constructor(L, scene, gltf, avatar) {
     this.L = L;
+    this.avatar = avatar;
     const root = this.root = gltf.scene.clone(true);
     // SkeletonUtils-free clone: rebind skinned meshes to the cloned bones by name
     const byName = {}; root.traverse((o) => { if (o.isBone) byName[o.name] = o; });
     root.traverse((o) => {
-      if (o.isSkinnedMesh) {
-        const bones = o.skeleton.bones.map((b) => byName[b.name]);
-        o.bind(new THREE.Skeleton(bones, o.skeleton.boneInverses), o.bindMatrix);
+      if (o.isMesh) {
+        if (o.isSkinnedMesh) {
+          const bones = o.skeleton.bones.map((b) => byName[b.name]);
+          o.bind(new THREE.Skeleton(bones, o.skeleton.boneInverses), o.bindMatrix);
+        }
         const map = o.material.map || null;
         o.material = new THREE.MeshBasicMaterial({ map, color: new THREE.Color(1, 1, 1), transparent: true, depthWrite: true, side: THREE.DoubleSide });
         o.frustumCulled = false; o.renderOrder = 12;
@@ -564,7 +574,12 @@ class Rig {
     });
     const sc = L.scale || 1;
     root.scale.setScalar(sc);
-    scene.add(root);
+    if (L.type === 'attach' && avatar) {
+      const [grp, base] = AVATAR_PARTS[L.part || 'head'] || AVATAR_PARTS.head;
+      avatar[grp].add(root);
+      this.attachBase = base;
+    } else scene.add(root);
+    if (L.id) RIGS[L.id] = this;
     root.updateMatrixWorld(true);
     const pre = (L.bones && L.bones.prefix) || 'spine_';
     this.byName = byName;
@@ -587,7 +602,8 @@ class Rig {
     this.rest = this.spine.map((b) => b.matrixWorld.clone());
     this.restPos = this.rest.map((m) => new THREE.Vector3().setFromMatrixPosition(m));
     // the body axis: path points map to (0, y_head, z_i) so bones keep their natural heights (no neck kink)
-    this.axisY = this.restPos[0].y;
+    this.axisY = this.restPos.length ? this.restPos[0].y : 0;   // attach pieces may have no spine
+    this.mats = this.mats || [];
     this.offs = [0];
     for (let i = 1; i < this.restPos.length; i++) this.offs.push(this.offs[i - 1] + Math.abs(this.restPos[i].z - this.restPos[i - 1].z));
     root.visible = false;
@@ -622,11 +638,13 @@ class Rig {
   }
   draw(cam, t) {
     const L = this.L, age = t - (L.t0 || 0), life = L.life || 1;
+    this._posedAt = t;
     if (age < 0 || age >= life) { this.root.visible = false; return; }
     this.root.visible = true;
     const k = age / life;
     for (const [n, r] of Object.entries(this.restLocal)) { this.byName[n].position.copy(r.p); this.byName[n].quaternion.copy(r.q); }
-    if (L.follow === 'rigid') this.drawRigid(t, k, age);
+    if (L.type === 'attach') this.drawAttach(age);
+    else if (L.follow === 'rigid') this.drawRigid(t, k, age);
     else { this.root.position.set(0, 0, 0); this.root.quaternion.identity(); this.drawPath(t, k); }
     this.applyTracks(age);
     if (this.jaw && L.jaw) this.jaw.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), evalKeys(L.jaw, k, 0) * DEG));
@@ -642,6 +660,19 @@ class Rig {
     const L = this.L, p = attachPos(L, t), o = evalKeys(L.orient, age, [0, 0, 0]);
     this.root.position.set(p[0], p[1], p[2]);
     this.root.quaternion.setFromEuler(new THREE.Euler(o[0] * DEG, o[1] * DEG, o[2] * DEG, 'YXZ'));
+  }
+  drawAttach(age) {
+    const L = this.L, b = this.attachBase || [0, 0, 0], o = evalKeys(L.offset, age, [0, 0, 0]), r = evalKeys(L.rot, age, [0, 0, 0]);
+    this.root.position.set(b[0] + o[0], b[1] + o[1], b[2] + o[2]);
+    this.root.rotation.set(r[0] * DEG, r[1] * DEG, r[2] * DEG, 'YXZ');
+  }
+  // world position of a bone (plus an offset in bone space) at effect time t, for bone-riding layers
+  bonePos(name, t, off) {
+    if (this._posedAt !== t) { this.draw(null, t); this._posedAt = t; }
+    const b = this.byName[name];
+    if (!b) return [0, 0, 0];
+    const v = new THREE.Vector3(...(off || [0, 0, 0])).applyMatrix4(b.matrixWorld);
+    return [v.x, v.y, v.z];
   }
   // boneTracks: {"<bone>": {"rot": [[t, [x, y, z] deg, ease], ...], "loop": period_s, "offset": s, "mirror": ["L", "R"]}}
   // local Euler (XYZ) added on top of the follow pose; t in seconds from t0 (wrapped by `loop`); `mirror` also drives
@@ -911,7 +942,14 @@ class Player {
     });
     this.items = [];
     let i = 0;
-    for (const L of fx.layers) {
+    for (const k of Object.keys(RIGS)) delete RIGS[k];
+    // rigs and attached models first: bone-riding layers read their pose
+    const isRig = (L) => L.type === 'rig' || L.type === 'attach';
+    for (const L of fx.layers.filter(isRig)) {
+      L.order = i++;
+      this.items.push(new Rig(L, scene, await loadRig(L.model), this.caster));
+    }
+    for (const L of fx.layers.filter((x) => !isRig(x))) {
       L.order = i++;
       if (L.type === 'emitter') this.items.push(new Emitter(L, scene, L.seed ?? (1000 + i * 7919)));
       else if (L.type === 'shell') this.items.push(new Shell(L, scene, await loadMesh(L.mesh)));
@@ -919,7 +957,6 @@ class Player {
       else if (L.type === 'bolt') this.items.push(new Bolt(L, scene));
       else if (L.type === 'trail') this.items.push(new Trail(L, scene, this));
       else if (L.type === 'vbeam') this.items.push(new VBeam(L, scene));
-      else if (L.type === 'rig') this.items.push(new Rig(L, scene, await loadRig(L.model)));
     }
     for (const D of fx.debris || []) this.items.push(new Debris(D, scene, this.groundColor));
     for (const N of fx.numbers || []) this.items.push(new DamageNumber(N, scene));
