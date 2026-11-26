@@ -118,19 +118,12 @@ def build():
     g = [LAND[0], 0, LAND[2]]
     L += impact([g[0], 2.0, g[2]], T + 0.005, size=11, life=0.55, seed=581)
     L.append(flare([g[0], 1.8, g[2]], T + 0.005, size=16, life=0.22, seed=582))
-    L += glint([g[0] + 0.4, 2.4, g[2] + 0.6], T + 0.005, size=6, life=0.2, seed=583)
-    L += ember_spray([g[0], 2.0, g[2]], T + 0.01, size=12, life=0.6, seed=584)
     L.append(streaks([g[0], 1.0, g[2]], T + 0.01, 14, speed=(60, 100), length=(2.5, 5), spread=60, seed=585))
-    L += fire_ring(g, T + 0.01, 9.5, life=0.7, seed=586)
-    L.append(shockwave(g, T + 0.015, 12, life=0.45, seed=587))
     L.append(dust_ring(g, T + 0.015, n=16, speed=(32, 44), size=(3.5, 8), seed=588))
     L.append(dust_rollout(g, T + 0.02, radius=4, n=12, size=(12, 20), speed=(14, 22), seed=592))
-    L += fire_bloom(g, T + 0.01, radius=8.0, dur=1.0, height=8.0, seed=5)
     L += dark_spikes([g[0], 2.2, g[2]], T + 0.02, size=16, life=0.32, seed=597)
     L.append(fire_scraps([g[0], 2.0, g[2]], T + 0.02, n=22, speed=(16, 30), seed=598))
     # the flow shape (reference): big flame streams whirl out of the landing and wrap the crater
-    L += fire_streams(g, T + 0.01, 0.45, r0=1.0, r1=10.0, n=8, y0=0.6, rise=1.2, turns=0.85, width=1.6, life=0.42, seed=3)
-    L += fire_streams(g, T + 0.06, 0.5, r0=2.0, r1=8.0, n=5, y0=2.5, rise=2.5, turns=0.7, width=1.1, life=0.38, seed=7, reverse=True)
     # thin hot swirl lines over the red streams (crisp yellow lines on red haze, as in the references)
     for k in range(6):
         ph = k / 6 * 2 * math.pi + 0.4

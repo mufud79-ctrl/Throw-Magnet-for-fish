@@ -16,21 +16,21 @@ import math
 import os
 
 LAYERS = ("glow", "rim", "mid", "core")
-LE = {"glow": 0.3, "rim": 0.15, "mid": 0.25, "core": 0.6}   # Type Soul pass: flat saturated colour that COVERS the sand
+LE = {"glow": 0.3, "rim": 0.0, "mid": 0.3, "core": 0.8}    # value pass: the rim is a DARK alpha-blended edge (grayscale test on sand)
 BR = {"glow": 1.4, "rim": 1.15, "mid": 1.1, "core": 1.2}
 GLOW_TR = 0.55
 
 # Type Soul pass: the named colours shift with the palette (yellow-dominant); CRIMSON is now the orange-red edge
-WHITE_GOLD, GOLD, ORANGE, CRIMSON, EMBER, CHAR = "#fff6b0", "#ffd21a", "#ff8a14", "#ff6a10", "#c8281a", "#2a2226"
+WHITE_GOLD, GOLD, ORANGE, CRIMSON, EMBER, CHAR = "#fff6b0", "#ffd21a", "#ff8a14", "#9a1a0e", "#6a100a", "#2a2226"
 SMOKE = "#3a2c2a"          # black smoke (smoke_cel_v3 is shaded 0.32..1, so this reads as a lit charcoal volume)
 SAND_DUST = "#cdb48a"
 AZURE = "#7fb0ff"          # stand-in dragon tint (thunder_serpent until assets/models/dragon.glb exists)
 
 PALS = {
     "fire": {   # Type Soul fire on sand: huge flat YELLOW masses, thin orange-red edges, dark-red accents
-        "HOT": {"glow": "#ff8a14", "rim": "#ff6a10", "mid": "#ffd21a", "core": "#fff6b0"},
+        "HOT": {"glow": "#ff8a14", "rim": "#9a1a0e", "mid": "#ffd21a", "core": "#fff6b0"},   # VALUE: dark edge / bright body / white core
         "COOL": {"glow": [[0, "#ff8a14"], [0.6, "#e0401a"], [1, "#8a1a10"]],
-                 "rim": [[0, "#ff6a10"], [0.55, "#e0401a"], [1, "#8a1a10"]],
+                 "rim": [[0, "#9a1a0e"], [0.55, "#6a100a"], [1, "#3a0a08"]],
                  "mid": [[0, "#ffd21a"], [0.5, "#ffb01a"], [1, "#ff6a10"]],
                  "core": [[0, "#fff6b0"], [0.4, "#ffe25a"], [1, "#ffb01a"]]},
         "spark": [[0, "#fff6b0"], [0.3, "#ffd21a"], [0.7, "#ff8a14"], [1, "#e0401a"]], "light": "#ff9a2a",
@@ -336,7 +336,7 @@ def glow_orb(at, t, size, life=0.3, pal="fire", tr=0.45, seed=72, rate=None, pat
     return e
 
 
-def ambience(centre, t0, t1, radius=10, rate=10, pal="fire", seed=73, big=1.0):
+def ambience(centre, t0, t1, radius=10, rate=10, pal="fire", seed=73, big=0.5):
     """Ability ambience for the whole move. The BIG layer is what sells an ability (user: "haze particles, dust
     particles, not tiny ones, big large pieces"): large sand-dust veils rolling along the ground, big heat-haze sheets
     rising, large ember pieces drifting and tumbling, a soft high smoke veil - plus the small drifting embers."""
@@ -574,7 +574,7 @@ def _modernize(L):
         return round(GLOW_TR + (1 - GLOW_TR) * tr, 3) if isinstance(tr, (int, float)) else [[a, round(GLOW_TR + (1 - GLOW_TR) * v, 3)] + e for a, v, *e in tr]
     if L.get("type") == "emitter":
         pr = L["props"]; k = _layer_of(pr.get("Texture"))
-        if k is None or pr.get("LightEmission") == 0:
+        if k is None or pr.get("Color") == CHAR:          # char decals keep their own settings
             return
         pr["LightEmission"] = LE[k]
         if k == "glow":

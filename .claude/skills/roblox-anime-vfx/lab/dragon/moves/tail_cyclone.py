@@ -48,7 +48,6 @@ def tip(t, r=RAD, y=0.6):
 def build():
     L = [ambience([0, 0, 0], 0, DUR, radius=10, rate=10, seed=701)]
     # ---- coil: heat at the hips, embers pulled in, a warm pool
-    L += swirl([0, 2.2, 0], 0.02, TS + 0.04, 4.2, seed=702)
     L.append(glow_pool([0, 0, 0], 0, 7, life=0.25, rate=[[0.0, TE, 8]], peak=0.28, seed=703))
     L.append({"type": "emitter", "at": [0, 2.0, 0], "part": [7, 4, 7], "rate": [[0.0, TS - 0.02, 34]], "seed": 704, "props": {
         "Texture": "spark_streak", "Color": PALS["fire"]["spark"], "LightEmission": 1, "Brightness": 1.5, "Shape": "Sphere", "ShapeInOut": "Inward",
@@ -71,8 +70,6 @@ def build():
     L.append(dust_ring([0, 0, 0], TS + 0.05, n=18, speed=(24, 34), size=(3, 6.5), seed=712))
     for k in range(3):
         L += smear([0, 1.6, 0], TS + 0.04 + 0.12 * k, 12, 120 * k, life=0.2, seed=713 + k)
-    L += fire_streams([0, 0, 0], TS + 0.05, TE - TS, r0=1.5, r1=RAD + 1.0, n=6, y0=0.6, rise=0.8, turns=1.0, width=1.3, life=0.4, seed=31)
-    L += fire_streams([0, 0, 0], TP, 0.45, r0=RAD - 1.0, r1=RAD + 4.0, n=8, y0=0.5, rise=1.5, turns=0.5, width=1.2, life=0.38, seed=33)
     # smoulder + pulse before the eruption
     L.append(glow_pool([0, 0, 0], TE, 15, life=0.35, peak=0.35, seed=720, hold=0.6))
     L.append(embers([0, 0.4, 0], 0, rate=[[TE, TP + 0.05, 50]], speed=(1, 3), life=(0.6, 1.0), rise=5, grav=0, part=[13, 0.3, 13], seed=721))
@@ -88,8 +85,6 @@ def build():
         L += pillar(p, 8.0, t, 0.62, width=3.6, reach=[[0, 0], [0.14, 1, "out"], [1, 1]])
         L += billow([p[0], 7.6, p[2]], t + 0.08, 3.8, life=0.5, seed=745 + k, grow=1.3)
         L.append(glow_pool(p, t, 6, life=0.5, peak=0.4, seed=748 + k))
-        L += fire_ring(p, t, 2.4, life=0.45, seed=751 + k)
-        L += ember_spray([p[0], 1.2, p[2]], t, size=5, life=0.5, seed=761 + k)
         L.append(smoke([p[0], 7.8, p[2]], t + 0.3, n=4, size=(4, 8), speed=(2, 4), life=(1.0, 1.5), seed=771 + k, rise=3.5))
         L.append(embers([p[0], 7.5, p[2]], t + 0.25, n=14, speed=(4, 9), life=(0.8, 1.4), grav=-14, seed=781 + k))
         L.append(scorch(p, t, size=4, life=1.6, seed=791 + k))
@@ -101,14 +96,9 @@ def build():
         th = TP + 0.04 * best + 0.02
         first = th if first is None else min(first, th)
         L += impact([q[0], 3.0, q[2]], th, size=5, life=0.4, seed=811 + i)
-        L += glint([q[0], 3.5, q[2]], th, size=3.5, life=0.18, seed=815 + i)
-        L += dark_spikes([q[0], 3.2, q[2]], th, size=8, life=0.28, seed=841 + i)
-        L.append(fire_scraps([q[0], 3.2, q[2]], th, n=12, seed=845 + i))
         hits.append({"t": th, "dummy": i, "dir": [R(q[0] / RAD * 0.4), 0, R(q[2] / RAD * 0.4)], "power": 0.7})
         numbers.append({"t": th + 0.02, "at": [q[0], 6.4, q[2]], "text": str(96 + 7 * i), "color": GOLD, "vel": [0, 11, 0], "size": 1.6})
     L.append(smoke_wisps([0, 0.4, 0], 1.1, DUR, 12, size=4, part=[13, 0.2, 13], seed=821))
-    L += fire_bloom([0, 0, 0], TP, radius=6.5, dur=0.9, height=6.0, seed=831, arcs=3, fronds=0.8)
-    L.append(haze([0, 5, 0], 0.7, DUR, size=18, seed=822))
     debris += rocks([0, 0, 0], TP, radius=RAD, count=10, size=0.8, speed=22, crater=False, seed=823)
 
     return {

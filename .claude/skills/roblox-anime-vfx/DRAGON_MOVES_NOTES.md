@@ -322,3 +322,18 @@ spikes radiating from hits, torn flame scraps flung out. Executed:
   volumetric translucent flame mass, solid yellow crescents sweeping around, sustained hot heart).
 - Sky Drop: big flat yellow vortex (fire_swirl x2), bloom, spikes, scraps. All six moves got bloom/spikes/scraps on
   their main beats. Comparison: scratchpad reference_vs_ours_v3.jpg (not committed: contains YouTube frames).
+
+### Honest reset (user: "still so mid, the moves all look the same, lock in, research, be brutally honest")
+Research (VFX Apprentice / League VFX style guide, particlefx.studio timing-shape-colour guides, 80.lv, VSQUAD
+interview). The expert "recipe for a bad effect" - stack additive elements, max every parameter, as many particles as
+possible, no hierarchy, trigger everything at once - described exactly what I had built. Brutal findings:
+1. SHARED RECIPE: fire_bloom + fire_streams + dark_spikes + fire_scraps + shockwave + glint + ember_spray on every move
+   = every move looked the same (it broke the brief's "no shared impact recipe" rule). Removed from every move; each
+   keeps ONE lead shape: Talon = claw crescents, Horn Rush = moving wall, Sky Drop = vortex + ring (spikes only here),
+   Tail Cyclone = crown of pillars, Ember Breath = cone + scorched fan, Transform = cocoon -> burst ring.
+2. NO VALUE STRUCTURE: the grayscale test showed yellow fire on tan sand has the SAME luminance as the sand - the
+   effects vanished in grayscale. Rule: on light backgrounds change value, not hue. The rim is now a dark crimson
+   alpha-blended edge (LE 0): dark edge / bright yellow body / near-white core - 3 value steps (as Type Soul does).
+3. Ambience halved (big layer is filler, not the subject).
+Gray/colour grids: assets/previews/dragon/six_moves_{color,grayscale}.jpg. Still weak (next): Talon finisher too
+small, Ember Breath cone small, Transform burst reads small at gameplay distance, timing still long in places.
