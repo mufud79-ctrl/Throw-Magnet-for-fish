@@ -18,15 +18,15 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
       0.3,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
       0.7,
-      "#ff7a10"
+      "#ff8a14"
      ],
      [
       1,
@@ -839,8 +839,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15,
    "transparency": [
     [
@@ -1276,8 +1276,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1,
    "transparency": [
     [
@@ -1713,8 +1713,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2,
    "transparency": [
     [
@@ -1756,15 +1756,15 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
       0.3,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
       0.7,
-      "#ff7a10"
+      "#ff8a14"
      ],
      [
       1,
@@ -1819,7 +1819,7 @@
    "props": {
     "Texture": "soft_glow",
     "Color": "#ff6a1a",
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.1,
     "Size": [
      [
@@ -1848,11 +1848,11 @@
     "Transparency": [
      [
       0,
-      0.828
+      0.845
      ],
      [
       0.15,
-      0.828
+      0.845
      ],
      [
       1,
@@ -2288,8 +2288,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15,
    "transparency": [
     [
@@ -2725,8 +2725,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1,
    "transparency": [
     [
@@ -3162,8 +3162,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2,
    "transparency": [
     [
@@ -3599,8 +3599,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15,
    "transparency": [
     [
@@ -4036,8 +4036,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1,
    "transparency": [
     [
@@ -4473,8 +4473,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2,
    "transparency": [
     [
@@ -4910,8 +4910,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15,
    "transparency": [
     [
@@ -5347,8 +5347,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1,
    "transparency": [
     [
@@ -5784,8 +5784,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2,
    "transparency": [
     [
@@ -6221,8 +6221,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15,
    "transparency": [
     [
@@ -6658,8 +6658,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1,
    "transparency": [
     [
@@ -7095,8 +7095,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2,
    "transparency": [
     [
@@ -7532,8 +7532,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15,
    "transparency": [
     [
@@ -7969,8 +7969,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1,
    "transparency": [
     [
@@ -8406,8 +8406,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2,
    "transparency": [
     [
@@ -8843,8 +8843,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15,
    "transparency": [
     [
@@ -9280,8 +9280,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1,
    "transparency": [
     [
@@ -9717,8 +9717,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2,
    "transparency": [
     [
@@ -10189,8 +10189,8 @@
     "flame_strip_4_rim"
    ],
    "swap": 0.06,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -10647,8 +10647,8 @@
     "flame_strip_4_mid"
    ],
    "swap": 0.06,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -11105,8 +11105,8 @@
     "flame_strip_4_core"
    ],
    "swap": 0.06,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -11563,8 +11563,8 @@
     "flame_strip_4_rim"
    ],
    "swap": 0.06,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -12021,8 +12021,8 @@
     "flame_strip_4_mid"
    ],
    "swap": 0.06,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -12479,8 +12479,8 @@
     "flame_strip_4_core"
    ],
    "swap": 0.06,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -12937,8 +12937,8 @@
     "flame_strip_4_rim"
    ],
    "swap": 0.06,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -13395,8 +13395,8 @@
     "flame_strip_4_mid"
    ],
    "swap": 0.06,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -13853,8 +13853,8 @@
     "flame_strip_4_core"
    ],
    "swap": 0.06,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -13869,18 +13869,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -13912,7 +13912,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1011,
    "rate": [
@@ -13935,18 +13935,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -14018,18 +14018,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -14084,18 +14084,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -14150,18 +14150,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -14193,7 +14193,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1012,
    "rate": [
@@ -14216,18 +14216,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -14299,18 +14299,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -14365,18 +14365,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -14431,18 +14431,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -14474,7 +14474,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1013,
    "rate": [
@@ -14497,18 +14497,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -14580,18 +14580,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -14646,18 +14646,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -14712,18 +14712,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -14755,7 +14755,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1014,
    "rate": [
@@ -14778,18 +14778,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -14861,18 +14861,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -14927,18 +14927,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -14993,18 +14993,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -15036,7 +15036,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1015,
    "rate": [
@@ -15059,18 +15059,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -15142,18 +15142,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -15208,18 +15208,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -15274,18 +15274,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -15317,7 +15317,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1016,
    "rate": [
@@ -15340,18 +15340,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -15423,18 +15423,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -15489,18 +15489,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -16031,11 +16031,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -16058,7 +16058,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.98,
+   "width": 1.7999999999999998,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -16069,18 +16069,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -16464,18 +16464,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -16848,7 +16848,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.6299999999999999,
+   "width": 0.7379999999999999,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -16859,18 +16859,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -17243,7 +17243,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.19799999999999998,
+   "width": 0.26999999999999996,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -17254,18 +17254,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -17611,11 +17611,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -17638,7 +17638,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 2.64,
+   "width": 2.4,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -17649,18 +17649,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -18044,18 +18044,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -18428,7 +18428,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.84,
+   "width": 0.9839999999999999,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -18439,18 +18439,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -18823,7 +18823,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.264,
+   "width": 0.36,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -18834,18 +18834,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -19191,11 +19191,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -19218,7 +19218,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 3.3000000000000003,
+   "width": 3.0,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -19229,18 +19229,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -19624,18 +19624,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -20008,7 +20008,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.0499999999999998,
+   "width": 1.23,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -20019,18 +20019,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -20403,7 +20403,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.33,
+   "width": 0.44999999999999996,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -20414,18 +20414,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -20771,11 +20771,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -20798,7 +20798,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 2.3100000000000005,
+   "width": 2.1,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -20809,18 +20809,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -21204,18 +21204,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -21588,7 +21588,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.735,
+   "width": 0.861,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -21599,18 +21599,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -21983,7 +21983,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.231,
+   "width": 0.315,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -21994,18 +21994,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -22351,11 +22351,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -22378,7 +22378,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 2.9699999999999998,
+   "width": 2.6999999999999997,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -22389,18 +22389,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -22784,18 +22784,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -23168,7 +23168,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.9449999999999998,
+   "width": 1.1069999999999998,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -23179,18 +23179,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -23563,7 +23563,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.297,
+   "width": 0.40499999999999997,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -23574,18 +23574,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -23931,11 +23931,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -23958,7 +23958,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.98,
+   "width": 1.7999999999999998,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -23969,18 +23969,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -24364,18 +24364,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -24748,7 +24748,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.6299999999999999,
+   "width": 0.7379999999999999,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -24759,18 +24759,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -25143,7 +25143,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.19799999999999998,
+   "width": 0.26999999999999996,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -25154,18 +25154,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -25511,11 +25511,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -25538,7 +25538,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 2.64,
+   "width": 2.4,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -25549,18 +25549,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -25944,18 +25944,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -26328,7 +26328,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.84,
+   "width": 0.9839999999999999,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -26339,18 +26339,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -26723,7 +26723,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.264,
+   "width": 0.36,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -26734,18 +26734,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -28556,18 +28556,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -29445,18 +29445,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -30317,18 +30317,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -31189,18 +31189,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -32078,18 +32078,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -32950,18 +32950,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -33823,15 +33823,15 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
       0.3,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
       0.7,
-      "#ff7a10"
+      "#ff8a14"
      ],
      [
       1,
@@ -34712,8 +34712,8 @@
    ],
    "props": {
     "Texture": "fire_swirl_glow",
-    "Color": "#d8301a",
-    "LightEmission": 0.35,
+    "Color": "#ff8a14",
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -34741,7 +34741,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.0,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1041,
    "emits": [
@@ -34760,8 +34760,8 @@
    ],
    "props": {
     "Texture": "fire_swirl_rim",
-    "Color": "#f04a12",
-    "LightEmission": 0.2,
+    "Color": "#ff6a10",
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -34825,8 +34825,8 @@
    ],
    "props": {
     "Texture": "fire_swirl_mid",
-    "Color": "#ffc81e",
-    "LightEmission": 0.35,
+    "Color": "#ffd21a",
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -34873,8 +34873,8 @@
    ],
    "props": {
     "Texture": "fire_swirl_core",
-    "Color": "#fff2a0",
-    "LightEmission": 0.9,
+    "Color": "#fff6b0",
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -34924,18 +34924,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -34967,7 +34967,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.5,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1042,
    "emits": [
@@ -34989,18 +34989,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -35071,18 +35071,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -35136,18 +35136,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -35198,8 +35198,8 @@
    ],
    "props": {
     "Texture": "anime_glint_glow",
-    "Color": "#d8301a",
-    "LightEmission": 0.35,
+    "Color": "#ff8a14",
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": 7,
     "Lifetime": [
@@ -35218,7 +35218,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.9,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1043,
    "emits": [
@@ -35237,8 +35237,8 @@
    ],
    "props": {
     "Texture": "anime_glint_rim",
-    "Color": "#f04a12",
-    "LightEmission": 0.2,
+    "Color": "#ff6a10",
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": 7,
     "Lifetime": [
@@ -35293,8 +35293,8 @@
    ],
    "props": {
     "Texture": "anime_glint_mid",
-    "Color": "#ffc81e",
-    "LightEmission": 0.35,
+    "Color": "#ffd21a",
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": 7,
     "Lifetime": [
@@ -35332,8 +35332,8 @@
    ],
    "props": {
     "Texture": "anime_glint_core",
-    "Color": "#fff2a0",
-    "LightEmission": 0.9,
+    "Color": "#fff6b0",
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": 7,
     "Lifetime": [
@@ -35374,18 +35374,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -35417,7 +35417,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1051,
    "emits": [
@@ -35454,18 +35454,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -35551,18 +35551,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -35631,18 +35631,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -35711,18 +35711,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -35754,7 +35754,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1052,
    "emits": [
@@ -35791,18 +35791,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -35888,18 +35888,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -35968,18 +35968,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -36048,18 +36048,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -36091,7 +36091,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1053,
    "emits": [
@@ -36128,18 +36128,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -36225,18 +36225,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -36305,18 +36305,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -36385,18 +36385,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -36428,7 +36428,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1054,
    "emits": [
@@ -36465,18 +36465,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -36562,18 +36562,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -36642,18 +36642,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -36722,18 +36722,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -36765,7 +36765,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1055,
    "emits": [
@@ -36802,18 +36802,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -36899,18 +36899,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -36979,18 +36979,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -37059,18 +37059,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -37102,7 +37102,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1056,
    "emits": [
@@ -37139,18 +37139,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -37236,18 +37236,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -37316,18 +37316,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -37396,18 +37396,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -37439,7 +37439,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1057,
    "emits": [
@@ -37476,18 +37476,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -37573,18 +37573,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -37653,18 +37653,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -37733,18 +37733,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -37776,7 +37776,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1058,
    "emits": [
@@ -37813,18 +37813,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -37910,18 +37910,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -37990,18 +37990,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -38070,18 +38070,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -38113,7 +38113,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1059,
    "emits": [
@@ -38150,18 +38150,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -38247,18 +38247,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -38327,18 +38327,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -38407,18 +38407,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -38450,7 +38450,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.2,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1060,
    "emits": [
@@ -38487,18 +38487,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -38584,18 +38584,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -38664,18 +38664,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -38744,18 +38744,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -38783,7 +38783,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.05,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1061,
    "emits": [
@@ -38805,18 +38805,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -38883,18 +38883,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -38944,18 +38944,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -38992,6 +38992,5148 @@
      1
     ]
    ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    0.07,
+    0.0
+   ],
+   "emits": [
+    [
+     1.51,
+     1
+    ]
+   ],
+   "seed": 1092,
+   "props": {
+    "Texture": "soft_glow",
+    "Color": "#d8301a",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      20.4
+     ],
+     [
+      0.15,
+      34.0
+     ],
+     [
+      1,
+      35.7
+     ]
+    ],
+    "Lifetime": [
+     1.4300000000000002,
+     1.4300000000000002
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "None",
+    "Transparency": [
+     [
+      0,
+      0.753
+     ],
+     [
+      0.5,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ],
+    "ZOffset": 0.0
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    0.07,
+    0.0
+   ],
+   "emits": [
+    [
+     1.51,
+     1
+    ]
+   ],
+   "seed": 1092,
+   "props": {
+    "Texture": "soft_glow",
+    "Color": "#ff8a1a",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      11.4
+     ],
+     [
+      0.15,
+      19.0
+     ],
+     [
+      1,
+      19.95
+     ]
+    ],
+    "Lifetime": [
+     1.4300000000000002,
+     1.4300000000000002
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "None",
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.35,
+      0.708
+     ],
+     [
+      1,
+      1.0
+     ]
+    ],
+    "ZOffset": 0.0
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -0.672,
+    3.147,
+    -0.793
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5.855731158866714
+     ],
+     [
+      1,
+      7.6856471460125615
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1101,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -0.672,
+    3.147,
+    -0.793
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5.855731158866714
+     ],
+     [
+      1,
+      7.6856471460125615
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1101,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -0.672,
+    3.147,
+    -0.793
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      5.855731158866714
+     ],
+     [
+      1,
+      7.6856471460125615
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1101,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.786,
+    3.667,
+    0.226
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      6.821623392725641
+     ],
+     [
+      1,
+      8.953380702952405
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1102,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.786,
+    3.667,
+    0.226
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      6.821623392725641
+     ],
+     [
+      1,
+      8.953380702952405
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1102,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.786,
+    3.667,
+    0.226
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      6.821623392725641
+     ],
+     [
+      1,
+      8.953380702952405
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1102,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.897,
+    4.179,
+    1.343
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      7.774466809786405
+     ],
+     [
+      1,
+      10.203987687844657
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1103,
+   "rate": [
+    [
+     1.56,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.897,
+    4.179,
+    1.343
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      7.774466809786405
+     ],
+     [
+      1,
+      10.203987687844657
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1103,
+   "rate": [
+    [
+     1.56,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.897,
+    4.179,
+    1.343
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      7.774466809786405
+     ],
+     [
+      1,
+      10.203987687844657
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.2,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1103,
+   "rate": [
+    [
+     1.56,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.582,
+    2.999,
+    -2.688
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5.580000000000001
+     ],
+     [
+      1,
+      7.32375
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1104,
+   "rate": [
+    [
+     1.575,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.582,
+    2.999,
+    -2.688
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5.580000000000001
+     ],
+     [
+      1,
+      7.32375
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1104,
+   "rate": [
+    [
+     1.575,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.582,
+    2.999,
+    -2.688
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      5.580000000000001
+     ],
+     [
+      1,
+      7.32375
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1104,
+   "rate": [
+    [
+     1.575,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.572,
+    3.523,
+    2.693
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      6.554891030325192
+     ],
+     [
+      1,
+      8.603294477301814
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     18,
+     18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1105,
+   "rate": [
+    [
+     1.59,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.572,
+    3.523,
+    2.693
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      6.554891030325192
+     ],
+     [
+      1,
+      8.603294477301814
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     18,
+     18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1105,
+   "rate": [
+    [
+     1.59,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.572,
+    3.523,
+    2.693
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      6.554891030325192
+     ],
+     [
+      1,
+      8.603294477301814
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     18,
+     18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1105,
+   "rate": [
+    [
+     1.59,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.293,
+    2.47,
+    -1.021
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      4.594864468879336
+     ],
+     [
+      1,
+      6.030759615404128
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1106,
+   "rate": [
+    [
+     1.605,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.293,
+    2.47,
+    -1.021
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      4.594864468879336
+     ],
+     [
+      1,
+      6.030759615404128
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1106,
+   "rate": [
+    [
+     1.605,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.293,
+    2.47,
+    -1.021
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      4.594864468879336
+     ],
+     [
+      1,
+      6.030759615404128
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.2,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1106,
+   "rate": [
+    [
+     1.605,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.389,
+    2.982,
+    -1.599
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5.547013482070711
+     ],
+     [
+      1,
+      7.280455195217808
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1107,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.389,
+    2.982,
+    -1.599
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5.547013482070711
+     ],
+     [
+      1,
+      7.280455195217808
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1107,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.389,
+    2.982,
+    -1.599
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      5.547013482070711
+     ],
+     [
+      1,
+      7.280455195217808
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1107,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.524,
+    3.46,
+    3.726
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      6.438083763646754
+     ],
+     [
+      1,
+      8.449984939786365
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1108,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.524,
+    3.46,
+    3.726
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      6.438083763646754
+     ],
+     [
+      1,
+      8.449984939786365
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1108,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.524,
+    3.46,
+    3.726
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      6.438083763646754
+     ],
+     [
+      1,
+      8.449984939786365
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1108,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.483,
+    2.513,
+    -4.021
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      4.675412339184306
+     ],
+     [
+      1,
+      6.1364786951794015
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1109,
+   "rate": [
+    [
+     1.56,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.483,
+    2.513,
+    -4.021
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      4.675412339184306
+     ],
+     [
+      1,
+      6.1364786951794015
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1109,
+   "rate": [
+    [
+     1.56,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.483,
+    2.513,
+    -4.021
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      4.675412339184306
+     ],
+     [
+      1,
+      6.1364786951794015
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.2,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1109,
+   "rate": [
+    [
+     1.56,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    4.027,
+    2.977,
+    2.075
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5.537932294650261
+     ],
+     [
+      1,
+      7.268536136728468
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     18,
+     18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1110,
+   "rate": [
+    [
+     1.575,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    4.027,
+    2.977,
+    2.075
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5.537932294650261
+     ],
+     [
+      1,
+      7.268536136728468
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     18,
+     18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1110,
+   "rate": [
+    [
+     1.575,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    4.027,
+    2.977,
+    2.075
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      5.537932294650261
+     ],
+     [
+      1,
+      7.268536136728468
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     18,
+     18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1110,
+   "rate": [
+    [
+     1.575,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -4.596,
+    2.099,
+    1.251
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      3.905846837100817
+     ],
+     [
+      1,
+      5.1264239736948225
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1111,
+   "rate": [
+    [
+     1.59,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -4.596,
+    2.099,
+    1.251
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      3.905846837100817
+     ],
+     [
+      1,
+      5.1264239736948225
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1111,
+   "rate": [
+    [
+     1.59,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -4.596,
+    2.099,
+    1.251
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      3.905846837100817
+     ],
+     [
+      1,
+      5.1264239736948225
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -18,
+     -18
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1111,
+   "rate": [
+    [
+     1.59,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.662,
+    2.546,
+    -4.214
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      4.737222918170123
+     ],
+     [
+      1,
+      6.217605080098287
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1112,
+   "rate": [
+    [
+     1.605,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.662,
+    2.546,
+    -4.214
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      4.737222918170123
+     ],
+     [
+      1,
+      6.217605080098287
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1112,
+   "rate": [
+    [
+     1.605,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.662,
+    2.546,
+    -4.214
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      4.737222918170123
+     ],
+     [
+      1,
+      6.217605080098287
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -9,
+     -9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.2,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1112,
+   "rate": [
+    [
+     1.605,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.922,
+    2.966,
+    5.115
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      5.517983691500348
+     ],
+     [
+      1,
+      7.2423535950942055
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1113,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.922,
+    2.966,
+    5.115
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5.517983691500348
+     ],
+     [
+      1,
+      7.2423535950942055
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1113,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.922,
+    2.966,
+    5.115
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      5.517983691500348
+     ],
+     [
+      1,
+      7.2423535950942055
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1113,
+   "rate": [
+    [
+     1.53,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -4.297,
+    2.16,
+    -3.272
+   ],
+   "props": {
+    "Texture": "flame_tongue_glow",
+    "Color": [
+     [
+      0,
+      "#ff8a14"
+     ],
+     [
+      0.6,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      4.018383160359231
+     ],
+     [
+      1,
+      5.274127897971491
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": [
+     [
+      0,
+      0.708
+     ],
+     [
+      0.6,
+      0.753
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1114,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -4.297,
+    2.16,
+    -3.272
+   ],
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      4.018383160359231
+     ],
+     [
+      1,
+      5.274127897971491
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1114,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -4.297,
+    2.16,
+    -3.272
+   ],
+   "props": {
+    "Texture": "flame_tongue_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      4.018383160359231
+     ],
+     [
+      1,
+      5.274127897971491
+     ]
+    ],
+    "Lifetime": [
+     0.77,
+     0.77
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     9,
+     9
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.15,
+    "Transparency": [
+     [
+      0,
+      0.35
+     ],
+     [
+      0.6,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1114,
+   "rate": [
+    [
+     1.545,
+     2.115,
+     3.0
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     -30,
+     -30
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1131,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     -30,
+     -30
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": 0
+   },
+   "seed": 1131,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_core",
+    "Color": [
+     [
+      0,
+      "#fff6b0"
+     ],
+     [
+      0.4,
+      "#ffe25a"
+     ],
+     [
+      1,
+      "#ffb01a"
+     ]
+    ],
+    "LightEmission": 0.6,
+    "Brightness": 1.2,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     -30,
+     -30
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": 0
+   },
+   "seed": 1131,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1132,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": 0
+   },
+   "seed": 1132,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_core",
+    "Color": [
+     [
+      0,
+      "#fff6b0"
+     ],
+     [
+      0.4,
+      "#ffe25a"
+     ],
+     [
+      1,
+      "#ffb01a"
+     ]
+    ],
+    "LightEmission": 0.6,
+    "Brightness": 1.2,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": 0
+   },
+   "seed": 1132,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_rim",
+    "Color": [
+     [
+      0,
+      "#ff6a10"
+     ],
+     [
+      0.55,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     30,
+     30
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.0,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1133,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_mid",
+    "Color": [
+     [
+      0,
+      "#ffd21a"
+     ],
+     [
+      0.5,
+      "#ffb01a"
+     ],
+     [
+      1,
+      "#ff6a10"
+     ]
+    ],
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     30,
+     30
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.05,
+    "Transparency": 0
+   },
+   "seed": 1133,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "fire_wisp_core",
+    "Color": [
+     [
+      0,
+      "#fff6b0"
+     ],
+     [
+      0.4,
+      "#ffe25a"
+     ],
+     [
+      1,
+      "#ffb01a"
+     ]
+    ],
+    "LightEmission": 0.6,
+    "Brightness": 1.2,
+    "Size": [
+     [
+      0,
+      5.1
+     ],
+     [
+      1,
+      6.6000000000000005
+     ]
+    ],
+    "Lifetime": [
+     0.55,
+     0.55
+    ],
+    "Speed": [
+     6,
+     6
+    ],
+    "Rotation": [
+     30,
+     30
+    ],
+    "Orientation": "FacingCameraWorldUp",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.1,
+    "Transparency": 0
+   },
+   "seed": 1133,
+   "rate": [
+    [
+     1.51,
+     2.39,
+     8.666666666666666
+    ]
+   ],
+   "part": [
+    9.0,
+    4.0,
+    9.0
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.351,
+    4.2,
+    -1.011
+   ],
+   "props": {
+    "Texture": "fire_crescent_glow",
+    "Color": "#ff8a14",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     30.0,
+     30.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.35,
+    "Transparency": [
+     [
+      0,
+      0.55
+     ],
+     [
+      0.7,
+      0.595
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1141,
+   "emits": [
+    [
+     1.53,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.351,
+    4.2,
+    -1.011
+   ],
+   "props": {
+    "Texture": "fire_crescent_rim",
+    "Color": "#ff6a10",
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     30.0,
+     30.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.4,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1141,
+   "emits": [
+    [
+     1.53,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.351,
+    4.2,
+    -1.011
+   ],
+   "props": {
+    "Texture": "fire_crescent_mid",
+    "Color": "#ffd21a",
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     30.0,
+     30.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.45,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1141,
+   "emits": [
+    [
+     1.53,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -3.351,
+    4.2,
+    -1.011
+   ],
+   "props": {
+    "Texture": "fire_crescent_core",
+    "Color": "#fff6b0",
+    "LightEmission": 0.6,
+    "Brightness": 1.2,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     30.0,
+     30.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.5,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1141,
+   "emits": [
+    [
+     1.53,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.011,
+    4.2,
+    -3.351
+   ],
+   "props": {
+    "Texture": "fire_crescent_glow",
+    "Color": "#ff8a14",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     120.0,
+     120.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.35,
+    "Transparency": [
+     [
+      0,
+      0.55
+     ],
+     [
+      0.7,
+      0.595
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1142,
+   "emits": [
+    [
+     1.59,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.011,
+    4.2,
+    -3.351
+   ],
+   "props": {
+    "Texture": "fire_crescent_rim",
+    "Color": "#ff6a10",
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     120.0,
+     120.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.4,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1142,
+   "emits": [
+    [
+     1.59,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.011,
+    4.2,
+    -3.351
+   ],
+   "props": {
+    "Texture": "fire_crescent_mid",
+    "Color": "#ffd21a",
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     120.0,
+     120.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.45,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1142,
+   "emits": [
+    [
+     1.59,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.011,
+    4.2,
+    -3.351
+   ],
+   "props": {
+    "Texture": "fire_crescent_core",
+    "Color": "#fff6b0",
+    "LightEmission": 0.6,
+    "Brightness": 1.2,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     120.0,
+     120.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.5,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1142,
+   "emits": [
+    [
+     1.59,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.351,
+    4.2,
+    1.011
+   ],
+   "props": {
+    "Texture": "fire_crescent_glow",
+    "Color": "#ff8a14",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     210.0,
+     210.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.35,
+    "Transparency": [
+     [
+      0,
+      0.55
+     ],
+     [
+      0.7,
+      0.595
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1143,
+   "emits": [
+    [
+     1.65,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.351,
+    4.2,
+    1.011
+   ],
+   "props": {
+    "Texture": "fire_crescent_rim",
+    "Color": "#ff6a10",
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     210.0,
+     210.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.4,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1143,
+   "emits": [
+    [
+     1.65,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.351,
+    4.2,
+    1.011
+   ],
+   "props": {
+    "Texture": "fire_crescent_mid",
+    "Color": "#ffd21a",
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     210.0,
+     210.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.45,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1143,
+   "emits": [
+    [
+     1.65,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    3.351,
+    4.2,
+    1.011
+   ],
+   "props": {
+    "Texture": "fire_crescent_core",
+    "Color": "#fff6b0",
+    "LightEmission": 0.6,
+    "Brightness": 1.2,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     210.0,
+     210.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.5,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1143,
+   "emits": [
+    [
+     1.65,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.011,
+    4.2,
+    3.351
+   ],
+   "props": {
+    "Texture": "fire_crescent_glow",
+    "Color": "#ff8a14",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     300.0,
+     300.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.35,
+    "Transparency": [
+     [
+      0,
+      0.55
+     ],
+     [
+      0.7,
+      0.595
+     ],
+     [
+      1,
+      1.0
+     ]
+    ]
+   },
+   "seed": 1144,
+   "emits": [
+    [
+     1.71,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.011,
+    4.2,
+    3.351
+   ],
+   "props": {
+    "Texture": "fire_crescent_rim",
+    "Color": "#ff6a10",
+    "LightEmission": 0.15,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     300.0,
+     300.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.4,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1144,
+   "emits": [
+    [
+     1.71,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.011,
+    4.2,
+    3.351
+   ],
+   "props": {
+    "Texture": "fire_crescent_mid",
+    "Color": "#ffd21a",
+    "LightEmission": 0.25,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     300.0,
+     300.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.45,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1144,
+   "emits": [
+    [
+     1.71,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.011,
+    4.2,
+    3.351
+   ],
+   "props": {
+    "Texture": "fire_crescent_core",
+    "Color": "#fff6b0",
+    "LightEmission": 0.6,
+    "Brightness": 1.2,
+    "Size": [
+     [
+      0,
+      15.0
+     ],
+     [
+      1,
+      19.0
+     ]
+    ],
+    "Lifetime": [
+     0.4,
+     0.4
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     300.0,
+     300.0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.5,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1144,
+   "emits": [
+    [
+     1.71,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    2.8,
+    0.0
+   ],
+   "emits": [
+    [
+     1.51,
+     1
+    ]
+   ],
+   "seed": 1151,
+   "props": {
+    "Texture": "soft_glow",
+    "Color": [
+     [
+      0,
+      "#fff6c8"
+     ],
+     [
+      0.4,
+      "#ffd04a"
+     ],
+     [
+      1,
+      "#ff7a1a"
+     ]
+    ],
+    "LightEmission": 0.3,
+    "Brightness": 1.3,
+    "Size": [
+     [
+      0,
+      6.0
+     ],
+     [
+      0.2,
+      9.0
+     ],
+     [
+      1,
+      5.0
+     ]
+    ],
+    "Lifetime": [
+     0.8800000000000001,
+     0.8800000000000001
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "FlipbookLayout": "None",
+    "Transparency": [
+     [
+      0,
+      0.573
+     ],
+     [
+      0.5,
+      0.685
+     ],
+     [
+      1,
+      1.0
+     ]
+    ],
+    "ZOffset": 0.2
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "spike_burst_rim",
+    "Color": "#5a0c0a",
+    "LightEmission": 0,
+    "Brightness": 1.15,
+    "Size": 24,
+    "Lifetime": [
+     0.35,
+     0.35
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.6,
+    "Transparency": 0
+   },
+   "seed": 1095,
+   "emits": [
+    [
+     1.52,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    5.0,
+    0.0
+   ],
+   "props": {
+    "Texture": "spike_burst_mid",
+    "Color": "#a01810",
+    "LightEmission": 0,
+    "Brightness": 1.1,
+    "Size": 24,
+    "Lifetime": [
+     0.35,
+     0.35
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.65,
+    "Transparency": 0
+   },
+   "seed": 1095,
+   "emits": [
+    [
+     1.52,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    4.0,
+    0.0
+   ],
+   "emits": [
+    [
+     1.52,
+     30
+    ]
+   ],
+   "seed": 1096,
+   "props": {
+    "Texture": "flame_tongue_rim",
+    "Color": [
+     [
+      0,
+      "#ff7a14"
+     ],
+     [
+      0.5,
+      "#e0401a"
+     ],
+     [
+      1,
+      "#8a1a10"
+     ]
+    ],
+    "LightEmission": 0.15,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      3.6
+     ],
+     [
+      1,
+      0.9
+     ]
+    ],
+    "Lifetime": [
+     0.5,
+     0.9
+    ],
+    "Speed": [
+     20,
+     36
+    ],
+    "SpreadAngle": [
+     180,
+     180
+    ],
+    "Acceleration": [
+     0,
+     -12,
+     0
+    ],
+    "Drag": 2.5,
+    "Rotation": [
+     0,
+     360
+    ],
+    "RotSpeed": [
+     -360,
+     360
+    ],
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "Random",
+    "FlipbookFramerate": [
+     0.01,
+     0.01
+    ],
+    "FlipbookStartRandom": true,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "ZOffset": 0.4
+   }
   },
   {
    "path": [
@@ -39336,11 +44478,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -39363,7 +44505,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 2.9700000000000006,
+   "width": 2.7,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -39374,18 +44516,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -39769,18 +44911,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -40153,7 +45295,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.945,
+   "width": 1.107,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -40164,18 +45306,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -40548,7 +45690,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.29700000000000004,
+   "width": 0.405,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -40559,18 +45701,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -40916,11 +46058,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -40943,7 +46085,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 3.9600000000000004,
+   "width": 3.6,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -40954,18 +46096,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -41349,18 +46491,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -41733,7 +46875,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.26,
+   "width": 1.476,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -41744,18 +46886,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -42128,7 +47270,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.396,
+   "width": 0.54,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -42139,18 +47281,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -42496,11 +47638,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -42523,7 +47665,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 4.95,
+   "width": 4.5,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -42534,18 +47676,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -42929,18 +48071,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -43313,7 +48455,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.575,
+   "width": 1.845,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -43324,18 +48466,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -43708,7 +48850,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.495,
+   "width": 0.6749999999999999,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -43719,18 +48861,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -44076,11 +49218,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -44103,7 +49245,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 3.4650000000000003,
+   "width": 3.15,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -44114,18 +49256,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -44509,18 +49651,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -44893,7 +50035,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.1024999999999998,
+   "width": 1.2914999999999999,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -44904,18 +50046,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -45288,7 +50430,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.3465,
+   "width": 0.4725,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -45299,18 +50441,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -45656,11 +50798,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -45683,7 +50825,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 4.455,
+   "width": 4.05,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -45694,18 +50836,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -46089,18 +51231,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -46473,7 +51615,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.4174999999999998,
+   "width": 1.6604999999999999,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -46484,18 +51626,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -46868,7 +52010,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.4455,
+   "width": 0.6074999999999999,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -46879,18 +52021,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -47236,11 +52378,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -47263,7 +52405,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 2.9700000000000006,
+   "width": 2.7,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -47274,18 +52416,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -47669,18 +52811,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -48053,7 +53195,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.945,
+   "width": 1.107,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -48064,18 +53206,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -48448,7 +53590,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.29700000000000004,
+   "width": 0.405,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -48459,18 +53601,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -48816,11 +53958,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -48843,7 +53985,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 3.9600000000000004,
+   "width": 3.6,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -48854,18 +53996,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -49249,18 +54391,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -49633,7 +54775,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.26,
+   "width": 1.476,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -49644,18 +54786,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -50028,7 +55170,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.396,
+   "width": 0.54,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -50039,18 +55181,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -50396,11 +55538,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -50423,7 +55565,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 4.95,
+   "width": 4.5,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -50434,18 +55576,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -50829,18 +55971,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -51213,7 +56355,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.575,
+   "width": 1.845,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -51224,18 +56366,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -51608,7 +56750,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.495,
+   "width": 0.6749999999999999,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -51619,18 +56761,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -51976,11 +57118,11 @@
    "transparency": [
     [
      0,
-     0.5
+     0.55
     ],
     [
      0.5,
-     0.575
+     0.618
     ],
     [
      1,
@@ -52003,7 +57145,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 3.4650000000000003,
+   "width": 3.15,
    "textures": [
     "flame_strip_1_glow",
     "flame_strip_2_glow",
@@ -52014,18 +57156,18 @@
    "color": [
     [
      0,
-     "#d8301a"
+     "#ff8a14"
     ],
     [
      0.6,
-     "#b0200f"
+     "#e0401a"
     ],
     [
      1,
-     "#6a120a"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.3,
    "brightness": 1.4
   },
   {
@@ -52409,18 +57551,18 @@
    "color": [
     [
      0,
-     "#f04a12"
+     "#ff6a10"
     ],
     [
      0.55,
-     "#c8281a"
+     "#e0401a"
     ],
     [
      1,
-     "#7a1810"
+     "#8a1a10"
     ]
    ],
-   "lightEmission": 0.2,
+   "lightEmission": 0.15,
    "brightness": 1.15
   },
   {
@@ -52793,7 +57935,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 1.1024999999999998,
+   "width": 1.2914999999999999,
    "textures": [
     "flame_strip_1_mid",
     "flame_strip_2_mid",
@@ -52804,18 +57946,18 @@
    "color": [
     [
      0,
-     "#ffc81e"
+     "#ffd21a"
     ],
     [
-     0.45,
-     "#ff9a1a"
+     0.5,
+     "#ffb01a"
     ],
     [
      1,
-     "#f04a12"
+     "#ff6a10"
     ]
    ],
-   "lightEmission": 0.35,
+   "lightEmission": 0.25,
    "brightness": 1.1
   },
   {
@@ -53188,7 +58330,7 @@
    ],
    "textureMode": "Stretch",
    "type": "trail",
-   "width": 0.3465,
+   "width": 0.4725,
    "textures": [
     "flame_strip_1_core",
     "flame_strip_2_core",
@@ -53199,18 +58341,18 @@
    "color": [
     [
      0,
-     "#fff2a0"
+     "#fff6b0"
     ],
     [
-     0.35,
-     "#ffd84a"
+     0.4,
+     "#ffe25a"
     ],
     [
      1,
-     "#ff9a1a"
+     "#ffb01a"
     ]
    ],
-   "lightEmission": 0.9,
+   "lightEmission": 0.6,
    "brightness": 1.2
   },
   {
@@ -53232,15 +58374,15 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
       0.3,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
     "LightEmission": 0.6,
@@ -53444,18 +58586,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -53483,7 +58625,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.55,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1065,
    "emits": [
@@ -53505,18 +58647,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -53583,18 +58725,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -53644,18 +58786,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -53712,15 +58854,15 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
       0.3,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
       0.7,
-      "#ff7a10"
+      "#ff8a14"
      ],
      [
       1,
@@ -53841,18 +58983,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": 16,
     "Lifetime": [
@@ -53874,11 +59016,11 @@
     "Transparency": [
      [
       0,
-      0.5
+      0.55
      ],
      [
       0.75,
-      0.55
+      0.595
      ],
      [
       1,
@@ -53906,18 +59048,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": 16,
     "Lifetime": [
@@ -53971,18 +59113,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": 16,
     "Lifetime": [
@@ -54036,18 +59178,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": 16,
     "Lifetime": [
@@ -54101,18 +59243,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -54180,18 +59322,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -54242,18 +59384,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -54304,18 +59446,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -54383,18 +59525,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -54445,18 +59587,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -54507,18 +59649,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -54586,18 +59728,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -54648,18 +59790,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -54710,18 +59852,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -54789,18 +59931,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -54851,18 +59993,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -54913,18 +60055,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -54992,18 +60134,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -55054,18 +60196,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -55117,15 +60259,15 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
       0.3,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
       0.7,
-      "#ff7a10"
+      "#ff8a14"
      ],
      [
       1,
@@ -55269,18 +60411,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -55308,7 +60450,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.3,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1071,
    "emits": [
@@ -55330,18 +60472,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -55408,18 +60550,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -55469,18 +60611,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -55530,18 +60672,18 @@
     "Color": [
      [
       0,
-      "#d8301a"
+      "#ff8a14"
      ],
      [
       0.6,
-      "#b0200f"
+      "#e0401a"
      ],
      [
       1,
-      "#6a120a"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.3,
     "Brightness": 1.4,
     "Size": [
      [
@@ -55569,7 +60711,7 @@
     "FlipbookLayout": "Grid4x4",
     "FlipbookMode": "OneShot",
     "ZOffset": 0.3,
-    "Transparency": 0.5
+    "Transparency": 0.55
    },
    "seed": 1072,
    "emits": [
@@ -55591,18 +60733,18 @@
     "Color": [
      [
       0,
-      "#f04a12"
+      "#ff6a10"
      ],
      [
       0.55,
-      "#c8281a"
+      "#e0401a"
      ],
      [
       1,
-      "#7a1810"
+      "#8a1a10"
      ]
     ],
-    "LightEmission": 0.2,
+    "LightEmission": 0.15,
     "Brightness": 1.15,
     "Size": [
      [
@@ -55669,18 +60811,18 @@
     "Color": [
      [
       0,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
-      0.45,
-      "#ff9a1a"
+      0.5,
+      "#ffb01a"
      ],
      [
       1,
-      "#f04a12"
+      "#ff6a10"
      ]
     ],
-    "LightEmission": 0.35,
+    "LightEmission": 0.25,
     "Brightness": 1.1,
     "Size": [
      [
@@ -55730,18 +60872,18 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
-      0.35,
-      "#ffd84a"
+      0.4,
+      "#ffe25a"
      ],
      [
       1,
-      "#ff9a1a"
+      "#ffb01a"
      ]
     ],
-    "LightEmission": 0.9,
+    "LightEmission": 0.6,
     "Brightness": 1.2,
     "Size": [
      [
@@ -56250,8 +61392,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#f04a12",
-   "lightEmission": 0.2,
+   "color": "#ff6a10",
+   "lightEmission": 0.15,
    "brightness": 1.15,
    "transparency": [
     [
@@ -56687,8 +61829,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#ffc81e",
-   "lightEmission": 0.35,
+   "color": "#ffd21a",
+   "lightEmission": 0.25,
    "brightness": 1.1,
    "transparency": [
     [
@@ -57124,8 +62266,8 @@
    "swap": 0.07,
    "textureMode": "Wrap",
    "textureLength": 16,
-   "color": "#fff2a0",
-   "lightEmission": 0.9,
+   "color": "#fff6b0",
+   "lightEmission": 0.6,
    "brightness": 1.2,
    "transparency": [
     [
@@ -57155,15 +62297,15 @@
     "Color": [
      [
       0,
-      "#fff2a0"
+      "#fff6b0"
      ],
      [
       0.3,
-      "#ffc81e"
+      "#ffd21a"
      ],
      [
       0.7,
-      "#ff7a10"
+      "#ff8a14"
      ],
      [
       1,

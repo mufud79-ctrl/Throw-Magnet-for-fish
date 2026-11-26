@@ -311,3 +311,14 @@ Matched against full-size reference frames (TSB / Type Soul / Roblox fire showca
    Rush contacts, Tail Cyclone spin + eruption, Ember Breath landing, Transform charge-in + burst-out).
 5. Ambience big-piece embers were pale paper rectangles at LE 1 / size 1.3 -> deep orange, LE 0.5, 0.85.
 All six hybrid moves re-rendered.
+
+### Type Soul pass (user: "still not even close, you're listing reasons, not executing them")
+Compared against Type Soul fire ON SAND (the right reference for our arena): huge flat saturated YELLOW cel masses,
+thin orange-red edges, giant swirling yellow vortex discs + solid crescent arcs around the character, sharp dark-red
+spikes radiating from hits, torn flame scraps flung out. Executed:
+- palette yellow-dominant (mid #ffd21a, rim #ff6a10, core #fff6b0, glow #ff8a14); named colour constants remapped;
+  LE glow 0.3 / rim 0.15 / mid 0.25 / core 0.6 (flat colour covers the sand); FIRE_CEL back to 1 (flat cel bands).
+- new `spike_burst` texture + `kit.dark_spikes`; `kit.fire_scraps`; `kit.fire_bloom` (huge 2-layer ground glow,
+  volumetric translucent flame mass, solid yellow crescents sweeping around, sustained hot heart).
+- Sky Drop: big flat yellow vortex (fire_swirl x2), bloom, spikes, scraps. All six moves got bloom/spikes/scraps on
+  their main beats. Comparison: scratchpad reference_vs_ours_v3.jpg (not committed: contains YouTube frames).

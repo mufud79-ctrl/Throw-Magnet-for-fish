@@ -16,23 +16,24 @@ import math
 import os
 
 LAYERS = ("glow", "rim", "mid", "core")
-LE = {"glow": 0.35, "rim": 0.2, "mid": 0.35, "core": 0.9}  # reference pass: colour COVERS the sand (bright ground + additive = white-out)
+LE = {"glow": 0.3, "rim": 0.15, "mid": 0.25, "core": 0.6}   # Type Soul pass: flat saturated colour that COVERS the sand
 BR = {"glow": 1.4, "rim": 1.15, "mid": 1.1, "core": 1.2}
-GLOW_TR = 0.5
+GLOW_TR = 0.55
 
-WHITE_GOLD, GOLD, ORANGE, CRIMSON, EMBER, CHAR = "#fff4c8", "#ffc23a", "#ff7a1a", "#d4202a", "#8a1418", "#2a2226"
+# Type Soul pass: the named colours shift with the palette (yellow-dominant); CRIMSON is now the orange-red edge
+WHITE_GOLD, GOLD, ORANGE, CRIMSON, EMBER, CHAR = "#fff6b0", "#ffd21a", "#ff8a14", "#ff6a10", "#c8281a", "#2a2226"
 SMOKE = "#3a2c2a"          # black smoke (smoke_cel_v3 is shaded 0.32..1, so this reads as a lit charcoal volume)
 SAND_DUST = "#cdb48a"
 AZURE = "#7fb0ff"          # stand-in dragon tint (thunder_serpent until assets/models/dragon.glb exists)
 
 PALS = {
-    "fire": {   # reference study (TSB / Type Soul fire on sand): GOLD-YELLOW dominant body, orange, a thin red edge
-        "HOT": {"glow": "#d8301a", "rim": "#f04a12", "mid": "#ffc81e", "core": "#fff2a0"},
-        "COOL": {"glow": [[0, "#d8301a"], [0.6, "#b0200f"], [1, "#6a120a"]],
-                 "rim": [[0, "#f04a12"], [0.55, "#c8281a"], [1, "#7a1810"]],
-                 "mid": [[0, "#ffc81e"], [0.45, "#ff9a1a"], [1, "#f04a12"]],
-                 "core": [[0, "#fff2a0"], [0.35, "#ffd84a"], [1, "#ff9a1a"]]},
-        "spark": [[0, "#fff2a0"], [0.3, "#ffc81e"], [0.7, "#ff7a10"], [1, "#e0401a"]], "light": "#ff8a2a",
+    "fire": {   # Type Soul fire on sand: huge flat YELLOW masses, thin orange-red edges, dark-red accents
+        "HOT": {"glow": "#ff8a14", "rim": "#ff6a10", "mid": "#ffd21a", "core": "#fff6b0"},
+        "COOL": {"glow": [[0, "#ff8a14"], [0.6, "#e0401a"], [1, "#8a1a10"]],
+                 "rim": [[0, "#ff6a10"], [0.55, "#e0401a"], [1, "#8a1a10"]],
+                 "mid": [[0, "#ffd21a"], [0.5, "#ffb01a"], [1, "#ff6a10"]],
+                 "core": [[0, "#fff6b0"], [0.4, "#ffe25a"], [1, "#ffb01a"]]},
+        "spark": [[0, "#fff6b0"], [0.3, "#ffd21a"], [0.7, "#ff8a14"], [1, "#e0401a"]], "light": "#ff9a2a",
     },
     "violet": {
         "HOT": {"glow": "#b04cff", "rim": "#6a16d0", "mid": "#d98aff", "core": "#fbeeff"},
@@ -836,5 +837,72 @@ def fire_streams(centre, t0, dur, *, r0=1.5, r1=9.0, n=7, y0=0.5, rise=0.0, turn
         w = width * (0.75 + 0.5 * ((k * 7) % 5) / 4)
         out += trail_stack({"path": sp, "at": sp[0][1], "t0": t0 + lag, "t1": t0 + lag + dur, "lifetime": life, "faceCamera": True,
                             "transparency": [[0, 0], [0.5, 0.15], [1, 1]], "widthScale": [[0, 1], [0.7, 0.6], [1, 0.1]], "textureMode": "Stretch"},
-                           {"glow": w * 2.2, "rim": w, "mid": w * 0.7, "core": w * 0.22}, pal=pal)
+                           {"glow": w * 2.0, "rim": w, "mid": w * 0.82, "core": w * 0.3}, pal=pal)
     return out
+
+
+def fire_bloom(centre, t, radius=8.0, dur=0.9, height=7.0, pal="fire", seed=0, arcs=3, fronds=1.0):
+    """The reference look at a main fire beat, in one call:
+      - a huge two-layer ground glow (orange heart -> red edge, ~3x the radius) that lights the sand around the fire
+      - a VOLUMETRIC fire mass: many big, overlapping, semi-transparent flame wisps/tongues rising and swaying, so the
+        fire reads as one glowing cloud of flame, not separate crisp pieces
+      - tall sweeping flame arcs curling up over the beat (big camera-facing crescents)
+      - a sustained hot yellow-white heart at the centre
+    Pair it with fire_streams (the swirl on the ground)."""
+    c = [centre[0], 0, centre[2]]
+    out = []
+    # ground glow: big red outer, orange inner (soft_glow flat)
+    for sz, col, le, tr, hold in ((radius * 3.4, "#d8301a", 0.45, 0.45, 0.5), (radius * 1.9, "#ff8a1a", 0.6, 0.35, 0.35)):
+        out.append({"type": "emitter", "at": R([c[0], 0.07, c[2]]), "emits": [[t, 1]], "seed": seed + 1, "props": {
+            "Texture": "soft_glow", "Color": col, "LightEmission": le, "Brightness": 1.1, "Size": [[0, sz * 0.6], [0.15, sz], [1, sz * 1.05]],
+            "Lifetime": [dur * 1.3, dur * 1.3], "Speed": [0.01, 0.01], "Orientation": "VelocityPerpendicular", "FlipbookLayout": "None",
+            "Transparency": [[0, tr], [hold, tr], [1, 1]], "ZOffset": 0.0}})
+    # volumetric mass: big translucent tongues + wisps standing all over the core area (deterministic placement)
+    nfr = int(14 * fronds)
+    for k in range(nfr):
+        a = k * 2.39996 + seed
+        r = radius * 0.55 * math.sqrt((k + 0.5) / nfr)
+        p = [c[0] + math.cos(a) * r, 0, c[2] + math.sin(a) * r]
+        h = height * (1.0 - 0.45 * r / (radius * 0.55)) * (0.8 + 0.4 * ((k * 7) % 5) / 4)
+        tk = t + 0.02 + 0.015 * (k % 6)
+        out += emit_stack("flame_tongue", [p[0], h * 0.43, p[2]], tk, size=[[0, h * 0.8], [1, h * 1.05]], life=dur * 0.7, pal=pal, rot=(k % 5 - 2) * 9,
+                          seed=seed + 10 + k, layers=("glow", "rim", "mid"), orient="FacingCameraWorldUp", z=0.05 * (k % 3),
+                          transparency=[[0, 0.35], [0.6, 0.45], [1, 1]], rate=[[tk, t + dur * 0.55, 3.0]])
+    out += wisps([c[0], height * 0.5, c[2]], t, t + dur * 0.8, 26, size=height * 0.6, life=0.55, pal=pal, seed=seed + 40, rots=(-30, 0, 30), rise=6)
+    for e in out[-9:]:
+        e["part"] = R([radius * 0.9, height * 0.4, radius * 0.9])
+    # big solid yellow crescents sweeping AROUND the beat (Type Soul rings): hot colours, opaque, low over the ground
+    for k in range(arcs):
+        a = seed * 0.7 + k * 2 * math.pi / arcs
+        p = [c[0] + math.cos(a) * radius * 0.35, height * 0.42, c[2] + math.sin(a) * radius * 0.35]
+        out += emit_stack("fire_crescent", p, t + 0.02 + 0.06 * k, size=[[0, radius * 1.5], [1, radius * 1.9]], life=0.4, pal=pal, cool=False,
+                          rot=k * 360 / max(1, arcs) + 30, seed=seed + 50 + k, z=0.35, transparency=[[0, 0], [0.7, 0.1], [1, 1]])
+    # sustained hot heart
+    out.append({"type": "emitter", "at": R([c[0], height * 0.28, c[2]]), "emits": [[t, 1]], "seed": seed + 60, "props": {
+        "Texture": "soft_glow", "Color": [[0, "#fff6c8"], [0.4, "#ffd04a"], [1, "#ff7a1a"]], "LightEmission": 1, "Brightness": 1.3,
+        "Size": [[0, radius * 0.6], [0.2, radius * 0.9], [1, radius * 0.5]], "Lifetime": [dur * 0.8, dur * 0.8], "Speed": [0.01, 0.01],
+        "FlipbookLayout": "None", "Transparency": [[0, 0.05], [0.5, 0.3], [1, 1]], "ZOffset": 0.2}})
+    return out
+
+
+
+def dark_spikes(at, t, size=10, life=0.35, seed=95, rot=0, color="#5a0c0a"):
+    """Sharp dark-red anime spikes radiating out of a fire hit (spike_burst, alpha-blended dark): the dark accent."""
+    out = emit_stack("spike_burst", at, t, size=size, life=life, cool=False, rot=rot, seed=seed, z=0.6, layers=("rim", "mid"))
+    for e in out:
+        e["props"]["Color"] = color if e["props"]["Texture"].endswith("_rim") else "#a01810"
+        e["props"]["LightEmission"] = 0
+    return out
+
+
+def fire_scraps(at, t, n=18, speed=(14, 26), size=(1.2, 2.6), life=(0.5, 0.9), seed=96, spread=180, grav=-12, direction=None):
+    """Torn flame scraps flung out of a fire hit, tumbling (flame_tongue rim, random frames, red-orange)."""
+    e = {"type": "emitter", "at": R(at), "emits": [[t, n]], "seed": seed, "props": {
+        "Texture": "flame_tongue_rim", "Color": [[0, "#ff7a14"], [0.5, "#e0401a"], [1, "#8a1a10"]], "LightEmission": 0.2, "Brightness": 1.1,
+        "Size": [[0, size[1]], [1, size[0] * 0.5]], "Lifetime": list(life), "Speed": list(speed), "SpreadAngle": [spread, spread],
+        "Acceleration": [0, grav, 0], "Drag": 2.5, "Rotation": [0, 360], "RotSpeed": [-360, 360],
+        "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random", "FlipbookFramerate": [0.01, 0.01], "FlipbookStartRandom": True,
+        "Transparency": [[0, 0], [0.7, 0.1], [1, 1]], "ZOffset": 0.4}}
+    if direction:
+        e["rot"] = direction
+    return e

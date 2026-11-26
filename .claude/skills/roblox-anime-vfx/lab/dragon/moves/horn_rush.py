@@ -144,6 +144,9 @@ def build():
         L += ember_spray([p[0], 3.2, p[2] + 1.0], th, size=5, life=0.5, seed=303 + i)
         L += glint([p[0] + 0.4, 3.8, p[2] + 1.4], th, size=3.5, life=0.18, seed=305 + i, rot=20 * i)
         L.append(glow_pool([p[0], 0, p[2]], th, 6, life=0.4, peak=0.45, seed=307 + i))
+        L += dark_spikes([p[0], 3.2, p[2] + 1.0], th, size=8, life=0.28, seed=361 + i, rot=30 * i)
+        L.append(fire_scraps([p[0], 3.2, p[2] + 1.0], th, n=12, seed=363 + i))
+        L += fire_bloom([p[0], 0, p[2]], th, radius=3.2, dur=0.7, height=4.5, seed=365 + 7 * i, arcs=2, fronds=0.5)
         hits.append({"t": th, "dummy": i, "dir": [0.15 * (1 if p[0] > 0 else -1), 0, -1], "power": 0.85})
         numbers.append({"t": th + 0.02, "at": [p[0] + 1.2, 6.4, p[2]], "text": str(72 + 9 * i), "color": GOLD, "vel": [0, 9, -2], "size": 1.6})
     for i, p in enumerate(TARGETS):

@@ -102,9 +102,12 @@ def build():
         first = th if first is None else min(first, th)
         L += impact([q[0], 3.0, q[2]], th, size=5, life=0.4, seed=811 + i)
         L += glint([q[0], 3.5, q[2]], th, size=3.5, life=0.18, seed=815 + i)
+        L += dark_spikes([q[0], 3.2, q[2]], th, size=8, life=0.28, seed=841 + i)
+        L.append(fire_scraps([q[0], 3.2, q[2]], th, n=12, seed=845 + i))
         hits.append({"t": th, "dummy": i, "dir": [R(q[0] / RAD * 0.4), 0, R(q[2] / RAD * 0.4)], "power": 0.7})
         numbers.append({"t": th + 0.02, "at": [q[0], 6.4, q[2]], "text": str(96 + 7 * i), "color": GOLD, "vel": [0, 11, 0], "size": 1.6})
     L.append(smoke_wisps([0, 0.4, 0], 1.1, DUR, 12, size=4, part=[13, 0.2, 13], seed=821))
+    L += fire_bloom([0, 0, 0], TP, radius=6.5, dur=0.9, height=6.0, seed=831, arcs=3, fronds=0.8)
     L.append(haze([0, 5, 0], 0.7, DUR, size=18, seed=822))
     debris += rocks([0, 0, 0], TP, radius=RAD, count=10, size=0.8, speed=22, crater=False, seed=823)
 

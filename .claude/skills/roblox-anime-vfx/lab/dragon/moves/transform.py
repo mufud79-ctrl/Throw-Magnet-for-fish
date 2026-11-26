@@ -127,6 +127,9 @@ def build():
         L += billow([math.cos(a) * 3.5, 3.0, math.sin(a) * 3.5], T + 0.01, 6.0, life=0.6, seed=1051 + j, grow=1.4,
                     move={"from": [math.cos(a) * 3.5, 3.0, math.sin(a) * 3.5], "to": [math.cos(a) * 10, 2.0, math.sin(a) * 10], "t0": T, "t1": T + 0.45, "ease": "out"})
     L += fire_ring(G, T + 0.01, 13, life=0.75, seed=1061)
+    L += fire_bloom(G, T + 0.01, radius=10.0, dur=1.1, height=10.0, seed=1091, arcs=4, fronds=1.0)
+    L += dark_spikes([0, 5, 0], T + 0.02, size=24, life=0.35, seed=1095)
+    L.append(fire_scraps([0, 4, 0], T + 0.02, n=30, speed=(20, 36), size=(1.8, 3.6), seed=1096))
     L += fire_streams(G, T + 0.01, 0.5, r0=2.0, r1=15.0, n=9, y0=0.8, rise=2.0, turns=0.8, width=1.8, life=0.45, seed=53)
     L.append(shockwave(G, T + 0.015, 16, life=0.5, seed=1062))
     L.append(dust_ring(G, T + 0.015, n=26, speed=(36, 50), size=(4, 9), seed=1063, radius=4))

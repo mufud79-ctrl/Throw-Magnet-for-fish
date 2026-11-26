@@ -1948,7 +1948,7 @@ def _depth(F, scale, wrap=False):
     return 1 - np.exp(-d / max(1e-6, scale))
 
 
-FIRE_CEL = os.environ.get("FIRE_CEL", "0") != "0"   # 0 (default since the reference pass) = soft painted gradients; 1 = flat cel bands
+FIRE_CEL = os.environ.get("FIRE_CEL", "1") != "0"   # 1 = flat cel bands (Type Soul fire on sand is flat yellow cel); 0 = soft painted
 
 
 def _fire_layers(F, heat, cool=0.0, e=0.02, mid_th=0.3, core_th=0.8, vol=None, glow=(0.012, 0.04), gk=0.85, wrap=False,
@@ -2883,6 +2883,28 @@ def dust_veil(n=16, seed=1111):
     return alphas, vals
 
 
+def spike_burst(n=16, seed=1121):
+    """Anime impact spikes (one-shot 16f, cel layers): 12 sharp tapered spikes of uneven length shoot out of the centre
+    in 2 frames, hold, then retract and thin. Tint DARK red at low LightEmission: the dark accent that radiates out of
+    a fire hit (Type Soul style), or hot gold for a flash."""
+    rng = np.random.default_rng(seed)
+    sp = [(k / 12 * TAU + rng.uniform(-0.2, 0.2), rng.uniform(0.55, 1.0), rng.uniform(0.016, 0.03)) for k in range(12)]
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        ext = min(1.0, (i + 1) / 2.0) * (1 - max(0.0, (t - 0.45) / 0.55) ** 1.2)
+        strokes = []
+        for th, ln, w in sp:
+            r0 = 0.12 + 0.1 * t
+            r1 = r0 + (0.84 - r0) * ln * ext
+            if r1 - r0 < 0.02:
+                continue
+            strokes.append(([_px(math.cos(th) * r0, math.sin(th) * r0), _px(math.cos(th) * r1, math.sin(th) * r1)],
+                            np.array([S * w * (1 - 0.5 * t), 0.0]), 0.0))
+        frames.append(_stroke_layers(strokes, ks=(1.0, 0.5, 0.15), soft=0.5) if strokes else {L: np.zeros((S, S), np.float32) for L in ("glow", "rim", "mid", "core")})
+    return frames
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2990,6 +3012,7 @@ LIB = {
     "anime_glint":   (anime_glint,   "cel", 4, 0, "dragonfire"),
     "fire_scorch":   (fire_scorch,   "shaded", 1, 0, "soot"),
     "dust_veil":     (dust_veil,     "shaded", 4, 0, "dust"),
+    "spike_burst":   (spike_burst,   "cel", 4, 0, "dragonfire"),
     "flame_wall_1": (_flame_wall(3101), "cel", 0, 0, "dragonfire"),
     "flame_wall_2": (_flame_wall(3102), "cel", 0, 0, "dragonfire"),
     "flame_wall_3": (_flame_wall(3103), "cel", 0, 0, "dragonfire"),
