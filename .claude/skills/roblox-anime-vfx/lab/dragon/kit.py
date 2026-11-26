@@ -142,7 +142,7 @@ def plane_stack(widths, *, pal="fire", count=3, strips=STRIPS, transparency=None
 # ---------------------------------------------------------------- the fire matter (big / medium)
 def billow(at, t, size, life=0.8, pal="fire", rot=0, seed=11, move=None, z=0.2, grow=1.25, transparency=None):
     """A flame_billow: lobes bloom, roll up, tear into tongues, burn down. size = studs at birth."""
-    return emit_stack("flame_billow", at, t, size=[[0, size * 0.8], [0.25, size, "out"], [1, size * grow]], life=life, pal=pal,
+    return emit_stack("flame_billow", at, t, size=[[0, size * 0.8], [0.25, size], [1, size * grow]], life=life, pal=pal,
                       rot=rot, seed=seed, move=move, z=z, transparency=transparency)
 
 
@@ -162,7 +162,7 @@ def burning(base, t0, t1, height, every=0.22, life=0.6, pal="fire", seed=13, lay
 
 def impact(at, t, size=8, life=0.5, pal="fire", seed=14, rot=0):
     """fire_impact: star pinch -> gold burst -> torn crimson ring -> flakes."""
-    return emit_stack("fire_impact", at, t, size=[[0, size * 0.75], [0.3, size, "out"], [1, size * 1.15]], life=life, pal=pal,
+    return emit_stack("fire_impact", at, t, size=[[0, size * 0.75], [0.3, size], [1, size * 1.15]], life=life, pal=pal,
                       seed=seed, rot=rot, z=0.5)
 
 

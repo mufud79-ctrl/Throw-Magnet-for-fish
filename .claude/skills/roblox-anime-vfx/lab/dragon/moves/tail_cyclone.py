@@ -84,7 +84,7 @@ def build():
         t = TP + 0.04 * k
         # the pillar: ONE column of fused cel fire (flame_pillar Beam) erupting out of the sand
         L += pillar(p, 8.0, t, 0.62, width=3.6, reach=[[0, 0], [0.14, 1, "out"], [1, 1]])
-        L += billow([p[0], 7.4, p[2]], t + 0.08, 5.0, life=0.55, seed=745 + k, grow=1.35)
+        L += billow([p[0], 7.6, p[2]], t + 0.08, 3.8, life=0.5, seed=745 + k, grow=1.3)
         L.append(glow_pool(p, t, 6, life=0.5, peak=0.4, seed=748 + k))
         L += fire_ring(p, t, 2.4, life=0.45, seed=751 + k)
         L += ember_spray([p[0], 1.2, p[2]], t, size=5, life=0.5, seed=761 + k)

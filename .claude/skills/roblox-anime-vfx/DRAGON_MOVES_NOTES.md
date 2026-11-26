@@ -164,3 +164,14 @@ sequence (new `flame_pillar_1..4`: approved flame_tongue frames stacked up a tal
 Beam strip, u=0 base), crowned by billows, a small fire_ring at each base, smoke and falling embers after. Rejected on
 the way: vbeam torrents as pillars (flat striped planes = lasers) and tiny-radius ring_wall pillars (a trail swept in
 0.05 s gets 1-2 samples and collapses). GAP: no tail mesh on the avatar (rig v2 `attach`, rigging session).
+
+## Move 5: Ember Breath (hybrid B) - built
+`lab/dragon/moves/ember_breath.py` -> `dragon_05_EmberBreath.json`. Cone = a narrow camera-facing torrent-strip Beam
+core (mouth -> sweeping contact point) wrapped in billows riding three depths of the cone (small near the mouth, big at
+the far end); where it touches the sand a vertical flame_wall Trail draws a continuous curtain along the 50-degree arc,
+scorch fan + flickers after. GAP: no jaw mask (rig v2 attach).
+
+### BUG (all moves): billows and fire impacts were invisible
+`billow()` and `impact()` passed the ease word "out" as the 3rd element of an emitter Size sequence, where the 3rd
+element is the Roblox envelope (a number) -> NaN size, nothing drawn. Fixed in the kit; all five moves re-rendered.
+An opaque Beam also hides particles inside it: billows must be bigger than (or outside) a ribbon to read.
