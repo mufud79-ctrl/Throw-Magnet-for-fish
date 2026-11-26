@@ -2804,6 +2804,59 @@ def _flame_wall(seed):
     return fn
 
 
+def _flame_pillar(seed):
+    """A column of fire built FROM the approved cel flame matter: big flame_tongue frames stacked and overlapped up a
+    tall canvas (each covering the outlines below it), billows fusing the base, torn tongue tips licking off the top.
+    Stored as a strip for a Beam: u = along the pillar (u=0 base -> u=1 tips), v = across. Drawn as ONE camera-facing
+    Beam from the ground up (grow it with `reach`). Swap the 4 variants (~0.07 s). 1024x256."""
+    def fn():
+        src = _wall_src()
+        Hu, Wu = 1024 * SS, 256 * SS                           # upright canvas: tall
+        rng = np.random.default_rng(seed)
+        var = seed % 10
+        out = {L: np.zeros((Hu, Wu), np.float32) for L in ("rim", "mid", "core")}
+
+        def place(fr, cx, cy_base, w, h, flip):
+            for L in ("rim", "mid", "core"):
+                a = fr[L][:, ::-1] if flip else fr[L]
+                a = np.clip(np.asarray(Image.fromarray(np.ascontiguousarray(a).astype(np.float32)).resize((w, h), Image.LANCZOS), np.float32), 0, 1)
+                y0 = cy_base - int(h * 0.96)
+                x0 = cx - w // 2
+                ys, ye = max(0, y0), min(Hu, y0 + h)
+                xs, xe = max(0, x0), min(Wu, x0 + w)
+                if ye <= ys or xe <= xs:
+                    continue
+                out[L][ys:ye, xs:xe] = np.maximum(out[L][ys:ye, xs:xe], a[ys - y0:ye - y0, xs - x0:xe - x0])
+
+        # stacked big tongues up the column (bases spread over the lower 75%), widest low, narrower high
+        for j in range(6):
+            u = j / 5
+            fr = src["tongue"][(3 + j + var) % 6 + 3]
+            h = int(Hu * (0.62 - 0.12 * u) * rng.uniform(0.9, 1.1))
+            w = int(Wu * (1.25 - 0.45 * u) * rng.uniform(0.9, 1.05))
+            base = int(Hu * (1.0 - 0.62 * u))
+            place(fr, Wu // 2 + int(rng.uniform(-0.08, 0.08) * Wu), base, w, h, rng.random() < 0.5)
+        # billows fusing the base and the lower body
+        for j in range(4):
+            fr = src["billow"][4 + (j + var) % 4]
+            h = int(Wu * rng.uniform(0.85, 1.05))
+            place(fr, Wu // 2 + int(rng.uniform(-0.15, 0.15) * Wu), Hu - int(Hu * 0.1 * j), h, h, rng.random() < 0.5)
+        hh = 1 - (np.arange(Hu) + 0.5) / Hu
+        Hh = np.repeat(hh[:, None], Wu, 1)
+        out["mid"] = np.maximum(out["mid"], out["core"])
+        out["core"] = out["core"] * ss(Hh, 0.35, 0.1)
+        out["rim"] = np.maximum(out["rim"], out["mid"])
+        for L in ("rim", "mid", "core"):
+            out[L] = out[L] * ss(Hh, 0.995, 0.95)
+        n = Wu
+        tight = blur(out["rim"], n * 0.03) * 1.3
+        wide = blur(out["rim"], n * 0.1) * 1.9
+        out["glow"] = np.clip(np.maximum(tight, wide), 0, 1) * 0.85
+        # to strip orientation: u along the pillar (base at u=0, i.e. the left column), v across
+        return {L: np.ascontiguousarray(np.rot90(a, -1)) for L, a in out.items()}
+    return fn
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -2914,6 +2967,10 @@ LIB = {
     "flame_wall_2": (_flame_wall(3102), "cel", 0, 0, "dragonfire"),
     "flame_wall_3": (_flame_wall(3103), "cel", 0, 0, "dragonfire"),
     "flame_wall_4": (_flame_wall(3104), "cel", 0, 0, "dragonfire"),
+    "flame_pillar_1": (_flame_pillar(3201), "cel", 0, 0, "dragonfire"),
+    "flame_pillar_2": (_flame_pillar(3202), "cel", 0, 0, "dragonfire"),
+    "flame_pillar_3": (_flame_pillar(3203), "cel", 0, 0, "dragonfire"),
+    "flame_pillar_4": (_flame_pillar(3204), "cel", 0, 0, "dragonfire"),
 }
 
 PALETTES = {

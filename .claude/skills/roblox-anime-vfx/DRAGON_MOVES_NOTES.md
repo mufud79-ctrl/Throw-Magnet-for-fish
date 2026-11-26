@@ -156,3 +156,11 @@ and evenly spaced flicker teardrops ("spikes, not fire"). Lesson: fire walls nee
 Drawn as ONE ribbon: `kit.wall_beam` (camera-facing Beams, width = wall height, three spans with tapered ends, optional
 bow; flip=True puts the tips up; no glow Beam - it shows its rectangle) and `kit.ring_wall` (a vertical Trail drawn
 around the circle in ~0.12 s; the curtain it leaves is the ring). Horn Rush and Sky Drop now use them.
+
+## Move 4: Tail Cyclone (hybrid V) - built
+`lab/dragon/moves/tail_cyclone.py` -> `dragon_04_TailCyclone.json`. The (virtual) tail tip draws the ring: a vertical
+flame_wall Trail following the tip through the 360 spin (one continuous curtain). Eruption: 8 `kit.pillar` columns in
+sequence (new `flame_pillar_1..4`: approved flame_tongue frames stacked up a tall canvas + base billows, stored as a
+Beam strip, u=0 base), crowned by billows, a small fire_ring at each base, smoke and falling embers after. Rejected on
+the way: vbeam torrents as pillars (flat striped planes = lasers) and tiny-radius ring_wall pillars (a trail swept in
+0.05 s gets 1-2 samples and collapses). GAP: no tail mesh on the avatar (rig v2 `attach`, rigging session).

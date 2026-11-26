@@ -133,7 +133,7 @@ def plane_stack(widths, *, pal="fire", count=3, strips=STRIPS, transparency=None
             continue
         out.append({"count": count, "width": widths[L], "textures": [f"{s}_{L}" for s in strips], "swap": swap,
                     "color": P["HOT"][L], "lightEmission": LE[L], "brightness": BR[L],
-                    "transparency": (transparency[L] if isinstance(transparency, dict) else transparency) or 0,
+                    "transparency": (transparency.get(L, 0) if isinstance(transparency, dict) else transparency) or 0,
                     "twist": (twist or {}).get(L, 0), "textureSpeed": (speed or {}).get(L, 0),
                     "textureLength": (tlen or {}).get(L, 10), "angle": (angle or {}).get(L, 0)})
     return out
@@ -747,3 +747,19 @@ def ring_wall(centre, radius, t0, life, height, *, sweep=0.12, pal="fire", tlen=
                     "color": P["HOT"][L], "lightEmission": LE[L], "brightness": BR[L],
                     "transparency": fade or [[0, 0], [0.7, 0.1], [1, 1]]})
     return out
+
+
+PILLARS = [f"flame_pillar_{i}" for i in range(1, 5)]
+
+
+def pillar(base, height, t0, life, width=4.0, pal="fire", reach=None, swap=0.07, flip=False):
+    """A column of fire: ONE camera-facing Beam of flame_pillar from the ground up (base at u=0), growing with `reach`
+    (it erupts out of the sand). Fused fire, not a beam of stripes."""
+    P = PALS[pal]
+    a, b = [base[0], base[1], base[2]], [base[0], base[1] + height, base[2]]
+    if flip:
+        a, b = b, a
+    return [{"type": "beam", "from": R(a), "to": R(b), "t0": t0, "life": life, "textures": [f"{w}_{L}" for w in PILLARS], "swap": swap,
+             "segments": 8, "color": P["HOT"][L], "lightEmission": LE[L], "brightness": BR[L], "width": [[0, [width, width]], [1, [width, width]]],
+             "reach": reach or [[0, 0], [0.15, 1, "out"], [1, 1]], "transparency": [[0, 0], [0.7, 0.05], [1, 1]]}
+            for L in ("rim", "mid", "core")]
