@@ -20,7 +20,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from kit import *  # noqa
-from kit import _keys
+from kit import _keys, _fb
 
 TL, TB2, TA, TD, TI = 0.15, 0.35, 0.75, 0.90, 1.05
 LAND = [0, 0, -10]
@@ -113,55 +113,48 @@ def build():
         "Lifetime": [0.12, 0.2], "Speed": [8, 14], "SpreadAngle": [12, 12], "Drag": 3, "Orientation": "VelocityParallel", "ZOffset": 0.5}})
     L += smear(body(0.97, 3.5), TD + 0.04, 9, -90, life=0.16, seed=572)
 
-    # ---- IMPACT (BIG): crater + molten cracks, fire ring, standing flame ring, smoke column, mass, fillers
+    # ---- IMPACT, anime shape language (rework): sharp, pointed, directional, hard-edged; strict hierarchy
     T = TI
     g = [LAND[0], 0, LAND[2]]
-    L += impact([g[0], 2.0, g[2]], T + 0.005, size=11, life=0.55, seed=581)
-    L.append(flare([g[0], 1.8, g[2]], T + 0.005, size=16, life=0.22, seed=582))
-    L.append(streaks([g[0], 1.0, g[2]], T + 0.01, 14, speed=(60, 100), length=(2.5, 5), spread=60, seed=585))
-    L.append(dust_ring(g, T + 0.015, n=16, speed=(32, 44), size=(3.5, 8), seed=588))
-    L.append(dust_rollout(g, T + 0.02, radius=4, n=12, size=(12, 20), speed=(14, 22), seed=592))
-    L += dark_spikes([g[0], 2.2, g[2]], T + 0.02, size=16, life=0.32, seed=597)
-    L.append(fire_scraps([g[0], 2.0, g[2]], T + 0.02, n=22, speed=(16, 30), seed=598))
-    # the flow shape (reference): big flame streams whirl out of the landing and wrap the crater
-    # thin hot swirl lines over the red streams (crisp yellow lines on red haze, as in the references)
-    for k in range(6):
-        ph = k / 6 * 2 * math.pi + 0.4
-        sp = []
-        for i in range(41):
-            u = i / 40
-            aa = ph + 1.1 * 2 * math.pi * u ** 0.8
-            r = 1.2 + 8.0 * (1 - (1 - u) ** 2)
-            sp.append([R(T + 0.02 + 0.4 * u, 4), R([g[0] + math.cos(aa) * r, 0.35 + 0.6 * u, g[2] + math.sin(aa) * r])])
-        for lay, w, col in (("mid", 0.32, [[0, "#fff2a0"], [0.5, "#ffc81e"], [1, "#ff7a10"]]), ("core", 0.12, [[0, "#ffffff"], [0.5, "#fff2a0"], [1, "#ffc81e"]])):
-            L.append({"type": "trail", "path": sp, "at": sp[0][1], "t0": T + 0.02, "t1": T + 0.42, "lifetime": 0.32, "faceCamera": True,
-                      "width": w, "textures": [f"{st}_{lay}" for st in STRIPS], "swap": 0.06, "color": col, "lightEmission": 1,
-                      "brightness": 1.4, "textureMode": "Stretch", "transparency": [[0, 0], [0.6, 0.2], [1, 1]], "widthScale": [[0, 1], [1, 0.2]]})
-    # a brief hot heart at the centre of the impact
-    L.append(glow_orb([g[0], 1.6, g[2]], T + 0.01, 7, life=0.45, tr=0.15, seed=596))
-    L[-1]["props"]["Color"] = "#ffe070"; L[-1]["props"]["LightEmission"] = 1
-    # the flow shape: a spiral of fire whirling out on the ground from the landing (flat fire_swirl, two counter-turning)
-    for j, (sz, rot) in enumerate(((24, 0), (16, 70))):
-        for e in emit_stack("fire_swirl", [g[0], 0.3 + 0.05 * j, g[2]], T + 0.01, size=[[0, sz * 0.5], [0.25, sz], [1, sz * 1.15]], life=0.75,
-                            cool=False, mode="Loop", fps=26, seed=593 + j, rot=rot, orient="VelocityPerpendicular",
-                            transparency=[[0, 0], [0.6, 0.15], [1, 1]]):
-            L.append(e)
-    L.append(glow_pool(g, T, 18, life=1.2, peak=0.5, seed=589))
-    L += molten_crack(g, T + 0.01, size=17, rot=20, glow_life=1.6, char_life=3.2, seed=590)
-    L.append(scorch(g, T + 0.3, size=12, life=2.2, seed=591))
-    # the ring of standing flames (signature): tongues stand up all around the ring for ~1 s, then burn down
-    # the ring of fire (signature): ONE continuous curtain drawn around the crater in 0.12 s, then a lower ring as it
-    # burns down - fused fire, never separate tongues
-    L += ring_wall(g, 8.4, T + 0.05, 0.95, 5.2, sweep=0.12, start=0.3, fade=[[0, 0], [0.75, 0.05], [1, 1]])
-    L += ring_wall(g, 8.6, T + 0.72, 0.6, 2.6, sweep=0.1, start=2.0, reverse=True, fade=[[0, 0.1], [0.6, 0.3], [1, 1]])
-    L.append(glow_pool(g, T + 0.1, 20, life=0.6, rate=[[T + 0.1, T + 1.0, 4]], peak=0.25, seed=661, hold=0.4))
-    # black smoke column rolling up, after-smoke, shimmer, ash
-    L.append(smoke([g[0], 1.5, g[2]], 0, rate=[[T + 0.06, T + 0.5, 22]], size=(5, 11), speed=(6, 11), life=(1.2, 1.8), seed=662,
-                   part=[5, 1, 5], spread=25, rise=4))
-    L.append(smoke_wisps([g[0], 0.4, g[2]], T + 0.4, DUR, 10, size=4, part=[16, 0.2, 16], seed=663))
-    L.append(haze([g[0], 5.0, g[2]], T, DUR, size=18, seed=664))
-    L.append(ash([g[0], 9, g[2]], T + 0.2, DUR, 16, part=(18, 3, 18), seed=665))
-    debris = rocks(g, T + 0.01, radius=6.0, count=9, size=0.9, speed=28, seed=666)
+    # PRIMARY (frame 0-2): a dense crown of tall flame spikes bursting up around the crater, uneven heights,
+    # leaning outward - the one shape you'd still read if everything else were hidden
+    for k in range(22):
+        a = k / 22 * 2 * math.pi + 0.13 * math.sin(k * 3.1)
+        r = 2.2 + 3.4 * ((k * 7) % 5) / 4
+        h = 9.5 - 0.9 * r + 2.0 * ((k * 3) % 4) / 3
+        p = [g[0] + math.cos(a) * r, 0, g[2] + math.sin(a) * r]
+        lean = math.degrees(math.atan2(math.cos(a), 1.0)) * 0.25
+        tk = T + 0.005 + 0.012 * (k % 4)
+        L += emit_stack("anime_flame_spike", [p[0], h * 0.42, p[2]], tk, size=[[0, h * 0.95], [1, h * 1.05]], life=0.62, cool=False,
+                        rot=-lean, seed=601 + k, orient="FacingCameraWorldUp", z=0.04 * (k % 5))
+    # SECONDARY (+1 frame): white radial speed lines, black ink shards + gold ink shards, one star flash
+    L.append(_fb("speed_burst", [g[0], 2.6, g[2]], T + 0.03, 26, 0.32, color="#ffffff", le=1, br=1.4, seed=611, z=0.9))
+    sh = emit_stack("ink_shards", [g[0], 2.4, g[2]], T + 0.03, size=[[0, 14], [1, 17]], life=0.42, cool=False, seed=612, rot=10, layers=("rim", "mid"), z=0.7)
+    for e in sh:
+        e["props"]["Color"] = "#1a0806" if e["props"]["Texture"].endswith("_rim") else "#3a0c08"
+        e["props"]["LightEmission"] = 0
+    L += sh
+    L += emit_stack("ink_shards", [g[0], 2.6, g[2]], T + 0.045, size=[[0, 10], [1, 13]], life=0.36, cool=False, seed=613, rot=-25, z=0.8)
+    L += glint([g[0], 2.8, g[2]], T + 0.02, size=9, life=0.24, seed=614)
+    # TERTIARY: gold needles flying out low and fast, scattered star glints popping in sequence, flame scraps
+    L.append({"type": "emitter", "at": [g[0], 1.6, g[2]], "emits": [[T + 0.03, 34]], "seed": 615, "part": [2, 0.5, 2], "props": {
+        "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.4, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.6,
+        "Shape": "Cylinder", "ShapeInOut": "Outward", "ShapeStyle": "Surface", "Size": [[0, 6], [0.5, 3.5], [1, 0.4]],
+        "Lifetime": [0.22, 0.4], "Speed": [70, 120], "SpreadAngle": [25, 25], "Drag": 7, "Acceleration": [0, 8, 0],
+        "Orientation": "VelocityParallel", "ZOffset": 0.6}})
+    for k in range(7):
+        a = k * 2.4
+        r = 3.5 + 2.5 * ((k * 5) % 3) / 2
+        L += glint([g[0] + math.cos(a) * r, 2.0 + 3.0 * ((k * 3) % 4) / 3, g[2] + math.sin(a) * r], T + 0.06 + 0.035 * k, size=2.6 + 0.8 * (k % 3), life=0.2, seed=621 + k)
+    L.append(fire_scraps([g[0], 2.2, g[2]], T + 0.03, n=18, speed=(18, 32), seed=630))
+    L += dark_spikes([g[0], 2.2, g[2]], T + 0.03, size=15, life=0.3, seed=631)
+    # MASS (after the hit): dark smoke behind the fire for contrast, molten cracks, crater, dust, small rocks
+    L.append(smoke([g[0], 3.0, g[2] - 1.5], T + 0.12, n=10, size=(6, 12), speed=(4, 8), life=(1.0, 1.5), seed=640, spread=60, rise=3,
+                   color="#2a1c1a", tr0=0.15, part=[6, 2, 3]))
+    L += molten_crack(g, T + 0.03, size=16, rot=20, glow_life=1.4, char_life=3.0, seed=641, flames=False)
+    L.append(dust_ring(g, T + 0.02, n=14, speed=(30, 40), size=(3, 6.5), seed=642))
+    L.append(glow_pool(g, T, 12, life=0.7, peak=0.45, seed=643))
+    debris = rocks(g, T + 0.01, radius=5.0, count=8, size=0.8, speed=28, seed=644)
 
     hits, numbers = [], []
     for i, p in enumerate(TARGETS):

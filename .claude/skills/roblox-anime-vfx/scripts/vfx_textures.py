@@ -2905,6 +2905,139 @@ def spike_burst(n=16, seed=1121):
     return frames
 
 
+# ================================================================ ANIME SHAPE LANGUAGE (rework: sharp, pointed, directional, hard-edged)
+def anime_flame_spike(n=16, seed=1201):
+    """Sharp anime flame spike (one-shot 16f, cel layers): a tall, thin, pointed flame shoots up out of the bottom of
+    the cell in 3 frames (S-bent, knife tip), two smaller barbed spikes lean off its base, it flickers (the tip
+    whips), then its top tears off and the spike thins and sinks. Hard edges, a hot core line up the middle."""
+    rng = np.random.default_rng(seed)
+    ph = rng.uniform(0, TAU)
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        grow = ease_out(min(1.0, (i + 1) / 3.0), 2.5)
+        sink = max(0.0, (t - 0.55) / 0.45) ** 1.3
+        strokes = []
+        for k, (dx, hscale, lean, wb) in enumerate(((0.0, 1.0, 0.0, 0.17), (-0.12, 0.55, -0.35, 0.09), (0.13, 0.48, 0.38, 0.08))):
+            h = 1.78 * hscale * grow * (1 - 0.65 * sink)
+            if h < 0.05:
+                continue
+            pts, ws = [], []
+            m = 14
+            for j in range(m + 1):
+                u = j / m
+                y = -0.95 + h * u
+                x = dx + lean * h * u * u + 0.06 * math.sin(ph + u * 3.4 + t * 9) * u
+                if k == 0 and t > 0.45 and u > 0.78:                  # the torn top flies up, detached
+                    y += 0.25 * (t - 0.45)
+                pts.append(_px(x, y))
+                ws.append(S * wb * (1 - u) ** 0.85 * (1 - 0.45 * sink) * (0.0 if (k == 0 and t > 0.45 and abs(u - 0.76) < 0.03) else 1.0))
+            ws[-1] = 0
+            strokes.append((pts, np.array(ws), 0.0))
+        lay = _stroke_layers(strokes, ks=(1.0, 0.62, 0.22 * (1 - sink)), soft=0.45)
+        frames.append(_fade(lay, 1 - ss(t, 0.82, 1.0)))
+    return frames
+
+
+def anime_slash(n=16, seed=1211):
+    """Anime slash (one-shot 16f, cel layers): a hard-edged crescent with knife-point tips draws on in 2 frames (thick
+    just behind the head, razor tail), a white-hot line along its inner edge, then it thins from the tail and
+    breaks into a few sharp shards. Head at the right."""
+    frames = []
+    rng = np.random.default_rng(seed)
+    for i in range(n):
+        t = i / (n - 1)
+        draw = ease_out(min(1.0, (i + 1) / 2.0), 2.0)
+        eat = max(0.0, (t - 0.3) / 0.7) ** 1.2
+        a_head = math.radians(-20)
+        sweep = math.radians(200) * draw
+        a0 = a_head + sweep * eat                                   # the tail end eats toward the head
+        pts, ws = [], []
+        m = 40
+        for j in range(m + 1):
+            u = j / m
+            a = a_head + (a0 - a_head) + (sweep * (1 - eat)) * u
+            r = 0.78 + 0.03 * math.sin(u * 7)
+            pts.append(_px(math.cos(a) * r, math.sin(a) * r * 0.8))
+            prof = min(1.0, u / 0.06) * (1 - u) ** 1.6
+            ws.append(S * 0.16 * prof * (1 - 0.55 * eat))
+        ws[0] = ws[-1] = 0
+        lay = _stroke_layers([(pts, np.array(ws), 0.0)], ks=(1.0, 0.6, 0.2 * (1 - eat)), soft=0.4)
+        frames.append(_fade(lay, 1 - ss(t, 0.8, 1.0)))
+    return frames
+
+
+def ink_shards(n=16, seed=1221):
+    """Ink shard burst (one-shot 16f, cel layers): 14 jagged, sharp-cornered shards (irregular blades, some forked) snap
+    out of the centre in 2 frames, fly a little further, then thin to slivers and vanish. Graphic 2D accent: tint it
+    near-black for the dark ink accent, or element-coloured."""
+    rng = np.random.default_rng(seed)
+    shards = []
+    for k in range(14):
+        th = k / 14 * TAU + rng.uniform(-0.2, 0.2)
+        shards.append((th, rng.uniform(0.45, 0.95), rng.uniform(0.05, 0.11), rng.uniform(-0.25, 0.25), rng.random() < 0.4))
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        ext = ease_out(min(1.0, (i + 1) / 2.0), 2.0)
+        fly = 0.12 * ease_out(t, 2)
+        thin = 1 - ss(t, 0.35, 1.0)
+        img = Image.new("L", (S, S), 0)
+        d = ImageDraw.Draw(img)
+        for th, ln, w, bend, fork in shards:
+            r0 = 0.12 + fly
+            r1 = r0 + ln * ext * 0.8
+            c, s_ = math.cos(th), math.sin(th)
+            nx, ny = -s_, c
+            wm = w * thin
+            mid = (r0 + r1) * 0.55
+            poly = [(r0, 0), (mid, wm), (r1, bend * 0.1), (mid * 1.05, -wm * 0.6)]
+            if fork:
+                poly = [(r0, 0), (mid, wm), (r1 * 0.85, wm * 1.4), (mid * 1.1, wm * 0.2), (r1, -wm * 0.3), (mid, -wm * 0.7)]
+            P = [tuple(_px(c * a + nx * b, s_ * a + ny * b)) for a, b in poly]
+            d.polygon(P, fill=255)
+        rim = np.asarray(img, np.float32) / 255
+        rim = blur(rim, SS * 0.4)
+        lay = {"rim": rim, "mid": np.clip(ndi.grey_erosion(rim, size=(5, 5)) * 1.0, 0, 1), "core": np.clip(ndi.grey_erosion(rim, size=(11, 11)), 0, 1) * (1 - t)}
+        lay["glow"] = np.clip(blur(rim, S * 0.02) * 1.2, 0, 1) * 0.6
+        frames.append(lay)
+    return frames
+
+
+def speed_burst(n=16, seed=1231):
+    """Radial speed lines (one-shot 16f, white): 26 thick, tapered lines of mixed length shoot out from a ring around
+    the centre in 2 frames, then retract outward and thin away. The anime impact punctuation (white, LE 1)."""
+    rng = np.random.default_rng(seed)
+    x, y = coords(S)
+    lines = [(rng.uniform(0, TAU), rng.uniform(0.4, 1.0), rng.uniform(0.012, 0.03)) for _ in range(26)]
+    frames = []
+    for i in range(n):
+        t = i / (n - 1)
+        ext = ease_out(min(1.0, (i + 1) / 2.0), 2.0)
+        r0 = 0.22 + 0.55 * ease_out(max(0.0, t - 0.15) / 0.85, 1.6)
+        I = np.zeros_like(x)
+        for th, ln, w in lines:
+            r1 = min(0.97, 0.22 + (0.75 * ln) * ext + 0.1)
+            if r1 - r0 < 0.03:
+                continue
+            I = np.maximum(I, _needle(x, y, (math.cos(th) * r1, math.sin(th) * r1), (math.cos(th) * r0, math.sin(th) * r0), w * (1 - 0.6 * t), 0.0))
+        frames.append(np.clip(I * (1 - ss(t, 0.7, 1.0)), 0, 1))
+    return frames
+
+
+def needle_bold():
+    """Bold energy needle (single image, white): a long, thick, sharply tapered needle with a hot core and a tight
+    glow, head end fatter. VelocityParallel, fast, heavy drag: the streaks that fly out of every anime hit."""
+    x, y = coords(S)
+    v = (y + 1) / 2
+    prof = np.clip(np.sin(np.pi * np.clip(v, 0, 1) ** 0.55), 0, 1)
+    w = 0.05 * prof + 1e-4
+    core = ss(np.abs(x), w * 0.55, w * 0.25) * prof
+    body = ss(np.abs(x), w * 1.1, w * 0.8) * prof * 0.8
+    halo = np.exp(-(x / (w * 2.4)) ** 2) * prof * 0.35
+    return np.clip(np.maximum.reduce([core, body, halo]), 0, 1)
+
+
 # ================================================================ registry
 # kind: 'layered' (white layers), 'shaded' (alpha + grey value), 'white' (alpha only)
 LIB = {
@@ -3013,6 +3146,12 @@ LIB = {
     "fire_scorch":   (fire_scorch,   "shaded", 1, 0, "soot"),
     "dust_veil":     (dust_veil,     "shaded", 4, 0, "dust"),
     "spike_burst":   (spike_burst,   "cel", 4, 0, "dragonfire"),
+    # anime shape language (rework)
+    "anime_flame_spike": (anime_flame_spike, "cel", 4, 0, "dragonfire"),
+    "anime_slash":   (anime_slash,   "cel", 4, 0, "dragonfire"),
+    "ink_shards":    (ink_shards,    "cel", 4, 0, "dragonfire"),
+    "speed_burst":   (speed_burst,   "white", 4, 0, "white"),
+    "needle_bold":   (needle_bold,   "white", 1, 0, "white"),
     "flame_wall_1": (_flame_wall(3101), "cel", 0, 0, "dragonfire"),
     "flame_wall_2": (_flame_wall(3102), "cel", 0, 0, "dragonfire"),
     "flame_wall_3": (_flame_wall(3103), "cel", 0, 0, "dragonfire"),

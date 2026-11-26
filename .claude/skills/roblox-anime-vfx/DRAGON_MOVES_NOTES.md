@@ -337,3 +337,15 @@ possible, no hierarchy, trigger everything at once - described exactly what I ha
 3. Ambience halved (big layer is filler, not the subject).
 Gray/colour grids: assets/previews/dragon/six_moves_{color,grayscale}.jpg. Still weak (next): Talon finisher too
 small, Ember Breath cone small, Transform burst reads small at gameplay distance, timing still long in places.
+
+### Anime rework (user: "I want anime stylized VFX - look up anime Roblox VFX, tell me why you made this, rework it")
+Mesh-led test (swirl/crescent/ring/dome/tube with colour textures) was REJECTED ("even worse"): round, soft, static
+shapes. Studied anime Roblox VFX (Spirits Reborn on sand, green energy hit, ink splash, fire slam): SHARP pointed
+tapered shapes (flame spikes, needles, shards, 4-point star sparkles), directional energy (radial speed lines, needles
+streaking out), flat hard-edged saturated colour with white highlights and BLACK/dark accent shapes, lots of small
+crisp sparkles, instant pop timing. Everything I had built was round and soft (billows, blobs, ribbons, cylinders)
+and static. New sprites: anime_flame_spike, anime_slash, ink_shards, speed_burst, needle_bold (+ anime_glint).
+Sky Drop impact rebuilt with strict hierarchy: PRIMARY crown of 22 flame spikes; SECONDARY speed lines + black and gold
+ink shards + star flash (+1 frame); TERTIARY gold needles, popping star glints, scraps, dark spikes; MASS dark smoke
+behind, molten cracks, dust. Frames: assets/previews/dragon/skydrop_anime_rework.jpg. Waiting for the user's verdict
+before converting the other moves.

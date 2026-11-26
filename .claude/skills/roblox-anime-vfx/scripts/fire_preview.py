@@ -15,7 +15,7 @@ from vfx_textures import LIB, OUT
 HOT = {"glow": ("#ff7a1a", 0.75, 0.7), "rim": ("#d4202a", 0.2, 0), "mid": ("#ffc23a", 0.4, 0), "core": ("#fff4c8", 1, 0)}
 COOL = {"glow": ("#d4202a", 0.75, 0.82), "rim": ("#3a1c1e", 0.0, 0), "mid": ("#d4202a", 0.4, 0.2), "core": ("#ff7a1a", 1, 0.4)}
 FIRE = ["flame_billow", "flame_tongue", "claw_rake", "fire_crescent", "fire_ring", "fire_impact", "molten_crack",
-        "claw_gouge", "fire_slice", "heat_ring", "anime_glint"]
+        "claw_gouge", "fire_slice", "heat_ring", "anime_glint", "anime_flame_spike", "anime_slash", "ink_shards"]
 STRIPS = [f"flame_strip_{i}" for i in range(1, 5)]
 
 
