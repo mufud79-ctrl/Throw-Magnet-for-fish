@@ -349,3 +349,7 @@ Sky Drop impact rebuilt with strict hierarchy: PRIMARY crown of 22 flame spikes;
 ink shards + star flash (+1 frame); TERTIARY gold needles, popping star glints, scraps, dark spikes; MASS dark smoke
 behind, molten cracks, dust. Frames: assets/previews/dragon/skydrop_anime_rework.jpg. Waiting for the user's verdict
 before converting the other moves.
+Polish 1 ("better, could use polishing"): crown taller with more height contrast, leaning out, erupting as a wave from
+the centre; speed lines smaller/warm/0.2 s (white thick lines read as pale bars on the sky); cut dark_spikes (redundant
+with the black ink shards) and red scraps (confetti); take-off = small spike burst; dive = anime_slash smear + gold
+needles; targets get ink shards + glint instead of the generic impact.

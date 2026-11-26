@@ -66,9 +66,13 @@ def build():
     # ---- the leap: two flame bursts under the feet, dust ring, spiral flame ribbons around the rising body
     for t, seed in ((TL, 511), (TB2, 515)):
         f = body(t, 0.2)
-        L += billow([f[0], f[1] + 0.8, f[2]], t, 5.0, life=0.5, seed=seed, grow=1.4)
-        L += ember_spray([f[0], f[1] + 0.5, f[2]], t, size=6, life=0.45, seed=seed + 1)
-        L += glint([f[0], f[1] + 0.6, f[2]], t, size=4, life=0.18, seed=seed + 2)
+        for j in range(5):
+            a = j / 5 * 2 * math.pi + seed
+            q = [f[0] + math.cos(a) * 0.9, f[1], f[2] + math.sin(a) * 0.9]
+            hh = 3.6 - 0.5 * (j % 2)
+            L += emit_stack("anime_flame_spike", [q[0], q[1] + hh * 0.42, q[2]], t + 0.01 * j, size=hh, life=0.4, cool=False,
+                            rot=(j - 2) * 14, seed=seed + 3 + j, orient="FacingCameraWorldUp")
+        L += glint([f[0], f[1] + 0.8, f[2]], t, size=4, life=0.18, seed=seed + 2)
     L.append(dust_ring([0, 0, 0], TL + 0.01, n=10, speed=(22, 30), size=(2.5, 5.5), seed=518))
     L.append(dust_rollout([0, 0, 0], TL + 0.01, n=6, size=(8, 13), speed=(9, 14), seed=517))
     L.append(scorch([0, 0, 0], TL, size=6, life=2.0, seed=519))
@@ -111,7 +115,11 @@ def build():
     L.append({"type": "emitter", "at": body(TD, 3), "rate": [[TD, TI, 80]], "seed": 571, "path": dp, "rot": [180, 0, 0], "props": {
         "Texture": "spark_streak", "Color": PALS["fire"]["spark"], "LightEmission": 1, "Brightness": 1.6, "Size": [[0, 4.5], [1, 0.4]],
         "Lifetime": [0.12, 0.2], "Speed": [8, 14], "SpreadAngle": [12, 12], "Drag": 3, "Orientation": "VelocityParallel", "ZOffset": 0.5}})
-    L += smear(body(0.97, 3.5), TD + 0.04, 9, -90, life=0.16, seed=572)
+    L += emit_stack("anime_slash", body(0.97, 3.5), TD + 0.03, size=11, life=0.22, cool=False, rot=-100, seed=572, z=0.3)
+    L.append({"type": "emitter", "at": body(TD, 3), "rate": [[TD, TI, 70]], "seed": 573, "path": dp, "rot": [0, 0, 0], "props": {
+        "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.5, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.5,
+        "Size": [[0, 4.5], [1, 0.5]], "Lifetime": [0.12, 0.2], "Speed": [18, 30], "SpreadAngle": [10, 10], "Drag": 4,
+        "Orientation": "VelocityParallel", "ZOffset": 0.5}})
 
     # ---- IMPACT, anime shape language (rework): sharp, pointed, directional, hard-edged; strict hierarchy
     T = TI
@@ -120,15 +128,16 @@ def build():
     # leaning outward - the one shape you'd still read if everything else were hidden
     for k in range(22):
         a = k / 22 * 2 * math.pi + 0.13 * math.sin(k * 3.1)
-        r = 2.2 + 3.4 * ((k * 7) % 5) / 4
-        h = 9.5 - 0.9 * r + 2.0 * ((k * 3) % 4) / 3
+        r = 1.6 + 4.2 * ((k * 7) % 5) / 4
+        h = 12.5 - 1.25 * r + 2.6 * ((k * 3) % 4) / 3
         p = [g[0] + math.cos(a) * r, 0, g[2] + math.sin(a) * r]
-        lean = math.degrees(math.atan2(math.cos(a), 1.0)) * 0.25
-        tk = T + 0.005 + 0.012 * (k % 4)
+        lean = math.degrees(math.atan2(math.cos(a), 1.0)) * 0.45
+        tk = T + 0.004 + 0.018 * (r - 1.6) / 4.2              # erupts as a wave from the centre outward
         L += emit_stack("anime_flame_spike", [p[0], h * 0.42, p[2]], tk, size=[[0, h * 0.95], [1, h * 1.05]], life=0.62, cool=False,
                         rot=-lean, seed=601 + k, orient="FacingCameraWorldUp", z=0.04 * (k % 5))
     # SECONDARY (+1 frame): white radial speed lines, black ink shards + gold ink shards, one star flash
-    L.append(_fb("speed_burst", [g[0], 2.6, g[2]], T + 0.03, 26, 0.32, color="#ffffff", le=1, br=1.4, seed=611, z=0.9))
+    L.append(_fb("speed_burst", [g[0], 2.6, g[2]], T + 0.03, 21, 0.2, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2,
+                 seed=611, z=0.9, tr=[[0, 0.1], [0.6, 0.35], [1, 1]]))
     sh = emit_stack("ink_shards", [g[0], 2.4, g[2]], T + 0.03, size=[[0, 14], [1, 17]], life=0.42, cool=False, seed=612, rot=10, layers=("rim", "mid"), z=0.7)
     for e in sh:
         e["props"]["Color"] = "#1a0806" if e["props"]["Texture"].endswith("_rim") else "#3a0c08"
@@ -146,8 +155,6 @@ def build():
         a = k * 2.4
         r = 3.5 + 2.5 * ((k * 5) % 3) / 2
         L += glint([g[0] + math.cos(a) * r, 2.0 + 3.0 * ((k * 3) % 4) / 3, g[2] + math.sin(a) * r], T + 0.06 + 0.035 * k, size=2.6 + 0.8 * (k % 3), life=0.2, seed=621 + k)
-    L.append(fire_scraps([g[0], 2.2, g[2]], T + 0.03, n=18, speed=(18, 32), seed=630))
-    L += dark_spikes([g[0], 2.2, g[2]], T + 0.03, size=15, life=0.3, seed=631)
     # MASS (after the hit): dark smoke behind the fire for contrast, molten cracks, crater, dust, small rocks
     L.append(smoke([g[0], 3.0, g[2] - 1.5], T + 0.12, n=10, size=(6, 12), speed=(4, 8), life=(1.0, 1.5), seed=640, spread=60, rise=3,
                    color="#2a1c1a", tr0=0.15, part=[6, 2, 3]))
@@ -161,7 +168,8 @@ def build():
         th = T + 0.03 + 0.01 * i
         d = [p[0] - g[0], 0, p[2] - g[2]]
         n = math.hypot(d[0], d[2]) or 1
-        L += impact([p[0], 3.0, p[2]], th, size=5, life=0.4, seed=671 + i)
+        L += emit_stack("ink_shards", [p[0], 3.2, p[2]], th, size=6, life=0.3, cool=False, seed=671 + i, rot=40 * i, z=0.7)
+        L += glint([p[0] + 0.3, 3.6, p[2]], th + 0.01, size=3.2, life=0.18, seed=675 + i)
         L += wisps([p[0], 3.0, p[2]], th, th + 0.7, 10, size=2.2, life=0.45, seed=681 + 3 * i)
         hits.append({"t": th, "dummy": i, "dir": [R(d[0] / n), 0, R(d[2] / n)], "power": 1.1})
         numbers.append({"t": th + 0.02, "at": [p[0] + 1.0, 6.6, p[2]], "text": str(118 + 11 * i), "color": WHITE_GOLD, "vel": [R(d[0] / n * 2), 10, R(d[2] / n * 2)], "size": 1.8})
