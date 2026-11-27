@@ -22,7 +22,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from kit import *  # noqa
-from kit import _keys
+from kit import _keys, _fb
 
 TC, TH, T2 = 0.30, 0.46, 0.56
 DUR = 1.5
@@ -81,6 +81,20 @@ def wall(t0, t1, z0, z1, width, seed, scale=1.0):
     to = [[k, [width * 0.5, hmax * 0.5, z]] for k, z in zk(z0)]
     hk = [[0, hmax * 0.25], [0.12, hmax, "out"], [k1 * 0.8, hmax], [1, hmax * 0.15, "in"]]
     out += wall_beam(frm, to, t0, life, hk, bow=[0, 0, -1.6 * scale], tlen=12 * scale)
+    # ANIME CREST: sharp flame spikes erupting along the wall's front edge as it rolls (the lead shape: a charging wall
+    # of spikes), plus warm translucent haze pushed ahead of it
+    for e in emit_stack("anime_flame_spike", [0, hmax * 0.42, z0], t0 + 0.02, size=[[0, hmax * 0.9], [1, hmax * 1.05]], life=0.3,
+                        rate=[[t0 + 0.02, t1 - 0.12, 34 * scale]], cool=False, seed=seed + 60, orient="FacingCameraWorldUp", z=0.2, locked=True,
+                        transparency=[[0, 0], [0.6, 0.1], [1, 1]]):
+        e["move"] = mv(hmax * 0.42)
+        e["part"] = [width * 0.9, 0.5, 0.6]
+        e["props"]["Rotation"] = [-12, 12]
+        out.append(e)
+    out.append({"type": "emitter", "at": [0, 2.5, z0], "rate": [[t0, t1, 16 * scale]], "seed": seed + 61, "part": [width * 0.9, 1.5, 1],
+                "move": mv(2.5), "props": {"Texture": "haze_soft", "Color": [[0, "#ff9a3a"], [1, "#ff5a1e"]], "LightEmission": 0.7,
+        "Brightness": 1, "Size": [[0, 5 * scale], [1, 10 * scale]], "Lifetime": [0.7, 1.0], "Speed": [3, 6], "SpreadAngle": [40, 40],
+        "Drag": 1.5, "Rotation": [0, 360], "RotSpeed": [-8, 8], "FlipbookLayout": "None",
+        "Transparency": [[0, 1], [0.15, 0.68], [0.6, 0.78], [1, 1]], "ZOffset": -1.0}})
     # rolling billows dropped behind the front (they stay where they're born: the wall leaves fire behind it)
     for j in range(5):
         dx = (j - 2) / 2 * width * 0.38
@@ -104,8 +118,11 @@ def wall(t0, t1, z0, z1, width, seed, scale=1.0):
     for e in out[-6:]:
         e["move"] = mv(3.0)
         e["part"] = [width * 0.8, 1.5, 1]
-    out.append(smoke([0, 3.4, z0], 0, rate=[[t0 + 0.04, t1, 12 * scale]], size=(3.5, 7), speed=(6, 10), life=(0.7, 1.1), seed=seed + 42,
-                     part=[width * 0.8, 1.5, 1], direction=[-90, 0, 0], spread=20, move=mv(3.4)))
+    out.append({"type": "emitter", "at": [0, 3.6, z0 + 1.0], "rate": [[t0 + 0.04, t1, 10 * scale]], "seed": seed + 42, "part": [width * 0.8, 1.5, 1],
+                "move": mv(3.6), "props": {"Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0, "Brightness": 1,
+        "Size": [[0, 4 * scale], [1, 9 * scale]], "Lifetime": [0.8, 1.2], "Speed": [2, 4], "SpreadAngle": [30, 30], "Acceleration": [0, 2.5, 0],
+        "Drag": 1.2, "Rotation": [0, 360], "RotSpeed": [-10, 10], "FlipbookLayout": "None",
+        "Transparency": [[0, 1], [0.15, 0.55], [0.6, 0.7], [1, 1]], "ZOffset": -1.2}})
     return out
 
 
@@ -138,10 +155,22 @@ def build():
     hits, numbers = [], []
     for i, p in enumerate(TARGETS):
         th = TH + 0.006 * i
-        L += impact([p[0], 3.2, p[2] + 1.2], th, size=5.5, life=0.4, seed=301 + i)
+        hp_ = [p[0], 3.2, p[2] + 1.2]
+        L += glint([hp_[0], hp_[1] + 0.4, hp_[2] + 0.3], th, size=4.5, life=0.2, seed=301 + i)
+        sh = emit_stack("ink_shards", hp_, th + 0.015, size=[[0, 5], [1, 6.5]], life=0.26, cool=False, seed=303 + i, rot=30 * i, layers=("rim",), z=0.7)
+        for e in sh:
+            e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0
+        L += sh
+        L.append(_fb("speed_burst", hp_, th + 0.01, 8, 0.16, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2,
+                     seed=305 + i, z=0.9, tr=[[0, 0.2], [0.6, 0.45], [1, 1]]))
+        L.append({"type": "emitter", "at": hp_, "emits": [[th + 0.02, 12]], "seed": 309 + i, "props": {
+            "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.5, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.5,
+            "Size": [[0, 3.2], [1, 0.3]], "Lifetime": [0.14, 0.24], "Speed": [40, 70], "SpreadAngle": [60, 60], "Drag": 7,
+            "Orientation": "VelocityParallel", "ZOffset": 0.6}})
         L.append(glow_pool([p[0], 0, p[2]], th, 6, life=0.4, peak=0.45, seed=307 + i))
         hits.append({"t": th, "dummy": i, "dir": [0.15 * (1 if p[0] > 0 else -1), 0, -1], "power": 0.85})
         numbers.append({"t": th + 0.02, "at": [p[0] + 1.2, 6.4, p[2]], "text": str(72 + 9 * i), "color": GOLD, "vel": [0, 9, -2], "size": 1.6})
+    L += aura_haze([0, 0, -10.5], TH, 1.2, radius=7.0, height=5.0, strength=0.9, seed=360, cloud=0.5)   # OUTSIDE
     # the wall tears into tongues as it dies
     for j in range(9):
         L += tongue([(j - 4) * 1.6, 0, -13.8 - 0.4 * (j % 3)], 0.84 + 0.02 * j, 3.2 + 0.5 * (j % 2), life=0.55, seed=311 + j)
@@ -149,7 +178,7 @@ def build():
     L.append({"type": "emitter", "at": [0, 0.9, -6], "part": [12, 0.6, 8], "emits": [[0.42, 18]], "seed": 330, "rot": [-90, 0, 0], "props": {
         "Texture": "smoke_cel_v3", "Color": SAND_DUST, "LightEmission": 0, "Brightness": 1, "Size": [[0, 3], [1, 7]],
         "Lifetime": [0.8, 1.2], "Speed": [20, 30], "SpreadAngle": [12, 4], "Drag": 4, "Acceleration": [0, 1.2, 0], "Rotation": [-20, 20],
-        "Transparency": [[0, 0.1], [0.7, 0.3], [1, 1]], "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot", "Orientation": "FacingCameraWorldUp", "ZOffset": -0.5}})
+        "Transparency": [[0, 0.35], [0.7, 0.55], [1, 1]], "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot", "Orientation": "FacingCameraWorldUp", "ZOffset": -0.5}})
     # the scorched lane: char decal, flickers along it, after-smoke, shimmer
     L.append(scorch([0, 0, -8.5], 0.55, size=13, life=2.0, seed=331, rot=90))
     for k in range(5):

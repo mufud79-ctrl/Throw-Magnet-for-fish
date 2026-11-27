@@ -82,28 +82,43 @@ def build():
     life = TC - TR + 0.08
     frm = keyed(mouth, TR, TR + life)
     to = keyed(contact, TR, TR + life)
-    wk = [[0, [0.5, 2.0]], [0.08, [1.0, 4.6], "out"], [0.85, [0.9, 4.2]], [1, [0.3, 1.4], "in"]]
+    wk = [[0, [0.7, 3.0]], [0.08, [1.4, 7.0], "out"], [0.85, [1.3, 6.4]], [1, [0.4, 2.0], "in"]]
     reach = [[0, 0.15], [0.06, 1, "out"], [0.9, 1], [1, 1]]
-    for lay, wm, sp in (("rim", 1.0, 3.2), ("mid", 0.72, 3.8), ("core", 0.26, 4.6)):
+    for lay, wm, sp in (("glow", 1.7, 2.6), ("rim", 1.0, 3.2), ("mid", 0.72, 3.8), ("core", 0.26, 4.6)):
         L.append({"type": "beam", "from": frm, "to": to, "t0": TR, "life": life, "textures": [f"{st}_{lay}" for st in STRIPS], "swap": 0.06,
                   "textureLength": 6, "textureSpeed": sp, "segments": 12, "color": PALS["fire"]["HOT"][lay], "lightEmission": LE[lay],
                   "brightness": BR[lay], "width": [[k, [w[0] * wm, w[1] * wm]] + e for k, w, *e in wk], "reach": reach,
                   "transparency": [[0, 0], [0.9, 0.05], [1, 0.6]]})
     # volume: billows rolling INSIDE the cone at three depths (small near the mouth, big at the far end) - a torrent,
     # never a laser
-    for j, (f, sz, rt) in enumerate(((0.3, 3.6, 22), (0.58, 5.4, 20), (0.82, 7.0, 18))):
+    for j, (f, sz, rt) in enumerate(((0.3, 5.0, 24), (0.58, 7.5, 22), (0.82, 9.5, 20))):
         bp = [[R(TR + (TC - TR) * i / 40, 4), R([m + (c - m) * f for m, c in zip(mouth(TR + (TC - TR) * i / 40), contact(TR + (TC - TR) * i / 40, y=1.4 + 0.8 * (1 - f)))])] for i in range(41)]
         for e in billow(bp[0][1], TR, sz, life=0.32, seed=917 + j * 3, grow=1.3, rot=60 * j):
             e.pop("emits", None); e["rate"] = [[TR + 0.03 * j, TC, rt]]; e["path"] = bp
             L.append(e)
     # billows rolling at the cone's mouth (riding the contact point), an ember spray, smoke riding the top
     cp = path(contact, TR, TC, y=1.6)
-    for e in billow(cp[0][1], TR, 4.8, life=0.45, seed=911, grow=1.35):
+    for e in billow(cp[0][1], TR, 7.0, life=0.5, seed=911, grow=1.4):
         e.pop("emits", None); e["rate"] = [[TR + 0.04, TC, 18]]; e["path"] = cp
         L.append(e)
     L.append(embers(cp[0][1], 0, rate=[[TR, TC, 70]], speed=(8, 18), life=(0.35, 0.7), grav=-10, spread=60, path=cp, seed=912))
-    L.append(smoke([0, 4.5, -6], 0, rate=[[TR + 0.1, TC + 0.05, 14]], size=(3.5, 7), speed=(2, 4), life=(0.9, 1.3), seed=913,
-                   path=path(contact, TR, TC, r=REACH * 0.7, y=4.8)))
+    L.append({"type": "emitter", "at": [0, 4.8, -6], "rate": [[TR + 0.1, TC + 0.05, 12]], "seed": 913, "path": path(contact, TR, TC, r=REACH * 0.7, y=4.8),
+              "part": [2, 1, 2], "props": {"Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0, "Brightness": 1,
+        "Size": [[0, 3.5], [1, 8]], "Lifetime": [0.9, 1.3], "Speed": [1, 3], "SpreadAngle": [30, 30], "Acceleration": [0, 2.5, 0], "Drag": 1.2,
+        "Rotation": [0, 360], "RotSpeed": [-10, 10], "FlipbookLayout": "None", "Transparency": [[0, 1], [0.15, 0.55], [0.6, 0.7], [1, 1]], "ZOffset": -1.0}})
+    # SPIKE EDGE (the lead shape: a spike-edged cone): sharp flame spikes keep bursting up along the front of the cone
+    # where it hits the sand, leaning away from the caster, plus gold needles streaming out past it
+    for e in emit_stack("anime_flame_spike", cp[0][1], TR + 0.04, size=[[0, 6.5], [1, 7.5]], life=0.38, rate=[[TR + 0.04, TC - 0.04, 50]],
+                        cool=False, seed=918, orient="FacingCameraWorldUp", z=0.3, transparency=[[0, 0], [0.6, 0.1], [1, 1]]):
+        e["path"] = path(contact, TR, TC, y=2.2)
+        e["part"] = [5.0, 0.4, 4.0]
+        e["props"]["Rotation"] = [-25, 25]
+        L.append(e)
+    L.append({"type": "emitter", "at": cp[0][1], "rate": [[TR, TC, 60]], "seed": 919, "path": path(contact, TR, TC, r=REACH * 0.55, y=3.0),
+              "part": [1.5, 1.0, 1.5], "rot": [-75, 0, 0], "props": {
+        "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.5, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.5,
+        "Size": [[0, 3.6], [1, 0.3]], "Lifetime": [0.16, 0.26], "Speed": [40, 60], "SpreadAngle": [35, 35], "Drag": 5,
+        "Orientation": "VelocityParallel", "ZOffset": 0.6}})
     L += wisps(cp[0][1], TR, TC, 16, size=2.6, life=0.45, path=cp, seed=914)
     L.append(glow_pool([0, 0, -8], TR, 9, life=0.3, rate=[[TR, TC, 14]], peak=0.4, seed=916, path=path(contact, TR, TC, y=0)))
 
@@ -134,12 +149,18 @@ def build():
             mid = (lo + hi) / 2
             (lo, hi) = (mid, hi) if mid * mid * (3 - 2 * mid) < k else (lo, mid)
         th = TR + (TC - TR) * lo
-        L += impact([q[0], 3.0, q[2] + 0.8], th, size=5, life=0.4, seed=951 + i)
+        sh = emit_stack("ink_shards", [q[0], 3.0, q[2] + 0.8], th + 0.01, size=[[0, 4.5], [1, 6]], life=0.26, cool=False, seed=951 + i,
+                        rot=35 * i, layers=("rim",), z=0.7)
+        for e in sh:
+            e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0
+        L += sh
+        L += glint([q[0], 3.4, q[2] + 1.0], th, size=3.8, life=0.2, seed=953 + i)
         L += wisps([q[0], 2.5, q[2]], th, th + 0.6, 10, size=2.2, life=0.45, seed=955 + 3 * i)
         hits.append({"t": th, "dummy": i, "dir": [0, 0, -1], "power": 0.4})
         numbers.append({"t": th + 0.02, "at": [q[0] + 1.0, 6.2, q[2]], "text": str(31 + 6 * i), "color": GOLD, "vel": [0, 9, 0], "size": 1.5})
         stops.append({"t": th + 0.02, "dur": 0.04})
 
+    L += aura_haze([0, 0, -REACH * 0.75], TR + 0.15, TC - TR + 0.6, radius=REACH * 0.6, height=5.0, strength=1.3, seed=970, cloud=0.8)   # OUTSIDE
     # ---- after: smoke curls from the mouth, after-smoke off the wedge, shimmer
     L.append(smoke_wisps(mouth(TC + 0.1), TC, DUR, 6, size=2.2, part=[0.4, 0.3, 0.4], seed=961))
     L.append(smoke_wisps([0, 0.4, -8], TC - 0.2, DUR, 10, size=3.5, part=[12, 0.2, 4], seed=962))

@@ -970,7 +970,7 @@ def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff
         "FlipbookFramerate": [0.01, 0.01], "FlipbookStartRandom": True, "ZOffset": 0.3}})
     for k in range(int(9 * S)):
         a = k * 2.399 + seed
-        r = radius * (0.6 + 1.5 * ((k * 5) % 7) / 6)
+        r = radius * (0.4 + 0.7 * ((k * 5) % 7) / 6)      # glints stay near the effect (far ones land on the camera)
         out += glint([c[0] + math.cos(a) * r, height * (0.3 + 0.9 * ((k * 3) % 5) / 4), c[2] + math.sin(a) * r], t0 + 0.08 + dur * 0.06 * k,
                      size=1.6 + 0.9 * (k % 3), life=0.22, seed=seed + 10 + k)
     return out

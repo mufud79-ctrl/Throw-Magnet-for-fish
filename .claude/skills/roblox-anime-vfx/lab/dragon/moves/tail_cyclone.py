@@ -81,21 +81,44 @@ def build():
         a = math.radians(_keys(POSE["twist"], TS, 0)) + math.pi / 2 + k / NP * 2 * math.pi
         p = [math.cos(a) * RAD, 0, math.sin(a) * RAD]
         t = TP + 0.04 * k
-        # the pillar: ONE column of fused cel fire (flame_pillar Beam) erupting out of the sand
-        L += pillar(p, 8.0, t, 0.62, width=3.6, reach=[[0, 0], [0.14, 1, "out"], [1, 1]])
-        L += billow([p[0], 7.6, p[2]], t + 0.08, 3.8, life=0.5, seed=745 + k, grow=1.3)
-        L.append(glow_pool(p, t, 6, life=0.5, peak=0.4, seed=748 + k))
-        L.append(smoke([p[0], 7.8, p[2]], t + 0.3, n=4, size=(4, 8), speed=(2, 4), life=(1.0, 1.5), seed=771 + k, rise=3.5))
-        L.append(embers([p[0], 7.5, p[2]], t + 0.25, n=14, speed=(4, 9), life=(0.8, 1.4), grav=-14, seed=781 + k))
+        # the eruption: a FAN of sharp anime flame spikes bursting out of the ring (the lead shape: a ring of spike
+        # crowns going off in sequence), leaning outward, uneven heights; a glint and a few needles shooting up
+        out_deg = math.degrees(math.atan2(math.cos(a), 1.0)) * 0.5
+        for j2 in range(4):
+            off = (j2 - 1.5) * 0.9
+            q = [p[0] - math.sin(a) * off, 0, p[2] + math.cos(a) * off]
+            h = 7.5 + 1.8 * ((j2 * 5 + k) % 3) / 2 - 1.2 * abs(j2 - 1.5)
+            L += emit_stack("anime_flame_spike", [q[0], h * 0.42, q[2]], t + 0.012 * j2, size=[[0, h * 0.95], [1, h * 1.05]],
+                            life=0.5 + 0.06 * (j2 % 2), cool=False, rot=-out_deg + (j2 - 1.5) * 8, seed=745 + 7 * k + j2,
+                            orient="FacingCameraWorldUp", z=0.04 * j2)
+        L += glint([p[0], 3.2, p[2]], t + 0.01, size=3.6, life=0.18, seed=748 + k)
+        L.append({"type": "emitter", "at": [p[0], 1.2, p[2]], "emits": [[t + 0.02, 6]], "seed": 761 + k, "rot": [0, 0, 0], "props": {
+            "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.5, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.5,
+            "Size": [[0, 3.6], [1, 0.3]], "Lifetime": [0.18, 0.3], "Speed": [45, 70], "SpreadAngle": [14, 14], "Drag": 6,
+            "Acceleration": [0, 0, 0], "Orientation": "VelocityParallel", "ZOffset": 0.6}})
+        L.append(glow_pool(p, t, 6, life=0.4, peak=0.3, seed=751 + k))
+        L.append(embers([p[0], 6.5, p[2]], t + 0.2, n=8, speed=(3, 7), life=(0.8, 1.3), grav=-10, seed=781 + k))
         L.append(scorch(p, t, size=4, life=1.6, seed=791 + k))
-        L += flicker(p, t + 0.35, t + 0.95, 1.6, seed=801 + k)
+        L += flicker(p, t + 0.3, t + 0.9, 1.6, seed=801 + k)
+    # smooth dark smoke rising off the ring after the crowns, and the warm haze spreading past it
+    L.append({"type": "emitter", "at": [0, 4.0, 0], "emits": [[TP + 0.25, 10]], "rate": [[TP + 0.3, TP + 0.8, 10]], "seed": 771,
+              "part": [RAD * 2, 2, RAD * 2], "props": {"Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0,
+        "Brightness": 1, "Size": [[0, 4], [1, 9]], "Lifetime": [1.0, 1.4], "Speed": [1, 3], "SpreadAngle": [30, 30], "Acceleration": [0, 2.5, 0],
+        "Drag": 1.2, "Rotation": [0, 360], "RotSpeed": [-10, 10], "FlipbookLayout": "None",
+        "Transparency": [[0, 1], [0.15, 0.6], [0.6, 0.72], [1, 1]], "ZOffset": -1.0}})
+    L += aura_haze([0, 0, 0], TP, 1.3, radius=RAD * 1.1, height=5.5, strength=1.0, seed=830, cloud=0.5)   # OUTSIDE
     # targets: each is launched by the pillar nearest to it
     first = None
     for i, q in enumerate(TARGETS):
         best = min(range(NP), key=lambda k: abs(((math.radians(_keys(POSE["twist"], TS, 0)) + math.pi / 2 + k / NP * 2 * math.pi) - tang[i] + math.pi) % (2 * math.pi) - math.pi))
         th = TP + 0.04 * best + 0.02
         first = th if first is None else min(first, th)
-        L += impact([q[0], 3.0, q[2]], th, size=5, life=0.4, seed=811 + i)
+        sh = emit_stack("ink_shards", [q[0], 3.0, q[2]], th + 0.01, size=[[0, 4.5], [1, 6]], life=0.26, cool=False, seed=811 + i,
+                        rot=40 * i, layers=("rim",), z=0.7)
+        for e in sh:
+            e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0
+        L += sh
+        L += glint([q[0], 3.4, q[2]], th, size=3.8, life=0.2, seed=815 + i)
         hits.append({"t": th, "dummy": i, "dir": [R(q[0] / RAD * 0.4), 0, R(q[2] / RAD * 0.4)], "power": 0.7})
         numbers.append({"t": th + 0.02, "at": [q[0], 6.4, q[2]], "text": str(96 + 7 * i), "color": GOLD, "vel": [0, 11, 0], "size": 1.6})
     L.append(smoke_wisps([0, 0.4, 0], 1.1, DUR, 12, size=4, part=[13, 0.2, 13], seed=821))

@@ -20,6 +20,8 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from kit import *  # noqa
+from kit import _fb
+import math
 
 T1, T2, T3 = 0.18, 0.38, 0.62
 TARGET = [0, 0, -7.6]
@@ -54,14 +56,14 @@ def claw_trails(side, t0, t1, seed):
         hp = hand_path(POSE, t0, t1, side, step=1 / 120, reach=2.35, lateral=lat, fwd=-0.45)
         hot = {"rim": [[0, CRIMSON], [0.6, CRIMSON], [1, EMBER]], "mid": [[0, GOLD], [0.5, ORANGE], [1, CRIMSON]],
                "core": [[0, WHITE_GOLD], [0.4, GOLD], [1, ORANGE]]}
-        for lay, w in (("rim", 0.95), ("mid", 0.62), ("core", 0.2)):
+        for lay, w in (("rim", 1.5), ("mid", 1.0), ("core", 0.32)):
             out.append({"type": "trail", "path": hp, "at": hp[0][1], "t0": t0, "t1": t1, "lifetime": 0.26, "faceCamera": True,
                         "width": w, "textures": [f"{st}_{lay}" for st in STRIPS], "swap": 0.06, "color": hot[lay],
                         "lightEmission": LE[lay], "brightness": BR[lay], "textureMode": "Stretch",
                         "transparency": [[0, 0], [0.4, 0.05], [0.8, 0.5], [1, 1]], "widthScale": [[0, 1], [0.6, 0.75], [1, 0.2]]})
     hp = hand_path(POSE, t0, t1, side, step=1 / 120, reach=2.2)
     out += trail_stack({"path": hp, "at": hp[0][1], "t0": t0, "t1": t1, "lifetime": 0.2, "faceCamera": True,
-                        "transparency": [[0, 0.45], [1, 1]], "widthScale": [[0, 1], [1, 0.3]]}, {"glow": 1.6}, layers=("glow",))
+                        "transparency": [[0, 0.35], [1, 1]], "widthScale": [[0, 1], [1, 0.3]]}, {"glow": 3.2}, layers=("glow",))
     return out
 
 
@@ -85,39 +87,68 @@ def build():
         "ShapeStyle": "Surface", "Size": [[0, 1.6], [1, 0.4]], "Lifetime": [0.12, 0.16], "Speed": [20, 26], "Orientation": "VelocityParallel",
         "Transparency": [[0, 0.3], [1, 0.8]], "ZOffset": 0.3}})
 
-    # ---- the rakes: each hangs where its swipe passed, at the swipe's angle
-    rakes = [(T1 + 0.02, [FRONT[0] + 0.3, 3.9, FRONT[2]], -40, 5.6, 0.8, 131),
-             (T2 + 0.02, [FRONT[0] - 0.5, 3.6, FRONT[2]], 220, 5.6, 0.75, 141),
-             (T3 + 0.02, [FRONT[0] - 0.1, 3.4, FRONT[2] - 0.2], -90, 7.4, 0.85, 151)]
-    for t, at, rot, sz, life, seed in rakes:
-        L += rake(at, t, sz, life=life, rot=rot, seed=seed)
+    # ---- the rakes: three parallel ANIME SLASHES per swipe (hard-edged crescents, knife tips, white-hot inner line),
+    # cut across the target at the swipe's angle - the lead shape of this move
+    def claw_slash(at, t, size, rot, seed, life=0.34):
+        out = []
+        nx, ny = math.cos(math.radians(rot + 90)), math.sin(math.radians(rot + 90))
+        for k, off in enumerate((-1, 0, 1)):
+            d = off * size * 0.13
+            out += emit_stack("anime_slash", [at[0] + nx * d, at[1] + ny * d, at[2] + 0.05 * k], t + 0.012 * k,
+                              size=[[0, size * (1 - 0.08 * abs(off))], [1, size * 1.06]], life=life, cool=False, rot=rot,
+                              seed=seed + k, z=0.6 + 0.02 * k)
+        return out
 
-    # ---- hits 1 and 2 (medium)
     hits, numbers = [], []
-    for i, (t, side) in enumerate(((T1, 1), (T2, -1))):
+    for i, (t, side, rot) in enumerate(((T1, 1, -35), (T2, -1, 215))):
         th = t + 0.02
-        L += impact([CHEST[0] + 0.5 * side, CHEST[1], CHEST[2] + 1.0], th, size=5.0, life=0.4, seed=161 + i, rot=40 * i)
-        L.append(embers([0.3, 3.4, -6.8], th, n=14, speed=(10, 22), life=(0.4, 0.8), grav=-18, seed=167 + i))
-        L.append(glow_pool([0.2, 0, -7.0], th, 6, life=0.35, peak=0.45, seed=169 + i))
-        L.append(smoke([0, 4.6, -9.2], th + 0.06, n=3, size=(2.5, 5.5), speed=(1.5, 3), life=(0.9, 1.3), seed=165 + i))
+        hp = [CHEST[0] + 0.3 * side, CHEST[1] + 0.3, CHEST[2] + 1.2]
+        L += claw_slash(hp, th - 0.01, 7.0, rot, 131 + 10 * i)                      # PRIMARY
+        L += glint([hp[0] - 0.4 * side, hp[1] + 0.5, hp[2] + 0.3], th, size=4.2, life=0.2, seed=161 + i)
+        sh = emit_stack("ink_shards", hp, th + 0.02, size=[[0, 4.5], [1, 6]], life=0.26, cool=False, seed=163 + i, rot=rot, layers=("rim",), z=0.7)
+        for e in sh:
+            e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0
+        L += sh                                                                     # SECONDARY (dark accent)
+        L.append({"type": "emitter", "at": hp, "emits": [[th + 0.02, 10]], "seed": 165 + i, "props": {
+            "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.5, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.5,
+            "Size": [[0, 3.2], [1, 0.3]], "Lifetime": [0.14, 0.24], "Speed": [40, 70], "SpreadAngle": [40, 40], "Drag": 7,
+            "Orientation": "VelocityParallel", "ZOffset": 0.6}})   # TERTIARY
+        L.append(glow_pool([0.2, 0, -7.0], th, 6, life=0.3, peak=0.35, seed=169 + i))
         hits.append({"t": th, "dummy": 0, "dir": [0.25 * side, 0, -1], "power": 0.22})
         numbers.append({"t": th + 0.02, "at": [1.8 * side, 6.4, -8.4], "text": str(48 + 7 * i), "color": GOLD, "vel": [1.5 * side, 8, 0], "size": 1.4})
 
-    # ---- the finisher (BIG)
+    # ---- the finisher (BIG): both claws down -> an X of two triple slashes, white speed lines, a burst of needles,
+    # haze rolling out, gouges burned into the sand
     th = T3 + 0.02
-    L += impact([0.3, 3.0, -7.0], th, size=8.5, life=0.55, seed=171)
-    L.append(flare([0.3, 3.2, -6.6], th, size=11, life=0.2, seed=172))
-    L.append(streaks([0.2, 2.0, -7.4], th + 0.005, 9, speed=(55, 90), length=(2, 4), spread=35, direction=[180, 0, 0], seed=173))
-    L.append(dust_ring([0, 0, -8.2], th + 0.01, n=14, speed=(24, 34), size=(3, 6.5), seed=175))
-    L.append(glow_pool([0.1, 0, -8.0], th, 11, life=0.9, peak=0.5, seed=176))
-    L.append(smoke([0, 3.5, -10.2], th + 0.08, n=6, size=(4, 9), speed=(2, 5), life=(1.2, 1.8), seed=177, spread=50))
+    fp = [0.2, 3.4, -6.4]
+    L += claw_slash([fp[0] - 0.6, fp[1], fp[2]], th - 0.01, 10.5, -70, 151, life=0.42)
+    L += claw_slash([fp[0] + 0.6, fp[1], fp[2]], th + 0.015, 10.5, -110, 155, life=0.42)
+    L.append(_fb("speed_burst", fp, th + 0.02, 15, 0.2, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2,
+                 seed=158, z=0.9, tr=[[0, 0.15], [0.6, 0.4], [1, 1]]))
+    sh = emit_stack("ink_shards", fp, th + 0.03, size=[[0, 8], [1, 10]], life=0.3, cool=False, seed=159, rot=20, layers=("rim",), z=0.7)
+    for e in sh:
+        e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0
+    L += sh
+    L += glint([fp[0], fp[1] + 0.4, fp[2] + 0.4], th + 0.01, size=7, life=0.24, seed=172)
+    L.append({"type": "emitter", "at": fp, "emits": [[th + 0.03, 22]], "seed": 173, "props": {
+        "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.4, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.6,
+        "Size": [[0, 4.5], [0.5, 2.5], [1, 0.3]], "Lifetime": [0.18, 0.32], "Speed": [55, 95], "SpreadAngle": [180, 180], "Drag": 7,
+        "Orientation": "VelocityParallel", "ZOffset": 0.6}})
+    for k in range(4):
+        a = k * 2.3
+        L += glint([fp[0] + math.cos(a) * 3.2, fp[1] + math.sin(a) * 2.2, fp[2]], th + 0.06 + 0.04 * k, size=2.2 + 0.6 * (k % 2), life=0.18, seed=176 + k)
+    L += aura_haze([0, 0, -8.4], th, 1.3, radius=5.5, height=5.0, strength=1.0, seed=180, cloud=0.6)   # OUTSIDE
+    L.append(dust_ring([0, 0, -8.2], th + 0.01, n=12, speed=(24, 34), size=(3, 6), seed=175))
+    L.append(glow_pool([0.1, 0, -8.0], th, 10, life=0.6, peak=0.35, seed=176))
+    L.append({"type": "emitter", "at": [0, 3.5, -10.0], "emits": [[th + 0.08, 6]], "rate": [[th + 0.1, th + 0.6, 6]], "seed": 177,
+              "part": [4, 1.5, 2], "props": {"Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0,
+        "Brightness": 1, "Size": [[0, 4], [1, 9]], "Lifetime": [0.9, 1.3], "Speed": [2, 4], "SpreadAngle": [30, 30], "Acceleration": [0, 2.5, 0],
+        "Drag": 1.2, "Rotation": [0, 360], "RotSpeed": [-10, 10], "FlipbookLayout": "None",
+        "Transparency": [[0, 1], [0.15, 0.5], [0.6, 0.65], [1, 1]], "ZOffset": -0.8}})
     L += gouge([0, 0, -9.4], th, size=8.5, rot=90, glow_life=1.25, char_life=3.0, seed=178)
     hits.append({"t": th, "dummy": 0, "dir": [0, 0, -1], "power": 1.0})
     numbers.append({"t": th + 0.03, "at": [1.4, 7.0, -8.8], "text": "164", "color": WHITE_GOLD, "vel": [0.5, 10, -1], "size": 1.8})
     debris = rocks([0, 0, -8.4], th, radius=3.5, count=8, size=0.9, speed=24, crater=False, seed=179)
-    for t, at, rot, sz, life, seed in rakes:
-        L.append(embers(at, 0, rate=[[t + life * 0.4, t + life * 0.95, 24]], speed=(1, 4), life=(0.5, 1.0), grav=-4,
-                        part=[sz * 0.55, 1.2, 0.6], seed=seed + 5))
 
     # ---- FILLER (fluidity): swirls winding up each claw, wisps shed off the hands, a motion smear on every swing,
     # ember sprays on every hit, heat shimmer over the fight, after-smoke and small flames on the gouges
@@ -128,8 +159,6 @@ def build():
     for t, at, rot, sz in ((T1 - 0.005, [0.8, 4.0, -3.4], -40, 7.5), (T2 - 0.005, [-0.6, 3.8, -3.4], 220, 7.5),
                            (T3 - 0.005, [1.2, 4.2, -3.6], -95, 8.5), (T3 - 0.005, [-1.2, 4.2, -3.6], -85, 8.5)):
         L += smear(at, t, sz, rot, life=0.2, seed=431 + int(t * 100))
-    for i, (t, sz) in enumerate(((T1, 5.0), (T2, 5.0), (T3, 8.5))):
-        L += glint([0.5 - 0.3 * i, 3.6 + 0.2 * i, -6.2], t + 0.02, size=3.5 + 1.5 * (i == 2), life=0.2, seed=471 + i, rot=15 * i)
     L.append(smoke_wisps([0, 0.4, -9.4], T3 + 0.25, DUR, 7, size=3.5, part=[6, 0.2, 2], seed=452))
     L.append(smoke_wisps([0, 3.5, -8.4], T3 + 0.1, DUR - 0.2, 4, size=4.0, part=[1.5, 2, 1.5], seed=453))
     for k, x in enumerate((-1.6, 0.0, 1.6)):

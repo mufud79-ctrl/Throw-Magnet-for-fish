@@ -24,6 +24,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from kit import *  # noqa
+from kit import _fb
 
 TC0, TS, TB = 0.40, 1.15, 1.50
 DUR = 2.8
@@ -101,7 +102,18 @@ def build():
             e.pop("emits", None); e["rate"] = [[TC0 + 0.05 * j, TB - 0.05, 5]]
             L.append(e)
     L.append(haze([0, 8, 0], TC0, DUR, size=16, seed=1023))
-    L.append(smoke([0, 10, 0], 0, rate=[[0.7, TB, 6]], size=(4, 8), speed=(2, 4), life=(1.0, 1.4), seed=1024, part=[6, 2, 6], rise=3))
+    L.append({"type": "emitter", "at": [0, 10, 0], "rate": [[0.7, TB, 6]], "seed": 1024, "part": [6, 2, 6], "props": {
+        "Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0, "Brightness": 1, "Size": [[0, 4], [1, 9]],
+        "Lifetime": [1.0, 1.4], "Speed": [2, 4], "SpreadAngle": [30, 30], "Acceleration": [0, 2.5, 0], "Drag": 1.2, "Rotation": [0, 360],
+        "RotSpeed": [-10, 10], "FlipbookLayout": "None", "Transparency": [[0, 1], [0.15, 0.55], [0.6, 0.7], [1, 1]], "ZOffset": -1.0}})
+    # spikes crawling up the cocoon: sharp flame points keep breaking out of its surface (a spiky egg, not a bucket)
+    for e in emit_stack("anime_flame_spike", [0, 4.5, 0], TC0 + 0.15, size=[[0, 4.5], [1, 5.5]], life=0.3, rate=[[TC0 + 0.15, TB - 0.04, 40]],
+                        cool=False, seed=1025, orient="FacingCameraWorldUp", z=0.3, transparency=[[0, 0], [0.6, 0.1], [1, 1]]):
+        e["part"] = [7, 7, 7]
+        e["props"]["Shape"] = "Cylinder"; e["props"]["ShapeStyle"] = "Surface"
+        e["props"]["Rotation"] = [-30, 30]
+        L.append(e)
+    L += aura_haze(G, TC0, TB - TC0 + 0.1, radius=5.0, height=6.0, strength=0.7, seed=1026, cloud=0.6)   # heat around the cocoon
 
     # ---- the dragon pours out of the cocoon (the hidden swap is inside the densest fire)
     hp = head_path()
@@ -119,18 +131,36 @@ def build():
     # ---- 1.45 pinch, 1.50 BURST + ROAR
     T = TB
     L += emit_stack("fire_swirl", [0, 5, 0], T - 0.12, size=[[0, 9], [1, 3]], life=0.12, cool=False, seed=1041)
-    L += impact([0, 4.5, 0], T + 0.005, size=13, life=0.55, seed=1042)
+    # BURST (primary): a radial star of huge flame spikes tearing outward from the cocoon in every direction
+    for j in range(14):
+        rot = j / 14 * 360 + 7 * math.sin(j * 2.3)
+        ln = 15 + 5 * ((j * 7) % 4) / 3
+        L += emit_stack("anime_flame_spike", [0, 5.0, 0], T + 0.004 * (j % 3), size=[[0, ln * 0.6], [0.2, ln], [1, ln * 1.05]],
+                        life=0.42 + 0.06 * (j % 2), cool=False, rot=rot, seed=1042 + j, z=0.5)
+    L.append(_fb("speed_burst", [0, 5, 0], T + 0.02, 26, 0.24, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2,
+                 seed=1043, z=0.9, tr=[[0, 0.1], [0.6, 0.35], [1, 1]]))
+    L += glint([0, 5.4, 0.5], T + 0.01, size=12, life=0.26, seed=1044)
+    L.append({"type": "emitter", "at": [0, 5, 0], "emits": [[T + 0.02, 40]], "seed": 1045, "props": {
+        "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.4, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.6,
+        "Size": [[0, 7], [0.5, 4], [1, 0.4]], "Lifetime": [0.25, 0.45], "Speed": [70, 120], "SpreadAngle": [180, 180], "Drag": 6,
+        "Orientation": "VelocityParallel", "ZOffset": 0.6}})
+    L += aura_haze(G, T + 0.02, 2.0, radius=11.0, height=8.0, strength=1.2, seed=1046, cloud=0.6)   # OUTSIDE
     for j in range(10):
         a = j / 10 * 2 * math.pi
         L += billow([math.cos(a) * 3.5, 3.0, math.sin(a) * 3.5], T + 0.01, 6.0, life=0.6, seed=1051 + j, grow=1.4,
                     move={"from": [math.cos(a) * 3.5, 3.0, math.sin(a) * 3.5], "to": [math.cos(a) * 10, 2.0, math.sin(a) * 10], "t0": T, "t1": T + 0.45, "ease": "out"})
-    L += fire_ring(G, T + 0.01, 13, life=0.75, seed=1061)
     L.append(dust_ring(G, T + 0.015, n=26, speed=(36, 50), size=(4, 9), seed=1063, radius=4))
-    L.append(smoke([0, 2.5, 0], T + 0.03, n=16, size=(5, 11), speed=(18, 28), life=(1.2, 1.8), seed=1064, spread=90, rise=2, part=[8, 2, 8]))
+    L.append({"type": "emitter", "at": [0, 2.5, 0], "emits": [[T + 0.03, 14]], "seed": 1064, "part": [8, 2, 8], "props": {
+        "Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0, "Brightness": 1, "Size": [[0, 5], [1, 12]],
+        "Shape": "Cylinder", "ShapeInOut": "Outward", "ShapeStyle": "Volume", "Lifetime": [1.2, 1.8], "Speed": [14, 22], "SpreadAngle": [20, 20],
+        "Drag": 2.5, "Acceleration": [0, 2, 0], "Rotation": [0, 360], "RotSpeed": [-10, 10], "FlipbookLayout": "None",
+        "Transparency": [[0, 1], [0.1, 0.5], [0.6, 0.7], [1, 1]], "ZOffset": -1.0}})
     L.append(streaks([0, 4, 0], T + 0.01, 18, speed=(70, 110), length=(3, 6), seed=1066))
     L += molten_crack(G, T + 0.01, size=16, rot=30, glow_life=1.6, char_life=3.0, seed=1067)
     L.append(scorch(G, T + 0.2, size=12, life=2.2, seed=1068))
-    debris = rocks(G, T + 0.01, radius=5.5, count=14, size=1.0, speed=34, seed=1069)
+    cr = crater(G, T, radius=5.0, life=3.0, seed=1070)
+    L += [x for x in cr if "kind" not in x]
+    debris = rocks(G, T + 0.01, radius=5.5, count=14, size=1.0, speed=34, crater=False, seed=1069) + [x for x in cr if "kind" in x]
     # the roar: two heat rings from the head
     head_at_burst = next(p for t, p in hp if t >= T)
     L += heat_ring(head_at_burst, T + 0.02, 12, life=0.5, seed=1071)
