@@ -411,7 +411,7 @@ def molten_crack(at, t, size=12, rot=0, glow_life=1.6, char_life=3.4, pal="fire"
     return out
 
 
-def crater(at, t, radius=6.0, life=3.0, ground="#b89a70", hot=True, slabs=16, seed=71):
+def crater(at, t, radius=6.0, life=3.0, ground="#b89a70", hot=True, slabs=16, seed=71, core=None, slab_color="#c9ad80"):
     """Anime slam crater (replaces the flat dark pit disc): a painted bowl decal (impact_crater: dark centre shading up
     to a lit jagged rim, ink outline, radial cracks), a ring of broken rock slabs tilted out along the rim (no pit),
     and a molten core glowing in the bottom of the bowl that cools white-gold -> orange -> red -> gone."""
@@ -423,10 +423,10 @@ def crater(at, t, radius=6.0, life=3.0, ground="#b89a70", hot=True, slabs=16, se
         "Rotation": [seed % 360, seed % 360], "Orientation": "VelocityPerpendicular", "FlipbookLayout": "None",
         "Transparency": [[0, 0], [0.8, 0], [1, 1]], "ZOffset": 0.0}}]   # never negative on a ground decal: it sinks under the floor
     out.append({"kind": "crater", "at": R(c), "t": t, "radius": radius * 1.02, "count": slabs, "size": radius * 0.32, "life": life,
-                "seed": seed + 1, "pit": False, "color": "#c9ad80"})
+                "seed": seed + 1, "pit": False, "color": slab_color})
     if hot:
         out.append({"type": "emitter", "at": R([c[0], 0.08, c[2]]), "emits": [[t, 1]], "seed": seed + 2, "props": {
-            "Texture": "soft_glow", "Color": [[0, "#fff6b0"], [0.15, "#ffb02a"], [0.5, "#e0401a"], [1, "#6a100a"]], "LightEmission": 0.9,
+            "Texture": "soft_glow", "Color": core or [[0, "#fff6b0"], [0.15, "#ffb02a"], [0.5, "#e0401a"], [1, "#6a100a"]], "LightEmission": 0.9,
             "Brightness": 1.3, "Size": [[0, radius * 1.6], [1, radius * 0.9]], "Lifetime": [life * 0.5, life * 0.5], "Speed": [0.01, 0.01],
             "Orientation": "VelocityPerpendicular", "FlipbookLayout": "None", "Transparency": [[0, 0], [0.4, 0.25], [1, 1]], "ZOffset": 0.01}})
     return out
@@ -611,7 +611,7 @@ def _modernize(L):
             L["transparency"] = glow_tr(L.get("transparency", 0))
 
 
-def write(fx, path, form="hybrid"):
+def write(fx, path, form="hybrid", tint=None):
     """form 'hybrid': warm dim (brightness -0.1, contrast +0.12, tint #ffe2c8). 'full': deep warm dim (-0.2, +0.18,
     #ffc9a8) that holds while the dragon exists. 'into_full' ramps from hybrid to full and holds (Transform);
     'from_full' starts full and ramps back to normal (Revert). Saturation stays 0: desaturating killed thunder's colour."""
@@ -623,7 +623,7 @@ def write(fx, path, form="hybrid"):
         _modernize(L)
     fx.setdefault("bloom", 0.38)
     dur = fx.get("duration", 2)
-    H, F, N = (-0.03, 0.08, 0, "#fff1e2"), (-0.06, 0.1, 0, "#ffe8d4"), (0, 0, 0, "#ffffff")   # abilities, not ultimates: never darken the sky
+    H, F, N = (-0.03, 0.08, 0, tint or "#fff1e2"), (-0.06, 0.1, 0, tint or "#ffe8d4"), (0, 0, 0, "#ffffff")   # abilities, not ultimates: never darken the sky
     if form == "hybrid":
         g = [[0, *N], [0.12, *H], [max(0.13, dur - 0.45), *H], [dur, *N]]
     elif form == "full":
@@ -929,7 +929,7 @@ def fire_scraps(at, t, n=18, speed=(14, 26), size=(1.2, 2.6), life=(0.5, 0.9), s
     return e
 
 
-def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff5a1e", strength=1.0, seed=97, cloud=1.0):
+def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff5a1e", strength=1.0, seed=97, cloud=1.0, pal="fire"):
     """The OUTSIDE of an effect (user: "there's no outside effect other than the affected area, no transparent haze"):
     the atmosphere that spreads well past the hit in every reference.
       - a huge soft glow cloud hanging around the effect (camera-facing soft_glow, translucent)
@@ -964,7 +964,7 @@ def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff
     # embers + star sparkles floating across a big area
     out.append({"type": "emitter", "at": R([c[0], height * 0.5, c[2]]), "emits": [[t0 + 0.02, int(16 * S)]], "rate": [[t0, t0 + dur * 0.7, 12 * S]],
                 "seed": seed + 4, "part": R([radius * 1.3, height * 0.4, radius * 1.3]), "props": {
-        "Texture": "embers", "Color": [[0, "#fff6b0"], [0.4, "#ffb02a"], [1, "#e0401a"]], "LightEmission": 0.8, "Brightness": 1.5,
+        "Texture": "embers", "Color": PALS[pal]["spark"], "LightEmission": 0.8, "Brightness": 1.5,
         "Size": [[0, 0.75], [0.7, 0.55], [1, 0.1]], "Lifetime": [1.0, 1.8], "Speed": [2, 5], "SpreadAngle": [35, 35], "Acceleration": [0, 3.5, 0],
         "Drag": 0.8, "Rotation": [0, 360], "RotSpeed": [-160, 160], "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random",
         "FlipbookFramerate": [0.01, 0.01], "FlipbookStartRandom": True, "ZOffset": 0.3}})
@@ -972,7 +972,7 @@ def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff
         a = k * 2.399 + seed
         r = radius * (0.4 + 0.7 * ((k * 5) % 7) / 6)      # glints stay near the effect (far ones land on the camera)
         out += glint([c[0] + math.cos(a) * r, height * (0.3 + 0.9 * ((k * 3) % 5) / 4), c[2] + math.sin(a) * r], t0 + 0.08 + dur * 0.06 * k,
-                     size=1.6 + 0.9 * (k % 3), life=0.22, seed=seed + 10 + k)
+                     size=1.6 + 0.9 * (k % 3), life=0.22, seed=seed + 10 + k, pal=pal)
     return out
 
 
@@ -1007,10 +1007,10 @@ def whisker_tracks(dur, amp=16, step=0.1):
     return tr
 
 
-def dark_haze(at, t, n=8, rate=None, size=(4, 9), life=(0.9, 1.3), part=(4, 2, 4), tr=0.55, seed=990, outward=0.0):
+def dark_haze(at, t, n=8, rate=None, size=(4, 9), life=(0.9, 1.3), part=(4, 2, 4), tr=0.55, seed=990, outward=0.0, color=None):
     """Smooth dark smoke (haze_soft, low opacity puffs): the dark anchor without chunky cel blobs."""
     e = {"type": "emitter", "at": R(at), "seed": seed, "part": list(part), "props": {
-        "Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0, "Brightness": 1,
+        "Texture": "haze_soft", "Color": color or [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0, "Brightness": 1,
         "Size": [[0, size[0]], [1, size[1]]], "Lifetime": list(life), "Speed": [1 + outward, 3 + outward * 1.5], "SpreadAngle": [30, 30],
         "Acceleration": [0, 2.5, 0], "Drag": 1.2 + outward * 0.1, "Rotation": [0, 360], "RotSpeed": [-10, 10], "FlipbookLayout": "None",
         "Transparency": [[0, 1], [0.15, tr], [0.6, min(0.95, tr + 0.15)], [1, 1]], "ZOffset": -1.0}}
@@ -1023,18 +1023,19 @@ def dark_haze(at, t, n=8, rate=None, size=(4, 9), life=(0.9, 1.3), part=(4, 2, 4
     return e
 
 
-def ink(at, t, size, rot=0, life=0.28, seed=995):
-    """Black anime ink shards (the dark accent of a hit)."""
+def ink(at, t, size, rot=0, life=0.28, seed=995, color="#1a0806"):
+    """Black anime ink shards (the dark accent of a hit). color = the element's dark accent."""
     sh = emit_stack("ink_shards", at, t, size=[[0, size], [1, size * 1.25]], life=life, cool=False, seed=seed, rot=rot, layers=("rim",), z=0.7)
     for e in sh:
-        e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0
+        e["props"]["Color"] = color; e["props"]["LightEmission"] = 0
     return sh
 
 
-def needles(at, t, n, speed=(50, 90), size=4.0, life=(0.18, 0.32), spread=180, seed=996, rot=None, part=None, rate=None, path=None):
+def needles(at, t, n, speed=(50, 90), size=4.0, life=(0.18, 0.32), spread=180, seed=996, rot=None, part=None, rate=None, path=None,
+            color=None, le=1):
     """Bold gold energy needles (needle_bold, velocity-parallel): the sharp tertiary spray."""
     e = {"type": "emitter", "at": R(at), "seed": seed, "props": {
-        "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.45, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.55,
+        "Texture": "needle_bold", "Color": color or [[0, "#fff6b0"], [0.45, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": le, "Brightness": 1.55,
         "Size": [[0, size], [0.5, size * 0.55], [1, size * 0.08]], "Lifetime": list(life), "Speed": list(speed), "SpreadAngle": [spread, spread],
         "Drag": 6, "Orientation": "VelocityParallel", "ZOffset": 0.6}}
     if rate:
@@ -1050,6 +1051,6 @@ def needles(at, t, n, speed=(50, 90), size=4.0, life=(0.18, 0.32), spread=180, s
     return e
 
 
-def speed_lines(at, t, size, life=0.22, seed=997, tr=None):
-    return _fb("speed_burst", at, t, size, life, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2, seed=seed, z=0.9,
+def speed_lines(at, t, size, life=0.22, seed=997, tr=None, color=None):
+    return _fb("speed_burst", at, t, size, life, color=color or [[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2, seed=seed, z=0.9,
                tr=tr or [[0, 0.12], [0.6, 0.38], [1, 1]])

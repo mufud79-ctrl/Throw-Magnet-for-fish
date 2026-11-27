@@ -2968,8 +2968,12 @@
       "#fff6b0"
      ],
      [
-      0.4,
-      "#ffb02a"
+      0.3,
+      "#ffd21a"
+     ],
+     [
+      0.7,
+      "#ff8a14"
      ],
      [
       1,
@@ -3031,9 +3035,9 @@
   {
    "type": "emitter",
    "at": [
-    1.71,
+    1.14,
     0.9,
-    -1.219
+    -0.813
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -3070,9 +3074,9 @@
   {
    "type": "emitter",
    "at": [
-    1.71,
+    1.14,
     0.9,
-    -1.219
+    -0.813
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -3126,9 +3130,9 @@
   {
    "type": "emitter",
    "at": [
-    1.71,
+    1.14,
     0.9,
-    -1.219
+    -0.813
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -3165,9 +3169,9 @@
   {
    "type": "emitter",
    "at": [
-    1.71,
+    1.14,
     0.9,
-    -1.219
+    -0.813
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -3204,9 +3208,9 @@
   {
    "type": "emitter",
    "at": [
-    -1.342,
+    -0.713,
     2.925,
-    6.334
+    3.367
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -3243,9 +3247,9 @@
   {
    "type": "emitter",
    "at": [
-    -1.342,
+    -0.713,
     2.925,
-    6.334
+    3.367
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -3299,9 +3303,9 @@
   {
    "type": "emitter",
    "at": [
-    -1.342,
+    -0.713,
     2.925,
-    6.334
+    3.367
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -3338,9 +3342,9 @@
   {
    "type": "emitter",
    "at": [
-    -1.342,
+    -0.713,
     2.925,
-    6.334
+    3.367
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -3377,9 +3381,9 @@
   {
    "type": "emitter",
    "at": [
-    -2.404,
+    -1.336,
     1.575,
-    -4.068
+    -2.26
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -3416,9 +3420,9 @@
   {
    "type": "emitter",
    "at": [
-    -2.404,
+    -1.336,
     1.575,
-    -4.068
+    -2.26
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -3472,9 +3476,9 @@
   {
    "type": "emitter",
    "at": [
-    -2.404,
+    -1.336,
     1.575,
-    -4.068
+    -2.26
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -3511,9 +3515,9 @@
   {
    "type": "emitter",
    "at": [
-    -2.404,
+    -1.336,
     1.575,
-    -4.068
+    -2.26
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -3550,9 +3554,9 @@
   {
    "type": "emitter",
    "at": [
-    2.847,
+    1.731,
     3.6,
-    0.863
+    0.525
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -3589,9 +3593,9 @@
   {
    "type": "emitter",
    "at": [
-    2.847,
+    1.731,
     3.6,
-    0.863
+    0.525
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -3645,9 +3649,9 @@
   {
    "type": "emitter",
    "at": [
-    2.847,
+    1.731,
     3.6,
-    0.863
+    0.525
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -3684,9 +3688,9 @@
   {
    "type": "emitter",
    "at": [
-    2.847,
+    1.731,
     3.6,
-    0.863
+    0.525
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -3723,9 +3727,9 @@
   {
    "type": "emitter",
    "at": [
-    -6.624,
+    -3.47,
     2.25,
-    3.185
+    1.668
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -3762,9 +3766,9 @@
   {
    "type": "emitter",
    "at": [
-    -6.624,
+    -3.47,
     2.25,
-    3.185
+    1.668
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -3818,9 +3822,9 @@
   {
    "type": "emitter",
    "at": [
-    -6.624,
+    -3.47,
     2.25,
-    3.185
+    1.668
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -3857,9 +3861,9 @@
   {
    "type": "emitter",
    "at": [
-    -6.624,
+    -3.47,
     2.25,
-    3.185
+    1.668
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -3896,9 +3900,9 @@
   {
    "type": "emitter",
    "at": [
-    2.077,
+    1.125,
     0.9,
-    -5.201
+    -2.817
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -3935,9 +3939,9 @@
   {
    "type": "emitter",
    "at": [
-    2.077,
+    1.125,
     0.9,
-    -5.201
+    -2.817
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -3991,9 +3995,9 @@
   {
    "type": "emitter",
    "at": [
-    2.077,
+    1.125,
     0.9,
-    -5.201
+    -2.817
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -4030,9 +4034,9 @@
   {
    "type": "emitter",
    "at": [
-    2.077,
+    1.125,
     0.9,
-    -5.201
+    -2.817
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -4069,9 +4073,9 @@
   {
    "type": "emitter",
    "at": [
-    1.366,
+    0.786,
     2.925,
-    3.6
+    2.073
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -4108,9 +4112,9 @@
   {
    "type": "emitter",
    "at": [
-    1.366,
+    0.786,
     2.925,
-    3.6
+    2.073
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -4164,9 +4168,9 @@
   {
    "type": "emitter",
    "at": [
-    1.366,
+    0.786,
     2.925,
-    3.6
+    2.073
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -4203,9 +4207,9 @@
   {
    "type": "emitter",
    "at": [
-    1.366,
+    0.786,
     2.925,
-    3.6
+    2.073
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -25777,8 +25781,12 @@
       "#fff6b0"
      ],
      [
-      0.4,
-      "#ffb02a"
+      0.3,
+      "#ffd21a"
+     ],
+     [
+      0.7,
+      "#ff8a14"
      ],
      [
       1,
@@ -25840,9 +25848,9 @@
   {
    "type": "emitter",
    "at": [
-    -5.143,
+    -3.429,
     2.1,
-    -8.354
+    -8.903
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -25879,9 +25887,9 @@
   {
    "type": "emitter",
    "at": [
-    -5.143,
+    -3.429,
     2.1,
-    -8.354
+    -8.903
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -25935,9 +25943,9 @@
   {
    "type": "emitter",
    "at": [
-    -5.143,
+    -3.429,
     2.1,
-    -8.354
+    -8.903
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -25974,9 +25982,9 @@
   {
    "type": "emitter",
    "at": [
-    -5.143,
+    -3.429,
     2.1,
-    -8.354
+    -8.903
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -26013,9 +26021,9 @@
   {
    "type": "emitter",
    "at": [
-    8.252,
+    4.386,
     6.825,
-    -24.461
+    -17.687
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -26052,9 +26060,9 @@
   {
    "type": "emitter",
    "at": [
-    8.252,
+    4.386,
     6.825,
-    -24.461
+    -17.687
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -26108,9 +26116,9 @@
   {
    "type": "emitter",
    "at": [
-    8.252,
+    4.386,
     6.825,
-    -24.461
+    -17.687
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -26147,9 +26155,9 @@
   {
    "type": "emitter",
    "at": [
-    8.252,
+    4.386,
     6.825,
-    -24.461
+    -17.687
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -26186,9 +26194,9 @@
   {
    "type": "emitter",
    "at": [
-    2.7,
+    1.5,
     3.675,
-    1.846
+    -3.419
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -26225,9 +26233,9 @@
   {
    "type": "emitter",
    "at": [
-    2.7,
+    1.5,
     3.675,
-    1.846
+    -3.419
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -26281,9 +26289,9 @@
   {
    "type": "emitter",
    "at": [
-    2.7,
+    1.5,
     3.675,
-    1.846
+    -3.419
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -26320,9 +26328,9 @@
   {
    "type": "emitter",
    "at": [
-    2.7,
+    1.5,
     3.675,
-    1.846
+    -3.419
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -26359,9 +26367,9 @@
   {
    "type": "emitter",
    "at": [
-    -6.296,
+    -3.827,
     8.4,
-    -14.346
+    -12.641
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -26398,9 +26406,9 @@
   {
    "type": "emitter",
    "at": [
-    -6.296,
+    -3.827,
     8.4,
-    -14.346
+    -12.641
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -26454,9 +26462,9 @@
   {
    "type": "emitter",
    "at": [
-    -6.296,
+    -3.827,
     8.4,
-    -14.346
+    -12.641
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -26493,9 +26501,9 @@
   {
    "type": "emitter",
    "at": [
-    -6.296,
+    -3.827,
     8.4,
-    -14.346
+    -12.641
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -26532,9 +26540,9 @@
   {
    "type": "emitter",
    "at": [
-    18.719,
+    9.805,
     5.25,
-    -12.608
+    -11.366
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -26571,9 +26579,9 @@
   {
    "type": "emitter",
    "at": [
-    18.719,
+    9.805,
     5.25,
-    -12.608
+    -11.366
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -26627,9 +26635,9 @@
   {
    "type": "emitter",
    "at": [
-    18.719,
+    9.805,
     5.25,
-    -12.608
+    -11.366
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -26666,9 +26674,9 @@
   {
    "type": "emitter",
    "at": [
-    18.719,
+    9.805,
     5.25,
-    -12.608
+    -11.366
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -26705,9 +26713,9 @@
   {
    "type": "emitter",
    "at": [
-    -9.163,
+    -4.963,
     2.1,
-    1.108
+    -3.983
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -26744,9 +26752,9 @@
   {
    "type": "emitter",
    "at": [
-    -9.163,
+    -4.963,
     2.1,
-    1.108
+    -3.983
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -26800,9 +26808,9 @@
   {
    "type": "emitter",
    "at": [
-    -9.163,
+    -4.963,
     2.1,
-    1.108
+    -3.983
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -26839,9 +26847,9 @@
   {
    "type": "emitter",
    "at": [
-    -9.163,
+    -4.963,
     2.1,
-    1.108
+    -3.983
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -26878,9 +26886,9 @@
   {
    "type": "emitter",
    "at": [
-    -0.523,
+    -0.301,
     6.825,
-    -19.886
+    -15.692
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -26917,9 +26925,9 @@
   {
    "type": "emitter",
    "at": [
-    -0.523,
+    -0.301,
     6.825,
-    -19.886
+    -15.692
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -26973,9 +26981,9 @@
   {
    "type": "emitter",
    "at": [
-    -0.523,
+    -0.301,
     6.825,
-    -19.886
+    -15.692
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -27012,9 +27020,9 @@
   {
    "type": "emitter",
    "at": [
-    -0.523,
+    -0.301,
     6.825,
-    -19.886
+    -15.692
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -27051,9 +27059,9 @@
   {
    "type": "emitter",
    "at": [
-    3.857,
+    2.571,
     3.675,
-    -6.22
+    -7.48
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -27090,9 +27098,9 @@
   {
    "type": "emitter",
    "at": [
-    3.857,
+    2.571,
     3.675,
-    -6.22
+    -7.48
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -27146,9 +27154,9 @@
   {
    "type": "emitter",
    "at": [
-    3.857,
+    2.571,
     3.675,
-    -6.22
+    -7.48
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -27185,9 +27193,9 @@
   {
    "type": "emitter",
    "at": [
-    3.857,
+    2.571,
     3.675,
-    -6.22
+    -7.48
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -27224,9 +27232,9 @@
   {
    "type": "emitter",
    "at": [
-    -16.641,
+    -8.845,
     8.4,
-    -10.545
+    -10.29
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -27263,9 +27271,9 @@
   {
    "type": "emitter",
    "at": [
-    -16.641,
+    -8.845,
     8.4,
-    -10.545
+    -10.29
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -27319,9 +27327,9 @@
   {
    "type": "emitter",
    "at": [
-    -16.641,
+    -8.845,
     8.4,
-    -10.545
+    -10.29
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -27358,9 +27366,9 @@
   {
    "type": "emitter",
    "at": [
-    -16.641,
+    -8.845,
     8.4,
-    -10.545
+    -10.29
    ],
    "props": {
     "Texture": "anime_glint_core",
@@ -27397,9 +27405,9 @@
   {
    "type": "emitter",
    "at": [
-    9.215,
+    5.12,
     5.25,
-    -17.918
+    -14.399
    ],
    "props": {
     "Texture": "anime_glint_glow",
@@ -27436,9 +27444,9 @@
   {
    "type": "emitter",
    "at": [
-    9.215,
+    5.12,
     5.25,
-    -17.918
+    -14.399
    ],
    "props": {
     "Texture": "anime_glint_rim",
@@ -27492,9 +27500,9 @@
   {
    "type": "emitter",
    "at": [
-    9.215,
+    5.12,
     5.25,
-    -17.918
+    -14.399
    ],
    "props": {
     "Texture": "anime_glint_mid",
@@ -27531,9 +27539,9 @@
   {
    "type": "emitter",
    "at": [
-    9.215,
+    5.12,
     5.25,
-    -17.918
+    -14.399
    ],
    "props": {
     "Texture": "anime_glint_core",

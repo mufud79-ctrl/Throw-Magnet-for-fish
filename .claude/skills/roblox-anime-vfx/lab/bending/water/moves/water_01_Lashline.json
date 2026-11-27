@@ -1,0 +1,2782 @@
+{
+ "name": "water_01_Lashline",
+ "title": "Lashline",
+ "element": "water",
+ "archetype": "lashline",
+ "duration": 1.6,
+ "layers": [
+  {
+   "type": "emitter",
+   "at": [
+    0.6,
+    3.2,
+    -1.2
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 2.5,
+    "Lifetime": [
+     0.18,
+     0.18
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 1,
+   "emits": [
+    [
+     0.22999999999999998,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.6,
+    3.2,
+    -1.2
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 2.5,
+    "Lifetime": [
+     0.18,
+     0.18
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 1,
+   "emits": [
+    [
+     0.22999999999999998,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.6,
+    3.2,
+    -1.2
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 2.5,
+    "Lifetime": [
+     0.18,
+     0.18
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 1,
+   "emits": [
+    [
+     0.22999999999999998,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.6,
+    3.2,
+    -1.2
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 2.5,
+    "Lifetime": [
+     0.18,
+     0.18
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 1,
+   "emits": [
+    [
+     0.22999999999999998,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.0,
+    -8.0
+   ],
+   "props": {
+    "Texture": "anime_slash_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": [
+     [
+      0,
+      7
+     ],
+     [
+      1,
+      7.5
+     ]
+    ],
+    "Lifetime": [
+     0.36,
+     0.36
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -30,
+     -30
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.6,
+    "Transparency": 0.55
+   },
+   "seed": 2,
+   "emits": [
+    [
+     0.35,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.0,
+    -8.0
+   ],
+   "props": {
+    "Texture": "anime_slash_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      7
+     ],
+     [
+      1,
+      7.5
+     ]
+    ],
+    "Lifetime": [
+     0.36,
+     0.36
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -30,
+     -30
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.65,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 2,
+   "emits": [
+    [
+     0.35,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.0,
+    -8.0
+   ],
+   "props": {
+    "Texture": "anime_slash_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      7
+     ],
+     [
+      1,
+      7.5
+     ]
+    ],
+    "Lifetime": [
+     0.36,
+     0.36
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -30,
+     -30
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.7,
+    "Transparency": 0
+   },
+   "seed": 2,
+   "emits": [
+    [
+     0.35,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.0,
+    -8.0
+   ],
+   "props": {
+    "Texture": "anime_slash_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": [
+     [
+      0,
+      7
+     ],
+     [
+      1,
+      7.5
+     ]
+    ],
+    "Lifetime": [
+     0.36,
+     0.36
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     -30,
+     -30
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.75,
+    "Transparency": 0
+   },
+   "seed": 2,
+   "emits": [
+    [
+     0.35,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.0,
+    -8.0
+   ],
+   "props": {
+    "Texture": "ink_shards_rim",
+    "Color": "#061a3a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": [
+     [
+      0,
+      5
+     ],
+     [
+      1,
+      6.25
+     ]
+    ],
+    "Lifetime": [
+     0.28,
+     0.28
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.7,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 3,
+   "emits": [
+    [
+     0.37,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.4,
+    -7.7
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 4.5,
+    "Lifetime": [
+     0.2,
+     0.2
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 4,
+   "emits": [
+    [
+     0.36,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.4,
+    -7.7
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 4.5,
+    "Lifetime": [
+     0.2,
+     0.2
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 4,
+   "emits": [
+    [
+     0.36,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.4,
+    -7.7
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 4.5,
+    "Lifetime": [
+     0.2,
+     0.2
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 4,
+   "emits": [
+    [
+     0.36,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.4,
+    -7.7
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 4.5,
+    "Lifetime": [
+     0.2,
+     0.2
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 4,
+   "emits": [
+    [
+     0.36,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.0,
+    -8.0
+   ],
+   "seed": 5,
+   "props": {
+    "Texture": "needle_bold",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.4,
+      "#bfeaff"
+     ],
+     [
+      1,
+      "#4fa8e8"
+     ]
+    ],
+    "LightEmission": 0.8,
+    "Brightness": 1.55,
+    "Size": [
+     [
+      0,
+      3.4
+     ],
+     [
+      0.5,
+      1.87
+     ],
+     [
+      1,
+      0.272
+     ]
+    ],
+    "Lifetime": [
+     0.18,
+     0.32
+    ],
+    "Speed": [
+     40,
+     70
+    ],
+    "SpreadAngle": [
+     60,
+     60
+    ],
+    "Drag": 6,
+    "Orientation": "VelocityParallel",
+    "ZOffset": 0.6
+   },
+   "emits": [
+    [
+     0.37,
+     12
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    2.2,
+    -9.0
+   ],
+   "emits": [
+    [
+     0.35,
+     1
+    ]
+   ],
+   "seed": 7,
+   "props": {
+    "Texture": "soft_glow",
+    "Color": "#2a70c8",
+    "LightEmission": 0.3,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      9.0
+     ],
+     [
+      0.12,
+      18.0
+     ],
+     [
+      1,
+      20.7
+     ]
+    ],
+    "Lifetime": [
+     1.2,
+     1.2
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "FlipbookLayout": "None",
+    "Transparency": [
+     [
+      0,
+      1.0
+     ],
+     [
+      0.08,
+      0.899
+     ],
+     [
+      0.4,
+      0.939
+     ],
+     [
+      1,
+      1.0
+     ]
+    ],
+    "ZOffset": -2.0
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    1.8,
+    -9.0
+   ],
+   "emits": [
+    [
+     0.35,
+     1
+    ]
+   ],
+   "seed": 7,
+   "props": {
+    "Texture": "soft_glow",
+    "Color": "#6cbcf0",
+    "LightEmission": 0.3,
+    "Brightness": 1.0,
+    "Size": [
+     [
+      0,
+      5.5
+     ],
+     [
+      0.12,
+      11.0
+     ],
+     [
+      1,
+      12.649999999999999
+     ]
+    ],
+    "Lifetime": [
+     1.2,
+     1.2
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "FlipbookLayout": "None",
+    "Transparency": [
+     [
+      0,
+      1.0
+     ],
+     [
+      0.08,
+      0.879
+     ],
+     [
+      0.4,
+      0.927
+     ],
+     [
+      1,
+      1.0
+     ]
+    ],
+    "ZOffset": -2.0
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    1.6,
+    -9.0
+   ],
+   "emits": [
+    [
+     0.36,
+     23
+    ]
+   ],
+   "rate": [
+    [
+     0.39999999999999997,
+     0.95,
+     12.6
+    ]
+   ],
+   "seed": 8,
+   "part": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "props": {
+    "Texture": "haze_soft",
+    "Color": [
+     [
+      0,
+      "#6cbcf0"
+     ],
+     [
+      0.5,
+      "#2a70c8"
+     ],
+     [
+      1,
+      "#2a70c8"
+     ]
+    ],
+    "LightEmission": 0.7,
+    "Brightness": 1.0,
+    "Shape": "Cylinder",
+    "ShapeInOut": "Outward",
+    "ShapeStyle": "Volume",
+    "Size": [
+     [
+      0,
+      4.5
+     ],
+     [
+      0.4,
+      8.0
+     ],
+     [
+      1,
+      10.5
+     ]
+    ],
+    "Lifetime": [
+     0.96,
+     1.32
+    ],
+    "Speed": [
+     1.25,
+     3.0
+    ],
+    "SpreadAngle": [
+     25,
+     25
+    ],
+    "Drag": 2.0,
+    "Acceleration": [
+     0,
+     0.6,
+     0
+    ],
+    "Rotation": [
+     0,
+     360
+    ],
+    "RotSpeed": [
+     -8,
+     8
+    ],
+    "Transparency": [
+     [
+      0,
+      1
+     ],
+     [
+      0.15,
+      0.712
+     ],
+     [
+      0.55,
+      0.784
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "FlipbookLayout": "None",
+    "Orientation": "FacingCamera",
+    "ZOffset": -1.5
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    0.06,
+    -9.0
+   ],
+   "emits": [
+    [
+     0.35,
+     1
+    ]
+   ],
+   "seed": 9,
+   "props": {
+    "Texture": "soft_glow",
+    "Color": "#6cbcf0",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": [
+     [
+      0,
+      10.0
+     ],
+     [
+      0.2,
+      25.0
+     ],
+     [
+      1,
+      27.5
+     ]
+    ],
+    "Lifetime": [
+     1.2,
+     1.2
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Orientation": "VelocityPerpendicular",
+    "FlipbookLayout": "None",
+    "Transparency": [
+     [
+      0,
+      1.0
+     ],
+     [
+      0.1,
+      0.749
+     ],
+     [
+      0.6,
+      0.806
+     ],
+     [
+      1,
+      1.0
+     ]
+    ],
+    "ZOffset": -0.1
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    2.0,
+    -9.0
+   ],
+   "emits": [
+    [
+     0.37,
+     14
+    ]
+   ],
+   "rate": [
+    [
+     0.35,
+     1.19,
+     10.8
+    ]
+   ],
+   "seed": 10,
+   "part": [
+    6.5,
+    1.6,
+    6.5
+   ],
+   "props": {
+    "Texture": "embers",
+    "Color": [
+     [
+      0,
+      "#ffffff"
+     ],
+     [
+      0.4,
+      "#bfeaff"
+     ],
+     [
+      1,
+      "#4fa8e8"
+     ]
+    ],
+    "LightEmission": 0.8,
+    "Brightness": 1.5,
+    "Size": [
+     [
+      0,
+      0.75
+     ],
+     [
+      0.7,
+      0.55
+     ],
+     [
+      1,
+      0.1
+     ]
+    ],
+    "Lifetime": [
+     1.0,
+     1.8
+    ],
+    "Speed": [
+     2,
+     5
+    ],
+    "SpreadAngle": [
+     35,
+     35
+    ],
+    "Acceleration": [
+     0,
+     3.5,
+     0
+    ],
+    "Drag": 0.8,
+    "Rotation": [
+     0,
+     360
+    ],
+    "RotSpeed": [
+     -160,
+     160
+    ],
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "Random",
+    "FlipbookFramerate": [
+     0.01,
+     0.01
+    ],
+    "FlipbookStartRandom": true,
+    "ZOffset": 0.3
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.92,
+    1.2,
+    -9.559
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 16,
+   "emits": [
+    [
+     0.43,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.92,
+    1.2,
+    -9.559
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 16,
+   "emits": [
+    [
+     0.43,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.92,
+    1.2,
+    -9.559
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 16,
+   "emits": [
+    [
+     0.43,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    1.92,
+    1.2,
+    -9.559
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 16,
+   "emits": [
+    [
+     0.43,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -2.549,
+    3.9,
+    -4.796
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 17,
+   "emits": [
+    [
+     0.502,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -2.549,
+    3.9,
+    -4.796
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 17,
+   "emits": [
+    [
+     0.502,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -2.549,
+    3.9,
+    -4.796
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 17,
+   "emits": [
+    [
+     0.502,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -2.549,
+    3.9,
+    -4.796
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 17,
+   "emits": [
+    [
+     0.502,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -0.736,
+    2.1,
+    -12.677
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 3.4000000000000004,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 18,
+   "emits": [
+    [
+     0.574,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -0.736,
+    2.1,
+    -12.677
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 3.4000000000000004,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 18,
+   "emits": [
+    [
+     0.574,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -0.736,
+    2.1,
+    -12.677
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 3.4000000000000004,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 18,
+   "emits": [
+    [
+     0.574,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -0.736,
+    2.1,
+    -12.677
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 3.4000000000000004,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 18,
+   "emits": [
+    [
+     0.574,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.086,
+    4.8,
+    -7.477
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 19,
+   "emits": [
+    [
+     0.6459999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.086,
+    4.8,
+    -7.477
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 19,
+   "emits": [
+    [
+     0.6459999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.086,
+    4.8,
+    -7.477
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 19,
+   "emits": [
+    [
+     0.6459999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.086,
+    4.8,
+    -7.477
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 19,
+   "emits": [
+    [
+     0.6459999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -5.466,
+    3.0,
+    -8.385
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 20,
+   "emits": [
+    [
+     0.718,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -5.466,
+    3.0,
+    -8.385
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 20,
+   "emits": [
+    [
+     0.718,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -5.466,
+    3.0,
+    -8.385
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 20,
+   "emits": [
+    [
+     0.718,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -5.466,
+    3.0,
+    -8.385
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 20,
+   "emits": [
+    [
+     0.718,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.845,
+    1.2,
+    -12.269
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 3.4000000000000004,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 21,
+   "emits": [
+    [
+     0.79,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.845,
+    1.2,
+    -12.269
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 3.4000000000000004,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 21,
+   "emits": [
+    [
+     0.79,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.845,
+    1.2,
+    -12.269
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 3.4000000000000004,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 21,
+   "emits": [
+    [
+     0.79,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    2.845,
+    1.2,
+    -12.269
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 3.4000000000000004,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 21,
+   "emits": [
+    [
+     0.79,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.083,
+    3.9,
+    -5.834
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 22,
+   "emits": [
+    [
+     0.8619999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.083,
+    3.9,
+    -5.834
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 22,
+   "emits": [
+    [
+     0.8619999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.083,
+    3.9,
+    -5.834
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 22,
+   "emits": [
+    [
+     0.8619999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.083,
+    3.9,
+    -5.834
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 1.6,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 22,
+   "emits": [
+    [
+     0.8619999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.391,
+    2.1,
+    -10.437
+   ],
+   "props": {
+    "Texture": "anime_glint_glow",
+    "Color": "#4fc3ff",
+    "LightEmission": 0.3,
+    "Brightness": 1.4,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.9,
+    "Transparency": 0.55
+   },
+   "seed": 23,
+   "emits": [
+    [
+     0.9339999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.391,
+    2.1,
+    -10.437
+   ],
+   "props": {
+    "Texture": "anime_glint_rim",
+    "Color": "#0b3a8a",
+    "LightEmission": 0.0,
+    "Brightness": 1.15,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 0.95,
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0.05
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "seed": 23,
+   "emits": [
+    [
+     0.9339999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.391,
+    2.1,
+    -10.437
+   ],
+   "props": {
+    "Texture": "anime_glint_mid",
+    "Color": "#8fdcff",
+    "LightEmission": 0.3,
+    "Brightness": 1.1,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.0,
+    "Transparency": 0
+   },
+   "seed": 23,
+   "emits": [
+    [
+     0.9339999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    -1.391,
+    2.1,
+    -10.437
+   ],
+   "props": {
+    "Texture": "anime_glint_core",
+    "Color": "#ffffff",
+    "LightEmission": 0.8,
+    "Brightness": 1.2,
+    "Size": 2.5,
+    "Lifetime": [
+     0.22,
+     0.22
+    ],
+    "Speed": [
+     0.01,
+     0.01
+    ],
+    "Rotation": [
+     0,
+     0
+    ],
+    "Orientation": "FacingCamera",
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "ZOffset": 1.05,
+    "Transparency": 0
+   },
+   "seed": 23,
+   "emits": [
+    [
+     0.9339999999999999,
+     1
+    ]
+   ]
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    0.9,
+    -9.0
+   ],
+   "emits": [
+    [
+     0.36,
+     10
+    ]
+   ],
+   "seed": 7,
+   "part": [
+    2.5,
+    0.6,
+    2.5
+   ],
+   "props": {
+    "Texture": "smoke_cel_v3",
+    "Color": "#cdb48a",
+    "LightEmission": 0,
+    "Brightness": 1,
+    "Shape": "Cylinder",
+    "ShapeInOut": "Outward",
+    "ShapeStyle": "Surface",
+    "Size": [
+     [
+      0,
+      2.5
+     ],
+     [
+      1,
+      5
+     ]
+    ],
+    "Lifetime": [
+     0.7,
+     1.0
+    ],
+    "Speed": [
+     20,
+     28
+    ],
+    "SpreadAngle": [
+     4,
+     4
+    ],
+    "Drag": 6,
+    "Acceleration": [
+     0,
+     1.5,
+     0
+    ],
+    "Rotation": [
+     -20,
+     20
+    ],
+    "RotSpeed": [
+     -20,
+     20
+    ],
+    "Transparency": [
+     [
+      0,
+      0
+     ],
+     [
+      0.7,
+      0.15
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "FlipbookLayout": "Grid4x4",
+    "FlipbookMode": "OneShot",
+    "Orientation": "FacingCameraWorldUp",
+    "ZOffset": -0.5
+   }
+  },
+  {
+   "type": "emitter",
+   "at": [
+    0.0,
+    3.0,
+    -10.0
+   ],
+   "seed": 8,
+   "part": [
+    4,
+    2,
+    4
+   ],
+   "props": {
+    "Texture": "haze_soft",
+    "Color": [
+     [
+      0,
+      "#b8d8ee"
+     ],
+     [
+      1,
+      "#dceaf4"
+     ]
+    ],
+    "LightEmission": 0,
+    "Brightness": 1,
+    "Size": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      7
+     ]
+    ],
+    "Lifetime": [
+     0.9,
+     1.3
+    ],
+    "Speed": [
+     1.0,
+     3.0
+    ],
+    "SpreadAngle": [
+     30,
+     30
+    ],
+    "Acceleration": [
+     0,
+     2.5,
+     0
+    ],
+    "Drag": 1.2,
+    "Rotation": [
+     0,
+     360
+    ],
+    "RotSpeed": [
+     -10,
+     10
+    ],
+    "FlipbookLayout": "None",
+    "Transparency": [
+     [
+      0,
+      1
+     ],
+     [
+      0.15,
+      0.55
+     ],
+     [
+      0.6,
+      0.7000000000000001
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "ZOffset": -1.0
+   },
+   "emits": [
+    [
+     0.43,
+     4
+    ]
+   ]
+  }
+ ],
+ "dummies": [
+  [
+   0,
+   0,
+   -9
+  ]
+ ],
+ "hits": [
+  {
+   "t": 0.37,
+   "dummy": 0,
+   "dir": [
+    0,
+    0,
+    -1
+   ],
+   "power": 0.6
+  }
+ ],
+ "hitstop": [
+  {
+   "t": 0.38999999999999996,
+   "dur": 0.06
+  }
+ ],
+ "shakes": [
+  {
+   "t": 0.37,
+   "amp": 0.2,
+   "dur": 0.15,
+   "freq": 22
+  }
+ ],
+ "lights": [
+  {
+   "at": [
+    0.0,
+    3.0,
+    -8.0
+   ],
+   "color": "#8fd0ff",
+   "range": 16,
+   "brightness": [
+    [
+     0.35,
+     0.0
+    ],
+    [
+     0.37,
+     4.32
+    ],
+    [
+     0.6499999999999999,
+     0.0
+    ]
+   ]
+  }
+ ],
+ "camera": {
+  "pos": [
+   [
+    0,
+    [
+     7.2,
+     6.2,
+     6.2
+    ]
+   ],
+   [
+    1,
+    [
+     7.2,
+     6.2,
+     6.2
+    ]
+   ]
+  ],
+  "look": [
+   [
+    0,
+    [
+     -1.2,
+     3.0,
+     -5.5
+    ]
+   ],
+   [
+    1,
+    [
+     -1.2,
+     3.0,
+     -5.5
+    ]
+   ]
+  ],
+  "fov": [
+   [
+    0,
+    70
+   ],
+   [
+    1,
+    70
+   ]
+  ]
+ },
+ "poster": 0.41,
+ "bloom": 0.38,
+ "grade": [
+  [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   "#ffffff"
+  ],
+  [
+   0.12,
+   -0.03,
+   0.08,
+   0.0,
+   "#eef6ff"
+  ],
+  [
+   1.15,
+   -0.03,
+   0.08,
+   0.0,
+   "#eef6ff"
+  ],
+  [
+   1.6,
+   0.0,
+   0.0,
+   0.0,
+   "#ffffff"
+  ]
+ ]
+}
