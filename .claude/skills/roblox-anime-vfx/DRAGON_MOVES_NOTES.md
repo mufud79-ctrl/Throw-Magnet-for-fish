@@ -358,3 +358,9 @@ ignore it"): new `kit.aura_haze` = the atmosphere past the hit: a huge transluce
 orange), layered translucent orange-red dust_veil haze sheets billowing OUT all around (Cylinder/Outward), a wide
 ground haze (5x radius), embers + star sparkles floating across a big area. Lesson: ambience must be COLOURED and
 visible (sand-coloured veils at half strength were invisible) and must spread well beyond the affected area.
+Polish 3 ("looks very odd, not smooth, very rough"): causes found - (1) dust_veil haze was a blotchy, streaky 16-frame
+one-shot (grain + stepping), (2) 22 overlapping spikes + two ink-shard sets + 34 needles + 7 glints = jagged clutter,
+(3) opaque cel dust and near-black smoke read as rough chunks on sand, (4) 30fps renders. Fixes: new `haze_soft`
+(single smooth image, low-frequency lobes only) played as many low-opacity puffs that drift/grow/thin slowly; 13 spikes,
+one shard set, 18 needles, 4 glints; dust and smoke made see-through; renders at 60fps (`--fps 60`).
+Lesson: atmosphere must be SMOOTH (no fine noise, no flipbook stepping) - roughness belongs only to the hero shapes.

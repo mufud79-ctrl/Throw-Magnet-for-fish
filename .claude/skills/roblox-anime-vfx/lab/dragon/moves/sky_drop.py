@@ -126,42 +126,43 @@ def build():
     g = [LAND[0], 0, LAND[2]]
     # PRIMARY (frame 0-2): a dense crown of tall flame spikes bursting up around the crater, uneven heights,
     # leaning outward - the one shape you'd still read if everything else were hidden
-    for k in range(22):
-        a = k / 22 * 2 * math.pi + 0.13 * math.sin(k * 3.1)
-        r = 1.6 + 4.2 * ((k * 7) % 5) / 4
+    for k in range(13):
+        a = k / 13 * 2 * math.pi + 0.13 * math.sin(k * 3.1)
+        r = 1.4 + 3.4 * ((k * 7) % 5) / 4
         h = 12.5 - 1.25 * r + 2.6 * ((k * 3) % 4) / 3
         p = [g[0] + math.cos(a) * r, 0, g[2] + math.sin(a) * r]
         lean = math.degrees(math.atan2(math.cos(a), 1.0)) * 0.45
-        tk = T + 0.004 + 0.018 * (r - 1.6) / 4.2              # erupts as a wave from the centre outward
+        tk = T + 0.004 + 0.018 * (r - 1.4) / 3.4              # erupts as a wave from the centre outward
         L += emit_stack("anime_flame_spike", [p[0], h * 0.42, p[2]], tk, size=[[0, h * 0.95], [1, h * 1.05]], life=0.62, cool=False,
                         rot=-lean, seed=601 + k, orient="FacingCameraWorldUp", z=0.04 * (k % 5))
     # SECONDARY (+1 frame): white radial speed lines, black ink shards + gold ink shards, one star flash
     L.append(_fb("speed_burst", [g[0], 2.6, g[2]], T + 0.03, 21, 0.2, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2,
                  seed=611, z=0.9, tr=[[0, 0.1], [0.6, 0.35], [1, 1]]))
-    sh = emit_stack("ink_shards", [g[0], 2.4, g[2]], T + 0.03, size=[[0, 14], [1, 17]], life=0.42, cool=False, seed=612, rot=10, layers=("rim", "mid"), z=0.7)
+    sh = emit_stack("ink_shards", [g[0], 2.4, g[2]], T + 0.03, size=[[0, 11], [1, 14]], life=0.34, cool=False, seed=612, rot=10, layers=("rim", "mid"), z=0.7)
     for e in sh:
         e["props"]["Color"] = "#1a0806" if e["props"]["Texture"].endswith("_rim") else "#3a0c08"
         e["props"]["LightEmission"] = 0
     L += sh
-    L += emit_stack("ink_shards", [g[0], 2.6, g[2]], T + 0.045, size=[[0, 10], [1, 13]], life=0.36, cool=False, seed=613, rot=-25, z=0.8)
     L += glint([g[0], 2.8, g[2]], T + 0.02, size=9, life=0.24, seed=614)
     # TERTIARY: gold needles flying out low and fast, scattered star glints popping in sequence, flame scraps
-    L.append({"type": "emitter", "at": [g[0], 1.6, g[2]], "emits": [[T + 0.03, 34]], "seed": 615, "part": [2, 0.5, 2], "props": {
+    L.append({"type": "emitter", "at": [g[0], 1.6, g[2]], "emits": [[T + 0.03, 18]], "seed": 615, "part": [2, 0.5, 2], "props": {
         "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.4, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.6,
         "Shape": "Cylinder", "ShapeInOut": "Outward", "ShapeStyle": "Surface", "Size": [[0, 6], [0.5, 3.5], [1, 0.4]],
         "Lifetime": [0.22, 0.4], "Speed": [70, 120], "SpreadAngle": [25, 25], "Drag": 7, "Acceleration": [0, 8, 0],
         "Orientation": "VelocityParallel", "ZOffset": 0.6}})
-    for k in range(7):
+    for k in range(4):
         a = k * 2.4
         r = 3.5 + 2.5 * ((k * 5) % 3) / 2
         L += glint([g[0] + math.cos(a) * r, 2.0 + 3.0 * ((k * 3) % 4) / 3, g[2] + math.sin(a) * r], T + 0.06 + 0.035 * k, size=2.6 + 0.8 * (k % 3), life=0.2, seed=621 + k)
     # OUTSIDE: the atmosphere spreading well past the hit (haze cloud, drifting haze sheets, ground haze, floating sparks)
-    L += aura_haze(g, T + 0.01, 1.6, radius=9.0, height=7.0, seed=650)
+    L += aura_haze(g, T + 0.01, 1.8, radius=9.0, height=7.0, strength=1.5, seed=650)
     # MASS (after the hit): dark smoke behind the fire for contrast, molten cracks, crater, dust, small rocks
     L.append(smoke([g[0], 3.0, g[2] - 1.5], T + 0.12, n=10, size=(6, 12), speed=(4, 8), life=(1.0, 1.5), seed=640, spread=60, rise=3,
-                   color="#2a1c1a", tr0=0.15, part=[6, 2, 3]))
+                   color="#3a2420", tr0=0.45, part=[6, 2, 3]))
     L += molten_crack(g, T + 0.03, size=16, rot=20, glow_life=1.4, char_life=3.0, seed=641, flames=False)
-    L.append(dust_ring(g, T + 0.02, n=14, speed=(30, 40), size=(3, 6.5), seed=642))
+    dr = dust_ring(g, T + 0.02, n=12, speed=(30, 40), size=(3, 6.5), seed=642)
+    dr["props"]["Transparency"] = [[0, 0.35], [0.6, 0.55], [1, 1]]   # softer, see-through dust (opaque cel dust read rough)
+    L.append(dr)
     L.append(glow_pool(g, T, 12, life=0.7, peak=0.45, seed=643))
     debris = rocks(g, T + 0.01, radius=5.0, count=8, size=0.8, speed=28, seed=644)
 

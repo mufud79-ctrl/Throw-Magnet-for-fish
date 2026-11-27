@@ -2444,6 +2444,24 @@ def soft_glow():
     return np.clip(np.exp(-(r / 0.42) ** 2) * 0.85 + np.exp(-(r / 0.16) ** 2) * 0.25, 0, 1) * ss(r, 0.98, 0.8)
 
 
+def haze_soft(seed=1311):
+    """Smooth translucent haze puff (single image, white, alpha only): a big soft cloud made of a few overlapping
+    gaussian lobes with only LOW-frequency variation - no grain, no streaks, no flipbook stepping. Played large,
+    many at low opacity, slowly drifting and rotating: the transparent coloured atmosphere around an ability."""
+    x, y = coords(S)
+    rng = np.random.default_rng(seed)
+    F = 0.5 * np.exp(-((x / 0.5) ** 2 + (y / 0.36) ** 2))
+    for _ in range(6):
+        cx, cy = rng.uniform(-0.32, 0.32), rng.uniform(-0.2, 0.2)
+        rr = rng.uniform(0.2, 0.32)
+        F = F + 0.75 * np.exp(-(((x - cx) / rr) ** 2 + ((y - cy) / (rr * 0.8)) ** 2))
+    F = F / F.max()
+    lo = blur(noise(S, S, 160, 160, seed + 1, 2), S * 0.04)
+    a = ss(F, 0.05, 0.95) * (0.8 + 0.4 * (lo - 0.5))
+    a = blur(a, S * 0.02) * ss(np.hypot(x, y), 0.99, 0.75)
+    return np.clip(a * 0.9, 0, 1)
+
+
 # ================================================================ DRAGON FILLER MATTER (the glue between the big shapes)
 def _stroke_layers(strokes, ks=(1.0, 0.55, 0.2), soft=0.8, warp=None, glow=(0.012, 0.035), gk=0.85, W=None, H=None):
     """Tapered painted strokes -> explicit fire layers (rim = full width, mid = inner, core = thin hot line)."""
@@ -3132,6 +3150,7 @@ LIB = {
     "heat_ring":     (heat_ring,     "cel", 4, 0, "dragonfire"),
     "fire_slice":    (fire_slice,    "cel", 4, 0, "dragonfire"),
     "soft_glow":     (soft_glow,     "white", 1, 0, "white"),
+    "haze_soft":     (haze_soft,     "white", 1, 0, "white"),
     # dragon filler matter (the glue between the big shapes)
     "fire_wisp":     (fire_wisp,     "cel", 4, 0, "dragonfire"),
     "fire_swirl":    (fire_swirl,    "cel", 4, 0, "dragonfire"),

@@ -925,15 +925,16 @@ def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff6a24", deep="#c8
             "Texture": "soft_glow", "Color": cl, "LightEmission": 0.45, "Brightness": 1.1,
             "Size": [[0, sz * 0.5], [0.12, sz], [1, sz * 1.15]], "Lifetime": [dur, dur], "Speed": [0.01, 0.01], "FlipbookLayout": "None",
             "Transparency": [[0, 1], [0.08, 1 - (1 - tr) * S], [0.55, 1 - (1 - tr) * S * 0.8], [1, 1]], "ZOffset": -2.0}})
-    # translucent coloured haze sheets drifting outward
-    out.append({"type": "emitter", "at": R([c[0], height * 0.5, c[2]]), "emits": [[t0 + 0.02, int(14 * S)]], "rate": [[t0 + 0.1, t0 + dur * 0.6, 8 * S]],
-                "seed": seed + 2, "part": R([radius * 0.8, height * 0.6, radius * 0.8]), "props": {
-        "Texture": "dust_veil", "Color": [[0, col], [0.6, deep], [1, "#5a1a14"]], "LightEmission": 0.35, "Brightness": 1.15,
+    # translucent coloured haze: MANY smooth soft puffs at low opacity (smooth single image, no flipbook stepping),
+    # pushed out gently all round and left to drift, grow and thin slowly - builds up into one continuous veil
+    out.append({"type": "emitter", "at": R([c[0], height * 0.4, c[2]]), "emits": [[t0 + 0.01, int(26 * S)]], "rate": [[t0 + 0.05, t0 + dur * 0.5, 14 * S]],
+                "seed": seed + 2, "part": R([radius * 0.6, height * 0.5, radius * 0.6]), "props": {
+        "Texture": "haze_soft", "Color": [[0, col], [0.5, deep], [1, deep]], "LightEmission": 0.4, "Brightness": 1.1,
         "Shape": "Cylinder", "ShapeInOut": "Outward", "ShapeStyle": "Volume",
-        "Size": [[0, radius * 1.2], [1, radius * 2.2]], "Lifetime": [dur * 0.7, dur], "Speed": [radius * 0.35, radius * 0.8], "SpreadAngle": [20, 20],
-        "Drag": 1.5, "Acceleration": [0, 1.0, 0], "Rotation": [-30, 30], "RotSpeed": [-12, 12],
-        "Transparency": [[0, 1], [0.12, 1 - 0.55 * S], [0.6, 1 - 0.4 * S], [1, 1]], "FlipbookLayout": "Grid4x4", "FlipbookMode": "OneShot",
-        "Orientation": "FacingCameraWorldUp", "ZOffset": -1.5}})
+        "Size": [[0, radius * 0.9], [0.4, radius * 1.6], [1, radius * 2.1]], "Lifetime": [dur * 0.8, dur * 1.1], "Speed": [radius * 0.25, radius * 0.6],
+        "SpreadAngle": [25, 25], "Drag": 2.0, "Acceleration": [0, 0.6, 0], "Rotation": [0, 360], "RotSpeed": [-8, 8],
+        "Transparency": [[0, 1], [0.15, 1 - 0.32 * S], [0.55, 1 - 0.24 * S], [1, 1]], "FlipbookLayout": "None",
+        "Orientation": "FacingCamera", "ZOffset": -1.5}})
     # wide ground haze
     out.append({"type": "emitter", "at": R([c[0], 0.06, c[2]]), "emits": [[t0, 1]], "seed": seed + 3, "props": {
         "Texture": "soft_glow", "Color": col, "LightEmission": 0.4, "Brightness": 1.1, "Size": [[0, radius * 2], [0.2, radius * 5], [1, radius * 5.5]],
