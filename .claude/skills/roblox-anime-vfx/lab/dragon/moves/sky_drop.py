@@ -155,6 +155,8 @@ def build():
         a = k * 2.4
         r = 3.5 + 2.5 * ((k * 5) % 3) / 2
         L += glint([g[0] + math.cos(a) * r, 2.0 + 3.0 * ((k * 3) % 4) / 3, g[2] + math.sin(a) * r], T + 0.06 + 0.035 * k, size=2.6 + 0.8 * (k % 3), life=0.2, seed=621 + k)
+    # OUTSIDE: the atmosphere spreading well past the hit (haze cloud, drifting haze sheets, ground haze, floating sparks)
+    L += aura_haze(g, T + 0.01, 1.6, radius=9.0, height=7.0, seed=650)
     # MASS (after the hit): dark smoke behind the fire for contrast, molten cracks, crater, dust, small rocks
     L.append(smoke([g[0], 3.0, g[2] - 1.5], T + 0.12, n=10, size=(6, 12), speed=(4, 8), life=(1.0, 1.5), seed=640, spread=60, rise=3,
                    color="#2a1c1a", tr0=0.15, part=[6, 2, 3]))

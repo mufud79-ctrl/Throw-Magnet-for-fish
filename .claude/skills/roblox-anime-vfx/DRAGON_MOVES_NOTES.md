@@ -353,3 +353,8 @@ Polish 1 ("better, could use polishing"): crown taller with more height contrast
 the centre; speed lines smaller/warm/0.2 s (white thick lines read as pale bars on the sky); cut dark_spikes (redundant
 with the black ink shards) and red scraps (confetti); take-off = small spike burst; dive = anime_slash smear + gold
 needles; targets get ink shards + glint instead of the generic impact.
+Polish 2 ("no outside effect other than the affected area, no transparent haze - it's in the references and you always
+ignore it"): new `kit.aura_haze` = the atmosphere past the hit: a huge translucent glow cloud (soft_glow, deep red +
+orange), layered translucent orange-red dust_veil haze sheets billowing OUT all around (Cylinder/Outward), a wide
+ground haze (5x radius), embers + star sparkles floating across a big area. Lesson: ambience must be COLOURED and
+visible (sand-coloured veils at half strength were invisible) and must spread well beyond the affected area.
