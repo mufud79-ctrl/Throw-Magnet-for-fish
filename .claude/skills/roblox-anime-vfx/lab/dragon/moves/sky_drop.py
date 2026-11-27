@@ -69,10 +69,11 @@ def build():
         for j in range(5):
             a = j / 5 * 2 * math.pi + seed
             q = [f[0] + math.cos(a) * 0.9, f[1], f[2] + math.sin(a) * 0.9]
-            hh = 3.6 - 0.5 * (j % 2)
+            hh = 5.2 - 0.8 * (j % 2)
             L += emit_stack("anime_flame_spike", [q[0], q[1] + hh * 0.42, q[2]], t + 0.01 * j, size=hh, life=0.4, cool=False,
                             rot=(j - 2) * 14, seed=seed + 3 + j, orient="FacingCameraWorldUp")
         L += glint([f[0], f[1] + 0.8, f[2]], t, size=4, life=0.18, seed=seed + 2)
+    L += aura_haze([0, 0, 0], TL, 0.9, radius=3.5, height=3.0, strength=0.8, seed=590)
     L.append(dust_ring([0, 0, 0], TL + 0.01, n=10, speed=(22, 30), size=(2.5, 5.5), seed=518))
     L.append(dust_rollout([0, 0, 0], TL + 0.01, n=6, size=(8, 13), speed=(9, 14), seed=517))
     L.append(scorch([0, 0, 0], TL, size=6, life=2.0, seed=519))
@@ -88,7 +89,10 @@ def build():
             r = 1.6 + 0.8 * math.sin(u * math.pi)
             sp.append([R(t, 4), R([c[0] + math.cos(a) * r, c[1] - 0.8 * (1 - u), c[2] + math.sin(a) * r])])
         hot = {"rim": [[0, CRIMSON], [0.6, CRIMSON], [1, EMBER]], "mid": [[0, GOLD], [0.5, ORANGE], [1, CRIMSON]], "core": [[0, WHITE_GOLD], [0.4, GOLD], [1, ORANGE]]}
-        for lay, w in (("rim", 1.3), ("mid", 0.85), ("core", 0.26)):
+        L.append({"type": "trail", "path": sp, "at": sp[0][1], "t0": TL, "t1": TA, "lifetime": 0.28, "faceCamera": True, "width": 4.2,
+                  "textures": [f"{s}_glow" for s in STRIPS], "swap": 0.06, "color": ORANGE, "lightEmission": 0.8, "brightness": 1.0,
+                  "textureMode": "Stretch", "transparency": [[0, 0.45], [0.6, 0.6], [1, 1]], "widthScale": [[0, 1], [1, 0.3]]})
+        for lay, w in (("rim", 2.6), ("mid", 1.7), ("core", 0.5)):
             L.append({"type": "trail", "path": sp, "at": sp[0][1], "t0": TL, "t1": TA, "lifetime": 0.32, "faceCamera": True, "width": w,
                       "textures": [f"{s}_{lay}" for s in STRIPS], "swap": 0.06, "color": hot[lay], "lightEmission": LE[lay], "brightness": BR[lay],
                       "textureMode": "Stretch", "transparency": [[0, 0], [0.5, 0.1], [1, 1]], "widthScale": [[0, 1], [1, 0.2]]})
@@ -115,7 +119,6 @@ def build():
     L.append({"type": "emitter", "at": body(TD, 3), "rate": [[TD, TI, 80]], "seed": 571, "path": dp, "rot": [180, 0, 0], "props": {
         "Texture": "spark_streak", "Color": PALS["fire"]["spark"], "LightEmission": 1, "Brightness": 1.6, "Size": [[0, 4.5], [1, 0.4]],
         "Lifetime": [0.12, 0.2], "Speed": [8, 14], "SpreadAngle": [12, 12], "Drag": 3, "Orientation": "VelocityParallel", "ZOffset": 0.5}})
-    L += emit_stack("anime_slash", body(0.97, 3.5), TD + 0.03, size=11, life=0.22, cool=False, rot=-100, seed=572, z=0.3)
     L.append({"type": "emitter", "at": body(TD, 3), "rate": [[TD, TI, 70]], "seed": 573, "path": dp, "rot": [0, 0, 0], "props": {
         "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.5, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.5,
         "Size": [[0, 4.5], [1, 0.5]], "Lifetime": [0.12, 0.2], "Speed": [18, 30], "SpreadAngle": [10, 10], "Drag": 4,
@@ -133,12 +136,12 @@ def build():
         p = [g[0] + math.cos(a) * r, 0, g[2] + math.sin(a) * r]
         lean = math.degrees(math.atan2(math.cos(a), 1.0)) * 0.45
         tk = T + 0.004 + 0.018 * (r - 1.4) / 3.4              # erupts as a wave from the centre outward
-        L += emit_stack("anime_flame_spike", [p[0], h * 0.42, p[2]], tk, size=[[0, h * 0.95], [1, h * 1.05]], life=0.62, cool=False,
+        L += emit_stack("anime_flame_spike", [p[0], h * 0.42, p[2]], tk, size=[[0, h * 0.95], [1, h * 1.05]], life=0.5 + 0.35 * (r - 1.4) / 3.4, cool=False,
                         rot=-lean, seed=601 + k, orient="FacingCameraWorldUp", z=0.04 * (k % 5))
     # SECONDARY (+1 frame): white radial speed lines, black ink shards + gold ink shards, one star flash
     L.append(_fb("speed_burst", [g[0], 2.6, g[2]], T + 0.03, 21, 0.2, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2,
                  seed=611, z=0.9, tr=[[0, 0.1], [0.6, 0.35], [1, 1]]))
-    sh = emit_stack("ink_shards", [g[0], 2.4, g[2]], T + 0.03, size=[[0, 11], [1, 14]], life=0.34, cool=False, seed=612, rot=10, layers=("rim", "mid"), z=0.7)
+    sh = emit_stack("ink_shards", [g[0], 2.4, g[2]], T + 0.03, size=[[0, 9], [1, 12]], life=0.28, cool=False, seed=612, rot=10, layers=("rim",), z=0.7)
     for e in sh:
         e["props"]["Color"] = "#1a0806" if e["props"]["Texture"].endswith("_rim") else "#3a0c08"
         e["props"]["LightEmission"] = 0
@@ -157,8 +160,13 @@ def build():
     # OUTSIDE: the atmosphere spreading well past the hit (haze cloud, drifting haze sheets, ground haze, floating sparks)
     L += aura_haze(g, T + 0.01, 1.8, radius=9.0, height=7.0, strength=1.5, seed=650)
     # MASS (after the hit): dark smoke behind the fire for contrast, molten cracks, crater, dust, small rocks
-    L.append(smoke([g[0], 3.0, g[2] - 1.5], T + 0.12, n=10, size=(6, 12), speed=(4, 8), life=(1.0, 1.5), seed=640, spread=60, rise=3,
-                   color="#3a2420", tr0=0.45, part=[6, 2, 3]))
+    L.append({"type": "emitter", "at": [g[0], 3.0, g[2] - 1.0], "emits": [[T + 0.1, 9]], "rate": [[T + 0.15, T + 0.8, 8]], "seed": 640,
+              "part": [5, 1.5, 3], "props": {"Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0,
+        "Brightness": 1, "Size": [[0, 5], [1, 11]], "Lifetime": [1.0, 1.5], "Speed": [2, 4], "SpreadAngle": [30, 30], "Acceleration": [0, 2.5, 0],
+        "Drag": 1.2, "Rotation": [0, 360], "RotSpeed": [-10, 10], "FlipbookLayout": "None",
+        "Transparency": [[0, 1], [0.15, 0.45], [0.6, 0.6], [1, 1]], "ZOffset": -0.8}})
+    # lingering low flames in the crater bridge the burst into the after-burn
+    L += flicker([g[0], 0.0, g[2]], T + 0.25, T + 1.0, 3.6, seed=645)
     L += molten_crack(g, T + 0.03, size=16, rot=20, glow_life=1.4, char_life=3.0, seed=641, flames=False)
     dr = dust_ring(g, T + 0.02, n=12, speed=(30, 40), size=(3, 6.5), seed=642)
     dr["props"]["Transparency"] = [[0, 0.35], [0.6, 0.55], [1, 1]]   # softer, see-through dust (opaque cel dust read rough)

@@ -908,7 +908,7 @@ def fire_scraps(at, t, n=18, speed=(14, 26), size=(1.2, 2.6), life=(0.5, 0.9), s
     return e
 
 
-def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff6a24", deep="#c8281a", strength=1.0, seed=97):
+def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff5a1e", strength=1.0, seed=97):
     """The OUTSIDE of an effect (user: "there's no outside effect other than the affected area, no transparent haze"):
     the atmosphere that spreads well past the hit in every reference.
       - a huge soft glow cloud hanging around the effect (camera-facing soft_glow, translucent)
@@ -922,14 +922,14 @@ def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff6a24", deep="#c8
     # glow cloud (two sizes)
     for sz, cl, tr, h in ((radius * 3.6, deep, 0.5, height * 0.55), (radius * 2.2, col, 0.4, height * 0.45)):
         out.append({"type": "emitter", "at": R([c[0], h, c[2]]), "emits": [[t0, 1]], "seed": seed + 1, "props": {
-            "Texture": "soft_glow", "Color": cl, "LightEmission": 0.45, "Brightness": 1.1,
+            "Texture": "soft_glow", "Color": cl, "LightEmission": 0.75, "Brightness": 1.0,
             "Size": [[0, sz * 0.5], [0.12, sz], [1, sz * 1.15]], "Lifetime": [dur, dur], "Speed": [0.01, 0.01], "FlipbookLayout": "None",
             "Transparency": [[0, 1], [0.08, 1 - (1 - tr) * S], [0.55, 1 - (1 - tr) * S * 0.8], [1, 1]], "ZOffset": -2.0}})
     # translucent coloured haze: MANY smooth soft puffs at low opacity (smooth single image, no flipbook stepping),
     # pushed out gently all round and left to drift, grow and thin slowly - builds up into one continuous veil
     out.append({"type": "emitter", "at": R([c[0], height * 0.4, c[2]]), "emits": [[t0 + 0.01, int(26 * S)]], "rate": [[t0 + 0.05, t0 + dur * 0.5, 14 * S]],
                 "seed": seed + 2, "part": R([radius * 0.6, height * 0.5, radius * 0.6]), "props": {
-        "Texture": "haze_soft", "Color": [[0, col], [0.5, deep], [1, deep]], "LightEmission": 0.4, "Brightness": 1.1,
+        "Texture": "haze_soft", "Color": [[0, col], [0.5, deep], [1, deep]], "LightEmission": 0.7, "Brightness": 1.0,
         "Shape": "Cylinder", "ShapeInOut": "Outward", "ShapeStyle": "Volume",
         "Size": [[0, radius * 0.9], [0.4, radius * 1.6], [1, radius * 2.1]], "Lifetime": [dur * 0.8, dur * 1.1], "Speed": [radius * 0.25, radius * 0.6],
         "SpreadAngle": [25, 25], "Drag": 2.0, "Acceleration": [0, 0.6, 0], "Rotation": [0, 360], "RotSpeed": [-8, 8],
@@ -941,10 +941,10 @@ def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff6a24", deep="#c8
         "Lifetime": [dur, dur], "Speed": [0.01, 0.01], "Orientation": "VelocityPerpendicular", "FlipbookLayout": "None",
         "Transparency": [[0, 1], [0.1, 1 - 0.62 * S], [0.6, 1 - 0.48 * S], [1, 1]], "ZOffset": -0.1}})
     # embers + star sparkles floating across a big area
-    out.append({"type": "emitter", "at": R([c[0], height * 0.5, c[2]]), "emits": [[t0 + 0.02, int(40 * S)]], "rate": [[t0, t0 + dur * 0.8, 30 * S]],
-                "seed": seed + 4, "part": R([radius * 2.6, height * 1.2, radius * 2.6]), "props": {
+    out.append({"type": "emitter", "at": R([c[0], height * 0.5, c[2]]), "emits": [[t0 + 0.02, int(16 * S)]], "rate": [[t0, t0 + dur * 0.7, 12 * S]],
+                "seed": seed + 4, "part": R([radius * 1.3, height * 0.4, radius * 1.3]), "props": {
         "Texture": "embers", "Color": [[0, "#fff6b0"], [0.4, "#ffb02a"], [1, "#e0401a"]], "LightEmission": 0.8, "Brightness": 1.5,
-        "Size": [[0, 0.75], [0.7, 0.55], [1, 0.1]], "Lifetime": [1.0, 1.8], "Speed": [1, 4], "SpreadAngle": [180, 180], "Acceleration": [0, 2.5, 0],
+        "Size": [[0, 0.75], [0.7, 0.55], [1, 0.1]], "Lifetime": [1.0, 1.8], "Speed": [2, 5], "SpreadAngle": [35, 35], "Acceleration": [0, 3.5, 0],
         "Drag": 0.8, "Rotation": [0, 360], "RotSpeed": [-160, 160], "FlipbookLayout": "Grid4x4", "FlipbookMode": "Random",
         "FlipbookFramerate": [0.01, 0.01], "FlipbookStartRandom": True, "ZOffset": 0.3}})
     for k in range(int(9 * S)):

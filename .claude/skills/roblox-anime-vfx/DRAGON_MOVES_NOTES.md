@@ -364,3 +364,9 @@ one-shot (grain + stepping), (2) 22 overlapping spikes + two ink-shard sets + 34
 (single smooth image, low-frequency lobes only) played as many low-opacity puffs that drift/grow/thin slowly; 13 spikes,
 one shard set, 18 needles, 4 glints; dust and smoke made see-through; renders at 60fps (`--fps 60`).
 Lesson: atmosphere must be SMOOTH (no fine noise, no flipbook stepping) - roughness belongs only to the hero shapes.
+Polish 4 ("better, not there yet"): leap spiral ribbons were 1.3-stud wires -> fat glowing flame ribbons (glow under-layer
++ 2.6/1.7/0.5 rim/mid/core); bigger take-off crowns + a small haze puff at the launch; removed the stray dive crescent;
+haze recoloured warm and luminous (LE 0.7-0.75) so it reads as heat light, not red paint on the sand; floating embers
+cut and made to RISE from the crater (not noise everywhere); spikes recede outward in a wave (staggered lifetimes);
+smooth haze_soft smoke replaces chunky cel smoke; lingering crater flames bridge the burst into the after-burn; ink
+shards are one clean black layer.
