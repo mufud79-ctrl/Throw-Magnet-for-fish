@@ -974,3 +974,82 @@ def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff
         out += glint([c[0] + math.cos(a) * r, height * (0.3 + 0.9 * ((k * 3) % 5) / 4), c[2] + math.sin(a) * r], t0 + 0.08 + dur * 0.06 * k,
                      size=1.6 + 0.9 * (k % 3), life=0.22, seed=seed + 10 + k)
     return out
+
+
+# ---------------------------------------------------------------- full-form head paths (plumbing)
+def _cr(p0, p1, p2, p3, u):
+    return [0.5 * (2 * b + (-a + c) * u + (2 * a - 5 * b + 4 * c - d) * u * u + (-a + 3 * b - 3 * c + d) * u ** 3)
+            for a, b, c, d in zip(p0, p1, p2, p3)]
+
+
+def cr_point(CP, t):
+    """Catmull-Rom through timed control points CP = [(t, [x, y, z]), ...] (the dragon head's flight line)."""
+    ts = [c[0] for c in CP]
+    i = max(0, min(len(CP) - 2, next((k for k in range(len(ts) - 1) if ts[k] <= t < ts[k + 1]), len(ts) - 2)))
+    u = (t - ts[i]) / (ts[i + 1] - ts[i])
+    P = [c[1] for c in CP]
+    return _cr(P[max(0, i - 1)], P[i], P[i + 1], P[min(len(P) - 1, i + 2)], u)
+
+
+def cr_path(CP, t0=None, t1=None, step=1 / 60):
+    t0 = CP[0][0] if t0 is None else t0
+    t1 = CP[-1][0] if t1 is None else t1
+    n = max(2, int((t1 - t0) / step))
+    return [[R(t0 + (t1 - t0) * k / n, 4), R(cr_point(CP, t0 + (t1 - t0) * k / n))] for k in range(n + 1)]
+
+
+def whisker_tracks(dur, amp=16, step=0.1):
+    tr = {}
+    for side in "LR":
+        for i in range(3):
+            tr[f"whisker{side}_{i}"] = {"rot": [[R(t, 3), [R(-18 + amp * math.sin(t * 6 + i), 2), 0, R((10 if side == "L" else -10) * math.sin(t * 3 + i), 2)]]
+                                                for t in [k * step for k in range(int(dur / step) + 2)]]}
+    return tr
+
+
+def dark_haze(at, t, n=8, rate=None, size=(4, 9), life=(0.9, 1.3), part=(4, 2, 4), tr=0.55, seed=990, outward=0.0):
+    """Smooth dark smoke (haze_soft, low opacity puffs): the dark anchor without chunky cel blobs."""
+    e = {"type": "emitter", "at": R(at), "seed": seed, "part": list(part), "props": {
+        "Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0, "Brightness": 1,
+        "Size": [[0, size[0]], [1, size[1]]], "Lifetime": list(life), "Speed": [1 + outward, 3 + outward * 1.5], "SpreadAngle": [30, 30],
+        "Acceleration": [0, 2.5, 0], "Drag": 1.2 + outward * 0.1, "Rotation": [0, 360], "RotSpeed": [-10, 10], "FlipbookLayout": "None",
+        "Transparency": [[0, 1], [0.15, tr], [0.6, min(0.95, tr + 0.15)], [1, 1]], "ZOffset": -1.0}}
+    if outward:
+        e["props"].update({"Shape": "Cylinder", "ShapeInOut": "Outward", "ShapeStyle": "Volume"})
+    if rate:
+        e["rate"] = rate
+    if n:
+        e["emits"] = [[t, n]]
+    return e
+
+
+def ink(at, t, size, rot=0, life=0.28, seed=995):
+    """Black anime ink shards (the dark accent of a hit)."""
+    sh = emit_stack("ink_shards", at, t, size=[[0, size], [1, size * 1.25]], life=life, cool=False, seed=seed, rot=rot, layers=("rim",), z=0.7)
+    for e in sh:
+        e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0
+    return sh
+
+
+def needles(at, t, n, speed=(50, 90), size=4.0, life=(0.18, 0.32), spread=180, seed=996, rot=None, part=None, rate=None, path=None):
+    """Bold gold energy needles (needle_bold, velocity-parallel): the sharp tertiary spray."""
+    e = {"type": "emitter", "at": R(at), "seed": seed, "props": {
+        "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.45, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.55,
+        "Size": [[0, size], [0.5, size * 0.55], [1, size * 0.08]], "Lifetime": list(life), "Speed": list(speed), "SpreadAngle": [spread, spread],
+        "Drag": 6, "Orientation": "VelocityParallel", "ZOffset": 0.6}}
+    if rate:
+        e["rate"] = rate
+    else:
+        e["emits"] = [[t, n]]
+    if rot:
+        e["rot"] = rot
+    if part:
+        e["part"] = part
+    if path:
+        e["path"] = path
+    return e
+
+
+def speed_lines(at, t, size, life=0.22, seed=997, tr=None):
+    return _fb("speed_burst", at, t, size, life, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2, seed=seed, z=0.9,
+               tr=tr or [[0, 0.12], [0.6, 0.38], [1, 1]])
