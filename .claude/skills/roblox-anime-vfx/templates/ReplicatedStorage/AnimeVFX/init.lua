@@ -896,7 +896,7 @@ local function makeDebris(play, D)
 		table.insert(chunks, c)
 	end
 	local pit
-	if D.kind == "crater" then
+	if D.kind == "crater" and D.pit ~= false then -- pit = false when a crater decal draws the bowl
 		pit = anchoredPart({ Shape = Enum.PartType.Cylinder, Material = Enum.Material.SmoothPlastic, Color = hexColor(D.pitColor or "#2a2420"), Size = Vector3.new(0.1, 1, 1) })
 	end
 	local life = D.life or 3

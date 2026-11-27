@@ -370,3 +370,9 @@ haze recoloured warm and luminous (LE 0.7-0.75) so it reads as heat light, not r
 cut and made to RISE from the crater (not noise everywhere); spikes recede outward in a wave (staggered lifetimes);
 smooth haze_soft smoke replaces chunky cel smoke; lingering crater flames bridge the burst into the after-burn; ink
 shards are one clean black layer.
+Polish 5 ("the impact circle itself is bad, improve it a lot"): the old crater was a flat hard-edged dark disc (the
+debris pit) with a crack sticker. New `kit.crater()`: painted `impact_crater` decal (shaded single: dark bowl shading
+up to a lit jagged lip, thin ink outline, sharp radial cracks running out past the rim, dusty skirt) sized 4x radius so
+the lip sits under a ring of 16 big broken slabs tilted outward; the debris pit is off (`"pit": false`, supported in
+lab/page/vfx.js and init.lua); a molten core glows in the bowl and cools. Bug found: a NEGATIVE ZOffset on a ground
+decal sinks it under the floor (it vanished) - ground decals use ZOffset >= 0. Test: lab/dragon/tests/crater_test.py.

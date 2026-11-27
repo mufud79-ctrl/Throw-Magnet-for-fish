@@ -158,7 +158,7 @@ def build():
         r = 3.5 + 2.5 * ((k * 5) % 3) / 2
         L += glint([g[0] + math.cos(a) * r, 2.0 + 3.0 * ((k * 3) % 4) / 3, g[2] + math.sin(a) * r], T + 0.06 + 0.035 * k, size=2.6 + 0.8 * (k % 3), life=0.2, seed=621 + k)
     # OUTSIDE: the atmosphere spreading well past the hit (haze cloud, drifting haze sheets, ground haze, floating sparks)
-    L += aura_haze(g, T + 0.01, 1.8, radius=9.0, height=7.0, strength=1.5, seed=650)
+    L += aura_haze(g, T + 0.01, 1.8, radius=9.0, height=7.0, strength=1.2, seed=650, cloud=0.55)
     # MASS (after the hit): dark smoke behind the fire for contrast, molten cracks, crater, dust, small rocks
     L.append({"type": "emitter", "at": [g[0], 3.0, g[2] - 1.0], "emits": [[T + 0.1, 9]], "rate": [[T + 0.15, T + 0.8, 8]], "seed": 640,
               "part": [5, 1.5, 3], "props": {"Texture": "haze_soft", "Color": [[0, "#4a2a22"], [1, "#6a4a3e"]], "LightEmission": 0,
@@ -171,8 +171,10 @@ def build():
     dr = dust_ring(g, T + 0.02, n=12, speed=(30, 40), size=(3, 6.5), seed=642)
     dr["props"]["Transparency"] = [[0, 0.35], [0.6, 0.55], [1, 1]]   # softer, see-through dust (opaque cel dust read rough)
     L.append(dr)
-    L.append(glow_pool(g, T, 12, life=0.7, peak=0.45, seed=643))
-    debris = rocks(g, T + 0.01, radius=5.0, count=8, size=0.8, speed=28, seed=644)
+    L.append(glow_pool(g, T, 12, life=0.5, peak=0.3, seed=643))
+    cr = crater(g, T, radius=5.5, life=3.0, seed=646)   # painted bowl + rock rim + molten core + ground fire ring
+    L += [x for x in cr if "kind" not in x]
+    debris = rocks(g, T + 0.01, radius=5.0, count=8, size=0.8, speed=28, crater=False, seed=644) + [x for x in cr if "kind" in x]
 
     hits, numbers = [], []
     for i, p in enumerate(TARGETS):

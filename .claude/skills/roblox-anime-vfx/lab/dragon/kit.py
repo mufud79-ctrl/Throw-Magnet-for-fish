@@ -411,6 +411,27 @@ def molten_crack(at, t, size=12, rot=0, glow_life=1.6, char_life=3.4, pal="fire"
     return out
 
 
+def crater(at, t, radius=6.0, life=3.0, ground="#b89a70", hot=True, slabs=16, seed=71):
+    """Anime slam crater (replaces the flat dark pit disc): a painted bowl decal (impact_crater: dark centre shading up
+    to a lit jagged rim, ink outline, radial cracks), a ring of broken rock slabs tilted out along the rim (no pit),
+    and a molten core glowing in the bottom of the bowl that cools white-gold -> orange -> red -> gone."""
+    c = [at[0], 0, at[2]]
+    # decal rim sits at half the texture radius, so size = 4x radius puts the painted lip under the slab ring
+    out = [{"type": "emitter", "at": R([c[0], 0.04, c[2]]), "emits": [[t, 1]], "seed": seed, "props": {
+        "Texture": "impact_crater", "Color": ground, "LightEmission": 0, "Brightness": 1,
+        "Size": [[0, radius * 2.6], [0.03, radius * 4.0], [1, radius * 4.1]], "Lifetime": [life, life], "Speed": [0.01, 0.01],
+        "Rotation": [seed % 360, seed % 360], "Orientation": "VelocityPerpendicular", "FlipbookLayout": "None",
+        "Transparency": [[0, 0], [0.8, 0], [1, 1]], "ZOffset": 0.0}}]   # never negative on a ground decal: it sinks under the floor
+    out.append({"kind": "crater", "at": R(c), "t": t, "radius": radius * 1.02, "count": slabs, "size": radius * 0.32, "life": life,
+                "seed": seed + 1, "pit": False, "color": "#c9ad80"})
+    if hot:
+        out.append({"type": "emitter", "at": R([c[0], 0.08, c[2]]), "emits": [[t, 1]], "seed": seed + 2, "props": {
+            "Texture": "soft_glow", "Color": [[0, "#fff6b0"], [0.15, "#ffb02a"], [0.5, "#e0401a"], [1, "#6a100a"]], "LightEmission": 0.9,
+            "Brightness": 1.3, "Size": [[0, radius * 1.6], [1, radius * 0.9]], "Lifetime": [life * 0.5, life * 0.5], "Speed": [0.01, 0.01],
+            "Orientation": "VelocityPerpendicular", "FlipbookLayout": "None", "Transparency": [[0, 0], [0.4, 0.25], [1, 1]], "ZOffset": 0.01}})
+    return out
+
+
 def gouge(at, t, size=8, rot=0, glow_life=1.3, char_life=3.0, pal="fire", seed=41):
     """Claw calling card: three burning gouges in the sand."""
     out = _mark("claw_gouge", at, t, size, rot, glow_life, char_life, pal, seed)
@@ -908,7 +929,7 @@ def fire_scraps(at, t, n=18, speed=(14, 26), size=(1.2, 2.6), life=(0.5, 0.9), s
     return e
 
 
-def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff5a1e", strength=1.0, seed=97):
+def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff5a1e", strength=1.0, seed=97, cloud=1.0):
     """The OUTSIDE of an effect (user: "there's no outside effect other than the affected area, no transparent haze"):
     the atmosphere that spreads well past the hit in every reference.
       - a huge soft glow cloud hanging around the effect (camera-facing soft_glow, translucent)
@@ -924,7 +945,7 @@ def aura_haze(centre, t0, dur, radius=10.0, height=6.0, col="#ff9a3a", deep="#ff
         out.append({"type": "emitter", "at": R([c[0], h, c[2]]), "emits": [[t0, 1]], "seed": seed + 1, "props": {
             "Texture": "soft_glow", "Color": cl, "LightEmission": 0.75, "Brightness": 1.0,
             "Size": [[0, sz * 0.5], [0.12, sz], [1, sz * 1.15]], "Lifetime": [dur, dur], "Speed": [0.01, 0.01], "FlipbookLayout": "None",
-            "Transparency": [[0, 1], [0.08, 1 - (1 - tr) * S], [0.55, 1 - (1 - tr) * S * 0.8], [1, 1]], "ZOffset": -2.0}})
+            "Transparency": [[0, 1], [0.08, 1 - (1 - tr) * S * cloud], [0.4, 1 - (1 - tr) * S * cloud * 0.6], [1, 1]], "ZOffset": -2.0}})
     # translucent coloured haze: MANY smooth soft puffs at low opacity (smooth single image, no flipbook stepping),
     # pushed out gently all round and left to drift, grow and thin slowly - builds up into one continuous veil
     out.append({"type": "emitter", "at": R([c[0], height * 0.4, c[2]]), "emits": [[t0 + 0.01, int(26 * S)]], "rate": [[t0 + 0.05, t0 + dur * 0.5, 14 * S]],

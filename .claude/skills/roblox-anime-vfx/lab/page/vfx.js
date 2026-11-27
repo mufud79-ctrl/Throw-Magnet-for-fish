@@ -738,7 +738,7 @@ class Debris {
         v: [(r() - 0.5) * 2, 0, (r() - 0.5) * 2], up: (D.speed || 30) * (0.6 + r() * 0.6), out: (D.speed || 30) * 0.35 * (0.5 + r()), rs: [(r() - 0.5) * 12, (r() - 0.5) * 12, (r() - 0.5) * 12] };
       this.items.push(it); this.group.add(m);
     }
-    if (D.kind === 'crater') { // dark pit disc
+    if (D.kind === 'crater' && D.pit !== false) { // dark pit disc (pit:false when a crater decal draws the bowl)
       this.pit = new THREE.Mesh(new THREE.CircleGeometry(1, 32), new THREE.MeshBasicMaterial({ color: new THREE.Color(...hex(D.pitColor || '#2a2420')), transparent: true }));
       this.pit.rotation.x = -Math.PI / 2; this.pit.position.y = 0.03; this.group.add(this.pit);
     }

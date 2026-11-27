@@ -2750,6 +2750,37 @@ def fire_scorch(seed=1101):
     return [np.clip(alpha, 0, 1)], [np.clip(val, 0, 1)]
 
 
+def impact_crater(seed=1331):
+    """Anime slam crater (single image, shaded; tint the ground colour): a bowl that is DARK in the middle and shades
+    up to a LIT raised rim, a jagged broken rim edge, a thin dark outline just outside the rim (anime ink), sharp radial
+    cracks running out of the bowl past the rim, and a soft dusty outer fade - not a flat disc."""
+    x, y = coords(S)
+    r, a = polar_of(x, y)
+    rng = np.random.default_rng(seed)
+    n1 = noise(S, S, 40, 40, seed + 1, 3)
+    jag = blur(_ang_noise(a, 28, seed + 2, 2.0), S * 0.006)
+    R0 = 0.5 + 0.06 * (jag - 0.5) + 0.03 * (n1 - 0.5)            # rim radius (jagged)
+    bowl = ss(r, 0.0, R0)                                         # 0 centre -> 1 at rim
+    rim = np.exp(-((r - R0) / 0.045) ** 2)                       # the raised lip
+    ink = np.exp(-((r - R0 - 0.05) / 0.012) ** 2)                # thin dark outline just outside the lip
+    # radial cracks: thin dark lines from inside the bowl out past the rim
+    cracks = np.zeros_like(r)
+    for k in range(11):
+        th = k / 11 * TAU + rng.uniform(-0.2, 0.2)
+        ln = rng.uniform(0.62, 0.92)
+        wob = th + 0.035 * np.sign(np.sin(r * 9 + k * 1.7)) * np.abs(np.sin(r * 9 + k * 1.7)) ** 0.5 * r
+        d = np.abs(np.angle(np.exp(1j * (a - wob)))) * r
+        w = 0.016 * (1.0 - r) + 0.002
+        cracks = np.maximum(cracks, ss(d, w, w * 0.4) * ss(r, 0.12, 0.2) * ss(r, ln, ln - 0.15))
+    outer = ss(r, 0.98, R0 + 0.08)                                # dusty skirt past the rim
+    alpha = np.maximum(ss(r, R0 + 0.06, R0 + 0.02), 0.55 * outer * (0.7 + 0.3 * n1))
+    alpha = np.maximum(alpha, cracks)
+    val = 0.14 + 0.5 * bowl ** 1.4 + 0.4 * rim + 0.06 * (n1 - 0.5)
+    val = np.where(r > R0 + 0.03, 0.8 + 0.1 * (n1 - 0.5), val)
+    val = val * (1 - 0.75 * ink) * (1 - 0.7 * cracks)
+    return [np.clip(alpha, 0, 1)], [np.clip(val, 0, 1)]
+
+
 _WALL_SRC = {}
 
 
@@ -3163,6 +3194,7 @@ LIB = {
     "ash_flakes":    (ash_flakes,    "shaded", 4, 0, "smoke"),
     "anime_glint":   (anime_glint,   "cel", 4, 0, "dragonfire"),
     "fire_scorch":   (fire_scorch,   "shaded", 1, 0, "soot"),
+    "impact_crater": (impact_crater, "shaded", 1, 0, "dust"),
     "dust_veil":     (dust_veil,     "shaded", 4, 0, "dust"),
     "spike_burst":   (spike_burst,   "cel", 4, 0, "dragonfire"),
     # anime shape language (rework)
