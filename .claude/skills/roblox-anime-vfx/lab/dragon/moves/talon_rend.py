@@ -123,8 +123,6 @@ def build():
     fp = [0.2, 3.4, -6.4]
     L += claw_slash([fp[0] - 0.6, fp[1], fp[2]], th - 0.01, 10.5, -70, 151, life=0.42)
     L += claw_slash([fp[0] + 0.6, fp[1], fp[2]], th + 0.015, 10.5, -110, 155, life=0.42)
-    L.append(_fb("speed_burst", fp, th + 0.02, 15, 0.2, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2,
-                 seed=158, z=0.9, tr=[[0, 0.15], [0.6, 0.4], [1, 1]]))
     sh = emit_stack("ink_shards", fp, th + 0.03, size=[[0, 8], [1, 10]], life=0.3, cool=False, seed=159, rot=20, layers=("rim",), z=0.7)
     for e in sh:
         e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0

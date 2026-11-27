@@ -161,8 +161,6 @@ def build():
         for e in sh:
             e["props"]["Color"] = "#1a0806"; e["props"]["LightEmission"] = 0
         L += sh
-        L.append(_fb("speed_burst", hp_, th + 0.01, 8, 0.16, color=[[0, "#fff8e0"], [0.5, "#ffe08a"], [1, "#ffb040"]], le=1, br=1.2,
-                     seed=305 + i, z=0.9, tr=[[0, 0.2], [0.6, 0.45], [1, 1]]))
         L.append({"type": "emitter", "at": hp_, "emits": [[th + 0.02, 12]], "seed": 309 + i, "props": {
             "Texture": "needle_bold", "Color": [[0, "#fff6b0"], [0.5, "#ffd21a"], [1, "#ff6a10"]], "LightEmission": 1, "Brightness": 1.5,
             "Size": [[0, 3.2], [1, 0.3]], "Lifetime": [0.14, 0.24], "Speed": [40, 70], "SpreadAngle": [60, 60], "Drag": 7,

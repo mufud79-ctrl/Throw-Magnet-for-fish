@@ -134,7 +134,6 @@ def build():
         ln = 20 + 6 * ((j * 7) % 4) / 3
         L += emit_stack("anime_flame_spike", [C[0], 8, C[2]], T + 0.004 * (j % 3), size=[[0, ln * 0.6], [0.2, ln], [1, ln * 1.05]],
                         life=0.42 + 0.06 * (j % 2), cool=False, rot=rot, seed=1451 + j, z=0.5)
-    L.append(speed_lines([C[0], 8, C[2]], T + 0.03, 34, seed=1471))
     L += ink([C[0], 8, C[2]], T + 0.03, 16, rot=10, seed=1472)
     L += glint([C[0], 8.5, C[2] + 1], T + 0.02, size=13, life=0.26, seed=1473)
     L.append(needles([C[0], 8, C[2]], T + 0.03, 36, speed=(80, 130), size=7, life=(0.25, 0.45), seed=1474))

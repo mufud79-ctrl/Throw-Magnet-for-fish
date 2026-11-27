@@ -376,3 +376,25 @@ up to a lit jagged lip, thin ink outline, sharp radial cracks running out past t
 the lip sits under a ring of 16 big broken slabs tilted outward; the debris pit is off (`"pit": false`, supported in
 lab/page/vfx.js and init.lua); a molten core glows in the bowl and cools. Bug found: a NEGATIVE ZOffset on a ground
 decal sinks it under the floor (it vanished) - ground decals use ZOffset >= 0. Test: lab/dragon/tests/crater_test.py.
+
+## Finish (all 12 + second pass + export)
+Hybrid moves reworked with the lessons (one lead shape each, BIG/medium/small, smooth haze outside, dark ink accent,
+crater/calling card, 60 fps): Talon Rend = triple anime claw slashes + X finisher; Horn Rush = flame wall with a
+spike crest + travelling haze; Tail Cyclone = spike crowns erupting round the ring in sequence; Ember Breath = fat
+torrent with a spiked front edge + needles; Transform = spiky cocoon -> radial spike-star burst + crater.
+Full form (new): Inferno Torrent = blast breath detonating into a spike crown + billow dome + crater (side-on cam);
+Comet Dive = comet (billows + backward spikes + trail) -> radial star + crown + radius-10 crater + molten rock rain,
+dragon bursts back out of the ground; Firestorm Coil = stacked pale wind bands -> ignite bottom-up into fire bands ->
+radial burst; Dragon Roar = 5 spinning anime crescent blades fanning out, each laying burning slice lines; Ash Rain =
+10 fireballs (core + spikes + trail) landing in a spiral of mini craters with pops, ash over the zone; Revert = dragon
+coils down, tints orange and burns away into spikes, player drops out with a squash.
+Second pass: white speed lines only on the four biggest hits (Sky Drop, Transform, Inferno Torrent, Comet Dive) so
+they don't become a shared recipe; side-by-side in assets/previews/dragon/twelve_moves.jpg.
+Kit plumbing added: cr_point/cr_path (head flight splines), whisker_tracks, dark_haze, ink, needles, speed_lines,
+crater. Lessons: lava_drops is a 4x4 sheet (Grid4x4 Random); a straight unborn body runs into the camera -> give the
+head a curved pre-roll and stage side-on; aura glints must stay within ~1x radius or they land on the camera.
+Export: `python3 scripts/export_luau.py --effects lab/dragon/moves --merge`. The new `--merge` flag was needed: the
+plain command deletes every other exported effect and rewrites the manifest with only this fruit (100 existing
+effects would have been lost). Result: 112 effects, 216 textures, 16 meshes, rig model assets/meshes/dragon.fbx; all
+manifest paths exist; the 12 dragon modules + Assets.lua parse with luaparse. init.lua does not parse in luaparse
+(Luau `+=`, pre-existing); nothing has been run in Studio. Nothing uploaded.
